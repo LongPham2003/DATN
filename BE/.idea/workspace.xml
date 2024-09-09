@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b47ecc04-0e00-4dd2-ae23-016f18744d19" name="Changes" comment="" />
+    <list default="true" id="b47ecc04-0e00-4dd2-ae23-016f18744d19" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../FE/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/package-lock.json" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 1
-}]]></component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 1
+}</component>
   <component name="ProjectId" id="2lb4OabPGhnxpv5ploQB0lAyKU1" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -19,6 +24,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/Admin/Desktop/DATN/BE/shoes",
     "nodejs_package_manager_path": "npm",
@@ -42,6 +48,7 @@
       <option name="presentableId" value="Default" />
       <updated>1725435412238</updated>
       <workItem from="1725435413792" duration="17000" />
+      <workItem from="1725885644633" duration="38000" />
     </task>
     <servers />
   </component>
