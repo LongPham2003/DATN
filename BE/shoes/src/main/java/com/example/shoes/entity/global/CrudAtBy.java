@@ -16,6 +16,8 @@ public  class CrudAtBy {
     private LocalDateTime updatedAt;
     private String createdBy;
     private String updatedBy;
+
+
     @PrePersist
     private void onCreate(CrudAtBy entity) {
         entity.setCreatedAt(getCreatedAt());
