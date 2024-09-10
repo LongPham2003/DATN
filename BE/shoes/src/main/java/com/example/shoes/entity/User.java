@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Set;
 
@@ -22,7 +23,8 @@ public class User {
     String email;
     String phone;
     String address;
-    Date birthday;
+    @Temporal(TemporalType.DATE)
+    LocalDate birthday;
     String gender;
     String verificationCode;
     String image;
