@@ -6,24 +6,31 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "role")
-public class Role {
+@Table(name = "image")
+public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 
     @Size(max = 255)
-    @NotNull
-    @Column(name = "roleName", nullable = false)
-    private String roleName;
+    @ColumnDefault("''")
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "imageData")
+    private byte[] imageData;
+
+    @ColumnDefault("1")
+    @Column(name = "status")
+    private Boolean status;
 
 }
