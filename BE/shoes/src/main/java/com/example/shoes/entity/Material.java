@@ -5,7 +5,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -18,8 +17,8 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Entity
-@Table(name = "users")
-public class User {
+@Table(name = "material")
+public class Material {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -27,36 +26,8 @@ public class User {
 
     @Size(max = 255)
     @NotNull
-    @Column(name = "fullName", nullable = false)
-    private String fullName;
-
-    @NotNull
-    @Lob
-    @Column(name = "address", nullable = false)
-    private String address;
-
-    @Size(max = 20)
-    @NotNull
-    @Column(name = "phoneNumber", nullable = false, length = 20)
-    private String phoneNumber;
-
-    @NotNull
-    @Column(name = "dateOfBirth", nullable = false)
-    private LocalDate dateOfBirth;
-
-    @Size(max = 10)
-    @ColumnDefault("''")
-    @Column(name = "gender", length = 10)
-    private String gender;
-
-    @Size(max = 255)
-    @Column(name = "email")
-    private String email;
-
-    @Size(max = 255)
-    @NotNull
-    @Column(name = "password", nullable = false)
-    private String password;
+    @Column(name = "name", nullable = false)
+    private String name;
 
     @ColumnDefault("1")
     @Column(name = "status")
