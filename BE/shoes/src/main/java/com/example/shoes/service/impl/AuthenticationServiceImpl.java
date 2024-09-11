@@ -1,7 +1,6 @@
 package com.example.shoes.service.impl;
 
 import com.example.shoes.dto.authentication.request.AuthenticationRequest;
-import com.example.shoes.entity.User;
 import com.example.shoes.exception.AppException;
 import com.example.shoes.exception.ErrorCode;
 import com.example.shoes.repository.UserRepository;
@@ -13,7 +12,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
