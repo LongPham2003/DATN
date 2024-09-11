@@ -18,12 +18,11 @@ import lombok.Setter;
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     private Integer id;
 
-    @Size(max = 255)
     @NotNull
-    @Column(name = "role_name", nullable = false)
+    @Column(name = "role_name")
     private String roleName;
 
 }

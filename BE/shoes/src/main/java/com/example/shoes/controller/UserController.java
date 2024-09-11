@@ -24,7 +24,7 @@ public class UserController {
     }
 
     @PostMapping("/update/{id}")
-    ApiResponse<Boolean> updateUser(@Valid @PathVariable Integer id, @RequestBody UserRequest user) {
+    ApiResponse<Boolean> updateUser(@Valid  @RequestBody UserRequest user,@PathVariable Integer id) {
         ApiResponse<Boolean> apiResponse = new ApiResponse<>();
         apiResponse.setResult(userService.updateUser(id,user));
         return apiResponse;

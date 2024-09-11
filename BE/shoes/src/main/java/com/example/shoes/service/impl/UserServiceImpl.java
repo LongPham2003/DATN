@@ -2,6 +2,7 @@ package com.example.shoes.service.impl;
 
 import com.example.shoes.dto.user.request.UserRequest;
 import com.example.shoes.entity.User;
+import com.example.shoes.enums.Role;
 import com.example.shoes.exception.AppException;
 import com.example.shoes.exception.ErrorCode;
 import com.example.shoes.repository.UserRepository;
@@ -11,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,7 +27,7 @@ public class UserServiceImpl implements UserService {
             throw new AppException(ErrorCode.USER_EXISTS);
         }
         User user = new User();
-        user.setName(userCreationRequest.getName());
+        user.setFullName(userCreationRequest.getFullName());
 
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         user.setPassword(passwordEncoder.encode(userCreationRequest.getPassword()));
@@ -34,18 +36,26 @@ public class UserServiceImpl implements UserService {
         user.setBirthday(userCreationRequest.getBirthday());
         user.setGender(userCreationRequest.getGender());
         user.setAddress(userCreationRequest.getAddress());
-        user.setRoles(userCreationRequest.getRoles());
         user.setPhone(userCreationRequest.getPhone());
-        user.setEnabled(true);
+
+        HashSet<String>  roles = new HashSet();
+        roles.add(Role.USER.name());
+
+//        user.setRoles(roles);
+
+        user.setStatus(true);
         return userRepository.save(user);
     }
 
     @Override
     public Boolean updateUser(Integer id ,UserRequest userUpdate) {
+
+
+
         Optional<User> optionalUser = userRepository.findById(id);
         if(optionalUser.isPresent()){
             User user = optionalUser.get();
-            user.setName(userUpdate.getName());
+            user.setFullName(userUpdate.getFullName());
             PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
             user.setPassword(passwordEncoder.encode(userUpdate.getPassword()));
             user.setEmail(userUpdate.getEmail());
@@ -54,6 +64,7 @@ public class UserServiceImpl implements UserService {
             user.setAddress(userUpdate.getAddress());
             user.setRoles(userUpdate.getRoles());
             user.setPhone(userUpdate.getPhone());
+            user.setStatus(userUpdate.isStatus());
             userRepository.save(user);
             return true;
         }else {
