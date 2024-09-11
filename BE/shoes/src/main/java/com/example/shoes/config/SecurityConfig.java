@@ -12,7 +12,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-    private final String[] PUBLIC_ENDPOINTS = {"/user/add","/auth/login","/user/getList"};
+    private final String[] PUBLIC_ENDPOINTS = {"/user/add","/auth/login","/user/getList","/user/update/**","/user/delete"};
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
