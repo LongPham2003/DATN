@@ -18,27 +18,23 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @Entity
-@Table(name = "productdetail")
-public class Productdetail {
+@Table(name = "product_details")
+public class ProductDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "productId")
-    private Product product;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "colorId")
+    @JoinColumn(name = "color_id")
     private Color color;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "brandId")
+    @JoinColumn(name = "brand_id")
     private Brand brand;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "materialId")
+    @JoinColumn(name = "material_id")
     private Material material;
 
     @ColumnDefault("0.00")
@@ -49,7 +45,6 @@ public class Productdetail {
     @Column(name = "quantity")
     private Integer quantity;
 
-    @ColumnDefault("1")
     @Column(name = "status")
     private Boolean status;
 

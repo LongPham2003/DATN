@@ -24,8 +24,8 @@ public class UserRequest {
     @Temporal(TemporalType.DATE)
     private LocalDate birthday;
     private  String gender;
-    private  boolean enabled;
     private String image;
+    private  boolean enabled;
     @ManyToMany
     private Set<Role> roles;
 

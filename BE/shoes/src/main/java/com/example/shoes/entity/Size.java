@@ -11,12 +11,12 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
-import java.time.LocalDate;
+import java.time.Instant;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "size")
+@Table(name = "sizes")
 public class Size {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,17 +25,18 @@ public class Size {
 
     @jakarta.validation.constraints.Size(max = 50)
     @NotNull
-    @Column(name = "sizeValue", nullable = false, length = 50)
+    @Column(name = "size_value", nullable = false, length = 50)
     private String sizeValue;
 
-    @ColumnDefault("1")
     @Column(name = "status")
     private Boolean status;
 
-    @Column(name = "createdAt")
-    private LocalDate createdAt;
+    @ColumnDefault("CURRENT_TIMESTAMP")
+    @Column(name = "created_at")
+    private Instant createdAt;
 
-    @Column(name = "updatedAt")
-    private LocalDate updatedAt;
+    @ColumnDefault("CURRENT_TIMESTAMP")
+    @Column(name = "updated_at")
+    private Instant updatedAt;
 
 }

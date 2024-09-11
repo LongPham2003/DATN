@@ -1,4 +1,4 @@
-package com.example.shoes.entity.global;
+package com.example.shoes.dto.user.response.global;
 
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
