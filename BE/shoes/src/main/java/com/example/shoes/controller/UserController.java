@@ -5,7 +5,6 @@ import com.example.shoes.dto.user.request.UserRequest;
 import com.example.shoes.entity.User;
 import com.example.shoes.service.impl.UserServiceImpl;
 import jakarta.validation.Valid;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

@@ -28,12 +28,12 @@ public class Order {
 
     @Size(max = 20)
     @NotNull
-    @Column(name = "phoneNumber", nullable = false, length = 20)
+    @Column(name = "phone_number", nullable = false, length = 20)
     private String phoneNumber;
 
     @NotNull
     @Lob
-    @Column(name = "shippingAddress", nullable = false)
+    @Column(name = "shipping_address", nullable = false)
     private String shippingAddress;
 
     @Lob
@@ -41,19 +41,19 @@ public class Order {
     private String notes;
 
     @NotNull
-    @Column(name = "orderDate", nullable = false)
+    @Column(name = "order_date", nullable = false)
     private LocalDate orderDate;
 
     @ColumnDefault("0.00")
-    @Column(name = "totalAmount", precision = 10, scale = 2)
+    @Column(name = "total_amount", precision = 10, scale = 2)
     private BigDecimal totalAmount;
 
     @ColumnDefault("0.00")
-    @Column(name = "discountAmount", precision = 10, scale = 2)
+    @Column(name = "discount_amount", precision = 10, scale = 2)
     private BigDecimal discountAmount;
 
     @NotNull
-    @Column(name = "deliveryDate", nullable = false)
+    @Column(name = "delivery_date", nullable = false)
     private LocalDate deliveryDate;
 
     @Size(max = 50)

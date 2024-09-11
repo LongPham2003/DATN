@@ -38,14 +38,12 @@ public class UserServiceImpl implements UserService {
         user.setPhone(userCreationRequest.getPhone());
         user.setEnabled(true);
         return userRepository.save(user);
-
     }
 
     @Override
     public Boolean updateUser(Integer id ,UserRequest userUpdate) {
         Optional<User> optionalUser = userRepository.findById(id);
         if(optionalUser.isPresent()){
-
             User user = optionalUser.get();
             user.setName(userUpdate.getName());
             user.setPassword(userUpdate.getPassword());
@@ -55,7 +53,6 @@ public class UserServiceImpl implements UserService {
             user.setAddress(userUpdate.getAddress());
             user.setRoles(userUpdate.getRoles());
             user.setPhone(userUpdate.getPhone());
-
             userRepository.save(user);
             return true;
         }else {

@@ -18,30 +18,35 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Entity
-@Table(name = "voucher")
+@Table(name = "vouchers")
 public class Voucher {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 
+    @Size(max = 20)
+    @NotNull
+    @Column(name = "voucher_code", nullable = false, length = 20)
+    private String voucherCode;
+
     @Size(max = 255)
     @NotNull
-    @Column(name = "voucherName", nullable = false)
+    @Column(name = "voucher_name", nullable = false)
     private String voucherName;
 
     @ColumnDefault("0.00")
-    @Column(name = "discountCondition", precision = 10, scale = 2)
+    @Column(name = "discount_condition", precision = 10, scale = 2)
     private BigDecimal discountCondition;
 
     @ColumnDefault("0.00")
-    @Column(name = "discountAmount", precision = 10, scale = 2)
+    @Column(name = "discount_amount", precision = 10, scale = 2)
     private BigDecimal discountAmount;
 
-    @Column(name = "startDate")
+    @Column(name = "start_date")
     private LocalDate startDate;
 
-    @Column(name = "endDate")
+    @Column(name = "end_date")
     private LocalDate endDate;
 
 }

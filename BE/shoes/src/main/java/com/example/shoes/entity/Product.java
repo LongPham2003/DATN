@@ -16,12 +16,12 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
-import java.time.LocalDate;
+import java.time.Instant;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "product")
+@Table(name = "products")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +29,7 @@ public class Product {
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "categoryId")
+    @JoinColumn(name = "category_id")
     private Category category;
 
     @Size(max = 255)
@@ -37,13 +37,12 @@ public class Product {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @ColumnDefault("1")
     @Column(name = "status")
     private Boolean status;
 
-    @NotNull
-    @Column(name = "createdAt", nullable = false)
-    private LocalDate createdAt;
+    @ColumnDefault("CURRENT_TIMESTAMP")
+    @Column(name = "created_at")
+    private Instant createdAt;
 
     @Lob
     @Column(name = "description")

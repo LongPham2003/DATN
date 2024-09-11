@@ -5,34 +5,30 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
-
-import java.math.BigDecimal;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "orderitems")
-public class Orderitem {
+@Table(name = "shipping_methods")
+public class ShippingMethod {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @ColumnDefault("0")
-    @Column(name = "quantity")
-    private Integer quantity;
+    @Size(max = 255)
+    @NotNull
+    @Column(name = "shipping_method_name", nullable = false)
+    private String shippingMethodName;
 
-    @ColumnDefault("0.00")
-    @Column(name = "price", precision = 10, scale = 2)
-    private BigDecimal price;
-
-    @Size(max = 50)
-    @Column(name = "status", length = 50)
-    private String status;
+    @Lob
+    @Column(name = "notes")
+    private String notes;
 
 }

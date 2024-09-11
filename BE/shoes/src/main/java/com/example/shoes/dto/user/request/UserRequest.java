@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Set;
 
 @Getter
@@ -18,10 +18,10 @@ public class UserRequest {
     private  String email;
     private  String phone;
     private  String address;
-    private  Date birthday;
+    private LocalDate birthday;
     private  String gender;
-    private  boolean enabled;
     private String image;
+    private  boolean enabled;
     @ManyToMany
     private Set<Role> roles;
 
