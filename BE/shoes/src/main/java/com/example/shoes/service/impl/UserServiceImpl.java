@@ -46,7 +46,8 @@ public class UserServiceImpl implements UserService {
         if(optionalUser.isPresent()){
             User user = optionalUser.get();
             user.setName(userUpdate.getName());
-            user.setPassword(userUpdate.getPassword());
+            PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+            user.setPassword(passwordEncoder.encode(userUpdate.getPassword()));
             user.setEmail(userUpdate.getEmail());
             user.setBirthday(userUpdate.getBirthday());
             user.setGender(userUpdate.getGender());

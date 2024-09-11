@@ -30,4 +30,4 @@ public class User {
     boolean enabled;
     @ManyToMany
     private Set<Role> roles;
-}
+

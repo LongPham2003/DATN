@@ -8,7 +8,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_NULL) // không có lỗi thì không có message thì không trả về message
 public class ApiResponse<T> {
     private int code = 1000;
     private String message;
