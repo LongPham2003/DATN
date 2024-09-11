@@ -15,11 +15,14 @@ import org.springframework.stereotype.Service;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
     UserRepository userRepository;
+
+    PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
     @Override
     public User addUser(UserRequest userCreationRequest) {
@@ -29,7 +32,7 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setFullName(userCreationRequest.getFullName());
 
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+
         user.setPassword(passwordEncoder.encode(userCreationRequest.getPassword()));
 
         user.setEmail(userCreationRequest.getEmail());
@@ -38,10 +41,8 @@ public class UserServiceImpl implements UserService {
         user.setAddress(userCreationRequest.getAddress());
         user.setPhone(userCreationRequest.getPhone());
 
-        HashSet<String>  roles = new HashSet();
-        roles.add(Role.USER.name());
 
-//        user.setRoles(roles);
+        user.setRoles(Role.USER);
 
         user.setStatus(true);
         return userRepository.save(user);
@@ -56,13 +57,15 @@ public class UserServiceImpl implements UserService {
         if(optionalUser.isPresent()){
             User user = optionalUser.get();
             user.setFullName(userUpdate.getFullName());
-            PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+
             user.setPassword(passwordEncoder.encode(userUpdate.getPassword()));
             user.setEmail(userUpdate.getEmail());
             user.setBirthday(userUpdate.getBirthday());
             user.setGender(userUpdate.getGender());
             user.setAddress(userUpdate.getAddress());
+
             user.setRoles(userUpdate.getRoles());
+
             user.setPhone(userUpdate.getPhone());
             user.setStatus(userUpdate.isStatus());
             userRepository.save(user);

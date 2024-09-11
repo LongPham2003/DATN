@@ -1,5 +1,6 @@
 package com.example.shoes.entity;
 
+import com.example.shoes.enums.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -43,7 +44,9 @@ public class User {
     String image;
     @Column(name = "status")
     boolean status;
-    @ManyToMany
-    private Set<Role> roles;
+
+
+    @Enumerated(EnumType.STRING)
+    Role roles;
 
 }
