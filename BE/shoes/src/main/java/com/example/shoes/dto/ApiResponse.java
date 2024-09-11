@@ -1,4 +1,4 @@
-package com.example.shoes.dto.user;
+package com.example.shoes.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;

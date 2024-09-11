@@ -1,7 +1,8 @@
 package com.example.shoes.exception;
 
-import com.example.shoes.dto.user.ApiResponse;
+import com.example.shoes.dto.ApiResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -30,12 +31,24 @@ public class GlobalExceptionHandler {
         apiResponse.setCode(errorCode.getCode());
         apiResponse.setMessage(e.getMessage());
 
-        return ResponseEntity.badRequest().body(apiResponse);
+        return ResponseEntity.status(errorCode.getHttpStatusCode()).body(apiResponse);
 
     }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     ResponseEntity<String> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         return ResponseEntity.badRequest().body(e.getFieldError().getDefaultMessage());
+    }
+
+    @ExceptionHandler(value = AccessDeniedException.class)
+    ResponseEntity<ApiResponse> handlingAccessDeniedException(AccessDeniedException exception) {
+        ErrorCode errorCode = ErrorCode.UN_AUTHORIZED;
+
+        return ResponseEntity.status(errorCode.getHttpStatusCode())
+                .body(ApiResponse.builder()
+                        .code(errorCode.getCode())
+                        .message(errorCode.getMessage())
+                        .build());
+
     }
 }

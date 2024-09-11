@@ -7,23 +7,23 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "roles")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     private Integer id;
 
-    @Size(max = 255)
     @NotNull
-    @Column(name = "role_name", nullable = false)
+    @Column(name = "role_name")
     private String roleName;
 
 }

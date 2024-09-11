@@ -1,6 +1,6 @@
 package com.example.shoes.controller;
 
-import com.example.shoes.dto.user.ApiResponse;
+import com.example.shoes.dto.ApiResponse;
 import com.example.shoes.dto.user.request.UserRequest;
 import com.example.shoes.entity.User;
 import com.example.shoes.service.impl.UserServiceImpl;
@@ -24,7 +24,7 @@ public class UserController {
     }
 
     @PostMapping("/update/{id}")
-    ApiResponse<Boolean> updateUser(@Valid @PathVariable Integer id, @RequestBody UserRequest user) {
+    ApiResponse<Boolean> updateUser(@Valid  @RequestBody UserRequest user,@PathVariable Integer id) {
         ApiResponse<Boolean> apiResponse = new ApiResponse<>();
         apiResponse.setResult(userService.updateUser(id,user));
         return apiResponse;

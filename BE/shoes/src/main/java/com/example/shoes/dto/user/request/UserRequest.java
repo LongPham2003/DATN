@@ -9,13 +9,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.Set;
 
 @Getter
 @Setter
 public class UserRequest {
-    private String name;
+    private String fullName;
     @Size(min = 8 ,message = "Password phải lớn hơn 8 kí tự")
     private String password;
     private  String email;
@@ -25,7 +24,8 @@ public class UserRequest {
     private LocalDate birthday;
     private  String gender;
     private String image;
-    private  boolean enabled;
+    private boolean status;
+
     @ManyToMany
     private Set<Role> roles;
 
