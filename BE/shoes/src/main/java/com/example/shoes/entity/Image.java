@@ -14,7 +14,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Getter
 @Setter
 @Entity
-@Table(name = "image")
+@Table(name = "images")
 public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,10 +26,9 @@ public class Image {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "imageData")
+    @Column(name = "image_data")
     private byte[] imageData;
 
-    @ColumnDefault("1")
     @Column(name = "status")
     private Boolean status;
 

@@ -12,12 +12,12 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
-import java.time.LocalDate;
+import java.time.Instant;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "brand")
+@Table(name = "brands")
 public class Brand {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,14 +29,15 @@ public class Brand {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @ColumnDefault("1")
     @Column(name = "status")
     private Boolean status;
 
-    @Column(name = "createdAt")
-    private LocalDate createdAt;
+    @ColumnDefault("CURRENT_TIMESTAMP")
+    @Column(name = "created_at")
+    private Instant createdAt;
 
-    @Column(name = "updatedAt")
-    private LocalDate updatedAt;
+    @ColumnDefault("CURRENT_TIMESTAMP")
+    @Column(name = "updated_at")
+    private Instant updatedAt;
 
 }

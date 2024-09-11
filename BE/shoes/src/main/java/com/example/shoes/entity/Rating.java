@@ -18,7 +18,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Getter
 @Setter
 @Entity
-@Table(name = "rating")
+@Table(name = "ratings")
 public class Rating {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +27,7 @@ public class Rating {
 
     @NotNull
     @ColumnDefault("0")
-    @Column(name = "ratingValue", nullable = false)
+    @Column(name = "rating_value", nullable = false)
     private Integer ratingValue;
 
     @Lob
@@ -35,7 +35,7 @@ public class Rating {
     private String comments;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "productDetailId")
-    private Productdetail productDetail;
+    @JoinColumn(name = "product_detail_id")
+    private ProductDetail productDetail;
 
 }
