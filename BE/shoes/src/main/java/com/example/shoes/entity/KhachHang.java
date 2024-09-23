@@ -1,12 +1,11 @@
 package com.example.shoes.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -15,43 +14,35 @@ import java.time.LocalDate;
 public class KhachHang {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID", nullable = false)
+    @Column(name = "id")
     private Integer id;
 
-    @Size(max = 255)
-    @NotNull
-    @Column(name = "Ho_Ten", nullable = false)
+    @Column(name = "ho_ten")
     private String hoTen;
 
-    @Size(max = 20)
-    @NotNull
-    @Column(name = "SDT", nullable = false, length = 20)
+    @Column(name = "sdt")
     private String sdt;
 
-    @Size(max = 255)
-    @Column(name = "Email")
+    @Column(name = "email")
     private String email;
 
-    @Column(name = "Ngay_Sinh")
-    private LocalDate ngaySinh;
+    @Column(name = "ngay_sinh")
+    @Temporal(TemporalType.DATE)
+    private Date ngaySinh;
 
-    @Size(max = 255)
-    @Column(name = "Dia_Chi_Mac_Dinh")
+    @Column(name = "dia_chi_mac_dinh")
     private String diaChiMacDinh;
 
-    @Size(max = 10)
-    @Column(name = "Gioi_Tinh", length = 10)
+    @Column(name = "gioi_tinh", length = 10)
     private String gioiTinh;
 
-    @NotNull
-    @Column(name = "Ngay_Tao", nullable = false)
+    @Column(name = "ngay_tao")
     private LocalDate ngayTao;
 
-    @Column(name = "Ngay_Cap_Nhat")
+    @Column(name = "ngay_cap_nhat")
     private LocalDate ngayCapNhat;
 
-    @NotNull
-    @Column(name = "Trang_Thai", nullable = false)
-    private Boolean trangThai = false;
+    @Column(name = "trang_thai")
+    private Boolean trangThai;
 
 }

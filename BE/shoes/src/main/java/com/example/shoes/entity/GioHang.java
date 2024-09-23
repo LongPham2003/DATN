@@ -12,15 +12,15 @@ import lombok.Setter;
 public class GioHang {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID", nullable = false)
+    @Column(name = "id", nullable = false)
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ID_Khach_Hang")
+    @JoinColumn(name = "id_khach_hang")
     private KhachHang idKhachHang;
 
     @NotNull
-    @Column(name = "Tong_So_Luong", nullable = false)
+    @Column(name = "tong_so_luong", nullable = false)
     private Integer tongSoLuong;
 
 }

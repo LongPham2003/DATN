@@ -13,23 +13,23 @@ import lombok.Setter;
 public class HinhAnh {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID", nullable = false)
+    @Column(name = "id", nullable = false)
     private Integer id;
 
     @Size(max = 255)
     @NotNull
-    @Column(name = "Ten_Anh", nullable = false)
+    @Column(name = "ten_anh", nullable = false)
     private String tenAnh;
 
-    @Column(name = "Du_Lieu_Anh")
+    @Column(name = "du_lieu_anh")
     private byte[] duLieuAnh;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ID_San_Pham_Chi_Tiet")
+    @JoinColumn(name = "id_san_pham_chi_tiet")
     private SanPhamChiTiet idSanPhamChiTiet;
 
     @NotNull
-    @Column(name = "Trang_Thai", nullable = false)
+    @Column(name = "trang_thai", nullable = false)
     private Boolean trangThai = false;
 
 }

@@ -13,16 +13,16 @@ import lombok.Setter;
 public class Loai {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID", nullable = false)
+    @Column(name = "id", nullable = false)
     private Integer id;
 
     @Size(max = 255)
     @NotNull
-    @Column(name = "Ten", nullable = false)
+    @Column(name = "ten", nullable = false)
     private String ten;
 
     @NotNull
-    @Column(name = "Trang_Thai", nullable = false)
+    @Column(name = "trang_thai", nullable = false)
     private Boolean trangThai = false;
 
 }

@@ -15,23 +15,23 @@ import java.time.Instant;
 public class LichSuHoaDon {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID", nullable = false)
+    @Column(name = "id", nullable = false)
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ID_Hoa_Don")
+    @JoinColumn(name = "id_hoa_don")
     private HoaDon idHoaDon;
 
     @Lob
-    @Column(name = "Mo_Ta")
+    @Column(name = "mo_ta")
     private String moTa;
 
     @ColumnDefault("CURRENT_TIMESTAMP")
-    @Column(name = "Thoi_Gian")
+    @Column(name = "thoi_gian")
     private Instant thoiGian;
 
     @Size(max = 255)
-    @Column(name = "Nguoi_Thuc_Hien")
+    @Column(name = "nguoi_thuc_hien")
     private String nguoiThucHien;
 
 }
