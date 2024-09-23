@@ -15,28 +15,28 @@ import java.time.LocalDate;
 public class SanPham {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID", nullable = false)
+    @Column(name = "id", nullable = false)
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ID_Loai")
+    @JoinColumn(name = "id_loai")
     private Loai idLoai;
 
     @Size(max = 255)
     @NotNull
-    @Column(name = "Ten_San_Pham", nullable = false)
+    @Column(name = "ten_san_pham", nullable = false)
     private String tenSanPham;
 
     @NotNull
-    @Column(name = "Ngay_Tao", nullable = false)
+    @Column(name = "ngay_tao", nullable = false)
     private LocalDate ngayTao;
 
     @Lob
-    @Column(name = "Mo_Ta")
+    @Column(name = "mo_ta")
     private String moTa;
 
     @NotNull
-    @Column(name = "Trang_Thai", nullable = false)
+    @Column(name = "trang_thai", nullable = false)
     private Boolean trangThai = false;
 
 }

@@ -13,40 +13,40 @@ import lombok.Setter;
 public class DiaChi {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID", nullable = false)
+    @Column(name = "id", nullable = false)
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ID_Khach_Hang")
+    @JoinColumn(name = "id_khach_hang")
     private KhachHang idKhachHang;
 
     @Size(max = 255)
     @NotNull
-    @Column(name = "Ten", nullable = false)
+    @Column(name = "ten", nullable = false)
     private String ten;
 
     @Size(max = 20)
     @NotNull
-    @Column(name = "SDT", nullable = false, length = 20)
+    @Column(name = "sdt", nullable = false, length = 20)
     private String sdt;
 
     @Size(max = 255)
     @NotNull
-    @Column(name = "Tinh_Thanh_Pho", nullable = false)
+    @Column(name = "tinh_thanh_pho", nullable = false)
     private String tinhThanhPho;
 
     @Size(max = 255)
     @NotNull
-    @Column(name = "Huyen_Quan", nullable = false)
+    @Column(name = "huyen_quan", nullable = false)
     private String huyenQuan;
 
     @Size(max = 255)
     @NotNull
-    @Column(name = "Xa_Phuong", nullable = false)
+    @Column(name = "xa_phuong", nullable = false)
     private String xaPhuong;
 
     @NotNull
-    @Column(name = "Dia_Chi_Mac_Dinh", nullable = false)
+    @Column(name = "dia_chi_mac_dinh", nullable = false)
     private Boolean diaChiMacDinh = false;
 
 }

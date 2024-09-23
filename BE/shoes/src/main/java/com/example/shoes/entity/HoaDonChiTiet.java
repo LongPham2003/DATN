@@ -14,27 +14,27 @@ import java.math.BigDecimal;
 public class HoaDonChiTiet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID", nullable = false)
+    @Column(name = "id", nullable = false)
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ID_SPCT")
+    @JoinColumn(name = "id_spct")
     private SanPhamChiTiet idSpct;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ID_Hoa_Don")
+    @JoinColumn(name = "id_hoa_don")
     private HoaDon idHoaDon;
 
     @NotNull
-    @Column(name = "So_Luong", nullable = false)
+    @Column(name = "so_luong", nullable = false)
     private Integer soLuong;
 
     @NotNull
-    @Column(name = "Don_Gia", nullable = false, precision = 10, scale = 2)
+    @Column(name = "don_gia", nullable = false, precision = 10, scale = 2)
     private BigDecimal donGia;
 
     @NotNull
-    @Column(name = "Trang_Thai", nullable = false)
+    @Column(name = "trang_thai", nullable = false)
     private Boolean trangThai = false;
 
 }

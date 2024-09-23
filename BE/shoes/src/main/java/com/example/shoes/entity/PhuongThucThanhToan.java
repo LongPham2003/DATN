@@ -13,20 +13,20 @@ import lombok.Setter;
 public class PhuongThucThanhToan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID", nullable = false)
+    @Column(name = "id", nullable = false)
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ID_Hoa_Don")
+    @JoinColumn(name = "id_hoa_don")
     private HoaDon idHoaDon;
 
     @Size(max = 255)
     @NotNull
-    @Column(name = "Ten_Phuong_Thuc", nullable = false)
+    @Column(name = "ten_phuong_thuc", nullable = false)
     private String tenPhuongThuc;
 
     @Lob
-    @Column(name = "Ghi_Chu")
+    @Column(name = "ghi_chu")
     private String ghiChu;
 
 }

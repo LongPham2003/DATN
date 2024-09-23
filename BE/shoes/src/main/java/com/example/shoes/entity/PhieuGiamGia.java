@@ -16,35 +16,35 @@ import java.time.LocalDate;
 public class PhieuGiamGia {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID", nullable = false)
+    @Column(name = "id", nullable = false)
     private Integer id;
 
     @Size(max = 255)
     @NotNull
-    @Column(name = "Ten_Voucher", nullable = false)
+    @Column(name = "ten_voucher", nullable = false)
     private String tenVoucher;
 
     @Lob
-    @Column(name = "Dieu_Kien_Giam_Gia")
+    @Column(name = "dieu_kien_giam_gia")
     private String dieuKienGiamGia;
 
-    @Column(name = "Muc_Giam", precision = 10, scale = 2)
+    @Column(name = "muc_giam", precision = 10, scale = 2)
     private BigDecimal mucGiam;
 
-    @Column(name = "Giam_Toi_Da", precision = 10, scale = 2)
+    @Column(name = "giam_toi_da", precision = 10, scale = 2)
     private BigDecimal giamToiDa;
 
-    @Column(name = "So_Luong")
+    @Column(name = "so_luong")
     private Integer soLuong;
 
-    @Column(name = "Ngay_Bat_Dau")
+    @Column(name = "ngay_bat_dau")
     private LocalDate ngayBatDau;
 
-    @Column(name = "Ngay_Ket_Thuc")
+    @Column(name = "ngay_ket_thuc")
     private LocalDate ngayKetThuc;
 
     @NotNull
-    @Column(name = "Trang_Thai", nullable = false)
+    @Column(name = "trang_thai", nullable = false)
     private Boolean trangThai = false;
 
 }

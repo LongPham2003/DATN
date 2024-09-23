@@ -13,24 +13,23 @@ import java.math.BigDecimal;
 @Table(name = "gio_hang_chi_tiet")
 public class GioHangChiTiet {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID", nullable = false)
+    @Column(name = "id", nullable = false)
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ID_Gio_Hang")
+    @JoinColumn(name = "id_gio_hang")
     private GioHang idGioHang;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ID_San_Pham_Chi_Tiet")
+    @JoinColumn(name = "id_san_pham_chi_tiet")
     private SanPhamChiTiet idSanPhamChiTiet;
 
     @NotNull
-    @Column(name = "So_Luong", nullable = false)
+    @Column(name = "so_luong", nullable = false)
     private Integer soLuong;
 
     @NotNull
-    @Column(name = "Don_Gia", nullable = false, precision = 10, scale = 2)
+    @Column(name = "don_gia", nullable = false, precision = 10, scale = 2)
     private BigDecimal donGia;
 
 }
