@@ -24,6 +24,7 @@ public class KhachHangResponse {
     @Temporal(TemporalType.DATE)
     private Date ngaySinh;
 
+
     private String diaChiMacDinh;
 
     private String gioiTinh;

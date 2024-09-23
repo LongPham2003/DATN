@@ -12,8 +12,6 @@ public class TaiKhoanResponse {
 
     private Integer id;
 
-
-
     private String tenDangNhap;
 
     private String email;

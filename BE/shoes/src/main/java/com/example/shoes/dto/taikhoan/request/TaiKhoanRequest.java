@@ -9,13 +9,13 @@ import lombok.Setter;
 @Setter
 @Builder
 public class TaiKhoanRequest {
-    @Email
-    @NotBlank(message = "Chua")
+    @Email (message = "Chưa đúng định dạng")
     private String email;
 
-    @NotBlank(message = "Mật khẩu trống")
-    @Min(8)
+    @Size(min = 8, message = "Mật khẩu phải có ít nhất 8 ký tự")
     private String password;
+
+    private Integer idKhachHang;
 
    private Boolean trangThai;
 }
