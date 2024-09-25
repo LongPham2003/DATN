@@ -4,6 +4,7 @@ import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import SignUp from "./pages/client/SignUp.jsx";
 import Login from "./pages/client/Login.jsx";
+import ResetPass from "./pages/client/ResetPass.jsx";
 
 const router = createBrowserRouter([
   {
@@ -13,6 +14,10 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login></Login>,
+  },
+  {
+    path: "/resetpass",
+    element: <ResetPass></ResetPass>,
   },
 ]);
 

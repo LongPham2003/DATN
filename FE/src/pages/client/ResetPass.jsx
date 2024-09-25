@@ -1,11 +1,10 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-const Login = () => {
+const ResetPass = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
-    password: "",
   });
 
   const [error, setError] = useState("");
@@ -22,7 +21,7 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:8080/auth/login", {
+      const response = await fetch("http://localhost:8080/auth/resetpass", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -35,15 +34,15 @@ const Login = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || "Login failed!");
+        throw new Error(errorData.message || "failed!");
       }
 
       const data = await response.json();
       if (data.result) {
         setError("");
-        navigate("/home");
+        navigate("/login");
       } else {
-        throw new Error("Login failed!");
+        throw new Error(" failed!");
       }
     } catch (error) {
       setError(error.message);
@@ -69,38 +68,15 @@ const Login = () => {
             required
           />
         </div>
-
-        <div className="mb-4">
-          <label className="block text-gray-700">Password</label>
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            className="mt-2 w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-        </div>
-
         {error && <p className="mb-4 text-sm text-red-500">{error}</p>}
-
         <button
           type="submit"
           className="w-full rounded-lg bg-blue-500 py-2 text-white transition duration-200 hover:bg-blue-600"
         >
-          Login
+          Đổi mật khẩu
         </button>
-        <div className="flex gap-3">
-          <button className="mt-3 w-full rounded-lg bg-blue-500 py-2 text-white transition duration-200 hover:bg-blue-600">
-            <Link to={"/signup"}>Đăng ký</Link>
-          </button>
-          <button className="mt-3 w-full rounded-lg bg-blue-500 py-2 text-white transition duration-200 hover:bg-blue-600">
-            <Link to={"/resetpass"}>Đổi mật khẩu</Link>
-          </button>
-        </div>
       </form>
     </div>
   );
 };
-
-export default Login;
+export default ResetPass;
