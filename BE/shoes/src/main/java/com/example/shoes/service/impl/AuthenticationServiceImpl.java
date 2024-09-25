@@ -1,6 +1,7 @@
 package com.example.shoes.service.impl;
 
 import com.example.shoes.dto.authentication.request.LoginRequest;
+import com.example.shoes.dto.authentication.request.ResetPass;
 import com.example.shoes.dto.authentication.request.SignUpRequest;
 import com.example.shoes.email.EmailService;
 import com.example.shoes.entity.KhachHang;
@@ -15,6 +16,8 @@ import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.security.SecureRandom;
 
 
 @Service
@@ -69,6 +72,38 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new AppException(ErrorCode.PASSWORD_OR_EMAIL_FALSE);
         }
         return true;
+    }
+
+    @Override
+    public String resetPass(ResetPass resetPass) {
+        TaiKhoan taiKhoan = taiKhoanRepo.findByEmail(resetPass.getEmail());
+        if (taiKhoan == null) {
+            throw new AppException(ErrorCode.USER_NOT_EXISTED);
+        }
+        String password = generatePass();
+
+        taiKhoan.setPassword(passwordEncoder.encode(password));
+
+        String subject = "Bạn đã đổi mật khẩu thành công. ";
+        emailService.sendEmailPasword(resetPass.getEmail(), subject, password);
+        taiKhoanRepo.save(taiKhoan);
+        return "Thành công";
+    }
+
+
+    public String generatePass() {
+        // Các ký tự để tạo mật khẩu
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
+        SecureRandom random = new SecureRandom();
+        StringBuilder password = new StringBuilder();
+
+        // Tạo mật khẩu dài 10 ký tự (có thể điều chỉnh)
+        for (int i = 0; i < 9; i++) {
+            int index = random.nextInt(chars.length());
+            password.append(chars.charAt(index));
+        }
+
+        return password.toString();
     }
 
 
