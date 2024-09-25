@@ -10,8 +10,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import java.util.Arrays;
 
@@ -19,7 +19,7 @@ import java.util.Arrays;
 @EnableWebSecurity
 public class SecurityConfiguration {
 
-    private final String[] PUBLIC_ENDPOINTS = {"/khachhang/getall","/taikhoan/getall","/auth/signup"};
+    private final String[] PUBLIC_ENDPOINTS = {"/khachhang/getall","/taikhoan/getall","/auth/signup","/auth/login"};
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
@@ -32,15 +32,17 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
+    public CorsFilter corsFilter() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "PUT", "POST", "DELETE", "PATCH"));
-        configuration.addAllowedOrigin("http://localhost:5173");
-        configuration.addAllowedHeader("*");
-        configuration.setAllowCredentials(true);
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173")); // Cho phép frontend truy cập từ địa chỉ này
+        configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH")); // Các phương thức HTTP được phép
+        configuration.setAllowedHeaders(Arrays.asList("*")); // Cho phép tất cả các header
+        configuration.setAllowCredentials(true); // Cho phép credentials (cookie, auth headers)
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
+        source.registerCorsConfiguration("/**", configuration); // Áp dụng cấu hình CORS cho tất cả các endpoint
+
+        return new CorsFilter(source); // Trả về một CorsFilter với cấu hình đã định
     }
 
     @Bean

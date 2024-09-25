@@ -1,5 +1,6 @@
 package com.example.shoes.controller;
 
+import com.example.shoes.dto.authentication.request.LoginRequest;
 import com.example.shoes.dto.authentication.request.SignUpRequest;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.service.AuthenticationService;
@@ -23,6 +24,12 @@ public class AuthenticationController {
         }
        return ApiResponse.<String>builder()
                .result(authenticationService.signUp(request)).build();
+    }
+
+    @PostMapping("/login")
+    public ApiResponse<Boolean> login(@RequestBody  LoginRequest loginRequest) {
+        return ApiResponse.<Boolean>builder()
+                .result(authenticationService.singIn(loginRequest)).build();
     }
 
 }

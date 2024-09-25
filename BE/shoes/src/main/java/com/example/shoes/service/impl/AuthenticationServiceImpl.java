@@ -1,8 +1,11 @@
 package com.example.shoes.service.impl;
 
+import com.example.shoes.dto.authentication.request.LoginRequest;
 import com.example.shoes.dto.authentication.request.SignUpRequest;
+import com.example.shoes.email.EmailService;
 import com.example.shoes.entity.KhachHang;
 import com.example.shoes.entity.TaiKhoan;
+import com.example.shoes.enums.Roles;
 import com.example.shoes.exception.AppException;
 import com.example.shoes.exception.ErrorCode;
 import com.example.shoes.repository.KhachHangRepo;
@@ -25,29 +28,48 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private EmailService emailService;
 
 
     @Override
     public String signUp(SignUpRequest signUpRequest) {
-       if(taiKhoanRepo.existsByEmail(signUpRequest.getEmail())){
-           throw  new AppException(ErrorCode.USER_NOT_EXISTED);
-       }
+        if (taiKhoanRepo.existsByEmail(signUpRequest.getEmail())) {
+            throw new AppException(ErrorCode.USER_NOT_EXISTED);
+        }
         if (signUpRequest.getPassword().length() < 8) {
             throw new ValidationException("Mật khẩu phải có ít nhất 8 ký tự");
         }
 
-       KhachHang khachHang = new KhachHang();
-       khachHang.setEmail(signUpRequest.getEmail());
-       khachHang.setTrangThai(true);
-       khachHangRepo.save(khachHang);
+        KhachHang khachHang = new KhachHang();
+        khachHang.setEmail(signUpRequest.getEmail());
+        khachHang.setTrangThai(true);
+        khachHangRepo.save(khachHang);
 
-       TaiKhoan taiKhoan = new TaiKhoan();
-       taiKhoan.setEmail(signUpRequest.getEmail());
-       taiKhoan.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
-       taiKhoan.setTrangThai(true);
-       taiKhoan.setIdKhachHang(khachHang);
-       taiKhoanRepo.save(taiKhoan);
+        TaiKhoan taiKhoan = new TaiKhoan();
+        taiKhoan.setEmail(signUpRequest.getEmail());
+        taiKhoan.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
+        taiKhoan.setTrangThai(true);
+        taiKhoan.setIdKhachHang(khachHang);
+        taiKhoan.setChucVu(Roles.KHACHHANG.name());
+        String subject = "Xin chào, bạn đã đăng ký thành công tài khoản. ";
+        emailService.sendEmailPasword(taiKhoan.getEmail(), subject, signUpRequest.getPassword());
+        taiKhoanRepo.save(taiKhoan);
 
         return "Đăng ký thành công";
     }
+
+    @Override
+    public boolean singIn(LoginRequest loginRequest) {
+        TaiKhoan taiKhoan = taiKhoanRepo.findByEmail(loginRequest.getEmail());
+        if (taiKhoan == null) {
+            throw new AppException(ErrorCode.PASSWORD_OR_EMAIL_FALSE);
+        }
+        if (!passwordEncoder.matches(loginRequest.getPassword(), taiKhoan.getPassword()) && taiKhoan != null) {
+            throw new AppException(ErrorCode.PASSWORD_OR_EMAIL_FALSE);
+        }
+        return true;
+    }
+
+
 }

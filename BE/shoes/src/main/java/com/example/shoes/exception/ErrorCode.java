@@ -15,7 +15,7 @@ public enum ErrorCode {
     UNAUTHORIZED(1007,"you do not have pemision",HttpStatus.FORBIDDEN),
     INVALID_DOB(1008,"Your age must be at {min}",HttpStatus.BAD_REQUEST),
     INVALID_CREDENTIALS(1009,"In valid credentials",HttpStatus.BAD_REQUEST),
-    PASSWORD_EXITED(1010,"PASSWORD EXID",HttpStatus.BAD_REQUEST);
+    PASSWORD_OR_EMAIL_FALSE(1010,"Tài khoản hoặc mật khẩu không đúng ",HttpStatus.BAD_REQUEST);
 
     private int code;
     private String message;
