@@ -3,16 +3,21 @@ import App from "./App.jsx";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import SignUp from "./pages/client/SignUp.jsx";
-import VerifyEmail from "./pages/client/Verify-Otp.jsx";
+import Login from "./pages/client/Login.jsx";
+import ResetPass from "./pages/client/ResetPass.jsx";
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/signup",
     element: <SignUp></SignUp>,
   },
   {
-    path: "/verify-otp",
-    element: <VerifyEmail></VerifyEmail>,
+    path: "/login",
+    element: <Login></Login>,
+  },
+  {
+    path: "/resetpass",
+    element: <ResetPass></ResetPass>,
   },
 ]);
 

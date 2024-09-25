@@ -1,5 +1,6 @@
 package com.example.shoes.dto.taikhoan.request;
 
+import com.example.shoes.enums.Roles;
 import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,6 +17,8 @@ public class TaiKhoanRequest {
     private String password;
 
     private Integer idKhachHang;
+
+    private Roles roles;
 
    private Boolean trangThai;
 }
