@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const SignUp = () => {
+const Login = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    confirmPassword: "",
   });
 
   const [error, setError] = useState("");
@@ -22,14 +21,8 @@ const SignUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match!");
-      return;
-    }
-
     try {
-      // eslint-disable-next-line no-unused-vars
-      const response = await fetch("http://localhost:8080/auth/signup", {
+      const response = await fetch("http://localhost:8080/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -38,26 +31,32 @@ const SignUp = () => {
           email: formData.email,
           password: formData.password,
         }),
-      }).then((response) => {
-        if (!response.ok) {
-          return response.json().then((errorData) => {
-            throw new Error(errorData.message);
-          });
-        }
       });
-      setError("");
-      navigate("/login");
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Login failed!");
+      }
+
+      const data = await response.json();
+      if (data.result) {
+        setError("");
+        navigate("/home");
+      } else {
+        throw new Error("Login failed!");
+      }
     } catch (error) {
       setError(error.message);
     }
   };
+
   return (
     <div className="flex h-screen items-center justify-center bg-gray-100">
       <form
         onSubmit={handleSubmit}
         className="w-96 rounded-lg bg-white p-8 shadow-lg"
       >
-        <h2 className="mb-6 text-center text-2xl font-bold">Register</h2>
+        <h2 className="mb-6 text-center text-2xl font-bold">Login</h2>
 
         <div className="mb-4">
           <label className="block text-gray-700">Email</label>
@@ -83,28 +82,17 @@ const SignUp = () => {
           />
         </div>
 
-        <div className="mb-4">
-          <label className="block text-gray-700">Confirm Password</label>
-          <input
-            type="password"
-            name="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            className="mt-2 w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-        </div>
-
         {error && <p className="mb-4 text-sm text-red-500">{error}</p>}
 
         <button
           type="submit"
           className="w-full rounded-lg bg-blue-500 py-2 text-white transition duration-200 hover:bg-blue-600"
         >
-          Register
+          Login
         </button>
       </form>
     </div>
   );
 };
-export default SignUp;
+
+export default Login;
