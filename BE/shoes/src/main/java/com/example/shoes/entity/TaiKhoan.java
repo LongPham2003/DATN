@@ -2,6 +2,7 @@ package com.example.shoes.entity;
 
 import jakarta.persistence.*;
 
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,6 +30,7 @@ public class TaiKhoan {
     @Column(name = "email")
     private String email;
 
+    @Size(min = 8, message = "Mật khẩu phải có ít nhất 8 ký tự")
     @Column(name = "password")
     private String password;
 

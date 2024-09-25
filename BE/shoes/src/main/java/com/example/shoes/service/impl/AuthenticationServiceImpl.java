@@ -8,6 +8,7 @@ import com.example.shoes.exception.ErrorCode;
 import com.example.shoes.repository.KhachHangRepo;
 import com.example.shoes.repository.TaiKhoanRepo;
 import com.example.shoes.service.AuthenticationService;
+import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
        if(taiKhoanRepo.existsByEmail(signUpRequest.getEmail())){
            throw  new AppException(ErrorCode.USER_NOT_EXISTED);
        }
+        if (signUpRequest.getPassword().length() < 8) {
+            throw new ValidationException("Mật khẩu phải có ít nhất 8 ký tự");
+        }
 
        KhachHang khachHang = new KhachHang();
        khachHang.setEmail(signUpRequest.getEmail());
@@ -41,6 +45,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
        taiKhoan.setEmail(signUpRequest.getEmail());
        taiKhoan.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
        taiKhoan.setTrangThai(true);
+       taiKhoan.setIdKhachHang(khachHang);
        taiKhoanRepo.save(taiKhoan);
 
         return "Đăng ký thành công";
