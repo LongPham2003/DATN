@@ -13,16 +13,15 @@ import lombok.Setter;
 public class KichThuoc {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     private Integer id;
 
-    @Size(max = 50)
     @NotNull
-    @Column(name = "kich_thuoc", nullable = false, length = 50)
+    @Column(name = "kich_thuoc")
     private String kichThuoc;
 
     @NotNull
-    @Column(name = "trang_thai", nullable = false)
-    private Boolean trangThai = false;
+    @Column(name = "trang_thai")
+    private Boolean trangThai;
 
 }

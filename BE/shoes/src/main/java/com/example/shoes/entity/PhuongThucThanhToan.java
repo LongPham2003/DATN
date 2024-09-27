@@ -2,7 +2,6 @@ package com.example.shoes.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,16 +12,15 @@ import lombok.Setter;
 public class PhuongThucThanhToan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_hoa_don")
     private HoaDon idHoaDon;
 
-    @Size(max = 255)
     @NotNull
-    @Column(name = "ten_phuong_thuc", nullable = false)
+    @Column(name = "ten_phuong_thuc")
     private String tenPhuongThuc;
 
     @Lob

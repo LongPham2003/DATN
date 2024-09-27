@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 @Table(name = "gio_hang_chi_tiet")
 public class GioHangChiTiet {
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -25,11 +25,11 @@ public class GioHangChiTiet {
     private SanPhamChiTiet idSanPhamChiTiet;
 
     @NotNull
-    @Column(name = "so_luong", nullable = false)
+    @Column(name = "so_luong")
     private Integer soLuong;
 
     @NotNull
-    @Column(name = "don_gia", nullable = false, precision = 10, scale = 2)
+    @Column(name = "don_gia")
     private BigDecimal donGia;
 
 }

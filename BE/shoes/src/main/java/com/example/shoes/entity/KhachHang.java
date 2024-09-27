@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.util.Date;
 
 @Getter
@@ -36,13 +35,13 @@ public class KhachHang {
     @Column(name = "gioi_tinh", length = 10)
     private String gioiTinh;
 
-    @Column(name = "ngay_tao")
-    private LocalDate ngayTao;
-
-    @Column(name = "ngay_cap_nhat")
-    private LocalDate ngayCapNhat;
 
     @Column(name = "trang_thai")
     private Boolean trangThai;
+
+    @OneToOne
+    @JoinColumn(name = "id_tai_khoan",referencedColumnName = "id")
+    private TaiKhoan taiKhoan;
+
 
 }

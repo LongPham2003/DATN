@@ -22,8 +22,6 @@ public class TaiKhoanServiceImpl implements TaikhoanService {
             TaiKhoanResponse taiKhoanResponse = new TaiKhoanResponse();
             taiKhoanResponse.setId(taiKhoan.getId());
             taiKhoanResponse.setEmail(taiKhoan.getEmail());
-            taiKhoanResponse.setChucVu(taiKhoan.getChucVu());
-            taiKhoanResponse.setTenDangNhap(taiKhoan.getTenDangNhap());
             responseList.add(taiKhoanResponse);
         }
         return responseList;

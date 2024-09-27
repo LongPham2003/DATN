@@ -2,7 +2,6 @@ package com.example.shoes.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,7 +15,7 @@ import java.time.LocalDate;
 public class HoaDon {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -31,45 +30,41 @@ public class HoaDon {
     @JoinColumn(name = "id_phieu_giam_gia")
     private PhieuGiamGia idPhieuGiamGia;
 
-    @Size(max = 20)
     @NotNull
-    @Column(name = "so_dien_thoai", nullable = false, length = 20)
+    @Column(name = "so_dien_thoai")
     private String soDienThoai;
 
-    @Size(max = 255)
     @Column(name = "dia_chi_giao_hang")
     private String diaChiGiaoHang;
 
     @NotNull
-    @Column(name = "tong_tien", nullable = false, precision = 10, scale = 2)
+    @Column(name = "tong_tien")
     private BigDecimal tongTien;
 
-    @Column(name = "tien_duoc_giam", precision = 10, scale = 2)
+    @Column(name = "tien_duoc_giam")
     private BigDecimal tienDuocGiam;
 
     @NotNull
-    @Column(name = "tien_phai_thanh_toan", nullable = false, precision = 10, scale = 2)
+    @Column(name = "tien_phai_thanh_toan")
     private BigDecimal tienPhaiThanhToan;
 
-    @Size(max = 255)
     @NotNull
-    @Column(name = "phuong_thuc_thanh_toan", nullable = false)
+    @Column(name = "phuong_thuc_thanh_toan")
     private String phuongThucThanhToan;
 
-    @Size(max = 255)
     @NotNull
-    @Column(name = "phuong_thuc_giao_hang", nullable = false)
+    @Column(name = "phuong_thuc_giao_hang")
     private String phuongThucGiaoHang;
 
     @NotNull
-    @Column(name = "ngay_tao", nullable = false)
+    @Column(name = "ngay_tao")
     private LocalDate ngayTao;
 
     @Column(name = "ngay_sua")
     private LocalDate ngaySua;
 
     @NotNull
-    @Column(name = "trang_thai", nullable = false)
-    private Boolean trangThai = false;
+    @Column(name = "trang_thai")
+    private Boolean trangThai;
 
 }

@@ -12,7 +12,7 @@ import lombok.Setter;
 public class GioHang {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -20,7 +20,7 @@ public class GioHang {
     private KhachHang idKhachHang;
 
     @NotNull
-    @Column(name = "tong_so_luong", nullable = false)
+    @Column(name = "tong_so_luong")
     private Integer tongSoLuong;
 
 }

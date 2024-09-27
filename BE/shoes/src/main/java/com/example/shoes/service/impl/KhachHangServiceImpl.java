@@ -27,10 +27,7 @@ public class KhachHangServiceImpl implements KhachHangService {
           khachHangResponse.setNgaySinh(khachHang.getNgaySinh());
           khachHangResponse.setDiaChiMacDinh(khachHang.getDiaChiMacDinh());
           khachHangResponse.setGioiTinh(khachHang.getGioiTinh());
-          khachHangResponse.setNgayTao(khachHang.getNgayTao());
-          khachHangResponse.setNgayCapNhat(khachHang.getNgayCapNhat());
           khachHangResponse.setTrangThai(khachHang.getTrangThai());
-
           khachHangResponses.add(khachHangResponse);
       }
 
