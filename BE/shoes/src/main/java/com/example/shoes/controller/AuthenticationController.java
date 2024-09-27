@@ -1,5 +1,6 @@
 package com.example.shoes.controller;
 
+import com.example.shoes.dto.authentication.request.DoiMatKhauRequest;
 import com.example.shoes.dto.authentication.request.LoginRequest;
 import com.example.shoes.dto.authentication.request.ResetPass;
 import com.example.shoes.dto.authentication.request.SignUpRequest;
@@ -37,6 +38,12 @@ public class AuthenticationController {
     public ApiResponse<String> resetpass(@RequestBody ResetPass resetPass) {
         return ApiResponse.<String>builder()
                 .result(authenticationService.resetPass(resetPass)).build();
+    }
+
+    @PostMapping("/doimatkhau")
+    public ApiResponse<String> doiMatKhau(@RequestBody DoiMatKhauRequest request) {
+        return ApiResponse.<String>builder()
+                .result(authenticationService.doiMatKhau(request)).build();
     }
 
 }

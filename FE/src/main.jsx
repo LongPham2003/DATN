@@ -2,9 +2,10 @@ import { createRoot } from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import SignUp from "./pages/client/SignUp.jsx";
-import Login from "./pages/client/Login.jsx";
-import ResetPass from "./pages/client/ResetPass.jsx";
+import SignUp from "./pages/client/auth/SignUp.jsx";
+import Login from "./pages/client/auth/Login.jsx";
+import ResetPass from "./pages/client/auth/ResetPass.jsx";
+import DoiMatKhau from "./pages/client/auth/DoiMatKhau.jsx";
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
   {
     path: "/resetpass",
     element: <ResetPass></ResetPass>,
+  },
+  {
+    path: "/doimatkhau",
+    element: <DoiMatKhau></DoiMatKhau>,
   },
 ]);
 
