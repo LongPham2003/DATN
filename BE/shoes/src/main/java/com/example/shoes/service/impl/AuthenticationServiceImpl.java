@@ -1,5 +1,6 @@
 package com.example.shoes.service.impl;
 
+import com.example.shoes.dto.authentication.request.DoiMatKhauRequest;
 import com.example.shoes.dto.authentication.request.LoginRequest;
 import com.example.shoes.dto.authentication.request.ResetPass;
 import com.example.shoes.dto.authentication.request.SignUpRequest;
@@ -84,9 +85,26 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         taiKhoan.setPassword(passwordEncoder.encode(password));
 
-        String subject = "Bạn đã đổi mật khẩu thành công. ";
+        String subject = "Mật khẩu của bạn là  . ";
         emailService.sendEmailPasword(resetPass.getEmail(), subject, password);
         taiKhoanRepo.save(taiKhoan);
+        return "Thành công";
+    }
+
+    @Override
+    public String doiMatKhau(DoiMatKhauRequest doiMatKhauRequest) {
+        TaiKhoan taiKhoan = taiKhoanRepo.findByEmail(doiMatKhauRequest.getEmail());
+        if (taiKhoan == null) {
+            throw new AppException(ErrorCode.USER_NOT_EXISTED);
+        }
+        if (passwordEncoder.matches(doiMatKhauRequest.getPassword(), taiKhoan.getPassword())&&taiKhoan!=null) {
+            taiKhoan.setPassword(passwordEncoder.encode(doiMatKhauRequest.getNewPassword()));
+            taiKhoanRepo.save(taiKhoan);
+        }else {
+            throw  new AppException(ErrorCode.PASSWORD_OR_EMAIL_FALSE);
+        }
+
+
         return "Thành công";
     }
 
@@ -97,7 +115,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         SecureRandom random = new SecureRandom();
         StringBuilder password = new StringBuilder();
 
-        // Tạo mật khẩu dài 10 ký tự (có thể điều chỉnh)
         for (int i = 0; i < 9; i++) {
             int index = random.nextInt(chars.length());
             password.append(chars.charAt(index));

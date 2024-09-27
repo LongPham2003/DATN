@@ -19,7 +19,8 @@ import java.util.Arrays;
 @EnableWebSecurity
 public class SecurityConfiguration {
 
-    private final String[] PUBLIC_ENDPOINTS = {"/khachhang/getall","/taikhoan/getall","/auth/signup","/auth/login","/auth/resetpass"};
+    private final String[] PUBLIC_ENDPOINTS = {"/khachhang/getall","/taikhoan/getall","/auth/signup","/auth/login",
+            "/auth/resetpass","/auth/doimatkhau"};
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
