@@ -1,14 +1,16 @@
 package com.example.shoes.dto.authentication.request;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
-@Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class DoiMatKhauRequest {
-    String email;
-    String password;
-    String newPassword;
+    private String email;
+    private String password;
+    private String newPassword;
 }
