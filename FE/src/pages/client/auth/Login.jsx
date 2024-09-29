@@ -56,7 +56,7 @@ const Login = () => {
         onSubmit={handleSubmit}
         className="w-96 rounded-lg bg-white p-8 shadow-lg"
       >
-        <h2 className="mb-6 text-center text-2xl font-bold">Login</h2>
+        <h2 className="mb-6 text-center text-2xl font-bold">Đăng nhập</h2>
 
         <div className="mb-4">
           <label className="block text-gray-700">Email</label>
@@ -88,14 +88,11 @@ const Login = () => {
           type="submit"
           className="w-full rounded-lg bg-blue-500 py-2 text-white transition duration-200 hover:bg-blue-600"
         >
-          Login
+          Đăng nhập
         </button>
         <div className="flex gap-3">
           <button className="mt-3 w-full rounded-lg bg-blue-500 py-2 text-white transition duration-200 hover:bg-blue-600">
             <Link to={"/signup"}>Đăng ký</Link>
-          </button>
-          <button className="mt-3 w-full rounded-lg bg-blue-500 py-2 text-white transition duration-200 hover:bg-blue-600">
-            <Link to={"/doimatkhau"}>Đổi mật khẩu</Link>
           </button>
         </div>
         <Link to={"/resetpass"}>Quên mật khẩu?</Link>
