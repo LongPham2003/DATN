@@ -1,5 +1,6 @@
 package com.example.shoes.entity;
 
+import com.example.shoes.enums.Roles;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,7 +35,6 @@ public class KhachHang {
 
     @Column(name = "gioi_tinh", length = 10)
     private String gioiTinh;
-
 
     @Column(name = "trang_thai")
     private Boolean trangThai;

@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatusCode;
 public enum ErrorCode {
     UNCATEGORIZED_EXCEPTION(9999, "Uncategorized error",HttpStatus.INTERNAL_SERVER_ERROR),
     INVALID_KEY(1001, "Uncategorized error", HttpStatus.BAD_REQUEST),
-    USER_EXISTED(1002, "USER EXISTED", HttpStatus.BAD_REQUEST),
+    USER_EXISTED(1002, "Người dùng đã tồn tại", HttpStatus.BAD_REQUEST),
     USERNAME_INVALID(1003, "password must be at character 3 ", HttpStatus.BAD_REQUEST),
     PASSWORD_INVALID(1004, "password must be at character 8 ", HttpStatus.BAD_REQUEST),
     USER_NOT_EXISTED(1005, "USER not existead ", HttpStatus.NOT_FOUND),

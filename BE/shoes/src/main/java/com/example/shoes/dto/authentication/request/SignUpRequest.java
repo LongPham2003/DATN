@@ -19,6 +19,9 @@ public class SignUpRequest {
 
     private Boolean trangThai;
 
+    private String hoTen;
+
+
 
 
 }
