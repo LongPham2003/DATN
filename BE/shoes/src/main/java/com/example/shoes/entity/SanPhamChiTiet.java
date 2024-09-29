@@ -15,7 +15,7 @@ import java.time.LocalDate;
 public class SanPhamChiTiet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -43,22 +43,22 @@ public class SanPhamChiTiet {
     private DeGiay idDeGiay;
 
     @NotNull
-    @Column(name = "don_gia", nullable = false, precision = 10, scale = 2)
+    @Column(name = "don_gia")
     private BigDecimal donGia;
 
     @NotNull
-    @Column(name = "so_luong", nullable = false)
+    @Column(name = "so_luong")
     private Integer soLuong;
 
     @NotNull
-    @Column(name = "ngay_tao", nullable = false)
+    @Column(name = "ngay_tao")
     private LocalDate ngayTao;
 
     @Column(name = "ngay_cap_nhat")
     private LocalDate ngayCapNhat;
 
     @NotNull
-    @Column(name = "trang_thai", nullable = false)
-    private Boolean trangThai = false;
+    @Column(name = "trang_thai")
+    private Boolean trangThai;
 
 }

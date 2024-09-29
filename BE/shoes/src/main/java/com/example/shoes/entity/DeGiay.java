@@ -13,16 +13,16 @@ import lombok.Setter;
 public class DeGiay {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     private Integer id;
 
     @Size(max = 255)
     @NotNull
-    @Column(name = "ten", nullable = false)
+    @Column(name = "ten")
     private String ten;
 
     @NotNull
-    @Column(name = "trang_thai", nullable = false)
-    private Boolean trangThai = false;
+    @Column(name = "trang_thai")
+    private Boolean trangThai;
 
 }

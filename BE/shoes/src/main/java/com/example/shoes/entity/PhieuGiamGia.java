@@ -2,7 +2,6 @@ package com.example.shoes.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,22 +15,21 @@ import java.time.LocalDate;
 public class PhieuGiamGia {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     private Integer id;
 
-    @Size(max = 255)
     @NotNull
-    @Column(name = "ten_voucher", nullable = false)
+    @Column(name = "ten_voucher")
     private String tenVoucher;
 
     @Lob
     @Column(name = "dieu_kien_giam_gia")
     private String dieuKienGiamGia;
 
-    @Column(name = "muc_giam", precision = 10, scale = 2)
+    @Column(name = "muc_giam")
     private BigDecimal mucGiam;
 
-    @Column(name = "giam_toi_da", precision = 10, scale = 2)
+    @Column(name = "giam_toi_da")
     private BigDecimal giamToiDa;
 
     @Column(name = "so_luong")
@@ -44,7 +42,7 @@ public class PhieuGiamGia {
     private LocalDate ngayKetThuc;
 
     @NotNull
-    @Column(name = "trang_thai", nullable = false)
-    private Boolean trangThai = false;
+    @Column(name = "trang_thai")
+    private Boolean trangThai;
 
 }

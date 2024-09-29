@@ -28,13 +28,12 @@ public class NhanVien {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "ngay_tao")
-    private LocalDate ngayTao;
-
-    @Column(name = "ngay_cap_nhat")
-    private LocalDate ngayCapNhat;
 
     @Column(name = "trang_thai")
     private Boolean trangThai = false;
+
+    @OneToOne
+    @JoinColumn(name = "id_tai_khoan",referencedColumnName = "id")
+    private TaiKhoan taiKhoan;
 
 }

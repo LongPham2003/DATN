@@ -15,7 +15,7 @@ import java.time.Instant;
 public class LichSuHoaDon {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -26,11 +26,10 @@ public class LichSuHoaDon {
     @Column(name = "mo_ta")
     private String moTa;
 
-    @ColumnDefault("CURRENT_TIMESTAMP")
+
     @Column(name = "thoi_gian")
     private Instant thoiGian;
 
-    @Size(max = 255)
     @Column(name = "nguoi_thuc_hien")
     private String nguoiThucHien;
 

@@ -2,7 +2,6 @@ package com.example.shoes.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,40 +12,35 @@ import lombok.Setter;
 public class DiaChi {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_khach_hang")
     private KhachHang idKhachHang;
 
-    @Size(max = 255)
     @NotNull
-    @Column(name = "ten", nullable = false)
+    @Column(name = "ten")
     private String ten;
 
-    @Size(max = 20)
     @NotNull
-    @Column(name = "sdt", nullable = false, length = 20)
+    @Column(name = "sdt")
     private String sdt;
 
-    @Size(max = 255)
     @NotNull
-    @Column(name = "tinh_thanh_pho", nullable = false)
+    @Column(name = "tinh_thanh_pho")
     private String tinhThanhPho;
 
-    @Size(max = 255)
     @NotNull
-    @Column(name = "huyen_quan", nullable = false)
+    @Column(name = "huyen_quan")
     private String huyenQuan;
 
-    @Size(max = 255)
     @NotNull
-    @Column(name = "xa_phuong", nullable = false)
+    @Column(name = "xa_phuong")
     private String xaPhuong;
 
     @NotNull
-    @Column(name = "dia_chi_mac_dinh", nullable = false)
-    private Boolean diaChiMacDinh = false;
+    @Column(name = "dia_chi_mac_dinh")
+    private Boolean diaChiMacDinh;
 
 }

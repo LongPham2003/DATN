@@ -27,9 +27,6 @@ public class KhachHangRequest {
 
     private String gioiTinh;
 
-    private LocalDate ngayTao;
-
-    private LocalDate ngayCapNhat;
 
     private Boolean trangThai;
 

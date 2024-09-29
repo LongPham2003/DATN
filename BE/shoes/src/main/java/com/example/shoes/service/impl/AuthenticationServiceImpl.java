@@ -45,17 +45,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new ValidationException("Mật khẩu phải có ít nhất 8 ký tự");
         }
 
-        KhachHang khachHang = new KhachHang();
-        khachHang.setEmail(signUpRequest.getEmail());
-        khachHang.setTrangThai(true);
-        khachHangRepo.save(khachHang);
+
 
         TaiKhoan taiKhoan = new TaiKhoan();
         taiKhoan.setEmail(signUpRequest.getEmail());
         taiKhoan.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
         taiKhoan.setTrangThai(true);
-        taiKhoan.setIdKhachHang(khachHang);
-        taiKhoan.setChucVu(Roles.KHACHHANG.name());
         String subject = "Xin chào, bạn đã đăng ký thành công tài khoản. ";
         emailService.sendEmailPasword(taiKhoan.getEmail(), subject, signUpRequest.getPassword());
         taiKhoanRepo.save(taiKhoan);

@@ -13,12 +13,12 @@ import lombok.Setter;
 public class HinhAnh {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     private Integer id;
 
     @Size(max = 255)
     @NotNull
-    @Column(name = "ten_anh", nullable = false)
+    @Column(name = "ten_anh")
     private String tenAnh;
 
     @Column(name = "du_lieu_anh")
@@ -29,7 +29,7 @@ public class HinhAnh {
     private SanPhamChiTiet idSanPhamChiTiet;
 
     @NotNull
-    @Column(name = "trang_thai", nullable = false)
-    private Boolean trangThai = false;
+    @Column(name = "trang_thai")
+    private Boolean trangThai ;
 
 }

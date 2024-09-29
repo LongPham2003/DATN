@@ -29,9 +29,7 @@ public class KhachHangResponse {
 
     private String gioiTinh;
 
-    private LocalDate ngayTao;
 
-    private LocalDate ngayCapNhat;
 
-    private Boolean trangThai = false;
+    private Boolean trangThai ;
 }
