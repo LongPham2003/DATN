@@ -73,7 +73,7 @@ const SignUp = () => {
 
         <div className="mb-4">
           <label className="block text-gray-700">Password</label>
-          <inputss
+          <input
             type="password"
             name="password"
             value={formData.password}
