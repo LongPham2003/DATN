@@ -4,10 +4,14 @@ import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import SignUp from "./pages/client/auth/SignUp.jsx";
 import Login from "./pages/client/auth/Login.jsx";
-import ResetPass from "./pages/client/auth/ResetPass.jsx";
+import ResetPass from "./pages/client/auth/QuenMatKhau.jsx";
 import DoiMatKhau from "./pages/client/auth/DoiMatKhau.jsx";
 
 const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <App></App>,
+  },
   {
     path: "/signup",
     element: <SignUp></SignUp>,

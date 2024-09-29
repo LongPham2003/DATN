@@ -14,5 +14,7 @@ public class TaiKhoanResponse {
 
     private String email;
 
+    private Boolean trangThai;
+
 
 }

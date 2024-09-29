@@ -17,4 +17,5 @@ public class TaiKhoanRequest {
     private String password;
 
     private Boolean trangThai;
+
 }

@@ -15,10 +15,13 @@ import com.example.shoes.repository.TaiKhoanRepo;
 import com.example.shoes.service.AuthenticationService;
 import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
+import java.util.Optional;
 
 
 @Service
@@ -39,13 +42,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public String signUp(SignUpRequest signUpRequest) {
         if (taiKhoanRepo.existsByEmail(signUpRequest.getEmail())) {
-            throw new AppException(ErrorCode.USER_NOT_EXISTED);
+            throw new AppException(ErrorCode.USER_EXISTED);
         }
         if (signUpRequest.getPassword().length() < 8) {
             throw new ValidationException("Mật khẩu phải có ít nhất 8 ký tự");
         }
-
-
 
         TaiKhoan taiKhoan = new TaiKhoan();
         taiKhoan.setEmail(signUpRequest.getEmail());
@@ -54,6 +55,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         String subject = "Xin chào, bạn đã đăng ký thành công tài khoản. ";
         emailService.sendEmailPasword(taiKhoan.getEmail(), subject, signUpRequest.getPassword());
         taiKhoanRepo.save(taiKhoan);
+
+        KhachHang khachHang = new KhachHang();
+        khachHang.setEmail(signUpRequest.getEmail());
+        khachHang.setHoTen(signUpRequest.getHoTen());
+        khachHang.setTaiKhoan(taiKhoan);
+        khachHangRepo.save(khachHang);
+
 
         return "Đăng ký thành công";
     }
@@ -80,7 +88,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         taiKhoan.setPassword(passwordEncoder.encode(password));
 
-        String subject = "Mật khẩu của bạn là  . ";
+        String subject = "Mật khẩu của bạn là . ";
         emailService.sendEmailPasword(resetPass.getEmail(), subject, password);
         taiKhoanRepo.save(taiKhoan);
         return "Thành công";
@@ -92,13 +100,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (taiKhoan == null) {
             throw new AppException(ErrorCode.USER_NOT_EXISTED);
         }
-        if (passwordEncoder.matches(doiMatKhauRequest.getPassword(), taiKhoan.getPassword())&&taiKhoan!=null) {
+        if (passwordEncoder.matches(doiMatKhauRequest.getPassword(), taiKhoan.getPassword()) && taiKhoan != null) {
             taiKhoan.setPassword(passwordEncoder.encode(doiMatKhauRequest.getNewPassword()));
             taiKhoanRepo.save(taiKhoan);
-        }else {
-            throw  new AppException(ErrorCode.PASSWORD_OR_EMAIL_FALSE);
+        } else {
+            throw new AppException(ErrorCode.PASSWORD_OR_EMAIL_FALSE);
         }
-
 
         return "Thành công";
     }

@@ -1,10 +1,10 @@
 package com.example.shoes.entity;
 
+import com.example.shoes.enums.Roles;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -29,8 +29,12 @@ public class NhanVien {
     private String email;
 
 
+    @Enumerated(EnumType.STRING)
+    private Roles roles;
+
+
     @Column(name = "trang_thai")
-    private Boolean trangThai = false;
+    private Boolean trangThai;
 
     @OneToOne
     @JoinColumn(name = "id_tai_khoan",referencedColumnName = "id")
