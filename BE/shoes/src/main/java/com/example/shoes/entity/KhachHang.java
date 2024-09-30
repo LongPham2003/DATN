@@ -1,14 +1,16 @@
 package com.example.shoes.entity;
 
-import com.example.shoes.enums.Roles;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "khach_hang")
 public class KhachHang {
@@ -42,6 +44,9 @@ public class KhachHang {
     @OneToOne
     @JoinColumn(name = "id_tai_khoan",referencedColumnName = "id")
     private TaiKhoan taiKhoan;
+
+    @OneToMany(mappedBy = "khachHang",cascade = CascadeType.ALL)
+    private List<DiaChi> diaChis;
 
 
 }

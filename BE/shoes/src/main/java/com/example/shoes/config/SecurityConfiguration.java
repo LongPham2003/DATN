@@ -19,14 +19,16 @@ import java.util.Arrays;
 @EnableWebSecurity
 public class SecurityConfiguration {
 
-    private final String[] PUBLIC_ENDPOINTS = {"/khachhang/getall","/taikhoan/getall","/auth/signup","/auth/login",
-            "/auth/resetpass","/auth/doimatkhau"};
+//    private final String[] PUBLIC_ENDPOINTS = {"/khachhang/getall","/taikhoan/getall","/auth/signup","/auth/login",
+//            "/auth/resetpass","/auth/doimatkhau"};
+
+    private final String[] PUBLIC_ENDPOINTS = {};
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests(request ->
-                request.requestMatchers( PUBLIC_ENDPOINTS).permitAll()
-                        .anyRequest().authenticated());
+                request.requestMatchers( PUBLIC_ENDPOINTS).authenticated()
+                        .anyRequest().permitAll());
 
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
         return httpSecurity.build();

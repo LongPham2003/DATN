@@ -1,8 +1,5 @@
 package com.example.shoes.dto.taikhoan.response;
 
-import com.example.shoes.entity.KhachHang;
-import com.example.shoes.entity.NhanVien;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 

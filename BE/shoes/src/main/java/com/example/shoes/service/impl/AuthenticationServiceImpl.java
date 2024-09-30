@@ -75,6 +75,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (!passwordEncoder.matches(loginRequest.getPassword(), taiKhoan.getPassword()) && taiKhoan != null) {
             throw new AppException(ErrorCode.PASSWORD_OR_EMAIL_FALSE);
         }
+        if(!taiKhoan.getTrangThai()){
+            throw new AppException(ErrorCode.PASSWORD_OR_EMAIL_FALSE);
+        }
         return true;
     }
 
@@ -121,7 +124,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             int index = random.nextInt(chars.length());
             password.append(chars.charAt(index));
         }
-
+        
         return password.toString();
     }
 
