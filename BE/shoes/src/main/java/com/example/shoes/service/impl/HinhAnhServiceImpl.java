@@ -8,6 +8,7 @@ import com.example.shoes.exception.ErrorCode;
 import com.example.shoes.repository.HinhAnhRepo;
 import com.example.shoes.service.HinhAnhService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,8 +21,8 @@ public class HinhAnhServiceImpl implements HinhAnhService {
 
     @Override
     public List<HinhAnhResponse> findAll() {
-        return hinhAnhRepo.findAll()
-                .stream()
+        List<HinhAnh> list =hinhAnhRepo.findAll(Sort.by(Sort.Direction.DESC,"id"));
+        return list.stream()
                 .map(this::convert)
                 .collect(Collectors.toList());
     }

@@ -8,6 +8,7 @@ import com.example.shoes.exception.ErrorCode;
 import com.example.shoes.repository.ChatLieuRepo;
 import com.example.shoes.service.ChatLieuService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,8 +22,8 @@ public class ChatLieuServiceImpl implements ChatLieuService {
 
     @Override
     public List<ChatLieuResponse> findAll() {
-        return chatLieuRepo.findAll()
-                .stream()
+        List<ChatLieu> chatLieuList = chatLieuRepo.findAll(Sort.by(Sort.Direction.DESC, "id"));
+        return chatLieuList.stream()
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());
     }

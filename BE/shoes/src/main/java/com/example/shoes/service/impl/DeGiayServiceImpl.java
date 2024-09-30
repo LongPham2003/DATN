@@ -8,6 +8,7 @@ import com.example.shoes.exception.ErrorCode;
 import com.example.shoes.repository.DeGiayRepo;
 import com.example.shoes.service.DeGiayService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,8 +20,8 @@ public class DeGiayServiceImpl implements DeGiayService {
     private DeGiayRepo deGiayRepo;
     @Override
     public List<DeGiayResponse> findAll() {
-        return deGiayRepo.findAll()
-                .stream()
+        List<DeGiay> list =deGiayRepo.findAll(Sort.by(Sort.Direction.DESC,"id"));
+        return list.stream()
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());
     }
