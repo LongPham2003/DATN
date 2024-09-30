@@ -23,6 +23,7 @@ import {
   PercentBadgeIcon,
 } from "@heroicons/react/24/solid";
 import { ChevronRightIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
+import { Link } from "react-router-dom";
 // import { logoppng } from "./../../../logo";
 // Component Sidebar chính
 export function Sidebar() {
@@ -58,14 +59,16 @@ export function Sidebar() {
             />
           }
         >
-          <ListItem className="ml-3 h-[50px] p-0">
-            <ListItemPrefix>
-              <PresentationChartBarIcon className="h-5 w-5" />
-            </ListItemPrefix>
-            <Typography color="blue-gray" className="mr-auto font-normal">
-              Thống kê
-            </Typography>
-          </ListItem>
+          <Link to="/admin/thongke">
+            <ListItem className="ml-3 h-[50px] p-0">
+              <ListItemPrefix>
+                <PresentationChartBarIcon className="h-5 w-5" />
+              </ListItemPrefix>
+              <Typography color="blue-gray" className="mr-auto font-normal">
+                Thống kê
+              </Typography>
+            </ListItem>
+          </Link>
           {/* <AccordionBody className="py-1"></AccordionBody> */}
         </Accordion>
 
@@ -95,12 +98,14 @@ export function Sidebar() {
           <AccordionBody className="py-1">
             <List className="p-0">
               {/* Mục Sản phẩm */}
-              <ListItem>
-                <ListItemPrefix>
-                  <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
-                </ListItemPrefix>
-                Sản phẩm
-              </ListItem>
+              <Link to="/admin/sanpham">
+                <ListItem>
+                  <ListItemPrefix>
+                    <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
+                  </ListItemPrefix>
+                  Sản phẩm
+                </ListItem>
+              </Link>
               <hr />
               {/* Mục Thuộc tính */}
               <ListItem onClick={handleAttributeOpen}>
@@ -108,7 +113,7 @@ export function Sidebar() {
                   <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
                 </ListItemPrefix>
                 Thuộc tính
-                <ListItemSuffix>
+                <ListItemSuffix className="ml-32">
                   <ChevronDownIcon
                     strokeWidth={2.5}
                     className={`h-3 w-3 transition-transform ${openAttribute ? "rotate-180" : ""}`}
@@ -118,42 +123,54 @@ export function Sidebar() {
               {/* Submenu của Thuộc tính */}
               {openAttribute && (
                 <>
-                  <ListItem className="pl-8">
-                    <ListItemPrefix>
-                      <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
-                    </ListItemPrefix>
-                    Màu sắc
-                  </ListItem>
-                  <ListItem className="pl-8">
-                    <ListItemPrefix>
-                      <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
-                    </ListItemPrefix>
-                    Chất liệu
-                  </ListItem>
-                  <ListItem className="pl-8">
-                    <ListItemPrefix>
-                      <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
-                    </ListItemPrefix>
-                    Kích thước
-                  </ListItem>
-                  <ListItem className="pl-8">
-                    <ListItemPrefix>
-                      <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
-                    </ListItemPrefix>
-                    Thương hiệu
-                  </ListItem>
-                  <ListItem className="pl-8">
-                    <ListItemPrefix>
-                      <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
-                    </ListItemPrefix>
-                    Loại giày
-                  </ListItem>
-                  <ListItem className="pl-8">
-                    <ListItemPrefix>
-                      <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
-                    </ListItemPrefix>
-                    Đế giày
-                  </ListItem>
+                  <Link to="/admin/mausac">
+                    <ListItem className="pl-8">
+                      <ListItemPrefix>
+                        <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
+                      </ListItemPrefix>
+                      Màu sắc
+                    </ListItem>
+                  </Link>
+                  <Link to="/admin/chatlieu">
+                    <ListItem className="pl-8">
+                      <ListItemPrefix>
+                        <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
+                      </ListItemPrefix>
+                      Chất liệu
+                    </ListItem>
+                  </Link>
+                  <Link to="/admin/kichthuoc">
+                    <ListItem className="pl-8">
+                      <ListItemPrefix>
+                        <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
+                      </ListItemPrefix>
+                      Kích thước
+                    </ListItem>
+                  </Link>
+                  <Link to="/admin/thuonghieu">
+                    <ListItem className="pl-8">
+                      <ListItemPrefix>
+                        <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
+                      </ListItemPrefix>
+                      Thương hiệu
+                    </ListItem>
+                  </Link>
+                  <Link to="/admin/loaigiay">
+                    <ListItem className="pl-8">
+                      <ListItemPrefix>
+                        <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
+                      </ListItemPrefix>
+                      Loại giày
+                    </ListItem>
+                  </Link>
+                  <Link to="/admin/degiay">
+                    <ListItem className="pl-8">
+                      <ListItemPrefix>
+                        <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
+                      </ListItemPrefix>
+                      Đế giày
+                    </ListItem>
+                  </Link>
                 </>
               )}
             </List>
@@ -162,28 +179,34 @@ export function Sidebar() {
 
         {/* Phần Voucher */}
         <hr className="my-2 border-blue-gray-50" />
-        <ListItem>
-          <ListItemPrefix>
-            <PercentBadgeIcon className="h-5 w-5" />
-          </ListItemPrefix>
-          Voucher
-        </ListItem>
+        <Link to="/admin/voucher">
+          <ListItem>
+            <ListItemPrefix>
+              <PercentBadgeIcon className="h-5 w-5" />
+            </ListItemPrefix>
+            Voucher
+          </ListItem>
+        </Link>
 
         {/* Phần Profile (Nhân viên) */}
-        <ListItem>
-          <ListItemPrefix>
-            <UserCircleIcon className="h-5 w-5" />
-          </ListItemPrefix>
-          Nhan vien
-        </ListItem>
+        <Link to="/admin/nhanvien">
+          <ListItem>
+            <ListItemPrefix>
+              <UserCircleIcon className="h-5 w-5" />
+            </ListItemPrefix>
+            Nhan vien
+          </ListItem>
+        </Link>
 
         {/* Phần Settings (Khách hàng) */}
-        <ListItem>
-          <ListItemPrefix>
-            <Cog6ToothIcon className="h-5 w-5" />
-          </ListItemPrefix>
-          Khach hang
-        </ListItem>
+        <Link to="/admin/khachhang">
+          <ListItem>
+            <ListItemPrefix>
+              <Cog6ToothIcon className="h-5 w-5" />
+            </ListItemPrefix>
+            Khach hang
+          </ListItem>
+        </Link>
       </List>
 
       {/* Phần tên người dùng và Logout */}
