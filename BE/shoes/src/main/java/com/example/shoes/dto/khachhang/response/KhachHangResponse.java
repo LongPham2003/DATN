@@ -5,7 +5,6 @@ import jakarta.persistence.TemporalType;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.util.Date;
 
 @Getter
@@ -24,12 +23,9 @@ public class KhachHangResponse {
     @Temporal(TemporalType.DATE)
     private Date ngaySinh;
 
-
     private String diaChiMacDinh;
 
     private String gioiTinh;
-
-
 
     private Boolean trangThai ;
 }

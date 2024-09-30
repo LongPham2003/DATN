@@ -27,6 +27,7 @@ public class KhachHangRequest {
 
     private String gioiTinh;
 
+    private String matKhau;
 
     private Boolean trangThai;
 
