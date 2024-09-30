@@ -15,7 +15,11 @@ public enum ErrorCode {
     UNAUTHORIZED(1007,"you do not have pemision",HttpStatus.FORBIDDEN),
     INVALID_DOB(1008,"Your age must be at {min}",HttpStatus.BAD_REQUEST),
     INVALID_CREDENTIALS(1009,"In valid credentials",HttpStatus.BAD_REQUEST),
-    PASSWORD_OR_EMAIL_FALSE(1010,"Tài khoản hoặc mật khẩu không đúng ",HttpStatus.BAD_REQUEST);
+    PASSWORD_OR_EMAIL_FALSE(1010,"Tài khoản hoặc mật khẩu không đúng ",HttpStatus.BAD_REQUEST),
+    MATERIAL_NOT_FOUND(1005, "Không tìm thay chat lieu ", HttpStatus.NOT_FOUND),
+    SHOE_SOLE_NOT_FOUND(1005, "Không tìm thấy   de giay  ", HttpStatus.NOT_FOUND),
+    IMAGE_NOT_FOUND(1005, "Không tìm thấy  hinh anh  ", HttpStatus.NOT_FOUND)
+    ;
 
     private int code;
     private String message;

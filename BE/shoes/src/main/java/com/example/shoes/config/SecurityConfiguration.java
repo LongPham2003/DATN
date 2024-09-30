@@ -20,7 +20,7 @@ import java.util.Arrays;
 public class SecurityConfiguration {
 
     private final String[] PUBLIC_ENDPOINTS = {"/khachhang/getall","/taikhoan/getall","/auth/signup","/auth/login",
-            "/auth/resetpass","/auth/doimatkhau"};
+            "/auth/resetpass","/auth/doimatkhau","/api/chatlieu/**","/api/degiay/**","/api/hinhanh/**"};
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
