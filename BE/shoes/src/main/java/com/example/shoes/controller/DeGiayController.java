@@ -65,7 +65,7 @@ public class DeGiayController {
                 .build();
     }
     @GetMapping("/search")
-    public ApiResponse<List<DeGiayResponse>> searchChatLieu(
+    public ApiResponse<List<DeGiayResponse>> search(
             @RequestParam(value = "ten", required = false) String ten,
             @RequestParam(value = "trangThai", required = false) Boolean trangThai) {
         List<DeGiayResponse> deGiayResponses = deGiayService.search(ten, trangThai);

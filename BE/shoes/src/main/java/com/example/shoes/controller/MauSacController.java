@@ -1,5 +1,6 @@
 package com.example.shoes.controller;
 
+import com.example.shoes.dto.chatlieu.response.ChatLieuResponse;
 import com.example.shoes.dto.mausac.request.MauSacRequest;
 import com.example.shoes.dto.mausac.response.MauSacResponse;
 import com.example.shoes.exception.ApiResponse;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -59,6 +61,15 @@ public class MauSacController {
         mausacService.delete(id);
         return ApiResponse.<Void>builder()
                 .message("Xóa thành công")
+                .build();
+    }
+    @GetMapping("/search")
+    public ApiResponse<List<MauSacResponse>> search(
+            @RequestParam(value = "ten", required = false) String ten,
+            @RequestParam(value = "trangThai", required = false) Boolean trangThai) {
+        List<MauSacResponse> mauSacResponses = mausacService.search(ten,trangThai);
+        return ApiResponse.<List<MauSacResponse>>builder()
+                .result(mauSacResponses)
                 .build();
     }
 }
