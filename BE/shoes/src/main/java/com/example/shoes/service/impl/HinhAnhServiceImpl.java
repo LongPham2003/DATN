@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,22 +39,36 @@ public class HinhAnhServiceImpl implements HinhAnhService {
     public HinhAnhResponse create(HinhAnhRequest request) {
         HinhAnh hinhAnh = new HinhAnh();
         hinhAnh.setTenAnh(request.getTenAnh());
-        hinhAnh.setDuLieuAnh(request.getDuLieuAnh());
-        hinhAnh.setIdSanPhamChiTiet(hinhAnh.getIdSanPhamChiTiet());
+
+        String base64Data = request.getDuLieuAnhBase64();
+        if (base64Data != null && base64Data.startsWith("data:image/png;base64,")) {
+            base64Data = base64Data.substring("data:image/png;base64,".length()); // Loại bỏ phần tiền tố
+        }
+
+        hinhAnh.setDuLieuAnh(Base64.getDecoder().decode(base64Data)); // Chuyển đổi Base64 thành byte[]
+         hinhAnh.setIdSanPhamChiTiet(hinhAnh.getIdSanPhamChiTiet());
         hinhAnh.setTrangThai(request.getTrangThai());
+
         HinhAnh saveHinhAnh = hinhAnhRepo.save(hinhAnh);
         return convert(saveHinhAnh);
     }
 
     @Override
     public HinhAnhResponse update(Integer id, HinhAnhRequest request) {
-       HinhAnh hinhAnh = hinhAnhRepo.findById(id)
+        HinhAnh hinhAnh = hinhAnhRepo.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.IMAGE_NOT_FOUND));
         hinhAnh.setTenAnh(request.getTenAnh());
-        hinhAnh.setDuLieuAnh(request.getDuLieuAnh());
-        hinhAnh.setIdSanPhamChiTiet(hinhAnh.getIdSanPhamChiTiet());
+
+        String base64Data = request.getDuLieuAnhBase64();
+        if (base64Data != null && base64Data.startsWith("data:image/png;base64,")) {
+            base64Data = base64Data.substring("data:image/png;base64,".length()); // Loại bỏ phần tiền tố
+        }
+
+        hinhAnh.setDuLieuAnh(Base64.getDecoder().decode(base64Data)); // Chuyển đổi Base64 thành byte[]
+         hinhAnh.setIdSanPhamChiTiet(hinhAnh.getIdSanPhamChiTiet());
         hinhAnh.setTrangThai(request.getTrangThai());
-        HinhAnh updated =hinhAnhRepo.save(hinhAnh);
+
+        HinhAnh updated = hinhAnhRepo.save(hinhAnh);
         return convert(updated);
     }
 
