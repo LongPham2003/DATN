@@ -95,4 +95,9 @@ public class KhachHangServiceImpl implements KhachHangService {
 
         return newKhachHang;
     }
+
+    @Override
+    public KhachHang update(KhachHangRequest request) {
+        return null;
+    }
 }
