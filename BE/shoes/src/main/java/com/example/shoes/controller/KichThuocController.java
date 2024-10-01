@@ -1,5 +1,6 @@
 package com.example.shoes.controller;
 
+import com.example.shoes.dto.chatlieu.response.ChatLieuResponse;
 import com.example.shoes.dto.kichthuoc.request.KichThuocRequest;
 import com.example.shoes.dto.kichthuoc.response.KichThuocResponse;
 import com.example.shoes.exception.ApiResponse;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -59,6 +61,15 @@ public class KichThuocController {
         kichThuocService.delete(id);
         return ApiResponse.<Void>builder()
                 .message("Xóa thành công")
+                .build();
+    }
+    @GetMapping("/search")
+    public ApiResponse<List<KichThuocResponse>> search(
+            @RequestParam(value = "kichThuoc", required = false) String kichThuoc,
+            @RequestParam(value = "trangThai", required = false) Boolean trangThai) {
+        List<KichThuocResponse> kichThuocResponses = kichThuocService.search(kichThuoc, trangThai);
+        return ApiResponse.<List<KichThuocResponse>>builder()
+                .result(kichThuocResponses)
                 .build();
     }
 }
