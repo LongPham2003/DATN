@@ -1,5 +1,6 @@
 package com.example.shoes.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -32,9 +33,6 @@ public class KhachHang {
     @Temporal(TemporalType.DATE)
     private Date ngaySinh;
 
-    @Column(name = "dia_chi_mac_dinh")
-    private String diaChiMacDinh;
-
     @Column(name = "gioi_tinh", length = 10)
     private String gioiTinh;
 
@@ -45,7 +43,7 @@ public class KhachHang {
     @JoinColumn(name = "id_tai_khoan",referencedColumnName = "id")
     private TaiKhoan taiKhoan;
 
-    @OneToMany(mappedBy = "khachHang",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "khachHang",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<DiaChi> diaChis;
 
 
