@@ -21,7 +21,8 @@ public enum ErrorCode {
     IMAGE_NOT_FOUND(1005, "Không tìm thấy  hinh anh  ", HttpStatus.NOT_FOUND),
     SIZE_NOT_FOUND(1005, "Không tìm thấy  kich thuoc  ", HttpStatus.NOT_FOUND),
     CATEGORY_NOT_FOUND(1005, "Không tìm thấy  loai  ", HttpStatus.NOT_FOUND),
-    COLOR_NOT_FOUND(1005, "Không tìm thấy  mau sac  ", HttpStatus.NOT_FOUND)
+    COLOR_NOT_FOUND(1005, "Không tìm thấy  mau sac  ", HttpStatus.NOT_FOUND),
+    BRAND_NOT_FOUND(1005, "Không tìm thấy  thuong hieu  ", HttpStatus.NOT_FOUND)
     ;
 
     private int code;
