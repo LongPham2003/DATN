@@ -1,6 +1,7 @@
 package com.example.shoes.controller;
 
 
+import com.example.shoes.dto.chatlieu.response.ChatLieuResponse;
 import com.example.shoes.dto.degiay.request.DeGiayRequet;
 import com.example.shoes.dto.degiay.response.DeGiayResponse;
 import com.example.shoes.exception.ApiResponse;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -60,6 +62,15 @@ public class DeGiayController {
        deGiayService.delete(id);
         return ApiResponse.<Void>builder()
                 .message("Xóa thành công")
+                .build();
+    }
+    @GetMapping("/search")
+    public ApiResponse<List<DeGiayResponse>> searchChatLieu(
+            @RequestParam(value = "ten", required = false) String ten,
+            @RequestParam(value = "trangThai", required = false) Boolean trangThai) {
+        List<DeGiayResponse> deGiayResponses = deGiayService.search(ten, trangThai);
+        return ApiResponse.<List<DeGiayResponse>>builder()
+                .result(deGiayResponses)
                 .build();
     }
 }
