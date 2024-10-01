@@ -3,6 +3,7 @@ package com.example.shoes.service.impl;
 import com.example.shoes.dto.mausac.request.MauSacRequest;
 import com.example.shoes.dto.mausac.response.MauSacResponse;
 
+import com.example.shoes.entity.ChatLieu;
 import com.example.shoes.entity.MauSac;
 import com.example.shoes.exception.AppException;
 import com.example.shoes.exception.ErrorCode;
@@ -60,6 +61,26 @@ public class MauSacServiceImpl implements MauSacService {
         }
         mauSacRepo.deleteById(id);
     }
+
+    @Override
+    public List<MauSacResponse> search(String ten, Boolean trangThai) {
+        List<MauSac> mauSacList;
+
+        if (ten != null && trangThai != null) {
+            mauSacList = mauSacRepo.findByTenContainingIgnoreCaseAndTrangThai(ten, trangThai);
+        } else if (ten != null) {
+            mauSacList = mauSacRepo.findByTenContainingIgnoreCase(ten);
+        } else if (trangThai != null) {
+            mauSacList = mauSacRepo.findByTrangThai(trangThai);
+        } else {
+            mauSacList = mauSacRepo.findAll();
+        }
+
+        return mauSacList.stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
+    }
+
     private MauSacResponse convertToResponse(MauSac mauSac) {
         MauSacResponse mauSacResponse = new MauSacResponse();
         mauSacResponse.setId(mauSac.getId());

@@ -60,6 +60,26 @@ public class LoaiServiceImpl implements LoaiService {
         }
         loaiRepository.deleteById(id);
     }
+
+    @Override
+    public List<LoaiResponse> search(String ten, Boolean trangThai) {
+        List<Loai> loaiList;
+
+        if (ten != null && trangThai != null) {
+            loaiList = loaiRepository.findByTenContainingIgnoreCaseAndTrangThai(ten, trangThai);
+        } else if (ten != null) {
+            loaiList = loaiRepository.findByTenContainingIgnoreCase(ten);
+        } else if (trangThai != null) {
+            loaiList = loaiRepository.findByTrangThai(trangThai);
+        } else {
+            loaiList = loaiRepository.findAll();
+        }
+
+        return loaiList.stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
+    }
+
     private LoaiResponse convertToResponse(Loai loai) {
         LoaiResponse loaiResponse = new  LoaiResponse();
         loaiResponse.setId(loai.getId());
