@@ -1,14 +1,15 @@
-package com.example.shoes.dto.nhanvien.request;
+package com.example.shoes.dto.nhanvien.response;
 
 import com.example.shoes.entity.TaiKhoan;
 import com.example.shoes.enums.Roles;
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
-public class NhanvienRequest {
-
+public class NhanVienRespone {
 
     private String hoTen;
 

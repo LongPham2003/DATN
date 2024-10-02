@@ -1,5 +1,6 @@
 package com.example.shoes.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -36,6 +37,7 @@ public class DiaChi {
 
     @ManyToOne
     @JoinColumn(name = "id_khach_hang", referencedColumnName = "id")
+    @JsonIgnore
     private KhachHang khachHang;
 
 }

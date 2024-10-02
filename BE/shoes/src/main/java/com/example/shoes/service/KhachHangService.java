@@ -8,5 +8,7 @@ import java.util.List;
 
 public interface KhachHangService {
     List<KhachHangResponse> findAll();
-//    KhachHang add(KhachHangRequest request);
+    KhachHang add(KhachHangRequest request);
+    KhachHang update(KhachHangRequest request);
+
 }
