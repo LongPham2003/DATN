@@ -17,12 +17,6 @@ public class DiaChi {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "ten")
-    private String ten;
-
-    @Column(name = "sdt")
-    private String sdt;
-
     @Column(name = "tinh_thanh_pho")
     private String tinhThanhPho;
 

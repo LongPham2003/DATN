@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Date;
+
 
 @Getter
 @Setter
@@ -19,25 +21,29 @@ public class NhanVien {
     @Column(name = "ho_ten")
     private String hoTen;
 
+    @Column(name = "email")
+    private String email;
+
     @Column(name = "sdt")
     private String sdt;
+
+    @Column(name = "ngay_sinh")
+    @Temporal(TemporalType.DATE)
+    Date ngaySinh;
 
     @Column(name = "gioi_tinh")
     private String gioiTinh;
 
-    @Column(name = "email")
-    private String email;
+    @Column(name = "dia_chi")
+    private String diaChi;
 
 
     @Enumerated(EnumType.STRING)
     private Roles roles;
 
 
-    @Column(name = "trang_thai")
-    private Boolean trangThai;
-
     @OneToOne
-    @JoinColumn(name = "id_tai_khoan",referencedColumnName = "id")
+    @JoinColumn(name = "id_tai_khoan", referencedColumnName = "id")
     private TaiKhoan taiKhoan;
 
 }

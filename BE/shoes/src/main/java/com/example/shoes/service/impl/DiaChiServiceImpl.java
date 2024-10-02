@@ -25,8 +25,6 @@ public class DiaChiServiceImpl implements DiaChiService {
     @Override
     public DiaChiResponse addDiaChi(CreateDiaChiRequest req) {
         DiaChi diaChi = new DiaChi();
-        diaChi.setTen(req.getTen());
-        diaChi.setSdt(req.getSdt());
         diaChi.setTinhThanhPho(req.getTinhThanhPho());
         diaChi.setHuyenQuan(req.getHuyenQuan());
         diaChi.setDiaChiMacDinh(req.getDiaChiMacDinh());
@@ -36,8 +34,6 @@ public class DiaChiServiceImpl implements DiaChiService {
         diaChiRepo.save(diaChi);
 
         DiaChiResponse response = new DiaChiResponse();
-        response.setTen(diaChi.getTen());
-        response.setSdt(diaChi.getSdt());
         response.setTinhThanhPho(diaChi.getTinhThanhPho());
         response.setHuyenQuan(diaChi.getHuyenQuan());
         response.setXaPhuong(diaChi.getXaPhuong());
@@ -50,8 +46,6 @@ public class DiaChiServiceImpl implements DiaChiService {
     public DiaChiResponse updateDiaChi(UpdateDiaChiRequest req) {
         DiaChi diaChi = new DiaChi();
         diaChi.setId(req.getId());
-        diaChi.setTen(req.getTen());
-        diaChi.setSdt(req.getSdt());
         diaChi.setTinhThanhPho(req.getTinhThanhPho());
         diaChi.setHuyenQuan(req.getHuyenQuan());
         diaChi.setDiaChiMacDinh(req.getDiaChiMacDinh());
@@ -61,8 +55,6 @@ public class DiaChiServiceImpl implements DiaChiService {
         diaChiRepo.save(diaChi);
 
         DiaChiResponse response = new DiaChiResponse();
-        response.setTen(diaChi.getTen());
-        response.setSdt(diaChi.getSdt());
         response.setTinhThanhPho(diaChi.getTinhThanhPho());
         response.setHuyenQuan(diaChi.getHuyenQuan());
         response.setXaPhuong(diaChi.getXaPhuong());

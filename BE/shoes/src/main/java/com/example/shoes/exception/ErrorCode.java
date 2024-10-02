@@ -8,6 +8,7 @@ public enum ErrorCode {
     UNCATEGORIZED_EXCEPTION(9999, "Uncategorized error",HttpStatus.INTERNAL_SERVER_ERROR),
     INVALID_KEY(1001, "Uncategorized error", HttpStatus.BAD_REQUEST),
     USER_EXISTED(1002, "Người dùng đã tồn tại", HttpStatus.BAD_REQUEST),
+    SDT_EXISTED(1002, "SDT đã tồn tại", HttpStatus.BAD_REQUEST),
     USERNAME_INVALID(1003, "password must be at character 3 ", HttpStatus.BAD_REQUEST),
     PASSWORD_INVALID(1004, "password must be at character 8 ", HttpStatus.BAD_REQUEST),
     USER_NOT_EXISTED(1005, "Tài khoản không tồn tại ", HttpStatus.NOT_FOUND),
@@ -21,7 +22,10 @@ public enum ErrorCode {
     IMAGE_NOT_FOUND(1005, "Không tìm thấy  hinh anh  ", HttpStatus.NOT_FOUND),
     SIZE_NOT_FOUND(1005, "Không tìm thấy  kich thuoc  ", HttpStatus.NOT_FOUND),
     CATEGORY_NOT_FOUND(1005, "Không tìm thấy  loai  ", HttpStatus.NOT_FOUND),
-    COLOR_NOT_FOUND(1005, "Không tìm thấy  mau sac  ", HttpStatus.NOT_FOUND)
+    COLOR_NOT_FOUND(1005, "Không tìm thấy  mau sac  ", HttpStatus.NOT_FOUND),
+
+    ATTRIBUTE_EXISTED(1005, "Đã Tồn Tại ", HttpStatus.BAD_REQUEST)
+
     ;
 
     private int code;

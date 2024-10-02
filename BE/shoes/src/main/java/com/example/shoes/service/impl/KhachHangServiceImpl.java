@@ -1,12 +1,10 @@
 package com.example.shoes.service.impl;
 
+import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.khachhang.request.KhachHangRequest;
 import com.example.shoes.dto.khachhang.response.KhachHangResponse;
 import com.example.shoes.email.EmailService;
-import com.example.shoes.entity.DiaChi;
-import com.example.shoes.entity.GioHang;
-import com.example.shoes.entity.KhachHang;
-import com.example.shoes.entity.TaiKhoan;
+import com.example.shoes.entity.*;
 import com.example.shoes.exception.AppException;
 import com.example.shoes.exception.ErrorCode;
 import com.example.shoes.repository.DiaChiRepo;
@@ -17,12 +15,16 @@ import com.example.shoes.service.GioHangService;
 import com.example.shoes.service.KhachHangService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +36,22 @@ public class KhachHangServiceImpl implements KhachHangService {
     private final EmailService emailService;
     private final DiaChiRepo diaChiRepo;
     private final GioHangRepo gioHangRepo;
+
+    @Override
+    public PhanTrangResponse<KhachHang> getKhachHang(int pageNumber, int pageSize, String keyword) {
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+
+        Page<KhachHang> page = khachHangRepo.getKhachHang(pageable, keyword);
+
+        PhanTrangResponse<KhachHang> phanTrangResponse = new PhanTrangResponse<>();
+        phanTrangResponse.setPageNumber(page.getNumber());
+        phanTrangResponse.setPageSize(page.getSize());
+        phanTrangResponse.setTotalElements(page.getTotalElements());
+        phanTrangResponse.setTotalPages(page.getTotalPages());
+        phanTrangResponse.setResult(page.getContent());
+
+        return phanTrangResponse;
+    }
 
     @Override
     public List<KhachHangResponse> findAll() {
@@ -98,6 +116,24 @@ public class KhachHangServiceImpl implements KhachHangService {
 
     @Override
     public KhachHang update(KhachHangRequest request) {
-        return null;
+        Optional<KhachHang> khachHangOptional = khachHangRepo.findById(request.getId());
+        KhachHang khachHang = khachHangOptional.get();
+
+        TaiKhoan taiKhoan = khachHang.getTaiKhoan();
+        taiKhoan.setEmail(request.getEmail());
+        taiKhoan.setPassword(request.getMatKhau());
+        taiKhoan.setTrangThai(request.getTrangThai());
+
+        taiKhoanRepo.save(taiKhoan);
+
+        khachHang.setHoTen(request.getHoTen());
+        khachHang.setSdt(request.getSdt());
+        khachHang.setEmail(request.getEmail());
+        khachHang.setNgaySinh(request.getNgaySinh());
+        khachHang.setTrangThai(request.getTrangThai());
+        khachHang.setGioiTinh(request.getGioiTinh());
+        khachHang.setTaiKhoan(taiKhoan);
+        return khachHangRepo.save(khachHang);
+
     }
 }

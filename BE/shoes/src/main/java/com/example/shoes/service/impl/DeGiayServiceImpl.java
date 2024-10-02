@@ -1,5 +1,6 @@
 package com.example.shoes.service.impl;
 
+import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.degiay.request.DeGiayRequet;
 import com.example.shoes.dto.degiay.response.DeGiayResponse;
 import com.example.shoes.entity.DeGiay;
@@ -8,22 +9,29 @@ import com.example.shoes.exception.ErrorCode;
 import com.example.shoes.repository.DeGiayRepo;
 import com.example.shoes.service.DeGiayService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Service
 public class DeGiayServiceImpl implements DeGiayService {
     @Autowired
     private DeGiayRepo deGiayRepo;
+
     @Override
-    public List<DeGiayResponse> findAll() {
-        List<DeGiay> list =deGiayRepo.findAll(Sort.by(Sort.Direction.DESC,"id"));
-        return list.stream()
-                .map(this::convertToResponse)
-                .collect(Collectors.toList());
+    public PhanTrangResponse<DeGiay> getDeGiay(int pageNumber, int pageSize, String keyword) {
+        Pageable pageable = PageRequest.of(pageNumber-1, pageSize);
+        Page<DeGiay> page = deGiayRepo.getDeGiay(pageable, keyword);
+        PhanTrangResponse<DeGiay> phanTrangResponse = new PhanTrangResponse<>();
+        phanTrangResponse.setPageNumber(page.getNumber());
+        phanTrangResponse.setPageSize(page.getSize());
+        phanTrangResponse.setTotalElements(page.getTotalElements());
+        phanTrangResponse.setTotalPages(page.getTotalPages());
+        phanTrangResponse.setResult(page.getContent());
+        return phanTrangResponse;
     }
 
     @Override
@@ -35,6 +43,9 @@ public class DeGiayServiceImpl implements DeGiayService {
 
     @Override
     public DeGiayResponse create(DeGiayRequet request) {
+        if(deGiayRepo.existsByTen(request.getTen())){
+            throw new AppException(ErrorCode.ATTRIBUTE_EXISTED);
+        }
         DeGiay deGiay = new DeGiay();
         deGiay.setTen(request.getTen());
         deGiay.setTrangThai(request.getTrangThai());

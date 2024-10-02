@@ -1,5 +1,6 @@
 package com.example.shoes.service.impl;
 
+import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.mausac.request.MauSacRequest;
 import com.example.shoes.dto.mausac.response.MauSacResponse;
 
@@ -9,47 +10,56 @@ import com.example.shoes.exception.ErrorCode;
 import com.example.shoes.repository.MauSacRepo;
 import com.example.shoes.service.MauSacService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class MauSacServiceImpl implements MauSacService {
     @Autowired
     private MauSacRepo mauSacRepo;
+
     @Override
-    public List<MauSacResponse> findAll() {
-        List<MauSac> list =mauSacRepo.findAll(Sort.by(Sort.Direction.DESC,"id"));
-        return list.stream()
-                .map(this::convertToResponse)
-                .collect(Collectors.toList());
+    public PhanTrangResponse<MauSac> getMauSac(int pageNumber, int pageSize, String keyword) {
+        Pageable pageable = PageRequest.of(pageNumber-1, pageSize);
+        Page<MauSac> page = mauSacRepo.getMauSac(pageable, keyword);
+        PhanTrangResponse<MauSac> phanTrangResponse = new PhanTrangResponse<>();
+        phanTrangResponse.setPageNumber(page.getNumber());
+        phanTrangResponse.setPageSize(page.getSize());
+        phanTrangResponse.setTotalElements(page.getTotalElements());
+        phanTrangResponse.setTotalPages(page.getTotalPages());
+        phanTrangResponse.setResult(page.getContent());
+        return phanTrangResponse;
     }
 
     @Override
     public MauSacResponse getById(Integer id) {
-        MauSac mauSac=mauSacRepo.findById(id)
+        MauSac mauSac = mauSacRepo.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.COLOR_NOT_FOUND));
         return convertToResponse(mauSac);
     }
 
     @Override
     public MauSacResponse create(MauSacRequest request) {
+        if(mauSacRepo.existsByTen(request.getTen())){
+            throw new AppException(ErrorCode.ATTRIBUTE_EXISTED);
+        }
         MauSac mauSac = new MauSac();
         mauSac.setTen(request.getTen());
         mauSac.setTrangThai(request.getTrangThai());
-       MauSac saved = mauSacRepo.save(mauSac);
+        MauSac saved = mauSacRepo.save(mauSac);
         return convertToResponse(saved);
     }
 
     @Override
     public MauSacResponse update(Integer id, MauSacRequest request) {
-        MauSac mauSac=mauSacRepo.findById(id)
+        MauSac mauSac = mauSacRepo.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.COLOR_NOT_FOUND));
         mauSac.setTen(request.getTen());
         mauSac.setTrangThai(request.getTrangThai());
-        MauSac updated =mauSacRepo.save(mauSac);
+        MauSac updated = mauSacRepo.save(mauSac);
         return convertToResponse(updated);
     }
 
@@ -60,6 +70,7 @@ public class MauSacServiceImpl implements MauSacService {
         }
         mauSacRepo.deleteById(id);
     }
+
     private MauSacResponse convertToResponse(MauSac mauSac) {
         MauSacResponse mauSacResponse = new MauSacResponse();
         mauSacResponse.setId(mauSac.getId());
