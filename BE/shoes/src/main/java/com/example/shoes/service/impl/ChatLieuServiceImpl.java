@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class ChatLieuServiceImpl implements ChatLieuService {
 
     @Autowired
-    private ChatLieuRepo chatLieuRepo;
+ private ChatLieuRepo chatLieuRepo;
 
 
 //    @Override
