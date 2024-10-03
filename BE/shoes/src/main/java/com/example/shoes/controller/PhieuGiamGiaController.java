@@ -47,11 +47,18 @@ public class PhieuGiamGiaController {
                 .build();
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ApiResponse<Void> delete(@PathVariable Integer id) {
-        phieuGiamGiaService.delete(id);
-        return ApiResponse.<Void>builder()
-                .message("Xóa thành công")
+//    @DeleteMapping("/delete/{id}")
+//    public ApiResponse<Void> delete(@PathVariable Integer id) {
+//        phieuGiamGiaService.delete(id);
+//        return ApiResponse.<Void>builder()
+//                .message("Xóa thành công")
+//                .build();
+//    }
+    @PutMapping("/delete/{id}")
+    public ApiResponse<PhieuGiamGiaResponse> delete(@PathVariable Integer id, @RequestBody PhieuGiamGiaRequest request) {
+        PhieuGiamGiaResponse updated = phieuGiamGiaService.delete(id, request);
+        return ApiResponse.<PhieuGiamGiaResponse>builder()
+                .result(updated)
                 .build();
     }
 

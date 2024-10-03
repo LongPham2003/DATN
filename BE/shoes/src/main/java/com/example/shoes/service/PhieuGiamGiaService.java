@@ -11,5 +11,5 @@ public interface PhieuGiamGiaService {
     PhieuGiamGiaResponse getById(Integer id);
     PhieuGiamGiaResponse create(PhieuGiamGiaRequest request);
     PhieuGiamGiaResponse update(Integer id, PhieuGiamGiaRequest request);
-    void delete(Integer id);
+    PhieuGiamGiaResponse delete(Integer id, PhieuGiamGiaRequest request);
 }

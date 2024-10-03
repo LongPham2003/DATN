@@ -69,12 +69,21 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
     }
 
     @Override
-    public void delete(Integer id) {
-        if (!phieuGiamGiaRepo.existsById(id)) {
-            throw new AppException(ErrorCode.VOUCHER_NOT_FOUND);
-        }
-        phieuGiamGiaRepo.deleteById(id);
+    public PhieuGiamGiaResponse delete(Integer id, PhieuGiamGiaRequest request) {
+        PhieuGiamGia phieuGiamGia = phieuGiamGiaRepo.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.VOUCHER_NOT_FOUND));
+        phieuGiamGia.setTrangThai(false);
+        PhieuGiamGia updated = phieuGiamGiaRepo.save(phieuGiamGia);
+        return convertToResponse(updated);
     }
+
+//    @Override
+//    public void delete(Integer id) {
+//        if (!phieuGiamGiaRepo.existsById(id)) {
+//            throw new AppException(ErrorCode.VOUCHER_NOT_FOUND);
+//        }
+//        phieuGiamGiaRepo.deleteById(id);
+//    }
 
     private PhieuGiamGiaResponse convertToResponse(PhieuGiamGia phieuGiamGia) {
         PhieuGiamGiaResponse phieuGiamGiaResponse = new PhieuGiamGiaResponse();
