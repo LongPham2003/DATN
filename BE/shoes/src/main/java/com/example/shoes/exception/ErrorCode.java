@@ -23,10 +23,15 @@ public enum ErrorCode {
     SIZE_NOT_FOUND(1005, "Không tìm thấy  kich thuoc  ", HttpStatus.NOT_FOUND),
     CATEGORY_NOT_FOUND(1005, "Không tìm thấy  loai  ", HttpStatus.NOT_FOUND),
     COLOR_NOT_FOUND(1005, "Không tìm thấy  mau sac  ", HttpStatus.NOT_FOUND),
+<<<<<<< HEAD
 
     ATTRIBUTE_EXISTED(1005, "Đã Tồn Tại ", HttpStatus.BAD_REQUEST)
 
+=======
+    VOUCHER_NOT_FOUND(1006, "Không tìm thấy voucher", HttpStatus.NOT_FOUND),
+>>>>>>> 3570c64 (them error voucher)
     ;
+
 
     private int code;
     private String message;
