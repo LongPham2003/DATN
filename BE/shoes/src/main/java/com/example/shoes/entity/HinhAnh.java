@@ -20,8 +20,7 @@ public class HinhAnh {
     @NotNull
     @Column(name = "ten_anh")
     private String tenAnh;
-
-    @Column(name = "du_lieu_anh")
+    @Column(name = "du_lieu_anh", columnDefinition = "LONGBLOB")
     private byte[] duLieuAnh;
 
     @ManyToOne(fetch = FetchType.LAZY)

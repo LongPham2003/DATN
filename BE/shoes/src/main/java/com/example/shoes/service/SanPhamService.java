@@ -12,4 +12,5 @@ public interface SanPhamService {
     SanPhamResponse getById(Integer id);
     SanPhamResponse create(SanPhamRequest request);
     SanPhamResponse update(Integer id, SanPhamRequest request);
+
 }

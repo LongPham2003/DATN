@@ -22,7 +22,14 @@ public enum ErrorCode {
     SIZE_NOT_FOUND(1005, "Không tìm thấy  kich thuoc  ", HttpStatus.NOT_FOUND),
     CATEGORY_NOT_FOUND(1005, "Không tìm thấy  loai  ", HttpStatus.NOT_FOUND),
     COLOR_NOT_FOUND(1005, "Không tìm thấy  mau sac  ", HttpStatus.NOT_FOUND),
-    BRAND_NOT_FOUND(1005, "Không tìm thấy  thuong hieu  ", HttpStatus.NOT_FOUND)
+    BRAND_NOT_FOUND(1005, "Không tìm thấy  thuong hieu  ", HttpStatus.NOT_FOUND),
+    PRODUCT_NOT_FOUND(1005, "Không tìm thấy san pham  ", HttpStatus.NOT_FOUND),
+    PRODUCT_DETAIL_NOT_FOUND(1005, "Không tìm thấy  sản phẩm chi tiet  ", HttpStatus.NOT_FOUND),
+    BILL_NOT_FOUND(1005, "Không tìm thấy  hoa don  ", HttpStatus.NOT_FOUND),
+    BILL_DETAIL_NOT_FOUND(1005, "Không tìm thấy  hoa don chi tiet  ", HttpStatus.NOT_FOUND),
+    CAR_NOT_FOUND(1005, "Không tìm thấy  gio hang ", HttpStatus.NOT_FOUND),
+    CAR_DETAIL_NOT_FOUND(1005, "Không tìm thấy  gio hang chi tiet  ", HttpStatus.NOT_FOUND)
+
     ;
 
     private int code;

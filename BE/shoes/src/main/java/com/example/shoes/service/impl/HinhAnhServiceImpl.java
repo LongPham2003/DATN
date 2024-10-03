@@ -22,7 +22,7 @@ public class HinhAnhServiceImpl implements HinhAnhService {
 
     @Override
     public List<HinhAnhResponse> findAll() {
-        List<HinhAnh> list =hinhAnhRepo.findAll(Sort.by(Sort.Direction.DESC,"id"));
+        List<HinhAnh> list = hinhAnhRepo.findAll(Sort.by(Sort.Direction.DESC, "id"));
         return list.stream()
                 .map(this::convert)
                 .collect(Collectors.toList());
@@ -40,17 +40,26 @@ public class HinhAnhServiceImpl implements HinhAnhService {
         HinhAnh hinhAnh = new HinhAnh();
         hinhAnh.setTenAnh(request.getTenAnh());
 
+        // Xử lý Base64: Loại bỏ tiền tố "data:image/png;base64," nếu có, và loại bỏ các ký tự không hợp lệ.
         String base64Data = request.getDuLieuAnhBase64();
-        if (base64Data != null && base64Data.startsWith("data:image/png;base64,")) {
-            base64Data = base64Data.substring("data:image/png;base64,".length()); // Loại bỏ phần tiền tố
+        if (base64Data != null && base64Data.contains("base64,")) {
+            base64Data = base64Data.substring(base64Data.indexOf("base64,") + "base64,".length());
+        }
+        base64Data = base64Data.replaceAll("[^A-Za-z0-9+/=]", "");
+
+        try {
+            // Chuyển đổi Base64 thành byte[]
+            byte[] imageBytes = Base64.getDecoder().decode(base64Data);
+            hinhAnh.setDuLieuAnh(imageBytes); // Lưu dữ liệu ảnh vào entity
+
+        } catch (IllegalArgumentException e) {
+            throw new AppException(ErrorCode.IMAGE_NOT_FOUND);
         }
 
-        hinhAnh.setDuLieuAnh(Base64.getDecoder().decode(base64Data)); // Chuyển đổi Base64 thành byte[]
-         hinhAnh.setIdSanPhamChiTiet(hinhAnh.getIdSanPhamChiTiet());
         hinhAnh.setTrangThai(request.getTrangThai());
+        HinhAnh savedHinhAnh = hinhAnhRepo.save(hinhAnh);
 
-        HinhAnh saveHinhAnh = hinhAnhRepo.save(hinhAnh);
-        return convert(saveHinhAnh);
+        return convert(savedHinhAnh);
     }
 
     @Override
@@ -58,14 +67,17 @@ public class HinhAnhServiceImpl implements HinhAnhService {
         HinhAnh hinhAnh = hinhAnhRepo.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.IMAGE_NOT_FOUND));
         hinhAnh.setTenAnh(request.getTenAnh());
-
+        // Xử lý Base64
         String base64Data = request.getDuLieuAnhBase64();
-        if (base64Data != null && base64Data.startsWith("data:image/png;base64,")) {
-            base64Data = base64Data.substring("data:image/png;base64,".length()); // Loại bỏ phần tiền tố
+        if (base64Data != null && base64Data.contains("base64,")) {
+            base64Data = base64Data.substring(base64Data.indexOf("base64,") + "base64,".length()); // Loại bỏ phần tiền tố
         }
 
+        // Loại bỏ ký tự không hợp lệ
+        base64Data = base64Data.replaceAll("[^A-Za-z0-9+/=]", "");
+
         hinhAnh.setDuLieuAnh(Base64.getDecoder().decode(base64Data)); // Chuyển đổi Base64 thành byte[]
-         hinhAnh.setIdSanPhamChiTiet(hinhAnh.getIdSanPhamChiTiet());
+        hinhAnh.setIdSanPhamChiTiet(hinhAnh.getIdSanPhamChiTiet());
         hinhAnh.setTrangThai(request.getTrangThai());
 
         HinhAnh updated = hinhAnhRepo.save(hinhAnh);
@@ -84,12 +96,19 @@ public class HinhAnhServiceImpl implements HinhAnhService {
         HinhAnhResponse hinhAnhResponse = new HinhAnhResponse();
         hinhAnhResponse.setId(hinhAnh.getId());
         hinhAnhResponse.setTenAnh(hinhAnh.getTenAnh());
-        hinhAnhResponse.setDuLieuAnh(hinhAnh.getDuLieuAnh());
+
+        // Chuyển đổi mảng byte[] của hình ảnh thành chuỗi Base64
+        if (hinhAnh.getDuLieuAnh() != null) {
+            hinhAnhResponse.setDuLieuAnhBase64(Base64.getEncoder().encodeToString(hinhAnh.getDuLieuAnh()));
+        }
+
+        // Kiểm tra và đặt idSanPhamChiTiet nếu tồn tại
         if (hinhAnh.getIdSanPhamChiTiet() != null) {
             hinhAnhResponse.setIdSanPhamChiTiet(hinhAnh.getIdSanPhamChiTiet().getId());
         } else {
             hinhAnhResponse.setIdSanPhamChiTiet(null);
         }
+
         hinhAnhResponse.setTrangThai(hinhAnh.getTrangThai());
         return hinhAnhResponse;
     }
