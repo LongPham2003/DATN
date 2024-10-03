@@ -2,14 +2,18 @@ package com.example.shoes.service;
 
 
 
-import com.example.shoes.dto.chatlieu.response.ChatLieuResponse;
+
+import com.example.shoes.dto.PhanTrangResponse;
+
 import com.example.shoes.dto.degiay.request.DeGiayRequet;
 import com.example.shoes.dto.degiay.response.DeGiayResponse;
+
+import com.example.shoes.entity.DeGiay;
 
 import java.util.List;
 
 public interface DeGiayService {
-    List<DeGiayResponse> findAll();
+    PhanTrangResponse<DeGiay> getDeGiay(int pageNumber, int pageSize, String keyword);
     DeGiayResponse getById(Integer id);
     DeGiayResponse create(DeGiayRequet request);
     DeGiayResponse update(Integer id, DeGiayRequet request);

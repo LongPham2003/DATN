@@ -1,15 +1,16 @@
-package com.example.shoes.dto.nhanvien.response;
+package com.example.shoes.dto.nhanvien.request;
 
 import com.example.shoes.entity.TaiKhoan;
 import com.example.shoes.enums.Roles;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.util.Date;
 
 @Getter
 @Setter
-public class NhanVienRespone {
+public class NhanvienAddRequest {
+
 
     private String hoTen;
 
@@ -19,12 +20,16 @@ public class NhanVienRespone {
 
     private String email;
 
+    private String diaChi;
+
+    @Temporal(TemporalType.DATE)
+    private Date ngaySinh;
 
     @Enumerated(EnumType.STRING)
     private Roles roles;
 
+    private  String matKhau;
 
-    private Boolean trangThai;
 
     private TaiKhoan taiKhoan;
 }

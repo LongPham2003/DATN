@@ -1,12 +1,16 @@
 package com.example.shoes.controller;
 
 
-import com.example.shoes.dto.chatlieu.response.ChatLieuResponse;
+
+import com.example.shoes.dto.PhanTrangResponse;
+
 import com.example.shoes.dto.degiay.request.DeGiayRequet;
 import com.example.shoes.dto.degiay.response.DeGiayResponse;
+import com.example.shoes.entity.DeGiay;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.service.DeGiayService;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,16 +23,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+
 @RestController
 @RequestMapping("/api/degiay")
 public class DeGiayController {
     @Autowired
     private DeGiayService deGiayService;
     @GetMapping("/list")
-    public ApiResponse<List<DeGiayResponse>> getAll() {
-        List<DeGiayResponse> chatLieuResponses = deGiayService.findAll();
-        return ApiResponse.<List<DeGiayResponse>>builder()
-                .result(chatLieuResponses)
+    public ApiResponse<PhanTrangResponse<DeGiay>> getAllChatLieu(
+            @RequestParam(value = "keyword", defaultValue = "") String keyword,
+            @RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "5") int pageSize
+    ) {
+        PhanTrangResponse<DeGiay> deGiay = deGiayService.getDeGiay(pageNumber, pageSize, keyword);
+        return ApiResponse.<PhanTrangResponse<DeGiay>>builder()
+                .result(deGiay)
                 .build();
     }
 

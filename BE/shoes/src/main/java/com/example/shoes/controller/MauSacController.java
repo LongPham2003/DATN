@@ -1,11 +1,15 @@
 package com.example.shoes.controller;
 
-import com.example.shoes.dto.chatlieu.response.ChatLieuResponse;
+
+import com.example.shoes.dto.PhanTrangResponse;
+
 import com.example.shoes.dto.mausac.request.MauSacRequest;
 import com.example.shoes.dto.mausac.response.MauSacResponse;
+import com.example.shoes.entity.MauSac;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.service.MauSacService;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,16 +22,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+
 @RestController
 @RequestMapping("/api/mausac")
 public class MauSacController {
     @Autowired
     private MauSacService mausacService;
     @GetMapping("/list")
-    public ApiResponse<List<MauSacResponse>> getAll() {
-        List<MauSacResponse> mauSacResponses = mausacService.findAll();
-        return ApiResponse.<List<MauSacResponse>>builder()
-                .result(mauSacResponses)
+    public ApiResponse<PhanTrangResponse<MauSac>> getAllChatLieu(
+            @RequestParam(value = "keyword", defaultValue = "") String keyword,
+            @RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "5") int pageSize
+    ) {
+        PhanTrangResponse<MauSac> mauSac = mausacService.getMauSac(pageNumber, pageSize, keyword);
+        return ApiResponse.<PhanTrangResponse<MauSac>>builder()
+                .result(mauSac)
                 .build();
     }
 

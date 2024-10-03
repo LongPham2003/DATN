@@ -2,7 +2,6 @@ package com.example.shoes.dto.diachi.response;
 
 
 import lombok.*;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Getter
 @Setter
@@ -10,9 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @NoArgsConstructor
 public class DiaChiResponse {
 
-    private String ten;
 
-    private String sdt;
 
     private String tinhThanhPho;
 

@@ -1,6 +1,7 @@
 package com.example.shoes.service.impl;
 
 
+import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.kichthuoc.request.KichThuocRequest;
 import com.example.shoes.dto.kichthuoc.response.KichThuocResponse;
 import com.example.shoes.entity.ChatLieu;
@@ -10,33 +11,46 @@ import com.example.shoes.exception.ErrorCode;
 import com.example.shoes.repository.KichThuocRepo;
 import com.example.shoes.service.KichThuocService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 @Service
 public class KichThuocServiceImpl implements KichThuocService {
     @Autowired
     private KichThuocRepo kichThuocRepo;
+
     @Override
-    public List<KichThuocResponse> findAll() {
-        List<KichThuoc> kichThuocList = kichThuocRepo.findAll(Sort.by(Sort.Direction.DESC,"id"));
-        return kichThuocList.stream()
-                .map(this::convertToResponse)
-                .collect(Collectors.toList());
+    public PhanTrangResponse<KichThuoc> getKichThuoc(int pageNumber, int pageSize, String keyword) {
+        Pageable pageable = PageRequest.of(pageNumber-1, pageSize);
+        Page<KichThuoc> page = kichThuocRepo.getKichThuoc(pageable, keyword);
+        PhanTrangResponse<KichThuoc> phanTrangResponse = new PhanTrangResponse<>();
+        phanTrangResponse.setPageNumber(page.getNumber());
+        phanTrangResponse.setPageSize(page.getSize());
+        phanTrangResponse.setTotalElements(page.getTotalElements());
+        phanTrangResponse.setTotalPages(page.getTotalPages());
+        phanTrangResponse.setResult(page.getContent());
+        return phanTrangResponse;
     }
+
 
     @Override
     public KichThuocResponse getById(Integer id) {
-        KichThuoc kichThuoc=kichThuocRepo.findById(id)
+        KichThuoc kichThuoc = kichThuocRepo.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.SIZE_NOT_FOUND));
         return convertToResponse(kichThuoc);
     }
 
     @Override
     public KichThuocResponse create(KichThuocRequest request) {
+        if(kichThuocRepo.existsByKichThuoc(request.getKichThuoc())){
+            throw new AppException(ErrorCode.ATTRIBUTE_EXISTED);
+        }
         KichThuoc kichThuoc = new KichThuoc();
         kichThuoc.setKichThuoc(request.getKichThuoc());
         kichThuoc.setTrangThai(request.getTrangThai());
@@ -62,6 +76,7 @@ public class KichThuocServiceImpl implements KichThuocService {
         kichThuocRepo.deleteById(id);
     }
 
+
     @Override
     public List<KichThuocResponse> search(String kichThuoc, Boolean trangThai) {
         List<KichThuoc> kichThuocList;
@@ -82,7 +97,7 @@ public class KichThuocServiceImpl implements KichThuocService {
     }
 
     private KichThuocResponse convertToResponse(KichThuoc kichThuoc) {
-        KichThuocResponse kichThuocResponse = new  KichThuocResponse();
+        KichThuocResponse kichThuocResponse = new KichThuocResponse();
         kichThuocResponse.setId(kichThuoc.getId());
         kichThuocResponse.setKichThuoc(kichThuoc.getKichThuoc());
         kichThuocResponse.setTrangThai(kichThuoc.getTrangThai());

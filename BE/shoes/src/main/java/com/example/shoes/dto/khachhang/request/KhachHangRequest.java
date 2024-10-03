@@ -11,6 +11,7 @@ import java.util.Date;
 @Builder
 public class KhachHangRequest {
 
+    private Integer id;
 
     private String hoTen;
 

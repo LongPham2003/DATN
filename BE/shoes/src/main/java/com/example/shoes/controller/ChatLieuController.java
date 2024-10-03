@@ -1,11 +1,14 @@
 package com.example.shoes.controller;
 
+import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.chatlieu.request.ChatLieuRequest;
 import com.example.shoes.dto.chatlieu.response.ChatLieuResponse;
+import com.example.shoes.entity.ChatLieu;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.service.ChatLieuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+
 import java.util.List;
 
 @RestController
@@ -24,9 +28,13 @@ public class ChatLieuController {
     @Autowired
     private ChatLieuService chatLieuService;
     @GetMapping("/list")
-    public ApiResponse<List<ChatLieuResponse>> getAllChatLieu() {
-        List<ChatLieuResponse> chatLieuResponses = chatLieuService.findAll();
-        return ApiResponse.<List<ChatLieuResponse>>builder()
+    public ApiResponse<PhanTrangResponse<ChatLieu>> getAllChatLieu(
+            @RequestParam(value = "keyword", defaultValue = "") String keyword,
+            @RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "5") int pageSize
+    ) {
+        PhanTrangResponse<ChatLieu> chatLieuResponses = chatLieuService.getChatLieu(pageNumber, pageSize, keyword);
+        return ApiResponse.<PhanTrangResponse<ChatLieu>>builder()
                 .result(chatLieuResponses)
                 .build();
     }
