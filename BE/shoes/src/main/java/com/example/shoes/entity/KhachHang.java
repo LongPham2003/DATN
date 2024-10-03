@@ -1,14 +1,17 @@
 package com.example.shoes.entity;
 
-import com.example.shoes.enums.Roles;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "khach_hang")
 public class KhachHang {
@@ -30,9 +33,6 @@ public class KhachHang {
     @Temporal(TemporalType.DATE)
     private Date ngaySinh;
 
-    @Column(name = "dia_chi_mac_dinh")
-    private String diaChiMacDinh;
-
     @Column(name = "gioi_tinh", length = 10)
     private String gioiTinh;
 
@@ -42,6 +42,9 @@ public class KhachHang {
     @OneToOne
     @JoinColumn(name = "id_tai_khoan",referencedColumnName = "id")
     private TaiKhoan taiKhoan;
+
+    @OneToMany(mappedBy = "khachHang",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<DiaChi> diaChis;
 
 
 }

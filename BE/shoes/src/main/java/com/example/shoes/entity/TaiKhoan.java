@@ -1,5 +1,6 @@
 package com.example.shoes.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import jakarta.validation.constraints.Size;
@@ -21,6 +22,7 @@ public class TaiKhoan {
 
     @Size(min = 8, message = "Mật khẩu phải có ít nhất 8 ký tự")
     @Column(name = "password")
+    @JsonIgnore
     private String password;
 
 

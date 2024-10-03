@@ -1,11 +1,9 @@
 package com.example.shoes.dto.khachhang.request;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-import java.time.LocalDate;
+
 import java.util.Date;
 
 @Getter
@@ -13,6 +11,7 @@ import java.util.Date;
 @Builder
 public class KhachHangRequest {
 
+    private Integer id;
 
     private String hoTen;
 
@@ -23,11 +22,16 @@ public class KhachHangRequest {
     @Temporal(TemporalType.DATE)
     private Date ngaySinh;
 
-    private String diaChiMacDinh;
 
     private String gioiTinh;
 
+    private String matKhau;
 
     private Boolean trangThai;
+
+    private String huyenQuan;
+    private String tinhThanhPho;
+    private String xaPhuong;
+
 
 }

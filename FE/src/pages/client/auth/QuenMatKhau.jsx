@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "react-toastify/dist/ReactToastify.css";
+import { Bounce, toast, ToastContainer } from "react-toastify";
 
 const ResetPass = () => {
   const navigate = useNavigate();
@@ -40,7 +42,10 @@ const ResetPass = () => {
       const data = await response.json();
       if (data.result) {
         setError("");
-        navigate("/login");
+        toast.success("Thành công");
+        setTimeout(() => {
+          navigate("/login");
+        }, 500);
       } else {
         throw new Error(" failed!");
       }
@@ -75,9 +80,22 @@ const ResetPass = () => {
           type="submit"
           className="w-full rounded-lg bg-blue-500 py-2 text-white transition duration-200 hover:bg-blue-600"
         >
-          Đổi mật khẩu
+          Lấy lại mật khẩu
         </button>
       </form>
+      <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
     </div>
   );
 };

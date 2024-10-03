@@ -1,6 +1,5 @@
 package com.example.shoes.dto.taikhoan.request;
 
-import com.example.shoes.enums.Roles;
 import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Getter;
