@@ -14,13 +14,37 @@ import { Helmet } from "react-helmet";
 import DanhSachNhanVien from "./pages/admin/NhanVien/DanhSachNhanVien";
 import TheMoiNhanVien from "./pages/admin/NhanVien/TheMoiNhanVien";
 import DanhSachKhachHang from "./pages/admin/KhachHang/DanhSachKhachHang";
+import Login from "./pages/client/auth/Login";
+import DoiMatKhau from "./pages/client/auth/DoiMatKhau";
+import SignUp from "./pages/client/auth/SignUp";
+import ResetPass from "./pages/client/auth/ResetPass";
 
 function App() {
   return (
     <>
       <BrowserRouter>
         <Routes>
-
+            {/* router login */}
+            <Route path="/login" element={
+               <>
+               <Helmet><title>Đăng nhập</title></Helmet>
+               <Login />
+             </>} />
+            <Route path="/doimatkhau" element={
+               <>
+               <Helmet><title>Đổi mật khẩu</title></Helmet>
+               <DoiMatKhau />
+            </>} /> 
+             <Route path="/SignUp" element={
+               <>
+               <Helmet><title>Đăng ký</title></Helmet>
+               <SignUp />
+             </>} />
+             <Route path="/resetpass" element={
+               <>
+               <Helmet><title>Reset pass</title></Helmet>
+               <ResetPass />
+              </>} />
           {/* roter dashboard */}
           <Route path="/admin" element={<Dashboard />}>
           {/* roter thong ke */}
