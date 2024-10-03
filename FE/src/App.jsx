@@ -13,6 +13,7 @@ import ThuongHieu from "./pages/admin/ThuocTinhSP/ThuongHieu/ThuongHieu";
 import { Helmet } from "react-helmet";
 import DanhSachNhanVien from "./pages/admin/NhanVien/DanhSachNhanVien";
 import TheMoiNhanVien from "./pages/admin/NhanVien/TheMoiNhanVien";
+import DanhSachKhachHang from "./pages/admin/KhachHang/DanhSachKhachHang";
 
 function App() {
   return (
@@ -72,7 +73,12 @@ function App() {
               <Helmet><title>Danh sách nhân viên</title></Helmet>
               <DanhSachNhanVien />
             </>} />
-            {/* roter them moi nhan vien */}
+            {/* roter danh sach khach hang */}
+            <Route path="khachhang" element={<>
+              <Helmet><title>Danh sách khách hàng</title></Helmet>
+              <DanhSachKhachHang />
+            </>} />
+            
             
           </Route>
         </Routes>
