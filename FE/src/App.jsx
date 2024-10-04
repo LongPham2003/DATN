@@ -10,113 +10,209 @@ import Voucher from "./pages/admin/Voucher/Voucher";
 import SanPham from "./pages/admin/SanPham/SanPham";
 import ThuongHieu from "./pages/admin/ThuocTinhSP/ThuongHieu/ThuongHieu";
 
-import Login from "./pages/client/auth/Login";
-import SignUp from "./pages/client/auth/SignUp";
-import DoiMatKhau from "./pages/client/auth/DoiMatKhau";
-import ResetPass from "./pages/client/auth/QuenMatKhau";
+// import Login from "./pages/client/auth/Login";
+// import SignUp from "./pages/client/auth/SignUp";
+// import DoiMatKhau from "./pages/client/auth/DoiMatKhau";
+// import ResetPass from "./pages/client/auth/QuenMatKhau";
 
 import { Helmet } from "react-helmet";
 import DanhSachNhanVien from "./pages/admin/NhanVien/DanhSachNhanVien";
 import TheMoiNhanVien from "./pages/admin/NhanVien/TheMoiNhanVien";
 import DanhSachKhachHang from "./pages/admin/KhachHang/DanhSachKhachHang";
 import Login from "./pages/client/auth/Login";
-import DoiMatKhau from "./pages/client/auth/DoiMatKhau";
 import SignUp from "./pages/client/auth/SignUp";
-import ResetPass from "./pages/client/auth/ResetPass";
-
-
+import DoiMatKhau from "./pages/client/auth/DoiMatKhau";
+import ResetPass from "./pages/client/auth/QuenMatKhau";
 function App() {
   return (
     <>
       <BrowserRouter>
         <Routes>
+          {/* <Route path="/login" element={<Login />}></Route>
+          <Route path="/signup" element={<SignUp />}></Route>
+          <Route path="/doimatkhau" element={<DoiMatKhau />}></Route>
+          <Route path="/resetpass" element={<ResetPass />}></Route> */}
 
-          <Route path="/login" element={<Login></Login>}></Route>
-          <Route path="/signup" element={<SignUp></SignUp>}></Route>
-          <Route path="/doimatkhau" element={<DoiMatKhau></DoiMatKhau>}></Route>
-          <Route path="/resetpass" element={<ResetPass></ResetPass>}></Route>
-
-            {/* router login */}
-            <Route path="/login" element={
-               <>
-               <Helmet><title>Đăng nhập</title></Helmet>
-               <Login />
-             </>} />
-            <Route path="/doimatkhau" element={
-               <>
-               <Helmet><title>Đổi mật khẩu</title></Helmet>
-               <DoiMatKhau />
-            </>} /> 
-             <Route path="/SignUp" element={
-               <>
-               <Helmet><title>Đăng ký</title></Helmet>
-               <SignUp />
-             </>} />
-             <Route path="/resetpass" element={
-               <>
-               <Helmet><title>Reset pass</title></Helmet>
-               <ResetPass />
-              </>} />
+          {/* router login */}
+          <Route
+            path="/login"
+            element={
+              <>
+                <Helmet>
+                  <title>Đăng nhập</title>
+                </Helmet>
+                <Login />
+              </>
+            }
+          />
+          <Route
+            path="/doimatkhau"
+            element={
+              <>
+                <Helmet>
+                  <title>Đổi mật khẩu</title>
+                </Helmet>
+                <DoiMatKhau />
+              </>
+            }
+          />
+          <Route
+            path="/SignUp"
+            element={
+              <>
+                <Helmet>
+                  <title>Đăng ký</title>
+                </Helmet>
+                <SignUp />
+              </>
+            }
+          />
+          <Route
+            path="/resetpass"
+            element={
+              <>
+                <Helmet>
+                  <title>Reset pass</title>
+                </Helmet>
+                <ResetPass />
+              </>
+            }
+          />
           {/* roter dashboard */}
 
           <Route path="/admin" element={<Dashboard />}>
-          {/* roter thong ke */}
-            <Route path="thongke" element={<>
-              <Helmet><title>Thống kê</title></Helmet>
-              <ThongKe />
-            </>} />
+            {/* roter thong ke */}
+            <Route
+              path="thongke"
+              element={
+                <>
+                  <Helmet>
+                    <title>Thống kê</title>
+                  </Helmet>
+                  <ThongKe />
+                </>
+              }
+            />
             {/* roter chat lieu */}
-            <Route path="chatlieu" element={<>
-              <Helmet><title>Chất liệu</title></Helmet>
-              <ChatLieu />
-            </>} />
+            <Route
+              path="chatlieu"
+              element={
+                <>
+                  <Helmet>
+                    <title>Chất liệu</title>
+                  </Helmet>
+                  <ChatLieu />
+                </>
+              }
+            />
             {/* roter de giay */}
-            <Route path="degiay" element={<>
-              <Helmet><title>Đế giày</title></Helmet>
-              <DeGiay />
-            </>} />
+            <Route
+              path="degiay"
+              element={
+                <>
+                  <Helmet>
+                    <title>Đế giày</title>
+                  </Helmet>
+                  <DeGiay />
+                </>
+              }
+            />
             {/* roter kich thuoc */}
-              <Route path="kichthuoc" element={<>
-              <Helmet><title>Kích thước</title></Helmet>
-              <KichThuoc />
-            </>} />
+            <Route
+              path="kichthuoc"
+              element={
+                <>
+                  <Helmet>
+                    <title>Kích thước</title>
+                  </Helmet>
+                  <KichThuoc />
+                </>
+              }
+            />
             {/* roter loai giay */}
-            <Route path="loaigiay" element={<>
-              <Helmet><title>Loại giày</title></Helmet>
-              <LoaiGiay />
-            </>} />
+            <Route
+              path="loaigiay"
+              element={
+                <>
+                  <Helmet>
+                    <title>Loại giày</title>
+                  </Helmet>
+                  <LoaiGiay />
+                </>
+              }
+            />
             {/* roter mau sac */}
-            <Route path="mausac" element={<>
-              <Helmet><title>Màu sắc</title></Helmet>
-              <MauSac />
-            </>} />
+            <Route
+              path="mausac"
+              element={
+                <>
+                  <Helmet>
+                    <title>Màu sắc</title>
+                  </Helmet>
+                  <MauSac />
+                </>
+              }
+            />
             {/* roter thuong hieu */}
-            <Route path="thuonghieu" element={<>
-              <Helmet><title>Thương hiệu</title></Helmet>
-              <ThuongHieu />
-            </>} />
+            <Route
+              path="thuonghieu"
+              element={
+                <>
+                  <Helmet>
+                    <title>Thương hiệu</title>
+                  </Helmet>
+                  <ThuongHieu />
+                </>
+              }
+            />
             {/* roter voucher */}
-            <Route path="voucher" element={<>
-              <Helmet><title>Voucher</title></Helmet>
-              <Voucher />
-            </>} />
+            <Route
+              path="voucher"
+              element={
+                <>
+                  <Helmet>
+                    <title>Voucher</title>
+                  </Helmet>
+                  <Voucher />
+                </>
+              }
+            />
             {/* roter san pham */}
-            <Route path="sanpham" element={<>
-              <Helmet><title>Sản phẩm</title></Helmet>
-              <SanPham />
-            </>} />
+            <Route
+              path="sanpham"
+              element={
+                <>
+                  <Helmet>
+                    <title>Sản phẩm</title>
+                  </Helmet>
+                  <SanPham />
+                </>
+              }
+            />
             {/* roter danh sach nhan vien */}
-            <Route path="nhanvien" element={<>
-              <Helmet><title>Danh sách nhân viên</title></Helmet>
-              <DanhSachNhanVien />
-            </>} />
+            <Route
+              path="nhanvien"
+              element={
+                <>
+                  <Helmet>
+                    <title>Danh sách nhân viên</title>
+                  </Helmet>
+                  <DanhSachNhanVien />
+                </>
+              }
+            />
             {/* roter danh sach khach hang */}
-            <Route path="khachhang" element={<>
-              <Helmet><title>Danh sách khách hàng</title></Helmet>
-              <DanhSachKhachHang />
-            </>} />
-            
-            
+            <Route
+              path="khachhang"
+              element={
+                <>
+                  <Helmet>
+                    <title>Danh sách khách hàng</title>
+                  </Helmet>
+                  <DanhSachKhachHang />
+                </>
+              }
+            />
           </Route>
         </Routes>
       </BrowserRouter>

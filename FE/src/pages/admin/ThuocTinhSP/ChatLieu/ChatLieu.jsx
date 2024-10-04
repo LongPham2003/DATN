@@ -1,30 +1,47 @@
+// import axios from "axios";
+import { useState } from "react";
+
 export default function ChatLieu() {
+  const [chatLieu, setChatLieu] = useState([]);
+
+  // const loadChatLieu = async () => {
+  //   const data = await axios.get(`http://localhost:8080/api/chatlieu/lis`);
+  //   setChatLieu(data.data);
+  // };
+
   return (
     <>
-      <div className="w-full h-screen overflow-auto">
-        <div className="mb-4 p-4 bg-white rounded shadow">
-          <h2 className="text-xl font-bold mb-2">Thêm Chất Liệu Mới</h2>
-          <form className="flex flex-wrap -mx-2">
-            <div className="w-1/2 px-2 mb-4">
-              <label htmlFor="maChatLieu" className="block mb-1">Mã Chất Liệu:</label>
+      <div className="h-screen w-full overflow-auto">
+        <div className="mb-4 rounded bg-white p-4 shadow">
+          <h2 className="mb-2 text-xl font-bold">Thêm Chất Liệu Mới</h2>
+          <form className="-mx-2 flex flex-wrap">
+            <div className="mb-4 w-1/2 px-2">
+              <label htmlFor="maChatLieu" className="mb-1 block">
+                Mã Chất Liệu:
+              </label>
               <input
                 type="text"
                 id="maChatLieu"
-                className="w-full p-2 border rounded"
+                className="w-full rounded border p-2"
                 placeholder="Nhập mã chất liệu"
               />
             </div>
-            <div className="w-1/2 px-2 mb-4">
-              <label htmlFor="tenChatLieu" className="block mb-1">Tên Chất Liệu:</label>
+            <div className="mb-4 w-1/2 px-2">
+              <label htmlFor="tenChatLieu" className="mb-1 block">
+                Tên Chất Liệu:
+              </label>
               <input
                 type="text"
                 id="tenChatLieu"
-                className="w-full p-2 border rounded"
+                className="w-full rounded border p-2"
                 placeholder="Nhập tên chất liệu"
               />
             </div>
             <div className="w-full px-2">
-              <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+              <button
+                type="submit"
+                className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+              >
                 Thêm Mới
               </button>
             </div>
@@ -40,12 +57,12 @@ export default function ChatLieu() {
             </tr>
           </thead>
           <tbody>
-            <tr className="hover:bg-gray-100 transition-colors duration-200">
+            <tr className="transition-colors duration-200 hover:bg-gray-100">
               <td className="border border-gray-300 p-2">Row 1, Cell 1</td>
               <td className="border border-gray-300 p-2">Row 1, Cell 2</td>
               <td className="border border-gray-300 p-2">Row 1, Cell 3</td>
             </tr>
-            <tr className="hover:bg-gray-100 transition-colors duration-200">
+            <tr className="transition-colors duration-200 hover:bg-gray-100">
               <td className="border border-gray-300 p-2">Row 2, Cell 1</td>
               <td className="border border-gray-300 p-2">Row 2, Cell 2</td>
               <td className="border border-gray-300 p-2">Row 2, Cell 3</td>
