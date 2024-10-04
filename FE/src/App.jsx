@@ -1,6 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Dashboard from "./pages/admin/Dashboard";
-import { Sidebar } from "./pages/admin/Sidebar";
 import ThongKe from "./pages/admin/ThongKe/ThongKe";
 import ChatLieu from "./pages/admin/ThuocTinhSP/ChatLieu/ChatLieu";
 import DeGiay from "./pages/admin/ThuocTinhSP/DeGiay/DeGiay";
@@ -10,6 +9,12 @@ import MauSac from "./pages/admin/ThuocTinhSP/MauSac/MauSac";
 import Voucher from "./pages/admin/Voucher/Voucher";
 import SanPham from "./pages/admin/SanPham/SanPham";
 import ThuongHieu from "./pages/admin/ThuocTinhSP/ThuongHieu/ThuongHieu";
+
+import Login from "./pages/client/auth/Login";
+import SignUp from "./pages/client/auth/SignUp";
+import DoiMatKhau from "./pages/client/auth/DoiMatKhau";
+import ResetPass from "./pages/client/auth/QuenMatKhau";
+
 import { Helmet } from "react-helmet";
 import DanhSachNhanVien from "./pages/admin/NhanVien/DanhSachNhanVien";
 import TheMoiNhanVien from "./pages/admin/NhanVien/TheMoiNhanVien";
@@ -19,11 +24,18 @@ import DoiMatKhau from "./pages/client/auth/DoiMatKhau";
 import SignUp from "./pages/client/auth/SignUp";
 import ResetPass from "./pages/client/auth/ResetPass";
 
+
 function App() {
   return (
     <>
       <BrowserRouter>
         <Routes>
+
+          <Route path="/login" element={<Login></Login>}></Route>
+          <Route path="/signup" element={<SignUp></SignUp>}></Route>
+          <Route path="/doimatkhau" element={<DoiMatKhau></DoiMatKhau>}></Route>
+          <Route path="/resetpass" element={<ResetPass></ResetPass>}></Route>
+
             {/* router login */}
             <Route path="/login" element={
                <>
@@ -46,6 +58,7 @@ function App() {
                <ResetPass />
               </>} />
           {/* roter dashboard */}
+
           <Route path="/admin" element={<Dashboard />}>
           {/* roter thong ke */}
             <Route path="thongke" element={<>

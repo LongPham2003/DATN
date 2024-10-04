@@ -1,5 +1,9 @@
+
+
+
 // Import các thư viện và components cần thiết
 import React, { useState } from "react";
+
 import {
   Card,
   Typography,
@@ -221,9 +225,109 @@ export function Sidebar() {
               <ListItemPrefix>
                 <UserCircleIcon className="h-5 w-5" />
               </ListItemPrefix>
+
+              <Typography color="blue-gray" className="mr-auto font-normal">
+                Sản phẩm
+              </Typography>
+            </AccordionHeader>
+          </ListItem>
+          <AccordionBody className="py-1">
+            <List className="p-0">
+              {/* Mục Sản phẩm */}
+              <Link to="/admin/sanpham">
+                <ListItem>
+                  <ListItemPrefix>
+                    <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
+                  </ListItemPrefix>
+                  Sản phẩm
+                </ListItem>
+              </Link>
+              <hr />
+              {/* Mục Thuộc tính */}
+              <ListItem onClick={handleAttributeOpen}>
+                <ListItemPrefix>
+                  <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
+                </ListItemPrefix>
+                Thuộc tính
+                <ListItemSuffix className="ml-32">
+                  <ChevronDownIcon
+                    strokeWidth={2.5}
+                    className={`h-3 w-3 transition-transform ${openAttribute ? "rotate-180" : ""}`}
+                  />
+                </ListItemSuffix>
+              </ListItem>
+              {/* Submenu của Thuộc tính */}
+              {openAttribute && (
+                <>
+                  <Link to="/admin/mausac">
+                    <ListItem className="pl-8">
+                      <ListItemPrefix>
+                        <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
+                      </ListItemPrefix>
+                      Màu sắc
+                    </ListItem>
+                  </Link>
+                  <Link to="/admin/chatlieu">
+                    <ListItem className="pl-8">
+                      <ListItemPrefix>
+                        <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
+                      </ListItemPrefix>
+                      Chất liệu
+                    </ListItem>
+                  </Link>
+                  <Link to="/admin/kichthuoc">
+                    <ListItem className="pl-8">
+                      <ListItemPrefix>
+                        <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
+                      </ListItemPrefix>
+                      Kích thước
+                    </ListItem>
+                  </Link>
+                  <Link to="/admin/thuonghieu">
+                    <ListItem className="pl-8">
+                      <ListItemPrefix>
+                        <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
+                      </ListItemPrefix>
+                      Thương hiệu
+                    </ListItem>
+                  </Link>
+                  <Link to="/admin/loaigiay">
+                    <ListItem className="pl-8">
+                      <ListItemPrefix>
+                        <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
+                      </ListItemPrefix>
+                      Loại giày
+                    </ListItem>
+                  </Link>
+                  <Link to="/admin/degiay">
+                    <ListItem className="pl-8">
+                      <ListItemPrefix>
+                        <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
+                      </ListItemPrefix>
+                      Đế giày
+                    </ListItem>
+                  </Link>
+                </>
+              )}
+            </List>
+          </AccordionBody>
+        </Accordion>
+
+        {/* Phần Voucher */}
+        <hr className="border-blue-gray-50 my-2" />
+        <Link to="/admin/voucher">
+          <ListItem>
+            <ListItemPrefix>
+              <PercentBadgeIcon className="h-5 w-5" />
+            </ListItemPrefix>
+            Voucher
+          </ListItem>
+        </Link>
+
               Nhan vien
             </ListItem>
           </Link>
+
 
           {/* Phần Settings (Khách hàng) */}
           <Link to="/admin/khachhang" onClick={() => setIsSidebarOpen(false)}>
@@ -259,6 +363,26 @@ export function Sidebar() {
             </ListItemPrefix>
             Log Out
           </ListItem>
+
+        </Link>
+      </List>
+
+      {/* Phần tên người dùng và Logout */}
+      <div className="mt-auto">
+        <hr className="border-blue-gray-50 my-2" />
+        {/* Tên người dùng */}
+        <div className="mb-2 flex items-center gap-4">
+          <Avatar
+            src="https://docs.material-tailwind.com/img/face-2.jpg"
+            alt="avatar"
+          />
+          <div>
+            <Typography variant="h6">Tania Andrew</Typography>
+            <Typography variant="small" color="gray" className="font-normal">
+              Web Developer
+            </Typography>
+          </div>
+
         </div>
       </Card>
     </>
