@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class ChatLieuServiceImpl implements ChatLieuService {
 
     @Autowired
-    private ChatLieuRepo chatLieuRepo;
+ private ChatLieuRepo chatLieuRepo;
 
 
 //    @Override
@@ -81,6 +81,25 @@ public class ChatLieuServiceImpl implements ChatLieuService {
             throw new AppException(ErrorCode.MATERIAL_NOT_FOUND);
         }
         chatLieuRepo.deleteById(id);
+    }
+
+    @Override
+    public List<ChatLieuResponse> searchChatLieu(String ten, Boolean trangThai) {
+        List<ChatLieu> chatLieuList;
+
+        if (ten != null && trangThai != null) {
+            chatLieuList = chatLieuRepo.findByTenContainingIgnoreCaseAndTrangThai(ten, trangThai);
+        } else if (ten != null) {
+            chatLieuList = chatLieuRepo.findByTenContainingIgnoreCase(ten);
+        } else if (trangThai != null) {
+            chatLieuList = chatLieuRepo.findByTrangThai(trangThai);
+        } else {
+            chatLieuList = chatLieuRepo.findAll();
+        }
+
+        return chatLieuList.stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
     }
 
     private ChatLieuResponse convertToResponse(ChatLieu chatLieu) {

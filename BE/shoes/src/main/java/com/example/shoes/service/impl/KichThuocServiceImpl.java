@@ -4,6 +4,7 @@ package com.example.shoes.service.impl;
 import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.kichthuoc.request.KichThuocRequest;
 import com.example.shoes.dto.kichthuoc.response.KichThuocResponse;
+import com.example.shoes.entity.ChatLieu;
 import com.example.shoes.entity.KichThuoc;
 import com.example.shoes.exception.AppException;
 import com.example.shoes.exception.ErrorCode;
@@ -14,6 +15,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -70,6 +74,26 @@ public class KichThuocServiceImpl implements KichThuocService {
             throw new AppException(ErrorCode.MATERIAL_NOT_FOUND);
         }
         kichThuocRepo.deleteById(id);
+    }
+
+
+    @Override
+    public List<KichThuocResponse> search(String kichThuoc, Boolean trangThai) {
+        List<KichThuoc> kichThuocList;
+
+        if (kichThuoc != null && trangThai != null) {
+            kichThuocList = kichThuocRepo.findByKichThuocContainingIgnoreCaseAndTrangThai(kichThuoc, trangThai);
+        } else if (kichThuoc != null) {
+            kichThuocList = kichThuocRepo.findByKichThuocContainingIgnoreCase(kichThuoc);
+        } else if (trangThai != null) {
+            kichThuocList = kichThuocRepo.findByTrangThai(trangThai);
+        } else {
+            kichThuocList = kichThuocRepo.findAll();
+        }
+
+        return kichThuocList.stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
     }
 
     private KichThuocResponse convertToResponse(KichThuoc kichThuoc) {

@@ -2,6 +2,7 @@ package com.example.shoes.service;
 
 
 
+
 import com.example.shoes.dto.loai.request.LoaiRequest;
 import com.example.shoes.dto.loai.response.LoaiResponse;
 
@@ -13,4 +14,5 @@ public interface LoaiService {
     LoaiResponse create(LoaiRequest request);
     LoaiResponse update(Integer id, LoaiRequest request);
     void delete(Integer id);
+    List<LoaiResponse> search(String ten, Boolean trangThai);
 }

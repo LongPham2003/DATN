@@ -3,6 +3,7 @@ package com.example.shoes.service.impl;
 import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.degiay.request.DeGiayRequet;
 import com.example.shoes.dto.degiay.response.DeGiayResponse;
+import com.example.shoes.entity.ChatLieu;
 import com.example.shoes.entity.DeGiay;
 import com.example.shoes.exception.AppException;
 import com.example.shoes.exception.ErrorCode;
@@ -14,6 +15,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -70,6 +73,26 @@ public class DeGiayServiceImpl implements DeGiayService {
         }
         deGiayRepo.deleteById(id);
     }
+
+    @Override
+    public List<DeGiayResponse> search(String ten, Boolean trangThai) {
+        List<DeGiay> deGiayListList;
+
+        if (ten != null && trangThai != null) {
+            deGiayListList = deGiayRepo.findByTenContainingIgnoreCaseAndTrangThai(ten, trangThai);
+        } else if (ten != null) {
+            deGiayListList = deGiayRepo.findByTenContainingIgnoreCase(ten);
+        } else if (trangThai != null) {
+            deGiayListList = deGiayRepo.findByTrangThai(trangThai);
+        } else {
+            deGiayListList = deGiayRepo.findAll();
+        }
+
+        return deGiayListList.stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
+    }
+
     private DeGiayResponse convertToResponse(DeGiay deGiay) {
         DeGiayResponse deGiayResponse = new DeGiayResponse();
         deGiayResponse.setId(deGiay.getId());

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -60,6 +61,15 @@ public class LoaiController {
         loaiService.delete(id);
         return ApiResponse.<Void>builder()
                 .message("Xóa thành công")
+                .build();
+    }
+    @GetMapping("/search")
+    public ApiResponse<List<LoaiResponse>> search(
+            @RequestParam(value = "ten", required = false) String ten,
+            @RequestParam(value = "trangThai", required = false) Boolean trangThai) {
+        List<LoaiResponse> loaiResponses = loaiService.search(ten, trangThai);
+        return ApiResponse.<List<LoaiResponse>>builder()
+                .result(loaiResponses)
                 .build();
     }
 }
