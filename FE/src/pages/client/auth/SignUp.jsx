@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import { Bounce, toast, ToastContainer } from "react-toastify";
+
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -8,7 +10,9 @@ const SignUp = () => {
     email: "",
     password: "",
     confirmPassword: "",
+
     hoTen: "",
+
   });
 
   const [error, setError] = useState("");
@@ -39,7 +43,9 @@ const SignUp = () => {
         body: JSON.stringify({
           email: formData.email,
           password: formData.password,
+
           hoTen: formData.hoTen,
+
         }),
       }).then((response) => {
         if (!response.ok) {
@@ -49,10 +55,14 @@ const SignUp = () => {
         }
       });
       setError("");
+
       toast.success("Thành công");
       setTimeout(() => {
         navigate("/login");
       }, 500);
+
+      navigate("/login");
+
     } catch (error) {
       setError(error.message);
     }
@@ -63,6 +73,7 @@ const SignUp = () => {
         onSubmit={handleSubmit}
         className="w-96 rounded-lg bg-white p-8 shadow-lg"
       >
+
         <h2 className="mb-6 text-center text-2xl font-bold">
           Đăng ký tài khoản
         </h2>
@@ -78,6 +89,9 @@ const SignUp = () => {
             required
           />
         </div>
+
+        <h2 className="mb-6 text-center text-2xl font-bold">Register</h2>
+
 
         <div className="mb-4">
           <label className="block text-gray-700">Email</label>
@@ -121,6 +135,7 @@ const SignUp = () => {
           type="submit"
           className="w-full rounded-lg bg-blue-500 py-2 text-white transition duration-200 hover:bg-blue-600"
         >
+
           Đăng ký
         </button>
       </form>
@@ -137,6 +152,11 @@ const SignUp = () => {
         theme="light"
         transition={Bounce}
       />
+
+          Register
+        </button>
+      </form>
+
     </div>
   );
 };
