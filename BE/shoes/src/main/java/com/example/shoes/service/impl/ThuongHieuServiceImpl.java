@@ -1,14 +1,19 @@
 package com.example.shoes.service.impl;
 
 
+import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.thuonghieu.request.ThuongHieuRequest;
 import com.example.shoes.dto.thuonghieu.response.ThuongHieuResponse;
+
 import com.example.shoes.entity.ThuongHieu;
 import com.example.shoes.exception.AppException;
 import com.example.shoes.exception.ErrorCode;
 import com.example.shoes.repository.ThuongHieuRepo;
 import com.example.shoes.service.ThuongHieuService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -21,11 +26,16 @@ public class ThuongHieuServiceImpl implements ThuongHieuService {
     private ThuongHieuRepo thuongHieuRepo;
 
     @Override
-    public List<ThuongHieuResponse> findAll() {
-        List<ThuongHieu> list =thuongHieuRepo.findAll(Sort.by(Sort.Direction.DESC,"id"));
-        return list.stream()
-                .map(this::convertToResponse)
-                .collect(Collectors.toList());
+    public PhanTrangResponse<ThuongHieu> getThuongHieu(int pageNumber, int pageSize, String keyword) {
+        Pageable pageable = PageRequest.of(pageNumber-1, pageSize);
+        Page<ThuongHieu> page = thuongHieuRepo.getThuongHieu(pageable,keyword);
+        PhanTrangResponse<ThuongHieu> phanTrangResponse = new PhanTrangResponse<>();
+        phanTrangResponse.setPageNumber(page.getNumber());
+        phanTrangResponse.setPageSize(page.getSize());
+        phanTrangResponse.setTotalElements(page.getTotalElements());
+        phanTrangResponse.setTotalPages(page.getTotalPages());
+        phanTrangResponse.setResult(page.getContent());
+        return phanTrangResponse;
     }
 
     @Override
@@ -59,7 +69,7 @@ public class ThuongHieuServiceImpl implements ThuongHieuService {
         if (!thuongHieuRepo.existsById(id)) {
             throw new AppException(ErrorCode.BRAND_NOT_FOUND);
         }
-        thuongHieuRepo.deleteById(id);
+        thuongHieuRepo.DeleteThuongHieu(id);
     }
 
     @Override

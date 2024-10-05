@@ -24,15 +24,6 @@ public class ChatLieuServiceImpl implements ChatLieuService {
     @Autowired
  private ChatLieuRepo chatLieuRepo;
 
-
-//    @Override
-//    public List<ChatLieuResponse> findAll() {
-//        List<ChatLieu> chatLieuList = chatLieuRepo.findAll(Sort.by(Sort.Direction.DESC, "id"));
-//        return chatLieuList.stream()
-//                .map(this::convertToResponse)
-//                .collect(Collectors.toList());
-//    }
-
     @Override
     public PhanTrangResponse<ChatLieu> getChatLieu(int pageNumber, int pageSize, String keyword) {
         Pageable pageable = PageRequest.of(pageNumber-1, pageSize);
@@ -80,7 +71,7 @@ public class ChatLieuServiceImpl implements ChatLieuService {
         if (!chatLieuRepo.existsById(id)) {
             throw new AppException(ErrorCode.MATERIAL_NOT_FOUND);
         }
-        chatLieuRepo.deleteById(id);
+        chatLieuRepo.DeleteChatLieu(id);
     }
 
     @Override

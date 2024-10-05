@@ -25,4 +25,5 @@ public class DeGiay {
     @Column(name = "trang_thai")
     private Boolean trangThai;
 
+
 }

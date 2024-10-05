@@ -1,14 +1,19 @@
 package com.example.shoes.service.impl;
 
 
+import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.sanpham.request.SanPhamRequest;
 import com.example.shoes.dto.sanpham.response.SanPhamResponse;
+import com.example.shoes.entity.MauSac;
 import com.example.shoes.entity.SanPham;
 import com.example.shoes.exception.AppException;
 import com.example.shoes.exception.ErrorCode;
 import com.example.shoes.repository.SanPhamRepo;
 import com.example.shoes.service.SanPhamService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -32,11 +37,22 @@ public class SanPhamServiceImpl implements SanPhamService {
 
 
     @Override
-    public List<SanPhamResponse> findAll() {
-        List<SanPham> list = sanPhamRepo.findAll(Sort.by(Sort.Direction.DESC, "id"));
-        return list.stream()
+    public PhanTrangResponse<SanPhamResponse> getSanPham(int pageNumber, int pageSize, String keyword) {
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize); // Chuyển đổi sang zero-based page
+        Page<SanPham> page = sanPhamRepo.getSanPham(pageable, keyword);
+
+        // Chuyển đổi từng đối tượng SanPham trong page sang SanPhamResponse
+        List<SanPhamResponse> sanPhamResponses = page.getContent().stream()
                 .map(this::convertToSanPhamResponse)
                 .collect(Collectors.toList());
+
+        PhanTrangResponse<SanPhamResponse> phanTrangResponse = new PhanTrangResponse<>();
+        phanTrangResponse.setPageNumber(page.getNumber() + 1);
+        phanTrangResponse.setPageSize(page.getSize());
+        phanTrangResponse.setTotalElements(page.getTotalElements());
+        phanTrangResponse.setTotalPages(page.getTotalPages());
+        phanTrangResponse.setResult(sanPhamResponses);
+        return phanTrangResponse;
     }
 
     @Override

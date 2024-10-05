@@ -1,8 +1,11 @@
 package com.example.shoes.controller;
 
 
+import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.loai.request.LoaiRequest;
 import com.example.shoes.dto.loai.response.LoaiResponse;
+import com.example.shoes.entity.Loai;
+import com.example.shoes.entity.ThuongHieu;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.service.LoaiService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +27,14 @@ public class LoaiController {
     @Autowired
     private LoaiService loaiService;
     @GetMapping("/list")
-    public ApiResponse<List<LoaiResponse>> getAll() {
-        List<LoaiResponse> loaiResponses = loaiService.findAll();
-        return ApiResponse.<List<LoaiResponse>>builder()
-                .result(loaiResponses)
+    public ApiResponse<PhanTrangResponse<Loai>> getAllLoai(
+            @RequestParam(value = "keyword", defaultValue = "") String keyword,
+            @RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "5") int pageSize
+    ) {
+        PhanTrangResponse<Loai> loaiPhanTrangResponse = loaiService.getLoai(pageNumber, pageSize, keyword);
+        return ApiResponse.<PhanTrangResponse<Loai>>builder()
+                .result(loaiPhanTrangResponse)
                 .build();
     }
 

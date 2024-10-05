@@ -7,7 +7,7 @@ import com.example.shoes.dto.PhanTrangResponse;
 
 import com.example.shoes.dto.mausac.request.MauSacRequest;
 import com.example.shoes.dto.mausac.response.MauSacResponse;
-import com.example.shoes.entity.KichThuoc;
+
 import com.example.shoes.entity.MauSac;
 
 

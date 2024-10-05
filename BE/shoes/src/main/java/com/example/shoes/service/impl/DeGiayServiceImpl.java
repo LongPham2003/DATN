@@ -26,7 +26,7 @@ public class DeGiayServiceImpl implements DeGiayService {
 
     @Override
     public PhanTrangResponse<DeGiay> getDeGiay(int pageNumber, int pageSize, String keyword) {
-        Pageable pageable = PageRequest.of(pageNumber-1, pageSize);
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
         Page<DeGiay> page = deGiayRepo.getDeGiay(pageable, keyword);
         PhanTrangResponse<DeGiay> phanTrangResponse = new PhanTrangResponse<>();
         phanTrangResponse.setPageNumber(page.getNumber());
@@ -46,13 +46,13 @@ public class DeGiayServiceImpl implements DeGiayService {
 
     @Override
     public DeGiayResponse create(DeGiayRequet request) {
-        if(deGiayRepo.existsByTen(request.getTen())){
+        if (deGiayRepo.existsByTen(request.getTen())) {
             throw new AppException(ErrorCode.ATTRIBUTE_EXISTED);
         }
         DeGiay deGiay = new DeGiay();
         deGiay.setTen(request.getTen());
         deGiay.setTrangThai(request.getTrangThai());
-        DeGiay saveDeGiay =deGiayRepo.save(deGiay);
+        DeGiay saveDeGiay = deGiayRepo.save(deGiay);
         return convertToResponse(saveDeGiay);
     }
 
@@ -62,16 +62,16 @@ public class DeGiayServiceImpl implements DeGiayService {
                 .orElseThrow(() -> new AppException(ErrorCode.SHOE_SOLE_NOT_FOUND));
         deGiay.setTen(request.getTen());
         deGiay.setTrangThai(request.getTrangThai());
-        DeGiay updated =deGiayRepo.save(deGiay);
+        DeGiay updated = deGiayRepo.save(deGiay);
         return convertToResponse(updated);
     }
 
     @Override
     public void delete(Integer id) {
-        if (!deGiayRepo.existsById(id)) {
-            throw new AppException(ErrorCode.SHOE_SOLE_NOT_FOUND);
-        }
-        deGiayRepo.deleteById(id);
+       if(!deGiayRepo.existsById(id)) {
+           throw new AppException(ErrorCode.SHOE_SOLE_NOT_FOUND);
+       }
+       deGiayRepo.DeleteDeGiay(id);
     }
 
     @Override
