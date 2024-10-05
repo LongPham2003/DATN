@@ -23,6 +23,8 @@ import Login from "./pages/client/auth/Login";
 import SignUp from "./pages/client/auth/SignUp";
 import DoiMatKhau from "./pages/client/auth/DoiMatKhau";
 import ResetPass from "./pages/client/auth/QuenMatKhau";
+// import page from "./pages/util/test";
+import PhanThan from "./pages/util/test";
 function App() {
   return (
     <>
@@ -30,8 +32,8 @@ function App() {
         <Routes>
           {/* <Route path="/login" element={<Login />}></Route>
           <Route path="/signup" element={<SignUp />}></Route>
-          <Route path="/doimatkhau" element={<DoiMatKhau />}></Route>
-          <Route path="/resetpass" element={<ResetPass />}></Route> */}
+          <Route path="/doimatkhau" element={<DoiMatKhau />}></Route>*/}
+          <Route path="/" element={<PhanThan />}></Route>
 
           {/* router login */}
           <Route
