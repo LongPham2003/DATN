@@ -11,7 +11,7 @@ import java.time.LocalDate;
 public class SanPhamResponse {
 
     private Integer id;
-    private String idLoai;
+    private Integer idLoai;
     private String tenSanPham;
     private LocalDate ngayTao;
     private String moTa;

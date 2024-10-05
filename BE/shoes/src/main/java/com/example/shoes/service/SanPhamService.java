@@ -9,7 +9,7 @@ import com.example.shoes.entity.SanPham;
 
 
 public interface SanPhamService {
-    PhanTrangResponse<SanPham> getSanPham(int pageNumber, int pageSize, String keyword);
+    PhanTrangResponse<SanPhamResponse> getSanPham(int pageNumber, int pageSize, String keyword);
     SanPhamResponse getById(Integer id);
     SanPhamResponse create(SanPhamRequest request);
     SanPhamResponse update(Integer id, SanPhamRequest request);

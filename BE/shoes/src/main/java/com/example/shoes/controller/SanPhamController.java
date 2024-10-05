@@ -26,13 +26,13 @@ public class SanPhamController {
     @Autowired
     private SanPhamService sanPhamService;
     @GetMapping("/list")
-    public ApiResponse<PhanTrangResponse<SanPham>> getAllChatLieu(
+    public ApiResponse<PhanTrangResponse<SanPhamResponse>> getAllChatLieu(
             @RequestParam(value = "keyword", defaultValue = "") String keyword,
             @RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber,
             @RequestParam(value = "pageSize", defaultValue = "5") int pageSize
     ) {
-        PhanTrangResponse<SanPham> sanPhamPhanTrangResponse = sanPhamService.getSanPham(pageNumber, pageSize, keyword);
-        return ApiResponse.<PhanTrangResponse<SanPham>>builder()
+        PhanTrangResponse<SanPhamResponse> sanPhamPhanTrangResponse = sanPhamService.getSanPham(pageNumber, pageSize, keyword);
+        return ApiResponse.<PhanTrangResponse<SanPhamResponse>>builder()
                 .result(sanPhamPhanTrangResponse)
                 .build();
     }

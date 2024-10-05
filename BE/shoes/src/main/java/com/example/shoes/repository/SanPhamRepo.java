@@ -1,6 +1,7 @@
 package com.example.shoes.repository;
 
 
+import com.example.shoes.dto.sanpham.response.SanPhamResponse;
 import com.example.shoes.entity.SanPham;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -27,7 +27,7 @@ public class SanPhamServiceImpl implements SanPhamService {
     private SanPhamResponse convertToSanPhamResponse(SanPham sanPham) {
         SanPhamResponse sanPhamResponse = new SanPhamResponse();
         sanPhamResponse.setId(sanPham.getId());
-        sanPhamResponse.setIdLoai(sanPham.getIdLoai().getTen());
+        sanPhamResponse.setIdLoai(sanPham.getIdLoai().getId());
         sanPhamResponse.setTenSanPham(sanPham.getTenSanPham());
         sanPhamResponse.setNgayTao(sanPham.getNgayTao());
         sanPhamResponse.setMoTa(sanPham.getMoTa());
@@ -37,15 +37,21 @@ public class SanPhamServiceImpl implements SanPhamService {
 
 
     @Override
-    public PhanTrangResponse<SanPham> getSanPham(int pageNumber, int pageSize, String keyword) {
-        Pageable pageable = PageRequest.of(pageNumber-1, pageSize);
+    public PhanTrangResponse<SanPhamResponse> getSanPham(int pageNumber, int pageSize, String keyword) {
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize); // Chuyển đổi sang zero-based page
         Page<SanPham> page = sanPhamRepo.getSanPham(pageable, keyword);
-        PhanTrangResponse<SanPham> phanTrangResponse = new PhanTrangResponse<>();
-        phanTrangResponse.setPageNumber(page.getNumber());
+
+        // Chuyển đổi từng đối tượng SanPham trong page sang SanPhamResponse
+        List<SanPhamResponse> sanPhamResponses = page.getContent().stream()
+                .map(this::convertToSanPhamResponse)
+                .collect(Collectors.toList());
+
+        PhanTrangResponse<SanPhamResponse> phanTrangResponse = new PhanTrangResponse<>();
+        phanTrangResponse.setPageNumber(page.getNumber() + 1);
         phanTrangResponse.setPageSize(page.getSize());
         phanTrangResponse.setTotalElements(page.getTotalElements());
         phanTrangResponse.setTotalPages(page.getTotalPages());
-        phanTrangResponse.setResult(page.getContent());
+        phanTrangResponse.setResult(sanPhamResponses);
         return phanTrangResponse;
     }
 
