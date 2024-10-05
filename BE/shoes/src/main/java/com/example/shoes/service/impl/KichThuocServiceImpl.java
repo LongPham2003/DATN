@@ -73,7 +73,7 @@ public class KichThuocServiceImpl implements KichThuocService {
         if (!kichThuocRepo.existsById(id)) {
             throw new AppException(ErrorCode.MATERIAL_NOT_FOUND);
         }
-        kichThuocRepo.deleteById(id);
+        kichThuocRepo.DeleteKichThuoc(id);
     }
 
 

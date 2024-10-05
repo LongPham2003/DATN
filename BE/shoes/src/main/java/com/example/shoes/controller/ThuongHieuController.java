@@ -1,8 +1,11 @@
 package com.example.shoes.controller;
 
 
+import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.thuonghieu.request.ThuongHieuRequest;
 import com.example.shoes.dto.thuonghieu.response.ThuongHieuResponse;
+import com.example.shoes.entity.ChatLieu;
+import com.example.shoes.entity.ThuongHieu;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.service.ThuongHieuService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +27,14 @@ public class ThuongHieuController {
     @Autowired
     private ThuongHieuService thuongHieuService;
     @GetMapping("/list")
-    public ApiResponse<List<ThuongHieuResponse>> getAll() {
-        List<ThuongHieuResponse> thuongHieuResponses = thuongHieuService.findAll();
-        return ApiResponse.<List<ThuongHieuResponse>>builder()
-                .result(thuongHieuResponses)
+    public ApiResponse<PhanTrangResponse<ThuongHieu>> getAllThuongHieu(
+            @RequestParam(value = "keyword", defaultValue = "") String keyword,
+            @RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "5") int pageSize
+    ) {
+        PhanTrangResponse<ThuongHieu> thuongHieuResponse = thuongHieuService.getThuongHieu(pageNumber, pageSize, keyword);
+        return ApiResponse.<PhanTrangResponse<ThuongHieu>>builder()
+                .result(thuongHieuResponse)
                 .build();
     }
 

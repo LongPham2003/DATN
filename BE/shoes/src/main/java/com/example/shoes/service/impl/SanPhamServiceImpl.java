@@ -1,14 +1,19 @@
 package com.example.shoes.service.impl;
 
 
+import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.sanpham.request.SanPhamRequest;
 import com.example.shoes.dto.sanpham.response.SanPhamResponse;
+import com.example.shoes.entity.MauSac;
 import com.example.shoes.entity.SanPham;
 import com.example.shoes.exception.AppException;
 import com.example.shoes.exception.ErrorCode;
 import com.example.shoes.repository.SanPhamRepo;
 import com.example.shoes.service.SanPhamService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +27,7 @@ public class SanPhamServiceImpl implements SanPhamService {
     private SanPhamResponse convertToSanPhamResponse(SanPham sanPham) {
         SanPhamResponse sanPhamResponse = new SanPhamResponse();
         sanPhamResponse.setId(sanPham.getId());
-        sanPhamResponse.setIdLoai(sanPham.getIdLoai().getId());
+        sanPhamResponse.setIdLoai(sanPham.getIdLoai().getTen());
         sanPhamResponse.setTenSanPham(sanPham.getTenSanPham());
         sanPhamResponse.setNgayTao(sanPham.getNgayTao());
         sanPhamResponse.setMoTa(sanPham.getMoTa());
@@ -32,11 +37,16 @@ public class SanPhamServiceImpl implements SanPhamService {
 
 
     @Override
-    public List<SanPhamResponse> findAll() {
-        List<SanPham> list = sanPhamRepo.findAll(Sort.by(Sort.Direction.DESC, "id"));
-        return list.stream()
-                .map(this::convertToSanPhamResponse)
-                .collect(Collectors.toList());
+    public PhanTrangResponse<SanPham> getSanPham(int pageNumber, int pageSize, String keyword) {
+        Pageable pageable = PageRequest.of(pageNumber-1, pageSize);
+        Page<SanPham> page = sanPhamRepo.getSanPham(pageable, keyword);
+        PhanTrangResponse<SanPham> phanTrangResponse = new PhanTrangResponse<>();
+        phanTrangResponse.setPageNumber(page.getNumber());
+        phanTrangResponse.setPageSize(page.getSize());
+        phanTrangResponse.setTotalElements(page.getTotalElements());
+        phanTrangResponse.setTotalPages(page.getTotalPages());
+        phanTrangResponse.setResult(page.getContent());
+        return phanTrangResponse;
     }
 
     @Override

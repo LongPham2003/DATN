@@ -72,7 +72,7 @@ public class MauSacServiceImpl implements MauSacService {
         if (!mauSacRepo.existsById(id)) {
             throw new AppException(ErrorCode.MATERIAL_NOT_FOUND);
         }
-        mauSacRepo.deleteById(id);
+        mauSacRepo.DeleteMauSac(id);
     }
 
 

@@ -23,6 +23,5 @@ public class ChatLieu {
 
     @NotNull
     @Column(name = "trang_thai")
-    private Boolean trangThai;
-
+    private Boolean trangThai ;
 }
