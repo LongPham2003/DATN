@@ -7,6 +7,8 @@ import com.example.shoes.entity.KhachHang;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.service.KhachHangService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,8 +19,11 @@ public class KhachHangController {
     @Autowired
     KhachHangService khachHangService;
 
+
     @GetMapping("/getall")
     public ApiResponse<List<KhachHangResponse>> getAll(){
+
+        System.out.println("long");
         return ApiResponse.<List<KhachHangResponse>>builder()
                 .result(khachHangService.findAll())
                 .build();

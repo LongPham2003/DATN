@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-=======
+
 import React, { useState, useEffect } from 'react';
 
 const Carousel = () => {
@@ -23,7 +23,6 @@ const Carousel = () => {
 
   return (
     <div className="relative h-64 w-full overflow-hidden">
-=======
     <div className="relative w-full h-64 overflow-hidden">
       {images.map((image, index) => (
         <img
