@@ -2,27 +2,17 @@ import { button } from "@material-tailwind/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
-// index.js hoặc App.js
-// import "bootstrap/dist/css/bootstrap.min.css";
-// import ReactPaginate from "https://cdn.skypack.dev/react-paginate@7.1.3";
+import { Bounce, toast, ToastContainer } from "react-toastify";
 
 export default function ChatLieu() {
-  // Trạng thái để lưu trữ danh sách chất liệu
   const [chatlieu, setChatLieu] = useState([]);
-
-  // Trạng thái để lưu trữ chất liệu mới
-  const [chatLieuMoi, setChatLieuMoi] = useState({
-    ten: "",
-    trangThai: true,
-  });
-
+  const [chatLieuMoi, setChatLieuMoi] = useState({ ten: "", trangThai: true });
   const [trangHienTai, setTrangHienTai] = useState(1);
-
   const [tongSoTrang, setTongSoTrang] = useState(0);
-  const pages = Array.from({ length: tongSoTrang }, (_, index) => index + 1);
-  const itemsPerPage = 5; // Đặt số mục trên mỗi trang là 5
+  const [danhSachTenChatLieu, setDanhSachTenChatLieu] = useState([]);
+  const [error, setError] = useState("");
+  const itemsPerPage = 5;
 
-  // Hàm để tải danh sách chất liệu
   const loadChatLieu = async (page) => {
     try {
       const response = await axios.get(
@@ -34,56 +24,96 @@ export default function ChatLieu() {
           ? 0
           : response.data.result.totalPages,
       );
-      console.log("Total pages: ", response.data.result.totalPages);
     } catch (error) {
       console.error("có lỗi xảy ra", error);
     }
   };
 
-  const themMoiChatLieu = async () => {
+  const layTenChatLieu = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/api/chatlieu/ten`,
+      );
+      setDanhSachTenChatLieu(response.data);
+      // console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const themMoiChatLieu = async (e) => {
+    e.preventDefault();
+    if (chatLieuMoi.ten.trim() === "") {
+      setError("Tên chất liệu không được để trống");
+      return;
+    }
     try {
       await axios.post(`http://localhost:8080/api/chatlieu/add`, chatLieuMoi);
       loadChatLieu();
       setChatLieuMoi({ ten: "", trangThai: true });
-      alert("Thêm chất liệu mới thành công!");
+      toast.success("Thêm màu sắc mới thành công", {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        newestOnTop: false,
+        closeOnClick: true,
+        rtl: false,
+        pauseOnFocusLoss: true,
+        draggable: true,
+        pauseOnHover: true,
+        theme: "light",
+        transition: Bounce,
+      });
     } catch (error) {
       console.error("Failed to add new chat lieu", error);
-      alert("Thêm chất liệu mới thất bại!");
+      toast.error("Thêm mới thất bại", {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
     }
   };
-
   const onInputChange = (e) => {
-    setChatLieuMoi({ ...chatLieuMoi, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setChatLieuMoi({ ...chatLieuMoi, [name]: value });
+    if (name === "ten") {
+      if (value.trim() === "") {
+        setError("Tên chất liệu không được để trống");
+      } else {
+        const tenDaTonTai = danhSachTenChatLieu.includes(value);
+        if (tenDaTonTai) {
+          setError("Tên chất liệu đã tồn tại");
+        } else {
+          setError("");
+        }
+      }
+    }
   };
 
   useEffect(() => {
     loadChatLieu(trangHienTai);
+    layTenChatLieu();
   }, [trangHienTai]);
-  const handlePageChange = (selectedPage) => {
-    console.log(selectedPage);
 
+  const handlePageChange = (selectedPage) => {
     setTrangHienTai(selectedPage.selected + 1);
   };
-  // const nextPage = (e) => {
-  //   // console.log(e);
-  //   loadChatLieu(+e.selected + 1);
-  // };
-  // Tính toán số dòng cần hiển thị
-  const totalRows = itemsPerPage; // Số dòng cần hiển thị trên mỗi trang
-  const emptyRows = totalRows - chatlieu.length; // Số dòng trống cần thêm
+
+  const totalRows = itemsPerPage;
+  const emptyRows = totalRows - chatlieu.length;
 
   return (
     <>
       <div className="h-screen w-full overflow-auto">
         <div className="mb-4 rounded bg-white p-4 shadow">
           <h2 className="mb-2 text-xl font-bold">Thêm Chất Liệu Mới</h2>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault(); // Ngăn chặn hành vi mặc định
-              themMoiChatLieu(); // Gọi hàm thêm mới chất liệu}}
-            }}
-            className="-mx-2 flex flex-wrap"
-          >
+          <form onSubmit={themMoiChatLieu} className="-mx-2 flex flex-wrap">
             <div className="mb-4 w-1/2 px-2">
               <label htmlFor="tenChatLieu" className="mb-1">
                 Tên Chất Liệu:
@@ -92,10 +122,11 @@ export default function ChatLieu() {
                 type="text"
                 id="tenChatLieu"
                 name="ten"
-                onChange={(e) => onInputChange(e)}
+                onChange={onInputChange}
                 className="w-full rounded border p-2"
                 placeholder="Nhập tên chất liệu"
               />
+              {error && <p className="text-red-500">{error}</p>}
             </div>
             <div className="w-full px-2">
               <button
@@ -106,6 +137,7 @@ export default function ChatLieu() {
               </button>
             </div>
           </form>
+          <ToastContainer />
         </div>
         <table className="w-full border-collapse">
           <thead>
@@ -114,14 +146,13 @@ export default function ChatLieu() {
               <th className="w-1/3 border border-gray-300 p-2">Tên</th>
               <th className="w-1/3 border border-gray-300 p-2">Trạng thái</th>
               <th className="w-1/3 border border-gray-300 p-2">Hành động</th>
-              {/* Add more headers as needed */}
             </tr>
           </thead>
           <tbody>
             {chatlieu.map((item, index) => (
               <tr key={item.id}>
                 <td className="w-10 border border-gray-300 p-2 text-center">
-                  {item.id}
+                  {index + 1 + (trangHienTai - 1) * itemsPerPage}
                 </td>
                 <td className="w-1/3 border border-gray-300 p-2 text-center">
                   {item.ten}
@@ -136,12 +167,9 @@ export default function ChatLieu() {
                 </td>
               </tr>
             ))}
-            {/* Thêm các dòng trống nếu cần */}
             {emptyRows > 0 &&
               Array.from({ length: emptyRows }).map((_, index) => (
                 <tr key={`empty-${index}`} style={{ height: "57px" }}>
-                  {" "}
-                  {/* Đặt độ cao hàng là 57px */}
                   <td className="border border-gray-300 p-2"></td>
                   <td className="border border-gray-300 p-2"></td>
                   <td className="border border-gray-300 p-2"></td>
@@ -150,17 +178,15 @@ export default function ChatLieu() {
               ))}
           </tbody>
         </table>
-
-        {/* Giữ ReactPaginate ở nguyên một vị trí */}
         <div className="mr-14 mt-4 flex justify-end">
           <ReactPaginate
             previousLabel={"< Previous"}
             nextLabel={"Next >"}
             breakLabel={"..."}
-            pageCount={tongSoTrang} // Tổng số trang
+            pageCount={tongSoTrang}
             marginPagesDisplayed={2}
             pageRangeDisplayed={2}
-            onPageChange={handlePageChange} // Hàm xử lý khi người dùng chọn trang
+            onPageChange={handlePageChange}
             containerClassName={"flex"}
             previousClassName={"mx-1"}
             previousLinkClassName={
@@ -176,19 +202,14 @@ export default function ChatLieu() {
             }
             pageClassName={"mx-1"}
             pageLinkClassName={
-              "px-3 py-1 border-b border-green-300 rounded-full hover:bg-gray-200 transition duration-200"
+              "px-3 py-1 border-b border-green-300 rounded-full hover:bg-green-500 transition duration-200"
             }
             activeClassName={"bg-green-500 rounded-full text-white"}
             activeLinkClassName={
               "px-4 py-2 bg-green-500 text-white rounded-full"
-            } // Đảm bảo nền đầy đủ cho nút đang hoạt động
+            }
           />
         </div>
-        {/* <button> First </button>
-        {pages.map((trang, index) => (
-          <button key={trang}>{trang}</button>
-        ))}
-        <button> Last </button> */}
       </div>
     </>
   );
