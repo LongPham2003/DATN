@@ -7,7 +7,10 @@ import com.example.shoes.entity.MauSac;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.service.MauSacService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -25,6 +28,12 @@ public class MauSacController {
         return ApiResponse.<PhanTrangResponse<MauSac>>builder()
                 .result(mauSac)
                 .build();
+    }
+
+    @GetMapping("/ten")
+    public ResponseEntity<List<String>> getAllTen(){
+        List<String> listTen = mausacService.getAllTenMauSac();
+        return ResponseEntity.ok(listTen);
     }
 
     @GetMapping("/{id}")

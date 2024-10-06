@@ -15,6 +15,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 @Service
 public class MauSacServiceImpl implements MauSacService {
@@ -70,6 +73,12 @@ public class MauSacServiceImpl implements MauSacService {
         }
         mauSacRepo.deleteById(id);
     }
+
+    @Override
+    public List<String> getAllTenMauSac() {
+        return mauSacRepo.findAll().stream().map(MauSac::getTen).collect(Collectors.toList());
+    }
+
 
     private MauSacResponse convertToResponse(MauSac mauSac) {
         MauSacResponse mauSacResponse = new MauSacResponse();

@@ -16,4 +16,5 @@ public interface MauSacService {
     MauSacResponse create(MauSacRequest request);
     MauSacResponse update(Integer id, MauSacRequest request);
     void delete(Integer id);
+    List<String> getAllTenMauSac();
 }
