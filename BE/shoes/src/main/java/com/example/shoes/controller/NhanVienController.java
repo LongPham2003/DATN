@@ -7,6 +7,10 @@ import com.example.shoes.entity.NhanVien;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.service.NhanVienService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/nhanvien")
 @RequiredArgsConstructor
 public class NhanVienController {
+    private static final Logger log = LoggerFactory.getLogger(NhanVienController.class);
     private final NhanVienService nhanVienService;
 
     @GetMapping("/search")
@@ -22,11 +27,15 @@ public class NhanVienController {
             @RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber,
             @RequestParam(value = "pageSize", defaultValue = "5") int pageSize
     ) {
-
+        System.out.println("long");
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        log.info("username : "+authentication.getName());
+        log.info("role : "+authentication.getAuthorities());
         PhanTrangResponse<NhanVien> list = nhanVienService.getNhanVien(pageNumber, pageSize, keyword);
 
         return ApiResponse.<PhanTrangResponse<NhanVien>>builder()
                 .result(list).build();
+
     }
 
     @PostMapping("/add")

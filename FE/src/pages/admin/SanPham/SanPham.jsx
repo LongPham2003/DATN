@@ -1,40 +1,45 @@
+import { useState } from "react";
+
+import ListProduct from "./Product/ListProduct";
+import ListProductDetail from "./ProductDetail/ListProductDetail";
+
 export default function SanPham() {
+  const [activeTab, setActiveTab] = useState(0);
+
+  const tabs = [
+    {
+      name: "San Pham",
+      content: <ListProduct />,
+    },
+    {
+      name: "San Pham Chi tiet",
+      content: <ListProductDetail />,
+    },
+  ];
+
   return (
-    <>
-      <div className="ml-9">
-        <span className="text-5xl">Danh sách sản phẩm</span>
-        <div className="mt-4">
-          <table className="border-slate-500 table-auto border-collapse border">
-            <thead>
-              <tr className="bg-gray-100 text-sm uppercase leading-normal text-gray-600">
-                <th className="px-6 py-3 text-left">ID</th>
-                <th className="px-6 py-3 text-left">Name</th>
-                <th className="px-6 py-3 text-left">Age</th>
-                <th className="px-6 py-3 text-left">Job</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="border-slate-600 border">
-                <td className="border border-blue-gray-800">
-                  The Sliding Mr. Bones (Next Stop, Pottersville)
-                </td>
-                <td className="border border-blue-gray-800">Malcolm Lockyer</td>
-                <td className="border border-blue-gray-800">1961</td>
-              </tr>
-              <tr className="border-slate-600 border">
-                <td>Witchy Woman</td>
-                <td>The Eagles</td>
-                <td>1972</td>
-              </tr>
-              <tr className="border-slate-600 border">
-                <td>Shining Star</td>
-                <td>Earth, Wind, and Fire</td>
-                <td>1975</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+    <div className="mx-auto min-w-full max-w-md">
+      {/* Tabs Navigation */}
+      <div className="flex space-x-4 border-b border-gray-300">
+        {tabs.map((tab, index) => (
+          <button
+            key={index}
+            onClick={() => setActiveTab(index)}
+            className={`px-4 py-2 transition-opacity duration-300 ${
+              activeTab === index
+                ? "border-b-2 border-blue-500 font-semibold text-blue-500"
+                : "text-gray-600 hover:text-blue-500"
+            }`}
+          >
+            {tab.name}
+          </button>
+        ))}
       </div>
-    </>
+
+      {/* Tab Content */}
+      <div className="mt-4 rounded-md border bg-white p-4 shadow-md">
+        {tabs[activeTab].content}
+      </div>
+    </div>
   );
 }

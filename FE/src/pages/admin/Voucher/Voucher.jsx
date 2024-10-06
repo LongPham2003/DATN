@@ -16,7 +16,7 @@ export default function Voucher() {
 
   return (
     <>
-      <div className="bg-stone-100 mx-4 h-full py-4">
+      <div className="mx-4 h-full bg-stone-100 py-4">
         <span style={{ fontSize: "40px", fontWeight: "bold" }}>
           Quản lý voucher
         </span>
@@ -43,7 +43,7 @@ export default function Voucher() {
               <div className="flex py-4">
                 <label className="mr-2">Mã khuyến mãi: </label>
                 <input
-                  className="border-slate-300 placeholder:text-slate-400 focus:border-sky-500 focus:ring-sky-500 block w-60 rounded-md border bg-white py-2 pl-9 pr-3 shadow-sm placeholder:italic focus:outline-none focus:ring-1 sm:text-sm"
+                  className="block w-60 rounded-md border border-slate-300 bg-white py-2 pl-9 pr-3 shadow-sm placeholder:italic placeholder:text-slate-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 sm:text-sm"
                   placeholder="Mã voucher..."
                   type="text"
                 />
@@ -51,7 +51,7 @@ export default function Voucher() {
               <div className="flex py-4">
                 <label className="mr-2">Tên khuyến mãi: </label>
                 <input
-                  className="border-slate-300 placeholder:text-slate-400 focus:border-sky-500 focus:ring-sky-500 block w-60 rounded-md border bg-white py-2 pl-9 pr-3 shadow-sm placeholder:italic focus:outline-none focus:ring-1 sm:text-sm"
+                  className="block w-60 rounded-md border border-slate-300 bg-white py-2 pl-9 pr-3 shadow-sm placeholder:italic placeholder:text-slate-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 sm:text-sm"
                   placeholder="Tên voucher..."
                   type="text"
                 />
@@ -59,20 +59,20 @@ export default function Voucher() {
               <div className="flex py-4">
                 <label className="mr-2">Ngày bắt đầu: </label>
                 <input
-                  className="border-slate-300 placeholder:text-slate-400 focus:border-sky-500 focus:ring-sky-500 block w-60 rounded-md border bg-white py-2 pl-9 pr-3 shadow-sm placeholder:italic focus:outline-none focus:ring-1 sm:text-sm"
+                  className="block w-60 rounded-md border border-slate-300 bg-white py-2 pl-9 pr-3 shadow-sm placeholder:italic placeholder:text-slate-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 sm:text-sm"
                   type="date"
                 />
               </div>
               <div className="flex py-4">
                 <label className="mr-2">Điều kiện giảm: </label>
                 <input
-                  className="border-slate-300 placeholder:text-slate-400 focus:border-sky-500 focus:ring-sky-500 block w-60 rounded-md border bg-white py-2 pl-9 pr-3 shadow-sm placeholder:italic focus:outline-none focus:ring-1 sm:text-sm"
+                  className="block w-60 rounded-md border border-slate-300 bg-white py-2 pl-9 pr-3 shadow-sm placeholder:italic placeholder:text-slate-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 sm:text-sm"
                   type="text"
                 />
               </div>
               <div className="flex py-4">
                 <label className="mr-11">Trạng thái: </label>
-                <select className="focus:border-sky-500 block w-60 rounded border border-gray-300 bg-white px-4 pr-8 leading-tight text-gray-700 focus:outline-none">
+                <select className="block w-60 rounded border border-gray-300 bg-white px-4 pr-8 leading-tight text-gray-700 focus:border-sky-500 focus:outline-none">
                   <option>Tất cả</option>
                   <option>Đang kích hoạt</option>
                   <option>Ngừng kích hoạt</option>
@@ -81,13 +81,13 @@ export default function Voucher() {
               <div className="flex py-4">
                 <label className="mr-2">Ngày kết thúc: </label>
                 <input
-                  className="border-slate-300 placeholder:text-slate-400 focus:border-sky-500 focus:ring-sky-500 block w-60 rounded-md border bg-white py-2 pl-9 pr-3 shadow-sm placeholder:italic focus:outline-none focus:ring-1 sm:text-sm"
+                  className="block w-60 rounded-md border border-slate-300 bg-white py-2 pl-9 pr-3 shadow-sm placeholder:italic placeholder:text-slate-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 sm:text-sm"
                   type="date"
                 />
               </div>
             </div>
             <div className="pt-8 text-center">
-              <button className="bg-sky-500 via-sky-500 to-emerald-500 h-[35px] w-40 rounded-full border-2 from-indigo-500 from-10% via-30% to-90% hover:bg-gradient-to-r hover:text-black">
+              <button className="h-[35px] w-40 rounded-full border-2 bg-sky-500 from-indigo-500 from-10% via-sky-500 via-30% to-emerald-500 to-90% hover:bg-gradient-to-r hover:text-black">
                 Làm mới
               </button>
             </div>
@@ -118,22 +118,24 @@ export default function Voucher() {
                           <th className="px-6 py-4">Last</th>
                           <th className="px-6 py-4">Handle</th>
                           <th className="px-6 py-4">Action</th>
+                          <th className="px-6 py-4">Action</th>
+                          <th className="px-6 py-4">Action</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <tr className="border-neutral-950 border-b font-medium">
+                        <tr className="border-b border-neutral-950 font-medium">
                           <td className="px-6 py-4">1</td>
                           <td className="px-6 py-4">Mark</td>
                           <td className="px-6 py-4">Otto</td>
                           <td className="px-6 py-4">@mdo</td>
                         </tr>
-                        <tr className="border-neutral-950 border-b font-medium">
+                        <tr className="border-b border-neutral-950 font-medium">
                           <td className="px-6 py-4">2</td>
                           <td className="px-6 py-4">Jacob</td>
                           <td className="px-6 py-4">Thornton</td>
                           <td className="px-6 py-4">@fat</td>
                         </tr>
-                        <tr className="border-neutral-950 border-b font-medium">
+                        <tr className="border-b border-neutral-950 font-medium">
                           <td className="px-6 py-4">3</td>
                           <td className="px-6 py-4">Larry</td>
                           <td className="px-6 py-4">Wild</td>

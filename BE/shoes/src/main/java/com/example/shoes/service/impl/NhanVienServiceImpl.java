@@ -58,6 +58,7 @@ public class NhanVienServiceImpl implements NhanVienService {
         taiKhoan.setEmail(request.getEmail());
         taiKhoan.setPassword(passwordEncoder.encode(request.getMatKhau()));
         taiKhoan.setTrangThai(true);
+        taiKhoan.setRoles(Roles.ROLE_NHANVIEN.name());
 
         taiKhoanRepo.save(taiKhoan);
 
@@ -68,9 +69,7 @@ public class NhanVienServiceImpl implements NhanVienService {
         nhanVien.setGioiTinh(request.getGioiTinh());
         nhanVien.setDiaChi(request.getDiaChi());
         nhanVien.setNgaySinh(request.getNgaySinh());
-        nhanVien.setRoles(Roles.NHANVIEN);
         nhanVien.setTaiKhoan(taiKhoan);
-
         return nhanVienRepo.save(nhanVien);
 
     }
@@ -94,12 +93,13 @@ public class NhanVienServiceImpl implements NhanVienService {
         nhanVien.setGioiTinh(request.getGioiTinh());
         nhanVien.setDiaChi(request.getDiaChi());
         nhanVien.setNgaySinh(request.getNgaySinh());
-        nhanVien.setRoles(Roles.NHANVIEN);
+
 
         TaiKhoan taiKhoan = nhanVienOptional.get().getTaiKhoan();
         taiKhoan.setEmail(request.getEmail());
         taiKhoan.setPassword(passwordEncoder.encode(request.getMatKhau()));
         taiKhoan.setTrangThai(request.getTrangThai());
+        taiKhoan.setRoles(Roles.ROLE_NHANVIEN.name());
         taiKhoanRepo.save(taiKhoan);
         nhanVien.setTaiKhoan(taiKhoan);
 

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import "react-toastify/dist/ReactToastify.css";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 
@@ -50,10 +51,12 @@ const DoiMatKhau = () => {
         }
       });
       setError("");
+
       toast.success("Thành công");
       setTimeout(() => {
-        navigate("/login");
+        navigate("/home");
       }, 500);
+      navigate("/login");
     } catch (error) {
       setError(error.message);
     }
@@ -115,6 +118,7 @@ const DoiMatKhau = () => {
         </div>
 
         {error && <p className="mb-4 text-sm text-red-500">{error}</p>}
+
         <button
           type="submit"
           className="w-full rounded-lg bg-blue-500 py-2 text-white transition duration-200 hover:bg-blue-600"
@@ -122,6 +126,7 @@ const DoiMatKhau = () => {
           Đổi mật khẩu
         </button>
       </form>
+
       <ToastContainer
         position="top-right"
         autoClose={1000}

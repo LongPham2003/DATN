@@ -23,8 +23,9 @@ public enum ErrorCode {
     SIZE_NOT_FOUND(1005, "Không tìm thấy  kich thuoc  ", HttpStatus.NOT_FOUND),
     CATEGORY_NOT_FOUND(1005, "Không tìm thấy  loai  ", HttpStatus.NOT_FOUND),
     COLOR_NOT_FOUND(1005, "Không tìm thấy  mau sac  ", HttpStatus.NOT_FOUND),
-    BRAND_NOT_FOUND(1005, "Không tìm thấy thuong hieu  ", HttpStatus.NOT_FOUND),
-    PRODUCT_NOT_FOUND(1005, "Không tìm thấy san pham  ", HttpStatus.NOT_FOUND),
+    VOUCHER_NOT_FOUND(1005,"Không tìm thấy phiếu giảm giá",HttpStatus.NOT_FOUND),
+    PRODUCT_NOT_FOUND(1005,"Không tìm thấy sản phẩm",HttpStatus.NOT_FOUND),
+    BRAND_NOT_FOUND(1005,"Không tìm thấy hãng",HttpStatus.NOT_FOUND),
     ATTRIBUTE_EXISTED(1005, "Đã Tồn Tại ", HttpStatus.BAD_REQUEST)
 
     ;
