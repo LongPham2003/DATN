@@ -6,17 +6,19 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
-
-public class CustomUserDetails implements UserDetails {
+/**
+ * @author long
+ */
+// tùy chỉnh để cung cấp  thông tin từ taikhoan cho spring security
+public class CustomTaiKhoanDetails implements UserDetails {
     private TaiKhoan taiKhoan;
 
-    public CustomUserDetails(TaiKhoan taiKhoan) {
+    public CustomTaiKhoanDetails(TaiKhoan taiKhoan) {
         this.taiKhoan = taiKhoan;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Mặc định, chúng ta sẽ sử dụng ROLE_USER.
         return Collections.singleton(new SimpleGrantedAuthority(taiKhoan.getRoles()));
     }
 

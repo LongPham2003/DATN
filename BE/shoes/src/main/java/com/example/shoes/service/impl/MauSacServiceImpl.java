@@ -75,7 +75,7 @@ public class MauSacServiceImpl implements MauSacService {
         if (!mauSacRepo.existsById(id)) {
             throw new AppException(ErrorCode.MATERIAL_NOT_FOUND);
         }
-        mauSacRepo.DeleteMauSac(id);
+        mauSacRepo.deleteById(id);
     }
 
 
@@ -96,6 +96,13 @@ public class MauSacServiceImpl implements MauSacService {
         return mauSacList.stream()
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());
+    }
+
+
+
+    @Override
+    public List<String> getAllTenMauSac() {
+        return mauSacRepo.findAll().stream().map(MauSac::getTen).collect(Collectors.toList());
     }
 
     // Phương thức chuyển đổi Mausac thành MauSacResponse
