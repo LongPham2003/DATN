@@ -5,6 +5,7 @@ import com.example.shoes.dto.khachhang.request.KhachHangRequest;
 import com.example.shoes.dto.khachhang.response.KhachHangResponse;
 import com.example.shoes.email.EmailService;
 import com.example.shoes.entity.*;
+import com.example.shoes.enums.Roles;
 import com.example.shoes.exception.AppException;
 import com.example.shoes.exception.ErrorCode;
 import com.example.shoes.repository.DiaChiRepo;
@@ -84,6 +85,7 @@ public class KhachHangServiceImpl implements KhachHangService {
         taiKhoan.setEmail(request.getEmail());
         taiKhoan.setTrangThai(true);
         taiKhoan.setPassword(passwordEncoder.encode(request.getMatKhau()));
+        taiKhoan.setRoles(Roles.ROLE_KHACHHANG.name());
 
         taiKhoanRepo.save(taiKhoan);
 

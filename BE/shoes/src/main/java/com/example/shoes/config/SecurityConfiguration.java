@@ -24,20 +24,24 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 import java.util.Arrays;
 
+/**
+ * @author long
+ */
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-
 public class SecurityConfiguration {
 
     private final String[] PUBLIC_ENDPOINTS = {"/taikhoan/getall", "/auth/signup", "/auth/login",
-            "/auth/resetpass", "/auth/doimatkhau","/nhanvien/search"};
+            "/auth/resetpass", "/auth/doimatkhau","/nhanvien/search","/khachhang/add"};
 
 //    private final String[] PUBLIC_ENDPOINTS = {};
 
@@ -47,16 +51,15 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
-                        .requestMatchers("/taikhoan/getall").hasRole("NHANVIEN")
+                        .requestMatchers("/khachhang/getall").hasRole("NHANVIEN")
                         .anyRequest().authenticated())
-                .httpBasic(Customizer.withDefaults())
-                .exceptionHandling(exceptionHandling ->
-                        exceptionHandling.authenticationEntryPoint((request, response, authException) -> {
-                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized: " + authException.getMessage());
-                        }));
+                .exceptionHandling(ex -> ex.accessDeniedHandler(new CustomAccessDeniedHandler()))
+                .httpBasic(Customizer.withDefaults());
         return http.build();
     }
 
+    // tạo ra 1 authenmanager tùy chỉnh để sd userdetailservice ấy thông tin người dùng
+    // từ csdl để xác thực bằng dao
     @Bean
     public AuthenticationManager authenticationManager(UserDetailsService userDetailsService) {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();

@@ -12,7 +12,7 @@ public enum ErrorCode {
     USERNAME_INVALID(1003, "password must be at character 3 ", HttpStatus.BAD_REQUEST),
     PASSWORD_INVALID(1004, "password must be at character 8 ", HttpStatus.BAD_REQUEST),
     USER_NOT_EXISTED(1005, "Tài khoản không tồn tại ", HttpStatus.NOT_FOUND),
-    UNAUTHENTICATED(1006, "unanthenticated", HttpStatus.UNAUTHORIZED),
+    UNAUTHENTICATED(1006, "Bạn không có quyền truy cập", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(1007,"you do not have pemision",HttpStatus.FORBIDDEN),
     INVALID_DOB(1008,"Your age must be at {min}",HttpStatus.BAD_REQUEST),
     INVALID_CREDENTIALS(1009,"In valid credentials",HttpStatus.BAD_REQUEST),
