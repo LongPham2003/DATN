@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -41,7 +42,7 @@ public class HinhAnhServiceImpl implements HinhAnhService {
         hinhAnh.setTenAnh(request.getTenAnh());
 
         // Xử lý Base64: Loại bỏ tiền tố "data:image/png;base64," nếu có, và loại bỏ các ký tự không hợp lệ.
-        String base64Data = request.getDuLieuAnhBase64();
+        String base64Data = Arrays.toString(request.getDuLieuAnhBase64());
         if (base64Data != null && base64Data.contains("base64,")) {
             base64Data = base64Data.substring(base64Data.indexOf("base64,") + "base64,".length());
         }
@@ -68,7 +69,7 @@ public class HinhAnhServiceImpl implements HinhAnhService {
                 .orElseThrow(() -> new AppException(ErrorCode.IMAGE_NOT_FOUND));
         hinhAnh.setTenAnh(request.getTenAnh());
         // Xử lý Base64
-        String base64Data = request.getDuLieuAnhBase64();
+        String base64Data = Arrays.toString(request.getDuLieuAnhBase64());
         if (base64Data != null && base64Data.contains("base64,")) {
             base64Data = base64Data.substring(base64Data.indexOf("base64,") + "base64,".length()); // Loại bỏ phần tiền tố
         }

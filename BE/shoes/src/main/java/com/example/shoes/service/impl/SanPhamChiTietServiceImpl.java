@@ -4,8 +4,13 @@ import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.sanpham.response.SanPhamResponse;
 import com.example.shoes.dto.sanphamchitiet.request.SanPhamChiTietRequest;
 import com.example.shoes.dto.sanphamchitiet.response.SanPhamChiTietResponse;
+import com.example.shoes.entity.ChatLieu;
+import com.example.shoes.entity.DeGiay;
+import com.example.shoes.entity.KichThuoc;
+import com.example.shoes.entity.MauSac;
 import com.example.shoes.entity.SanPham;
 import com.example.shoes.entity.SanPhamChiTiet;
+import com.example.shoes.entity.ThuongHieu;
 import com.example.shoes.repository.SanPhamChiTietRepo;
 import com.example.shoes.service.SanPhamChiTietService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 @Service
@@ -49,13 +55,37 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
 
     @Override
     public SanPhamChiTietResponse create(SanPhamChiTietRequest request) {
-        return null;
+        SanPhamChiTiet spct = new SanPhamChiTiet();
+        SanPham sanPham = new SanPham(request.getIdSanPham());
+        ChatLieu chatLieu = new ChatLieu(request.getIdChatLieu());
+        MauSac mauSac = new MauSac(request.getIdMauSac());
+        KichThuoc kichThuoc = new KichThuoc(request.getIdKichThuoc());
+        
+        ThuongHieu thuongHieu = new ThuongHieu(request.getIdThuongHieu());
+        DeGiay deGiay = new DeGiay(request.getIdDeGiay());
+
+        spct.setIdSanPham(sanPham);
+        spct.setIdChatLieu(chatLieu);
+        spct.setIdMauSac(mauSac);
+        spct.setIdKichThuoc(kichThuoc);
+        spct.setIdThuongHieu(thuongHieu);
+        spct.setIdDeGiay(deGiay);
+        spct.setNgayTao(LocalDate.now());
+        spct.setNgayCapNhat(LocalDate.now());
+        spct.setDonGia(request.getDonGia());
+        spct.setSoLuong(request.getSoLuong());
+        spct.setTrangThai(request.getTrangThai());
+
+        SanPhamChiTiet savedSpct = sanPhamChiTietRepo.save(spct);
+        return converToResponse(savedSpct);
     }
 
     @Override
     public SanPhamChiTietResponse update(Integer id, SanPhamChiTietRequest request) {
         return null;
     }
+
+
     private SanPhamChiTietResponse converToResponse(SanPhamChiTiet sanPhamChiTiet) {
         SanPhamChiTietResponse response = new SanPhamChiTietResponse();
         response.setId(sanPhamChiTiet.getId());
