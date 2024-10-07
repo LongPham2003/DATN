@@ -7,13 +7,18 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
-
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import java.time.LocalDate;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "san_pham")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class SanPham {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,5 +46,9 @@ public class SanPham {
     @NotNull
     @Column(name = "trang_thai")
     private Boolean trangThai;
+
+    public SanPham(Integer idSanPham){
+        this.id = idSanPham;
+    }
 
 }
