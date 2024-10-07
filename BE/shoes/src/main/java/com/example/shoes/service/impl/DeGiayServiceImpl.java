@@ -26,7 +26,9 @@ public class DeGiayServiceImpl implements DeGiayService {
 
     @Override
     public PhanTrangResponse<DeGiay> getDeGiay(int pageNumber, int pageSize, String keyword) {
+        // Tạo đối tượng Pageable với số trang và kích thước trang
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+        // Lấy danh sách  từ repo
         Page<DeGiay> page = deGiayRepo.getDeGiay(pageable, keyword);
         PhanTrangResponse<DeGiay> phanTrangResponse = new PhanTrangResponse<>();
         phanTrangResponse.setPageNumber(page.getNumber());
@@ -36,14 +38,14 @@ public class DeGiayServiceImpl implements DeGiayService {
         phanTrangResponse.setResult(page.getContent());
         return phanTrangResponse;
     }
-
+    // Phương thức lấy  theo id
     @Override
     public DeGiayResponse getById(Integer id) {
         DeGiay deGiay = deGiayRepo.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.SHOE_SOLE_NOT_FOUND));
         return convertToResponse(deGiay);
     }
-
+    // Phương thức thêm moi
     @Override
     public DeGiayResponse create(DeGiayRequet request) {
         if (deGiayRepo.existsByTen(request.getTen())) {
@@ -87,12 +89,12 @@ public class DeGiayServiceImpl implements DeGiayService {
         } else {
             deGiayListList = deGiayRepo.findAll();
         }
-
+    // Chuyển đổi danh sách  thành danh sách DeGiayResponse
         return deGiayListList.stream()
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());
     }
-
+    // Phương thức chuyển đổi DeGiay thành DeGiayResponse
     private DeGiayResponse convertToResponse(DeGiay deGiay) {
         DeGiayResponse deGiayResponse = new DeGiayResponse();
         deGiayResponse.setId(deGiay.getId());

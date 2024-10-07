@@ -27,8 +27,11 @@ public class MauSacServiceImpl implements MauSacService {
 
     @Override
     public PhanTrangResponse<MauSac> getMauSac(int pageNumber, int pageSize, String keyword) {
+        // Tạo đối tượng Pageable với số trang và kích thước trang
         Pageable pageable = PageRequest.of(pageNumber-1, pageSize);
+        // Lấy danh sách  từ repo
         Page<MauSac> page = mauSacRepo.getMauSac(pageable, keyword);
+        // Tạo đối tượng PhanTrangResponse để trả về kết quả
         PhanTrangResponse<MauSac> phanTrangResponse = new PhanTrangResponse<>();
         phanTrangResponse.setPageNumber(page.getNumber());
         phanTrangResponse.setPageSize(page.getSize());
@@ -37,14 +40,14 @@ public class MauSacServiceImpl implements MauSacService {
         phanTrangResponse.setResult(page.getContent());
         return phanTrangResponse;
     }
-
+    // Phương thức lấy  theo id
     @Override
     public MauSacResponse getById(Integer id) {
         MauSac mauSac = mauSacRepo.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.COLOR_NOT_FOUND));
         return convertToResponse(mauSac);
     }
-
+    // Phương thức thêm moi
     @Override
     public MauSacResponse create(MauSacRequest request) {
         if(mauSacRepo.existsByTen(request.getTen())){
@@ -89,13 +92,13 @@ public class MauSacServiceImpl implements MauSacService {
         } else {
             mauSacList = mauSacRepo.findAll();
         }
-
+// Chuyển đổi danh sách  thành danh sách MauSacResponse
         return mauSacList.stream()
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());
     }
 
-
+    // Phương thức chuyển đổi Mausac thành MauSacResponse
     private MauSacResponse convertToResponse(MauSac mauSac) {
         MauSacResponse mauSacResponse = new MauSacResponse();
         mauSacResponse.setId(mauSac.getId());

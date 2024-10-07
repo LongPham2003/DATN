@@ -24,10 +24,14 @@ import java.util.stream.Collectors;
 public class LoaiServiceImpl implements LoaiService {
     @Autowired
     private LoaiRepo loaiRepository;
+
     @Override
     public PhanTrangResponse<Loai> getLoai(int pageNumber, int pageSize, String keyword) {
-        Pageable pageable = PageRequest.of(pageNumber-1, pageSize);
+        // Tạo đối tượng Pageable với số trang và kích thước trang
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+        // Lấy danh sách  từ repo
         Page<Loai> page = loaiRepository.getLoai(pageable, keyword);
+        // Tạo đối tượng PhanTrangResponse để trả về kết quả
         PhanTrangResponse<Loai> phanTrangResponse = new PhanTrangResponse<>();
         phanTrangResponse.setPageNumber(page.getNumber());
         phanTrangResponse.setPageSize(page.getSize());
@@ -37,13 +41,15 @@ public class LoaiServiceImpl implements LoaiService {
         return phanTrangResponse;
     }
 
+    // Phương thức lấy  theo id
     @Override
     public LoaiResponse getById(Integer id) {
-      Loai loai=loaiRepository.findById(id)
+        Loai loai = loaiRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
         return convertToResponse(loai);
     }
 
+    // Phương thức thêm moi
     @Override
     public LoaiResponse create(LoaiRequest request) {
         Loai loai = new Loai();
@@ -55,11 +61,11 @@ public class LoaiServiceImpl implements LoaiService {
 
     @Override
     public LoaiResponse update(Integer id, LoaiRequest request) {
-        Loai loai=loaiRepository.findById(id)
+        Loai loai = loaiRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
         loai.setTen(request.getTen());
         loai.setTrangThai(request.getTrangThai());
-        Loai updated =loaiRepository.save(loai);
+        Loai updated = loaiRepository.save(loai);
         return convertToResponse(updated);
     }
 
@@ -84,14 +90,15 @@ public class LoaiServiceImpl implements LoaiService {
         } else {
             loaiList = loaiRepository.findAll();
         }
-
+        // Chuyển đổi danh sách  thành danh sách LoaiResponse
         return loaiList.stream()
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());
     }
 
+    // Phương thức chuyển đổi Loai thành LoaiResponse
     private LoaiResponse convertToResponse(Loai loai) {
-        LoaiResponse loaiResponse = new  LoaiResponse();
+        LoaiResponse loaiResponse = new LoaiResponse();
         loaiResponse.setId(loai.getId());
         loaiResponse.setTen(loai.getTen());
         loaiResponse.setTrangThai(loai.getTrangThai());
