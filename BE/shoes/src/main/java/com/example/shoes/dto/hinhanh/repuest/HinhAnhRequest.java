@@ -1,6 +1,5 @@
 package com.example.shoes.dto.hinhanh.repuest;
 
-import com.example.shoes.entity.SanPhamChiTiet;
 import lombok.Getter;
 import lombok.Setter;
 

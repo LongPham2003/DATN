@@ -5,11 +5,15 @@ import com.example.shoes.dto.authentication.request.LoginRequest;
 import com.example.shoes.dto.authentication.request.ResetPass;
 import com.example.shoes.dto.authentication.request.SignUpRequest;
 import com.example.shoes.email.EmailService;
+import com.example.shoes.entity.DiaChi;
+import com.example.shoes.entity.GioHang;
 import com.example.shoes.entity.KhachHang;
 import com.example.shoes.entity.TaiKhoan;
 import com.example.shoes.enums.Roles;
 import com.example.shoes.exception.AppException;
 import com.example.shoes.exception.ErrorCode;
+import com.example.shoes.repository.DiaChiRepo;
+import com.example.shoes.repository.GioHangRepo;
 import com.example.shoes.repository.KhachHangRepo;
 import com.example.shoes.repository.TaiKhoanRepo;
 import com.example.shoes.service.AuthenticationService;
@@ -19,6 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
+import java.util.List;
 
 
 @Service
@@ -35,6 +40,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private  DiaChiRepo diaChiRepo;
+
+    @Autowired
+    private  GioHangRepo gioHangRepo;
+
 
     @Override
     public String signUp(SignUpRequest signUpRequest) {
@@ -45,6 +56,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new ValidationException("Mật khẩu phải có ít nhất 8 ký tự");
         }
 
+
         TaiKhoan taiKhoan = new TaiKhoan();
         taiKhoan.setEmail(signUpRequest.getEmail());
         taiKhoan.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
@@ -54,11 +66,29 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         emailService.sendEmailPasword(taiKhoan.getEmail(), subject, signUpRequest.getPassword());
         taiKhoanRepo.save(taiKhoan);
 
+        DiaChi diaChi = DiaChi.builder()
+                .xaPhuong(signUpRequest.getXaPhuong())
+                .huyenQuan(signUpRequest.getHuyenQuan())
+                .tinhThanhPho(signUpRequest.getTinhThanhPho())
+                .build();
+
+        diaChiRepo.save(diaChi);
+
+
         KhachHang khachHang = new KhachHang();
         khachHang.setEmail(signUpRequest.getEmail());
         khachHang.setHoTen(signUpRequest.getHoTen());
         khachHang.setTaiKhoan(taiKhoan);
+        khachHang.setDiaChis(List.of(diaChi));
+
+        diaChi.setKhachHang(khachHang);
+        
         khachHangRepo.save(khachHang);
+
+        GioHang gioHang = new GioHang();
+        gioHang.setTongSoLuong(0);
+        gioHang.setIdKhachHang(khachHang);
+        gioHangRepo.save(gioHang);
 
 
         return "Đăng ký thành công";

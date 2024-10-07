@@ -193,7 +193,7 @@ export function Sidebar() {
             <ListItemPrefix>
               <UserCircleIcon className="h-5 w-5" />
             </ListItemPrefix>
-            Nhan vien
+            Nhân Viên
           </ListItem>
         </Link>
 
@@ -203,7 +203,7 @@ export function Sidebar() {
             <ListItemPrefix>
               <Cog6ToothIcon className="h-5 w-5" />
             </ListItemPrefix>
-            Khach hang
+            Khách hàng
           </ListItem>
         </Link>
       </List>
