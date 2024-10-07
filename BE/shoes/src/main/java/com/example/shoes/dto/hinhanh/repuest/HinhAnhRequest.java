@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 public class HinhAnhRequest {
     private String tenAnh;
-    private String duLieuAnhBase64;
+    private byte[] duLieuAnhBase64;
     private Integer idSanPhamChiTiet;
     private Boolean trangThai ;
 }
