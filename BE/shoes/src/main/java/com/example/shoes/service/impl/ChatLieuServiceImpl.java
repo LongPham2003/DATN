@@ -93,6 +93,12 @@ public class ChatLieuServiceImpl implements ChatLieuService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<String> getAllTenChatLieu() {
+        return chatLieuRepo.findAll().stream().map(ChatLieu::getTen).collect(Collectors.toList());
+    }
+
+
     private ChatLieuResponse convertToResponse(ChatLieu chatLieu) {
         ChatLieuResponse chatLieuResponse = new ChatLieuResponse();
         chatLieuResponse.setId(chatLieu.getId());

@@ -20,8 +20,9 @@ public class HinhAnh {
     @NotNull
     @Column(name = "ten_anh")
     private String tenAnh;
-    @Column(name = "du_lieu_anh", columnDefinition = "LONGBLOB")
-    private byte[] duLieuAnh;
+
+    @Column(name = "du_lieu_anh", columnDefinition = "LONGTEXT")
+    private String duLieuAnh;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_san_pham_chi_tiet")
