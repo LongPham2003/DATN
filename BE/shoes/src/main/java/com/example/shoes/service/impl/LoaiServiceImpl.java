@@ -1,14 +1,19 @@
 package com.example.shoes.service.impl;
 
 
+import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.loai.request.LoaiRequest;
 import com.example.shoes.dto.loai.response.LoaiResponse;
+import com.example.shoes.entity.ChatLieu;
 import com.example.shoes.entity.Loai;
 import com.example.shoes.exception.AppException;
 import com.example.shoes.exception.ErrorCode;
 import com.example.shoes.repository.LoaiRepo;
 import com.example.shoes.service.LoaiService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -20,11 +25,16 @@ public class LoaiServiceImpl implements LoaiService {
     @Autowired
     private LoaiRepo loaiRepository;
     @Override
-    public List<LoaiResponse> findAll() {
-        List<Loai> list =loaiRepository.findAll(Sort.by(Sort.Direction.DESC,"id"));
-        return list.stream()
-                .map(this::convertToResponse)
-                .collect(Collectors.toList());
+    public PhanTrangResponse<Loai> getLoai(int pageNumber, int pageSize, String keyword) {
+        Pageable pageable = PageRequest.of(pageNumber-1, pageSize);
+        Page<Loai> page = loaiRepository.getLoai(pageable, keyword);
+        PhanTrangResponse<Loai> phanTrangResponse = new PhanTrangResponse<>();
+        phanTrangResponse.setPageNumber(page.getNumber());
+        phanTrangResponse.setPageSize(page.getSize());
+        phanTrangResponse.setTotalElements(page.getTotalElements());
+        phanTrangResponse.setTotalPages(page.getTotalPages());
+        phanTrangResponse.setResult(page.getContent());
+        return phanTrangResponse;
     }
 
     @Override
@@ -58,8 +68,28 @@ public class LoaiServiceImpl implements LoaiService {
         if (!loaiRepository.existsById(id)) {
             throw new AppException(ErrorCode.MATERIAL_NOT_FOUND);
         }
-        loaiRepository.deleteById(id);
+        loaiRepository.DeleteLoai(id);
     }
+
+    @Override
+    public List<LoaiResponse> search(String ten, Boolean trangThai) {
+        List<Loai> loaiList;
+
+        if (ten != null && trangThai != null) {
+            loaiList = loaiRepository.findByTenContainingIgnoreCaseAndTrangThai(ten, trangThai);
+        } else if (ten != null) {
+            loaiList = loaiRepository.findByTenContainingIgnoreCase(ten);
+        } else if (trangThai != null) {
+            loaiList = loaiRepository.findByTrangThai(trangThai);
+        } else {
+            loaiList = loaiRepository.findAll();
+        }
+
+        return loaiList.stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
+    }
+
     private LoaiResponse convertToResponse(Loai loai) {
         LoaiResponse loaiResponse = new  LoaiResponse();
         loaiResponse.setId(loai.getId());

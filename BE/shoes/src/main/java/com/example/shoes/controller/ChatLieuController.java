@@ -29,18 +29,6 @@ public class ChatLieuController {
                 .build();
     }
 
-//    @GetMapping("/ten")
-//    public ApiResponse<PhanTrangResponse<List<String>>> getTenChatLieu() {
-//        List<String> allTen = chatLieuService.getAllTenChatLieu();
-//        return ApiResponse.<allTen>builder().build();
-//    }
-    @GetMapping("/ten")
-    public ResponseEntity<List<String>> getAllTen(){
-        List<String> listTen = chatLieuService.getAllTenChatLieu();
-        return ResponseEntity.ok(listTen);
-    }
-
-
     @GetMapping("/{id}")
     public ApiResponse<ChatLieuResponse> getChatLieuById(@PathVariable Integer id) {
         ChatLieuResponse chatLieuResponse = chatLieuService.getById(id);
@@ -73,6 +61,4 @@ public class ChatLieuController {
                 .message("Xóa chất liệu thành công")
                 .build();
     }
-
-
 }

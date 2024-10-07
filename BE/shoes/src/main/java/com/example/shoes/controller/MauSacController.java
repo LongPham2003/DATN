@@ -10,6 +10,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
 import java.util.List;
 
 
@@ -28,12 +40,6 @@ public class MauSacController {
         return ApiResponse.<PhanTrangResponse<MauSac>>builder()
                 .result(mauSac)
                 .build();
-    }
-
-    @GetMapping("/ten")
-    public ResponseEntity<List<String>> getAllTen(){
-        List<String> listTen = mausacService.getAllTenMauSac();
-        return ResponseEntity.ok(listTen);
     }
 
     @GetMapping("/{id}")
@@ -66,6 +72,15 @@ public class MauSacController {
         mausacService.delete(id);
         return ApiResponse.<Void>builder()
                 .message("Xóa thành công")
+                .build();
+    }
+    @GetMapping("/search")
+    public ApiResponse<List<MauSacResponse>> search(
+            @RequestParam(value = "ten", required = false) String ten,
+            @RequestParam(value = "trangThai", required = false) Boolean trangThai) {
+        List<MauSacResponse> mauSacResponses = mausacService.search(ten,trangThai);
+        return ApiResponse.<List<MauSacResponse>>builder()
+                .result(mauSacResponses)
                 .build();
     }
 }
