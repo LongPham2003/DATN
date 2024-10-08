@@ -1,15 +1,15 @@
 package com.example.shoes.controller;
 
 import com.example.shoes.dto.PhanTrangResponse;
+import com.example.shoes.dto.sanphamchitiet.request.SanPhamChiTietRequest;
 import com.example.shoes.dto.sanphamchitiet.response.SanPhamChiTietResponse;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.service.SanPhamChiTietService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -27,4 +27,5 @@ public class SanPhamChiTietController {
                 .result(sanPhamPhanTrangResponse)
                 .build();
     }
+
 }

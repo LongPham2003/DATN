@@ -3,13 +3,17 @@ package com.example.shoes.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "thuong_hieu")
+@AllArgsConstructor
+@NoArgsConstructor
 public class ThuongHieu {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,5 +28,9 @@ public class ThuongHieu {
     @NotNull
     @Column(name = "trang_thai")
     private Boolean trangThai;
+
+    public ThuongHieu(Integer idThuongHieu) {
+        this.id = idThuongHieu;
+    }
 
 }

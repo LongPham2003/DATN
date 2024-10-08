@@ -119,6 +119,17 @@ public class KhachHangServiceImpl implements KhachHangService {
     @Override
     public KhachHang update(KhachHangRequest request) {
         Optional<KhachHang> khachHangOptional = khachHangRepo.findById(request.getId());
+
+        if (!khachHangOptional.isPresent()) {
+            throw new AppException(ErrorCode.USER_NOT_EXISTED);
+        }
+        if (khachHangRepo.existsByEmail(request.getEmail()) && !khachHangOptional.get().getEmail().equals(request.getEmail())) {
+            throw new AppException(ErrorCode.USER_EXISTED);
+        }
+        if (khachHangRepo.existsBySdt(request.getSdt()) && !khachHangOptional.get().getSdt().equals(request.getSdt())) {
+            throw new AppException(ErrorCode.SDT_EXISTED);
+        }
+
         KhachHang khachHang = khachHangOptional.get();
 
         TaiKhoan taiKhoan = khachHang.getTaiKhoan();
