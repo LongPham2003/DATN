@@ -10,11 +10,6 @@ import Voucher from "./pages/admin/Voucher/Voucher";
 import SanPham from "./pages/admin/SanPham/SanPham";
 import ThuongHieu from "./pages/admin/ThuocTinhSP/ThuongHieu/ThuongHieu";
 
-// import Login from "./pages/client/auth/Login";
-// import SignUp from "./pages/client/auth/SignUp";
-// import DoiMatKhau from "./pages/client/auth/DoiMatKhau";
-// import ResetPass from "./pages/client/auth/QuenMatKhau";
-
 import { Helmet } from "react-helmet";
 import DanhSachNhanVien from "./pages/admin/NhanVien/DanhSachNhanVien";
 import TheMoiNhanVien from "./pages/admin/NhanVien/TheMoiNhanVien";
@@ -23,6 +18,8 @@ import Login from "./pages/client/auth/Login";
 import SignUp from "./pages/client/auth/SignUp";
 import DoiMatKhau from "./pages/client/auth/DoiMatKhau";
 import ResetPass from "./pages/client/auth/QuenMatKhau";
+// import page from "./pages/util/test";
+import PhanThan from "./pages/util/test";
 function App() {
   return (
     <>
@@ -30,8 +27,8 @@ function App() {
         <Routes>
           {/* <Route path="/login" element={<Login />}></Route>
           <Route path="/signup" element={<SignUp />}></Route>
-          <Route path="/doimatkhau" element={<DoiMatKhau />}></Route>
-          <Route path="/resetpass" element={<ResetPass />}></Route> */}
+          <Route path="/doimatkhau" element={<DoiMatKhau />}></Route>*/}
+          <Route path="/" element={<PhanThan />}></Route>
 
           {/* router login */}
           <Route

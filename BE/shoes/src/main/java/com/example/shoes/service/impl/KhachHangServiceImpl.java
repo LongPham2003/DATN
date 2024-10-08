@@ -5,6 +5,7 @@ import com.example.shoes.dto.khachhang.request.KhachHangRequest;
 import com.example.shoes.dto.khachhang.response.KhachHangResponse;
 import com.example.shoes.email.EmailService;
 import com.example.shoes.entity.*;
+import com.example.shoes.enums.Roles;
 import com.example.shoes.exception.AppException;
 import com.example.shoes.exception.ErrorCode;
 import com.example.shoes.repository.DiaChiRepo;
@@ -84,6 +85,7 @@ public class KhachHangServiceImpl implements KhachHangService {
         taiKhoan.setEmail(request.getEmail());
         taiKhoan.setTrangThai(true);
         taiKhoan.setPassword(passwordEncoder.encode(request.getMatKhau()));
+        taiKhoan.setRoles(Roles.ROLE_KHACHHANG.name());
 
         taiKhoanRepo.save(taiKhoan);
 
@@ -117,6 +119,17 @@ public class KhachHangServiceImpl implements KhachHangService {
     @Override
     public KhachHang update(KhachHangRequest request) {
         Optional<KhachHang> khachHangOptional = khachHangRepo.findById(request.getId());
+
+        if (!khachHangOptional.isPresent()) {
+            throw new AppException(ErrorCode.USER_NOT_EXISTED);
+        }
+        if (khachHangRepo.existsByEmail(request.getEmail()) && !khachHangOptional.get().getEmail().equals(request.getEmail())) {
+            throw new AppException(ErrorCode.USER_EXISTED);
+        }
+        if (khachHangRepo.existsBySdt(request.getSdt()) && !khachHangOptional.get().getSdt().equals(request.getSdt())) {
+            throw new AppException(ErrorCode.SDT_EXISTED);
+        }
+
         KhachHang khachHang = khachHangOptional.get();
 
         TaiKhoan taiKhoan = khachHang.getTaiKhoan();

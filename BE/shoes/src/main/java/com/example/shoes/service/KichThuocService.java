@@ -2,12 +2,14 @@ package com.example.shoes.service;
 
 
 
+
 import com.example.shoes.dto.PhanTrangResponse;
+
 import com.example.shoes.dto.kichthuoc.request.KichThuocRequest;
 import com.example.shoes.dto.kichthuoc.response.KichThuocResponse;
-import com.example.shoes.entity.DeGiay;
+
 import com.example.shoes.entity.KichThuoc;
-import org.springframework.data.domain.Sort;
+
 
 import java.util.List;
 
@@ -17,4 +19,5 @@ public interface KichThuocService {
     KichThuocResponse create(KichThuocRequest request);
     KichThuocResponse update(Integer id, KichThuocRequest request);
     void delete(Integer id);
+    List<KichThuocResponse> search(String kichThuoc, Boolean trangThai);
 }

@@ -14,6 +14,9 @@ import java.util.Date;
 @Getter
 @Setter
 public class NhanVienUpdateRequest {
+
+    private Integer id;
+
     private String hoTen;
 
     private String sdt;

@@ -1,8 +1,11 @@
 package com.example.shoes.controller;
 
 
+import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.loai.request.LoaiRequest;
 import com.example.shoes.dto.loai.response.LoaiResponse;
+import com.example.shoes.entity.Loai;
+import com.example.shoes.entity.ThuongHieu;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.service.LoaiService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -23,10 +27,14 @@ public class LoaiController {
     @Autowired
     private LoaiService loaiService;
     @GetMapping("/list")
-    public ApiResponse<List<LoaiResponse>> getAll() {
-        List<LoaiResponse> loaiResponses = loaiService.findAll();
-        return ApiResponse.<List<LoaiResponse>>builder()
-                .result(loaiResponses)
+    public ApiResponse<PhanTrangResponse<Loai>> getAllLoai(
+            @RequestParam(value = "keyword", defaultValue = "") String keyword,
+            @RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "5") int pageSize
+    ) {
+        PhanTrangResponse<Loai> loaiPhanTrangResponse = loaiService.getLoai(pageNumber, pageSize, keyword);
+        return ApiResponse.<PhanTrangResponse<Loai>>builder()
+                .result(loaiPhanTrangResponse)
                 .build();
     }
 
@@ -60,6 +68,15 @@ public class LoaiController {
         loaiService.delete(id);
         return ApiResponse.<Void>builder()
                 .message("Xóa thành công")
+                .build();
+    }
+    @GetMapping("/search")
+    public ApiResponse<List<LoaiResponse>> search(
+            @RequestParam(value = "ten", required = false) String ten,
+            @RequestParam(value = "trangThai", required = false) Boolean trangThai) {
+        List<LoaiResponse> loaiResponses = loaiService.search(ten, trangThai);
+        return ApiResponse.<List<LoaiResponse>>builder()
+                .result(loaiResponses)
                 .build();
     }
 }

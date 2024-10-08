@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,7 +23,7 @@ public class HinhAnhServiceImpl implements HinhAnhService {
 
     @Override
     public List<HinhAnhResponse> findAll() {
-        List<HinhAnh> list =hinhAnhRepo.findAll(Sort.by(Sort.Direction.DESC,"id"));
+        List<HinhAnh> list = hinhAnhRepo.findAll(Sort.by(Sort.Direction.DESC, "id"));
         return list.stream()
                 .map(this::convert)
                 .collect(Collectors.toList());
@@ -38,22 +40,48 @@ public class HinhAnhServiceImpl implements HinhAnhService {
     public HinhAnhResponse create(HinhAnhRequest request) {
         HinhAnh hinhAnh = new HinhAnh();
         hinhAnh.setTenAnh(request.getTenAnh());
-        hinhAnh.setDuLieuAnh(request.getDuLieuAnh());
-        hinhAnh.setIdSanPhamChiTiet(hinhAnh.getIdSanPhamChiTiet());
+
+        // Xử lý Base64: Loại bỏ tiền tố "data:image/png;base64," nếu có, và loại bỏ các ký tự không hợp lệ.
+        String base64Data = Arrays.toString(request.getDuLieuAnhBase64());
+        if (base64Data != null && base64Data.contains("base64,")) {
+            base64Data = base64Data.substring(base64Data.indexOf("base64,") + "base64,".length());
+        }
+        base64Data = base64Data.replaceAll("[^A-Za-z0-9+/=]", "");
+
+        try {
+            // Chuyển đổi Base64 thành byte[]
+            byte[] imageBytes = Base64.getDecoder().decode(base64Data);
+            hinhAnh.setDuLieuAnh(imageBytes); // Lưu dữ liệu ảnh vào entity
+
+        } catch (IllegalArgumentException e) {
+            throw new AppException(ErrorCode.IMAGE_NOT_FOUND);
+        }
+
         hinhAnh.setTrangThai(request.getTrangThai());
-        HinhAnh saveHinhAnh = hinhAnhRepo.save(hinhAnh);
-        return convert(saveHinhAnh);
+        HinhAnh savedHinhAnh = hinhAnhRepo.save(hinhAnh);
+
+        return convert(savedHinhAnh);
     }
 
     @Override
     public HinhAnhResponse update(Integer id, HinhAnhRequest request) {
-       HinhAnh hinhAnh = hinhAnhRepo.findById(id)
+        HinhAnh hinhAnh = hinhAnhRepo.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.IMAGE_NOT_FOUND));
         hinhAnh.setTenAnh(request.getTenAnh());
-        hinhAnh.setDuLieuAnh(request.getDuLieuAnh());
+        // Xử lý Base64
+        String base64Data = Arrays.toString(request.getDuLieuAnhBase64());
+        if (base64Data != null && base64Data.contains("base64,")) {
+            base64Data = base64Data.substring(base64Data.indexOf("base64,") + "base64,".length()); // Loại bỏ phần tiền tố
+        }
+
+        // Loại bỏ ký tự không hợp lệ
+        base64Data = base64Data.replaceAll("[^A-Za-z0-9+/=]", "");
+
+        hinhAnh.setDuLieuAnh(Base64.getDecoder().decode(base64Data)); // Chuyển đổi Base64 thành byte[]
         hinhAnh.setIdSanPhamChiTiet(hinhAnh.getIdSanPhamChiTiet());
         hinhAnh.setTrangThai(request.getTrangThai());
-        HinhAnh updated =hinhAnhRepo.save(hinhAnh);
+
+        HinhAnh updated = hinhAnhRepo.save(hinhAnh);
         return convert(updated);
     }
 
@@ -69,12 +97,19 @@ public class HinhAnhServiceImpl implements HinhAnhService {
         HinhAnhResponse hinhAnhResponse = new HinhAnhResponse();
         hinhAnhResponse.setId(hinhAnh.getId());
         hinhAnhResponse.setTenAnh(hinhAnh.getTenAnh());
-        hinhAnhResponse.setDuLieuAnh(hinhAnh.getDuLieuAnh());
+
+        // Chuyển đổi mảng byte[] của hình ảnh thành chuỗi Base64
+        if (hinhAnh.getDuLieuAnh() != null) {
+            hinhAnhResponse.setDuLieuAnhBase64(Base64.getEncoder().encodeToString(hinhAnh.getDuLieuAnh()));
+        }
+
+        // Kiểm tra và đặt idSanPhamChiTiet nếu tồn tại
         if (hinhAnh.getIdSanPhamChiTiet() != null) {
             hinhAnhResponse.setIdSanPhamChiTiet(hinhAnh.getIdSanPhamChiTiet().getId());
         } else {
             hinhAnhResponse.setIdSanPhamChiTiet(null);
         }
+
         hinhAnhResponse.setTrangThai(hinhAnh.getTrangThai());
         return hinhAnhResponse;
     }

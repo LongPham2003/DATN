@@ -1,5 +1,5 @@
 package com.example.shoes.enums;
 
 public enum Roles {
-    ADMIN,NHANVIEN,KHACHHANG
+    ROLE_ADMIN,ROLE_NHANVIEN,ROLE_KHACHHANG
 }

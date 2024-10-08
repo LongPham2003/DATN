@@ -37,11 +37,6 @@ public class NhanVien {
     @Column(name = "dia_chi")
     private String diaChi;
 
-
-    @Enumerated(EnumType.STRING)
-    private Roles roles;
-
-
     @OneToOne
     @JoinColumn(name = "id_tai_khoan", referencedColumnName = "id")
     private TaiKhoan taiKhoan;
