@@ -157,6 +157,19 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         return converToResponse(updatedSpct);
     }
 
+    @Override
+    public List<SanPhamChiTietResponse> locSanPhamChiTiet(String sanPham, String mauSac, String kichThuoc, String chatLieu, String thuongHieu, String deGiay, boolean trangThai) {
+        List<SanPhamChiTiet> sanPhamChiTietList = sanPhamChiTietRepo.locSanPhamChiTiet(sanPham,mauSac,kichThuoc,chatLieu,thuongHieu,deGiay,trangThai);
+
+        // Chuyển đổi từ SanPhamChiTiet sang SanPhamChiTietResponse
+        return sanPhamChiTietList.stream()
+                .map(sanPhamChiTiet -> {
+                    SanPhamChiTietResponse response = new SanPhamChiTietResponse();
+                    // Gán giá trị cho response như trước đó
+                    return response;
+                }).collect(Collectors.toList());
+    }
+
 
     private SanPhamChiTietResponse converToResponse(SanPhamChiTiet sanPhamChiTiet) {
         SanPhamChiTietResponse response = new SanPhamChiTietResponse();

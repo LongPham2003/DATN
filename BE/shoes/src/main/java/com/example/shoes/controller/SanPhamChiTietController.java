@@ -9,6 +9,8 @@ import com.example.shoes.service.SanPhamChiTietService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/sanphamchitiet")
 public class SanPhamChiTietController {
@@ -46,6 +48,20 @@ public class SanPhamChiTietController {
         SanPhamChiTietResponse updated = sanPhamChiTietService.update(id, request);
         return ApiResponse.<SanPhamChiTietResponse>builder()
                 .result(updated)
+                .build();
+    }
+    @GetMapping("/loc")
+    public ApiResponse<List<SanPhamChiTietResponse>> loc(
+            @RequestParam(required = false) String sanPham,
+            @RequestParam(required = false) String mauSac,
+            @RequestParam(required = false) String kichThuoc,
+            @RequestParam(required = false) String chatLieu,
+            @RequestParam(required = false) String thuongHieu,
+            @RequestParam(required = false) String deGiay,
+            @RequestParam(defaultValue = "true") boolean trangThai) {
+        List<SanPhamChiTietResponse> responses = sanPhamChiTietService.locSanPhamChiTiet(sanPham, mauSac, kichThuoc, chatLieu, thuongHieu, deGiay, trangThai);
+        return ApiResponse.<List<SanPhamChiTietResponse>>builder()
+                .result(responses)
                 .build();
     }
 }

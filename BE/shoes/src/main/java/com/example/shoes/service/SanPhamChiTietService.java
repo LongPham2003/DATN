@@ -1,13 +1,8 @@
 package com.example.shoes.service;
 
-
-
-
 import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.sanphamchitiet.request.SanPhamChiTietRequest;
 import com.example.shoes.dto.sanphamchitiet.response.SanPhamChiTietResponse;
-import com.example.shoes.entity.SanPham;
-import com.example.shoes.entity.SanPhamChiTiet;
 
 import java.util.List;
 
@@ -16,4 +11,5 @@ public interface SanPhamChiTietService {
     SanPhamChiTietResponse getById(Integer id);
     SanPhamChiTietResponse create(SanPhamChiTietRequest request);
     SanPhamChiTietResponse update(Integer id, SanPhamChiTietRequest request);
+    List<SanPhamChiTietResponse> locSanPhamChiTiet(String sanPham, String mauSac, String kichThuoc, String chatLieu, String thuongHieu, String deGiay, boolean trangThai);
 }

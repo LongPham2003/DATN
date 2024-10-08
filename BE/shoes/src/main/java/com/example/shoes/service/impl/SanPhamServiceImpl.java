@@ -44,14 +44,13 @@ public class SanPhamServiceImpl implements SanPhamService {
 
 
     @Override
-    public PhanTrangResponse<SanPhamResponse> getSanPham(int pageNumber, int pageSize, String keyword) {
+    public PhanTrangResponse<SanPhamResponse> getSanPham(int pageNumber, int pageSize, String keyword, String tenLoai, Boolean trangThai) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-        Page<SanPham> page = sanPhamRepo.getSanPham(pageable, keyword);
+        Page<SanPham> page = sanPhamRepo.getSanPham(keyword, tenLoai, trangThai, pageable);
 
         List<SanPhamResponse> responses = page.getContent().stream()
                 .map(this::convertToSanPhamResponse)
                 .collect(Collectors.toList());
-
         PhanTrangResponse<SanPhamResponse> phanTrangResponse = new PhanTrangResponse<>();
         phanTrangResponse.setPageNumber(page.getNumber() + 1);
         phanTrangResponse.setPageSize(page.getSize());
