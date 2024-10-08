@@ -15,4 +15,5 @@ public interface NhanVienService {
     NhanVien addNhanVien(NhanvienAddRequest request);
     NhanVien updateNhanVien(Integer id , NhanVienUpdateRequest request);
     NhanVien deleteNhanVien(Integer id);
+    NhanVien getById(Integer id);
 }
