@@ -9,6 +9,7 @@ import com.example.shoes.service.SanPhamChiTietService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -51,15 +52,22 @@ public class SanPhamChiTietController {
                 .build();
     }
     @GetMapping("/loc")
-    public ApiResponse<List<SanPhamChiTietResponse>> loc(
-            @RequestParam(required = false) String sanPham,
-            @RequestParam(required = false) String mauSac,
+    public ApiResponse<List<SanPhamChiTietResponse>> locSanPhamChiTiet(
+            @RequestParam(required = false) String tenSanPham,
+            @RequestParam(required = false) String tenMauSac,
             @RequestParam(required = false) String kichThuoc,
-            @RequestParam(required = false) String chatLieu,
-            @RequestParam(required = false) String thuongHieu,
-            @RequestParam(required = false) String deGiay,
-            @RequestParam(defaultValue = "true") boolean trangThai) {
-        List<SanPhamChiTietResponse> responses = sanPhamChiTietService.locSanPhamChiTiet(sanPham, mauSac, kichThuoc, chatLieu, thuongHieu, deGiay, trangThai);
+            @RequestParam(required = false) String tenChatLieu,
+            @RequestParam(required = false) String tenThuongHieu,
+            @RequestParam(required = false) String tenDeGiay,
+            @RequestParam(required = false) Boolean trangThai,
+            @RequestParam(required = false) BigDecimal minDonGia,
+            @RequestParam(required = false) BigDecimal maxDonGia
+    ) {
+        // Gọi service để lọc sản phẩm chi tiết
+        List<SanPhamChiTietResponse> responses = sanPhamChiTietService.locPhamChiTietList(
+                tenSanPham, tenMauSac, kichThuoc, tenChatLieu, tenThuongHieu, tenDeGiay, trangThai, minDonGia, maxDonGia);
+
+        // Trả về API response
         return ApiResponse.<List<SanPhamChiTietResponse>>builder()
                 .result(responses)
                 .build();

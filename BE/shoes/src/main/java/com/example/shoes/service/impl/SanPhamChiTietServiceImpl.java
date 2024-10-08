@@ -28,6 +28,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -56,7 +57,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     @Override
     public PhanTrangResponse<SanPhamChiTietResponse> getSanPhamChiTiet(int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize); // Chuyển đổi sang zero-based page
-        Page<SanPhamChiTiet> page = sanPhamChiTietRepo.getSanPham(pageable);
+        Page<SanPhamChiTiet> page = sanPhamChiTietRepo.getSanPhamChiTiet(pageable);
 
         List<SanPhamChiTietResponse> sanPhamChiTietResponses = page.getContent().stream()
                 .map(this::converToResponse)
@@ -158,16 +159,15 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     }
 
     @Override
-    public List<SanPhamChiTietResponse> locSanPhamChiTiet(String sanPham, String mauSac, String kichThuoc, String chatLieu, String thuongHieu, String deGiay, boolean trangThai) {
-        List<SanPhamChiTiet> sanPhamChiTietList = sanPhamChiTietRepo.locSanPhamChiTiet(sanPham,mauSac,kichThuoc,chatLieu,thuongHieu,deGiay,trangThai);
+    public List<SanPhamChiTietResponse> locPhamChiTietList(String tenSanPham, String tenMauSac, String kichThuoc, String tenChatLieu, String tenThuongHieu, String tenDeGiay, Boolean trangThai, BigDecimal minDonGia, BigDecimal maxDonGia) {
+        // Gọi phương thức trong repository
+        List<SanPhamChiTiet> sanPhamChiTietList = sanPhamChiTietRepo.locSanPhamChiTietList(
+                tenSanPham, tenMauSac, kichThuoc, tenChatLieu, tenThuongHieu, tenDeGiay, trangThai, minDonGia, maxDonGia);
 
-        // Chuyển đổi từ SanPhamChiTiet sang SanPhamChiTietResponse
+        // Chuyển đổi danh sách `SanPhamChiTiet` sang `SanPhamChiTietResponse`
         return sanPhamChiTietList.stream()
-                .map(sanPhamChiTiet -> {
-                    SanPhamChiTietResponse response = new SanPhamChiTietResponse();
-                    // Gán giá trị cho response như trước đó
-                    return response;
-                }).collect(Collectors.toList());
+                .map(this::converToResponse) // Sử dụng phương thức convertToResponse để chuyển đổi
+                .collect(Collectors.toList());
     }
 
 
