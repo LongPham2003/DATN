@@ -1,7 +1,7 @@
 package com.example.shoes.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -25,10 +25,9 @@ public class SanPham {
     @Column(name = "id")
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_loai")
-    @JsonBackReference
-    private Loai idLoai;
+    @ManyToOne
+    @JoinColumn(name = "id_loai", nullable = false) // Liên kết với bảng Loai
+    private Loai loai;
 
     @Size(max = 255)
     @NotNull
@@ -47,8 +46,7 @@ public class SanPham {
     @Column(name = "trang_thai")
     private Boolean trangThai;
 
-    public SanPham(Integer idSanPham){
+    public SanPham(Integer idSanPham) {
         this.id = idSanPham;
     }
-
 }
