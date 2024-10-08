@@ -27,8 +27,11 @@ public class KichThuocServiceImpl implements KichThuocService {
 
     @Override
     public PhanTrangResponse<KichThuoc> getKichThuoc(int pageNumber, int pageSize, String keyword) {
+        // Tạo đối tượng Pageable với số trang và kích thước trang
         Pageable pageable = PageRequest.of(pageNumber-1, pageSize);
+        // Lấy danh sách  từ repo
         Page<KichThuoc> page = kichThuocRepo.getKichThuoc(pageable, keyword);
+        // Tạo đối tượng PhanTrangResponse để trả về kết quả
         PhanTrangResponse<KichThuoc> phanTrangResponse = new PhanTrangResponse<>();
         phanTrangResponse.setPageNumber(page.getNumber());
         phanTrangResponse.setPageSize(page.getSize());
@@ -38,14 +41,14 @@ public class KichThuocServiceImpl implements KichThuocService {
         return phanTrangResponse;
     }
 
-
+    // Phương thức lấy  theo id
     @Override
     public KichThuocResponse getById(Integer id) {
         KichThuoc kichThuoc = kichThuocRepo.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.SIZE_NOT_FOUND));
         return convertToResponse(kichThuoc);
     }
-
+    // Phương thức thêm moi
     @Override
     public KichThuocResponse create(KichThuocRequest request) {
         if(kichThuocRepo.existsByKichThuoc(request.getKichThuoc())){
@@ -90,12 +93,12 @@ public class KichThuocServiceImpl implements KichThuocService {
         } else {
             kichThuocList = kichThuocRepo.findAll();
         }
-
+     // Chuyển đổi danh sách  thành danh sách KichThuocResponse
         return kichThuocList.stream()
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());
     }
-
+    // Phương thức chuyển đổi KichThuoc thành KichThuocResponse
     private KichThuocResponse convertToResponse(KichThuoc kichThuoc) {
         KichThuocResponse kichThuocResponse = new KichThuocResponse();
         kichThuocResponse.setId(kichThuoc.getId());

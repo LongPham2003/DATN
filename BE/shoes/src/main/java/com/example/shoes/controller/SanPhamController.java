@@ -4,8 +4,6 @@ package com.example.shoes.controller;
 import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.sanpham.request.SanPhamRequest;
 import com.example.shoes.dto.sanpham.response.SanPhamResponse;
-import com.example.shoes.entity.ChatLieu;
-import com.example.shoes.entity.SanPham;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.service.SanPhamService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/sanpham")
@@ -26,12 +24,14 @@ public class SanPhamController {
     @Autowired
     private SanPhamService sanPhamService;
     @GetMapping("/list")
-    public ApiResponse<PhanTrangResponse<SanPhamResponse>> getAllChatLieu(
-            @RequestParam(value = "keyword", defaultValue = "") String keyword,
+    public ApiResponse<PhanTrangResponse<SanPhamResponse>> getAllSanPham(
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "tenLoai", required = false) String tenLoai,
+            @RequestParam(value = "trangThai", required = false) Boolean trangThai,
             @RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber,
             @RequestParam(value = "pageSize", defaultValue = "5") int pageSize
     ) {
-        PhanTrangResponse<SanPhamResponse> sanPhamPhanTrangResponse = sanPhamService.getSanPham(pageNumber, pageSize, keyword);
+        PhanTrangResponse<SanPhamResponse> sanPhamPhanTrangResponse = sanPhamService.getSanPham(pageNumber, pageSize, keyword,  tenLoai, trangThai);
         return ApiResponse.<PhanTrangResponse<SanPhamResponse>>builder()
                 .result(sanPhamPhanTrangResponse)
                 .build();

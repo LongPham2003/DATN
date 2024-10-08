@@ -41,7 +41,9 @@ import java.util.Arrays;
 public class SecurityConfiguration {
 
     private final String[] PUBLIC_ENDPOINTS = {"/taikhoan/getall", "/auth/signup", "/auth/login",
-            "/auth/resetpass", "/auth/doimatkhau","/nhanvien/search","/khachhang/add"};
+            "/auth/resetpass", "/auth/doimatkhau","/nhanvien/search","/api/chatlieu/**",
+            "/api/sanpham/**","/api/sanphamchitiet/**","/api/kichthuoc/**","/api/mausac/**",
+            "/api/thuonghieu/**","/api/degiay/**","/api/hinhanh/**"};
 
 //    private final String[] PUBLIC_ENDPOINTS = {};
 

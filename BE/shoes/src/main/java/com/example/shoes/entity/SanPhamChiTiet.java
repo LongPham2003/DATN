@@ -2,7 +2,9 @@ package com.example.shoes.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
@@ -12,33 +14,35 @@ import java.time.LocalDate;
 @Setter
 @Entity
 @Table(name = "san_pham_chi_tiet")
+@AllArgsConstructor
+@NoArgsConstructor
 public class SanPhamChiTiet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "id_san_pham")
     private SanPham idSanPham;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "id_chat_lieu")
     private ChatLieu idChatLieu;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "id_mau_sac")
     private MauSac idMauSac;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "id_kich_thuoc")
     private KichThuoc idKichThuoc;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "id_thuong_hieu")
     private ThuongHieu idThuongHieu;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "id_de_giay")
     private DeGiay idDeGiay;
 

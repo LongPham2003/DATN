@@ -10,11 +10,6 @@ import Voucher from "./pages/admin/Voucher/Voucher";
 import SanPham from "./pages/admin/SanPham/SanPham";
 import ThuongHieu from "./pages/admin/ThuocTinhSP/ThuongHieu/ThuongHieu";
 
-// import Login from "./pages/client/auth/Login";
-// import SignUp from "./pages/client/auth/SignUp";
-// import DoiMatKhau from "./pages/client/auth/DoiMatKhau";
-// import ResetPass from "./pages/client/auth/QuenMatKhau";
-
 import { Helmet } from "react-helmet";
 import DanhSachNhanVien from "./pages/admin/NhanVien/DanhSachNhanVien";
 import TheMoiNhanVien from "./pages/admin/NhanVien/TheMoiNhanVien";
