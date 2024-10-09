@@ -3,8 +3,6 @@ package com.example.shoes.service.impl;
 import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.mausac.request.MauSacRequest;
 import com.example.shoes.dto.mausac.response.MauSacResponse;
-
-import com.example.shoes.entity.ChatLieu;
 import com.example.shoes.entity.MauSac;
 import com.example.shoes.exception.AppException;
 import com.example.shoes.exception.ErrorCode;
@@ -103,6 +101,17 @@ public class MauSacServiceImpl implements MauSacService {
     @Override
     public List<String> getAllTenMauSac() {
         return mauSacRepo.findAll().stream().map(MauSac::getTen).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MauSacResponse> getAll() {
+        // Lấy tất cả các ChatLieu từ repository
+        List<MauSac> list =mauSacRepo.findAll();
+
+        // Chuyển đổi từ ChatLieu sang ChatLieuResponse
+        return list.stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
     }
 
     // Phương thức chuyển đổi Mausac thành MauSacResponse

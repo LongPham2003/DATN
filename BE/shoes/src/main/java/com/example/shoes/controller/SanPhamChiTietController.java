@@ -1,14 +1,12 @@
 package com.example.shoes.controller;
 
 import com.example.shoes.dto.PhanTrangResponse;
-
 import com.example.shoes.dto.sanphamchitiet.request.SanPhamChiTietRequest;
 import com.example.shoes.dto.sanphamchitiet.response.SanPhamChiTietResponse;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.service.SanPhamChiTietService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -70,6 +68,16 @@ public class SanPhamChiTietController {
         // Trả về API response
         return ApiResponse.<List<SanPhamChiTietResponse>>builder()
                 .result(responses)
+                .build();
+    }
+    @GetMapping("/getall")
+    public ApiResponse<List<SanPhamChiTietResponse>> getAll() {
+        // Gọi hàm getAllChatLieu() để lấy danh sách các ChatLieuResponse
+        List<SanPhamChiTietResponse> list = sanPhamChiTietService.getAll();
+
+        // Tạo đối tượng ApiResponse để trả về danh sách ChatLieuResponse
+        return ApiResponse.<List<SanPhamChiTietResponse>>builder()
+                .result(list)
                 .build();
     }
 }

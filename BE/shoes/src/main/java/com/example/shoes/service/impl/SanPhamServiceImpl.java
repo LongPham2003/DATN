@@ -5,7 +5,6 @@ import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.sanpham.request.SanPhamRequest;
 import com.example.shoes.dto.sanpham.response.SanPhamResponse;
 import com.example.shoes.entity.Loai;
-import com.example.shoes.entity.MauSac;
 import com.example.shoes.entity.SanPham;
 import com.example.shoes.exception.AppException;
 import com.example.shoes.exception.ErrorCode;
@@ -102,6 +101,17 @@ public class SanPhamServiceImpl implements SanPhamService {
 
         SanPham saved = sanPhamRepo.save(sanPham);
         return convertToSanPhamResponse(saved);
+    }
+
+    @Override
+    public List<SanPhamResponse> getAll() {
+        // Lấy tất cả các ChatLieu từ repository
+        List<SanPham> list =sanPhamRepo.findAll();
+
+        // Chuyển đổi từ ChatLieu sang ChatLieuResponse
+        return list.stream()
+                .map(this::convertToSanPhamResponse)
+                .collect(Collectors.toList());
     }
 
 }

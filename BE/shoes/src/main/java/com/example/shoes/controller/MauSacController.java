@@ -8,7 +8,6 @@ import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.service.MauSacService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -86,6 +85,16 @@ public class MauSacController {
         List<MauSacResponse> mauSacResponses = mausacService.search(ten,trangThai);
         return ApiResponse.<List<MauSacResponse>>builder()
                 .result(mauSacResponses)
+                .build();
+    }
+    @GetMapping("/getall")
+    public ApiResponse<List<MauSacResponse>> getAll() {
+        // Gọi hàm getAllChatLieu() để lấy danh sách các ChatLieuResponse
+        List<MauSacResponse> list = mausacService.getAll();
+
+        // Tạo đối tượng ApiResponse để trả về danh sách ChatLieuResponse
+        return ApiResponse.<List<MauSacResponse>>builder()
+                .result(list)
                 .build();
     }
 }

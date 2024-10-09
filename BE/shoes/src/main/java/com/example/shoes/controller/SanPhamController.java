@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 
 
 @RestController
@@ -59,6 +60,16 @@ public class SanPhamController {
         SanPhamResponse updated = sanPhamService.update(id, request);
         return ApiResponse.<SanPhamResponse>builder()
                 .result(updated)
+                .build();
+    }
+    @GetMapping("/getall")
+    public ApiResponse<List<SanPhamResponse>> getAll() {
+        // Gọi hàm getAllChatLieu() để lấy danh sách các ChatLieuResponse
+        List<SanPhamResponse> list = sanPhamService.getAll();
+
+        // Tạo đối tượng ApiResponse để trả về danh sách ChatLieuResponse
+        return ApiResponse.<List<SanPhamResponse>>builder()
+                .result(list)
                 .build();
     }
 }

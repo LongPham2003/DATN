@@ -4,7 +4,6 @@ package com.example.shoes.service.impl;
 import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.kichthuoc.request.KichThuocRequest;
 import com.example.shoes.dto.kichthuoc.response.KichThuocResponse;
-import com.example.shoes.entity.ChatLieu;
 import com.example.shoes.entity.KichThuoc;
 import com.example.shoes.exception.AppException;
 import com.example.shoes.exception.ErrorCode;
@@ -98,6 +97,18 @@ public class KichThuocServiceImpl implements KichThuocService {
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<KichThuocResponse> getAll() {
+        // Lấy tất cả các ChatLieu từ repository
+        List<KichThuoc> list =kichThuocRepo.findAll();
+
+        // Chuyển đổi từ ChatLieu sang ChatLieuResponse
+        return list.stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
+    }
+
     // Phương thức chuyển đổi KichThuoc thành KichThuocResponse
     private KichThuocResponse convertToResponse(KichThuoc kichThuoc) {
         KichThuocResponse kichThuocResponse = new KichThuocResponse();

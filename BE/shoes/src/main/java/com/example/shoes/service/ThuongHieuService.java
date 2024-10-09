@@ -16,4 +16,5 @@ public interface ThuongHieuService {
     ThuongHieuResponse update(Integer id,ThuongHieuRequest request);
     void delete(Integer id);
     List<ThuongHieuResponse> search(String ten, Boolean trangThai);
+    List<ThuongHieuResponse> getAll();
 }

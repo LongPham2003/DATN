@@ -101,6 +101,18 @@ public class ChatLieuServiceImpl implements ChatLieuService {
         return chatLieuRepo.findAll().stream().map(ChatLieu::getTen).collect(Collectors.toList());
     }
 
+    @Override
+    public List<ChatLieuResponse> getAllChatLieu() {
+        // Lấy tất cả các ChatLieu từ repository
+        List<ChatLieu> chatLieuList = chatLieuRepo.findAll();
+
+        // Chuyển đổi từ ChatLieu sang ChatLieuResponse
+        return chatLieuList.stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
+    }
+
+
     // Phương thức chuyển đổi ChatLieu thành ChatLieuResponse
     private ChatLieuResponse convertToResponse(ChatLieu chatLieu) {
         ChatLieuResponse chatLieuResponse = new ChatLieuResponse();
