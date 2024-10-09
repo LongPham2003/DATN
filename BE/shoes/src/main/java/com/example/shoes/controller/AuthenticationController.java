@@ -4,6 +4,7 @@ import com.example.shoes.dto.authentication.request.DoiMatKhauRequest;
 import com.example.shoes.dto.authentication.request.LoginRequest;
 import com.example.shoes.dto.authentication.request.ResetPass;
 import com.example.shoes.dto.authentication.request.SignUpRequest;
+import com.example.shoes.entity.TaiKhoan;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.service.AuthenticationService;
 import jakarta.validation.Valid;
@@ -29,8 +30,8 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ApiResponse<Boolean> login(@RequestBody LoginRequest loginRequest) {
-        return ApiResponse.<Boolean>builder()
+    public ApiResponse<TaiKhoan> login(@RequestBody LoginRequest loginRequest) {
+        return ApiResponse.<TaiKhoan>builder()
                 .result(authenticationService.singIn(loginRequest)).build();
     }
 
