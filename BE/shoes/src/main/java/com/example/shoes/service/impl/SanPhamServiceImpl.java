@@ -19,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -76,7 +77,7 @@ public class SanPhamServiceImpl implements SanPhamService {
         SanPham sanPham = new SanPham();
         sanPham.setLoai(loai); // Gán đối tượng Loai cho SanPham
         sanPham.setTenSanPham(request.getTenSanPham());
-        sanPham.setNgayTao(request.getNgayTao());
+        sanPham.setNgayTao(LocalDate.now());
         sanPham.setMoTa(request.getMoTa());
         sanPham.setTrangThai(request.getTrangThai());
 
@@ -95,7 +96,7 @@ public class SanPhamServiceImpl implements SanPhamService {
 
         sanPham.setLoai(loai); // Gán đối tượng Loai cho SanPham
         sanPham.setTenSanPham(request.getTenSanPham());
-        sanPham.setNgayTao(request.getNgayTao());
+        sanPham.setNgayTao(LocalDate.now());
         sanPham.setMoTa(request.getMoTa());
         sanPham.setTrangThai(request.getTrangThai());
 
