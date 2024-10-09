@@ -16,4 +16,5 @@ public interface ChatLieuService {
     void delete(Integer id);
     List<ChatLieuResponse> searchChatLieu(String ten, Boolean trangThai);
     List<String> getAllTenChatLieu();
+    List<ChatLieuResponse> getAllChatLieu();
 }

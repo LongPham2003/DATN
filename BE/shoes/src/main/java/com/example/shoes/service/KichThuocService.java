@@ -4,7 +4,6 @@ package com.example.shoes.service;
 
 
 import com.example.shoes.dto.PhanTrangResponse;
-
 import com.example.shoes.dto.kichthuoc.request.KichThuocRequest;
 import com.example.shoes.dto.kichthuoc.response.KichThuocResponse;
 
@@ -20,4 +19,5 @@ public interface KichThuocService {
     KichThuocResponse update(Integer id, KichThuocRequest request);
     void delete(Integer id);
     List<KichThuocResponse> search(String kichThuoc, Boolean trangThai);
+    List<KichThuocResponse> getAll();
 }

@@ -4,7 +4,6 @@ package com.example.shoes.service.impl;
 import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.thuonghieu.request.ThuongHieuRequest;
 import com.example.shoes.dto.thuonghieu.response.ThuongHieuResponse;
-
 import com.example.shoes.entity.ThuongHieu;
 import com.example.shoes.exception.AppException;
 import com.example.shoes.exception.ErrorCode;
@@ -93,6 +92,18 @@ public class ThuongHieuServiceImpl implements ThuongHieuService {
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<ThuongHieuResponse> getAll() {
+        // Lấy tất cả các ChatLieu từ repository
+        List<ThuongHieu> list =thuongHieuRepo.findAll();
+
+        // Chuyển đổi từ ChatLieu sang ChatLieuResponse
+        return list.stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
+    }
+
     // Phương thức chuyển đổi ThuongHieu thành ThuongHieuResponse
     private ThuongHieuResponse convertToResponse(ThuongHieu thuongHieu) {
         ThuongHieuResponse thuongHieuResponse = new ThuongHieuResponse();

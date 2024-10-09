@@ -170,6 +170,17 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<SanPhamChiTietResponse> getAll() {
+        // Lấy tất cả các ChatLieu từ repository
+        List<SanPhamChiTiet> list =sanPhamChiTietRepo.findAll();
+
+        // Chuyển đổi từ ChatLieu sang ChatLieuResponse
+        return list.stream()
+                .map(this::converToResponse)
+                .collect(Collectors.toList());
+    }
+
 
     private SanPhamChiTietResponse converToResponse(SanPhamChiTiet sanPhamChiTiet) {
         SanPhamChiTietResponse response = new SanPhamChiTietResponse();

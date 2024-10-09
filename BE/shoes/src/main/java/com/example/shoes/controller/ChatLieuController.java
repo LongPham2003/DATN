@@ -28,6 +28,16 @@ public class ChatLieuController {
                 .result(chatLieuResponses)
                 .build();
     }
+    @GetMapping("/getall")
+    public ApiResponse<List<ChatLieuResponse>> getAll() {
+        // Gọi hàm getAllChatLieu() để lấy danh sách các ChatLieuResponse
+        List<ChatLieuResponse> chatLieuResponses = chatLieuService.getAllChatLieu();
+
+        // Tạo đối tượng ApiResponse để trả về danh sách ChatLieuResponse
+        return ApiResponse.<List<ChatLieuResponse>>builder()
+                .result(chatLieuResponses)
+                .build();
+    }
     @GetMapping("/ten")
     public ResponseEntity<List<String>> getAllTen(){
         List<String> listTen = chatLieuService.getAllTenChatLieu();
