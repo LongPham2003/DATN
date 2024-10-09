@@ -5,6 +5,7 @@ import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.kichthuoc.request.KichThuocRequest;
 import com.example.shoes.dto.kichthuoc.response.KichThuocResponse;
 import com.example.shoes.entity.ChatLieu;
+import com.example.shoes.entity.DeGiay;
 import com.example.shoes.entity.KichThuoc;
 import com.example.shoes.exception.AppException;
 import com.example.shoes.exception.ErrorCode;
@@ -94,6 +95,11 @@ public class KichThuocServiceImpl implements KichThuocService {
         return kichThuocList.stream()
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<String> getAllTenKichThuoc() {
+        return kichThuocRepo.findAll().stream().map(KichThuoc::getKichThuoc).collect(Collectors.toList());
     }
 
     private KichThuocResponse convertToResponse(KichThuoc kichThuoc) {

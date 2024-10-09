@@ -1,3 +1,4 @@
+
 import axios from "axios";
 import { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
@@ -49,9 +50,16 @@ export default function LoaiGiay() {
       setError("Loại giày không được để trống");
       return;
     }
+
+    // Kiểm tra xem loại giày đã tồn tại chưa
+    if (danhSachLoaiGiay.includes(loaiGiayMoi.ten.trim())) {
+      setError("Loại giày đã tồn tại");
+      return;
+    }
+
     try {
       await axios.post(`http://localhost:8080/api/loai/add`, loaiGiayMoi);
-      loadLoaiGiay();
+      loadLoaiGiay(trangHienTai); // Đảm bảo rằng truyền trang hiện tại
       setLoaiGiayMoi({ ten: "", trangThai: true });
       toast.success("Thêm loại giày mới thành công", {
         position: "top-right",
@@ -87,17 +95,9 @@ export default function LoaiGiay() {
     const { name, value } = e.target;
     setLoaiGiayMoi({ ...loaiGiayMoi, [name]: value });
 
+    // Xóa lỗi khi người dùng nhập lại tên loại giày
     if (name === "ten") {
-      if (value.trim() === "") {
-        setError("Loại giày không được để trống");
-      } else {
-        const loaiDaTonTai = danhSachLoaiGiay.includes(value);
-        if (loaiDaTonTai) {
-          setError("Loại giày đã tồn tại");
-        } else {
-          setError("");
-        }
-      }
+      setError(""); // Reset error khi có sự thay đổi
     }
   };
 

@@ -9,6 +9,7 @@ import com.example.shoes.entity.ThuongHieu;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.service.LoaiService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -70,6 +71,13 @@ public class LoaiController {
                 .message("Xóa thành công")
                 .build();
     }
+
+    @GetMapping("/ten")
+    public ResponseEntity<List<String>> getAllTen(){
+        List<String> listTen = loaiService.getAllTenLoai();
+        return ResponseEntity.ok(listTen);
+    }
+
     @GetMapping("/search")
     public ApiResponse<List<LoaiResponse>> search(
             @RequestParam(value = "ten", required = false) String ten,

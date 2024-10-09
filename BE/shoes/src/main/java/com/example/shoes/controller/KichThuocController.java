@@ -10,6 +10,7 @@ import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.service.KichThuocService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -73,6 +74,13 @@ public class KichThuocController {
                 .message("Xóa thành công")
                 .build();
     }
+
+    @GetMapping("/ten")
+    public ResponseEntity<List<String>> getAllTen(){
+        List<String> listTen = kichThuocService.getAllTenKichThuoc();
+        return ResponseEntity.ok(listTen);
+    }
+
     @GetMapping("/search")
     public ApiResponse<List<KichThuocResponse>> search(
             @RequestParam(value = "kichThuoc", required = false) String kichThuoc,
