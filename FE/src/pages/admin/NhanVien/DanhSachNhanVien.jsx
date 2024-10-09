@@ -2,12 +2,14 @@ import { useEffect, useState } from "react";
 import TheMoiNhanVien from "./TheMoiNhanVien";
 import ReactPaginate from "react-paginate";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 export default function DanhSachNhanVien() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+
   const [nhanvien, setNhanVien] = useState([]);
   const [trangHienTai, setTrangHienTai] = useState(1);
   const [tongSoTrang, setTongSoTrang] = useState(0);
@@ -35,8 +37,6 @@ export default function DanhSachNhanVien() {
         console.error("Lỗi" + error);
       });
   }, [trangHienTai, keyword]);
-
-  console.log({ nhanvien });
 
   return (
     <div className="p-4">
@@ -100,10 +100,10 @@ export default function DanhSachNhanVien() {
               <tr className="bg-gray-100">
                 <th className="border-b px-4 py-2">STT</th>
                 <th className="border-b px-4 py-2">Họ tên</th>
+                <th className="border-b px-4 py-2">Email</th>
+                <th className="border-b px-4 py-2">SDT</th>
                 <th className="border-b px-4 py-2">Ngày Sinh</th>
                 <th className="border-b px-4 py-2">Giới Tính</th>
-                <th className="border-b px-4 py-2">Địa Chỉ</th>
-                <th className="border-b px-4 py-2">Chức Vụ</th>
                 <th className="border-b px-4 py-2">Trạng Thái</th>
                 <th className="border-b px-4 py-2">Hành Động</th>
               </tr>
@@ -115,10 +115,10 @@ export default function DanhSachNhanVien() {
                     {index + 1 + (trangHienTai - 1) * pageSize}
                   </td>
                   <td className="border-b px-4 py-2">{item.hoTen}</td>
+                  <td className="border-b px-4 py-2">{item.email}</td>
+                  <td className="border-b px-4 py-2">{item.sdt}</td>
                   <td className="border-b px-4 py-2">{item.ngaySinh}</td>
                   <td className="border-b px-4 py-2">{item.gioiTinh}</td>
-                  <td className="border-b px-4 py-2">{item.diaChi}</td>
-                  <td className="border-b px-4 py-2">{item.taiKhoan.roles}</td>
                   <td className="mx-auto flex justify-center border-b px-4 py-2 text-center">
                     <button
                       className={`relative flex h-6 w-[50px] items-center rounded-full bg-blue-500 transition-all duration-300 ${
@@ -136,7 +136,9 @@ export default function DanhSachNhanVien() {
                       ></div>
                     </button>
                   </td>
-                  <td>Actions</td>
+                  <td>
+                    <Link to={`/admin/nhanvien/${item.id}`}>Chi Tiết</Link>
+                  </td>
                 </tr>
               ))}
             </tbody>

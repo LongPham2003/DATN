@@ -44,6 +44,12 @@ public class NhanVienController {
                 .result(nhanVienService.addNhanVien(nhanvienAddRequest)).build();
     }
 
+    @GetMapping("/{id}")
+    public ApiResponse<NhanVien> getNhanVienId(@PathVariable("id") Integer id) {
+        return ApiResponse.<NhanVien>builder()
+                .result(nhanVienService.getById(id)).build();
+    }
+
     @PostMapping("/update/{id}")
     public ApiResponse<NhanVien> update(@PathVariable("id") Integer id, @RequestBody NhanVienUpdateRequest request) {
         return ApiResponse.<NhanVien>builder()
