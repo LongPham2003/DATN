@@ -4,28 +4,40 @@ import AddProduct from "../Product/AddProduct";
 import ReactPaginate from "react-paginate";
 import axios from "axios";
 import { ToastContainer } from "react-toastify";
+import CustomDropdown from "../../../CustomDropdown";
 
 export default function ListProduct() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [danhSachSanPham, setDanhSachSanPham] = useState([]);
+  const [loaiSelect, setLoaiSelect] = useState([]);
   const [tongSoTrang, setTongSoTrang] = useState(0);
   const [trangHienTai, setTrangHienTai] = useState(1);
+  const [idLoai, setidLoai] = useState("");
+  const [tenTimKiem, setTenTimKiem] = useState("");
+  const [loaiTimKiem, setLoaiTimKiem] = useState("");
+  const [trangThaiTimKiem, setTrangThaiTimKiem] = useState("");
   const itemsPerPage = 5;
 
   const totalRows = itemsPerPage;
   const emptyRows = totalRows - danhSachSanPham.length;
 
+  let ApiGetAllLoai = `http://localhost:8080/api/loai/getall`;
+
   const loadSanPham = async (page) => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/api/sanpham/list?pageNumber=${page}`,
+        `http://localhost:8080/api/sanpham/list?pageNumber=${page}&keyword=${tenTimKiem}&tenLoai=${idLoai}&trangThai=${trangThaiTimKiem}`,
       );
+
+      const loai = await axios.get(ApiGetAllLoai);
+      setLoaiSelect(loai.data.result);
       setDanhSachSanPham(response.data.result.result);
       setTongSoTrang(
         response.data.result.totalPages === undefined
           ? 0
           : response.data.result.totalPages,
       );
+      console.log();
     } catch (error) {
       console.error("có lỗi xảy ra", error);
     }
@@ -44,6 +56,41 @@ export default function ListProduct() {
   useEffect(() => {
     loadSanPham(trangHienTai);
   }, [trangHienTai]);
+
+  const handleOptionSelect = (selectedOption) => {
+    // console.log(`Selected ID: ${selectedOption.ten}`); // In ID ra console
+    setidLoai(selectedOption.ten); // Cập nhật idLoai với ID đã chọn
+  };
+  const handleSearch = () => {
+    // Lấy giá trị từ ô tìm kiếm
+    const tenTimKiemValue = document.querySelector('input[type="text"]').value;
+    setTenTimKiem(tenTimKiemValue); // Lưu giá trị vào state loaiTimKiem
+
+    // Lấy giá trị trạng thái từ radio button
+    const trangThaiValue = trangThaiTimKiem; // Trạng thái từ radio button
+    setTrangThaiTimKiem(trangThaiValue); // Lưu giá trị vào state trangThaiTimKiem
+
+    // Gọi hàm loadSanPham với các giá trị đã lấy
+    loadSanPham(trangHienTai, tenTimKiemValue, trangThaiValue);
+  };
+
+  const handleReset = () => {
+    setTenTimKiem(""); // Đặt lại giá trị tìm kiếm
+    setTrangThaiTimKiem(""); // Đặt lại trạng thái
+    setidLoai(""); // Đặt lại loại nếu cần
+    setLoaiTimKiem(""); // Đặt lại loại tìm kiếm nếu cần
+    // Bỏ chọn radio button
+    const radioButtons = document.querySelectorAll('input[name="color"]');
+    radioButtons.forEach((radio) => {
+      radio.checked = false; // Bỏ chọn tất cả radio button
+    });
+    loadSanPham(1);
+  };
+
+  useEffect(() => {
+    loadSanPham(trangHienTai, tenTimKiem, trangThaiTimKiem);
+  }, [trangHienTai, tenTimKiem, trangThaiTimKiem]);
+
   return (
     <>
       <div>
@@ -59,30 +106,51 @@ export default function ListProduct() {
           </div>
         </div>
         <div className="mt-7 flex">
-          <div className="items-center justify-start">
+          {/* <div className="items-center justify-start">
             <label htmlFor="">Danh mục:</label>
             <select className="ml-9 h-[44px] w-[500px] rounded-md border-2 border-gray-300 p-2 outline-none transition-colors duration-300 hover:border-blue-500 focus:border-yellow-500">
-              <option value="option1">Option 1</option>
-              <option value="option2">Option 2</option>
-              <option value="option3">Option 3</option>
-              <option value="option4">Option 4</option>
+              {loaiSelect.map((loai) => (
+                <option value={loai.id} key={loai.id}>
+                  {loai.ten}
+                </option>
+              ))}
             </select>
+          </div> */}
+          <div className="ml-20 justify-center">
+            <label htmlFor="Loai" className="mr-3 text-xl">
+              Loại:
+            </label>
+            <CustomDropdown
+              options={loaiSelect}
+              onSelect={handleOptionSelect}
+            />
           </div>
           <div className="ml-72 justify-center">
             <label className="mr-3 text-xl">Trạng thái:</label>
             Đang kinh doanh
-            <Radio name="color" className="mr-14" />
+            <Radio name="color" className="mr-14" value={true} />
             Ngừng kinh doanh
-            <Radio name="color" />
+            <Radio name="color" value={false} />
           </div>
         </div>
-        <div className="flex justify-center">
-          <button
-            type="button"
-            className="mt-10 h-10 w-32 rounded-md bg-blue-400 font-semibold text-black transition-colors duration-300 hover:bg-blue-600 focus:bg-blue-700 active:bg-blue-300"
-          >
-            Tìm kiếm
-          </button>
+        <div className="flex justify-center gap-4">
+          <div className="flex justify-center" onClick={handleSearch}>
+            <button
+              type="button"
+              className="mt-10 h-10 w-32 rounded-md bg-blue-400 font-semibold text-black transition-colors duration-300 hover:bg-blue-600 focus:bg-blue-700 active:bg-blue-300"
+            >
+              Tìm kiếm
+            </button>
+          </div>
+          <div onClick={handleReset}>
+            <button
+              type="button"
+              className="ml-4 mt-10 h-10 w-32 rounded-md bg-red-400 font-semibold text-white transition-colors duration-300 hover:bg-red-600 focus:bg-red-700 active:bg-red-300" // Thêm margin-left để tạo khoảng cách
+              // Gọi hàm reset khi nhấn nút
+            >
+              Reset
+            </button>
+          </div>
         </div>
       </div>
       <hr className="my-5" />

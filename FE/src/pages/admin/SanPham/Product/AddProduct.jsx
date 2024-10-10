@@ -8,7 +8,8 @@ export default function AddProduct() {
   const [idLoai, setidLoai] = useState(0);
   const [mota, setmota] = useState("");
   const [loaiSelect, setLoaiSelect] = useState([]);
-  const [error, setError] = useState("");
+  const [errorTenSP, setErrorTenSP] = useState("");
+  const [errorLoai, setErrorLoai] = useState("");
   const [trangThai] = useState(true); // Sử dụng giá trị mặc định true cho trạng thái
   const navigate = useNavigate(); // Sử dụng useNavigate để điều hướng
 
@@ -43,9 +44,13 @@ export default function AddProduct() {
 
     try {
       if (tenSanPham.trim() === "") {
-        setError("Bạn chưa nhập tên sản phẩm");
+        setErrorTenSP("Tên sản phẩm không được để trống");
+        return;
+      } else if (idLoai === 0) {
+        setErrorLoai("Bạn phải chọn một loại sản phẩm");
         return;
       }
+
       if (!window.confirm("Bạn có chắc chắn muốn thêm sản phẩm này không?")) {
         return; // Nếu người dùng chọn Cancel, dừng thao tác
       }
@@ -108,10 +113,12 @@ export default function AddProduct() {
             id="tenSanPham"
             value={tenSanPham}
             name="tenSanPham"
-            onChange={(e) => settenSanPham(e.target.value)}
+            onChange={(e) => {
+              settenSanPham(e.target.value), setErrorTenSP("");
+            }}
             className="w-full rounded-md border px-3 py-2"
-            required
           />
+          {errorTenSP && <p className="text-red-500">{errorTenSP}</p>}
         </div>
         <div>
           <label htmlFor="idLoai" className="mb-1 block">
@@ -119,10 +126,11 @@ export default function AddProduct() {
           </label>
           <select
             id="idLoai"
-            onChange={(e) => setidLoai(e.target.value)}
+            onChange={(e) => {
+              setidLoai(e.target.value), setErrorLoai("");
+            }}
             value={idLoai}
             className="w-full rounded-md border px-3 py-2"
-            required
           >
             <option value="">Chọn danh mục</option>
             {loaiSelect.map((loai) => (
@@ -131,6 +139,7 @@ export default function AddProduct() {
               </option>
             ))}
           </select>
+          {errorLoai && <p className="text-red-500">{errorLoai}</p>}
         </div>
         <div>
           <label htmlFor="mota" className="mb-1 block">
@@ -143,10 +152,9 @@ export default function AddProduct() {
             onChange={(e) => setmota(e.target.value)}
             className="w-full rounded-md border px-3 py-2"
             rows="4"
-            required
           ></textarea>
         </div>
-        {error && <p className="text-red-500">{error}</p>}
+        {/* {error && <p className="text-red-500">{error}</p>} */}
         <button
           type="submit"
           className="w-full rounded-md bg-blue-500 py-2 text-white hover:bg-blue-600"
