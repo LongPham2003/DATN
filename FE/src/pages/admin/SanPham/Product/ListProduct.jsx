@@ -5,6 +5,7 @@ import ReactPaginate from "react-paginate";
 import axios from "axios";
 import { ToastContainer } from "react-toastify";
 import CustomDropdown from "../../../CustomDropdown";
+import DetailProduct from "../Product/DetailProduct"; // Import the DetailProduct component
 
 export default function ListProduct() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -15,33 +16,58 @@ export default function ListProduct() {
   const [idLoai, setidLoai] = useState("");
   const [tenTimKiem, setTenTimKiem] = useState("");
   const [loaiTimKiem, setLoaiTimKiem] = useState("");
-  const [trangThaiTimKiem, setTrangThaiTimKiem] = useState("");
+  const [idSP, setIdSP] = useState();
+  const [product, setProduct] = useState();
+
+  const [trangThaiTimKiem, setTrangThaiTimKiem] = useState();
   const itemsPerPage = 5;
 
   const totalRows = itemsPerPage;
   const emptyRows = totalRows - danhSachSanPham.length;
+  const [isDetailProductOpen, setIsDetailProductOpen] = useState(false); // State for DetailProduct modal
 
   let ApiGetAllLoai = `http://localhost:8080/api/loai/getall`;
+  let ApiGetById = `http://localhost:8080/api/sanpham/${idSP}`;
 
   const loadSanPham = async (page) => {
     try {
-      const response = await axios.get(
-        `http://localhost:8080/api/sanpham/list?pageNumber=${page}&keyword=${tenTimKiem}&tenLoai=${idLoai}&trangThai=${trangThaiTimKiem}`,
-      );
+      // Tạo điều kiện để các giá trị có thể có hoặc không
+      const queryParams = new URLSearchParams();
+      queryParams.append("pageNumber", page); // Page là bắt buộc
 
+      if (tenTimKiem) {
+        queryParams.append("keyword", tenTimKiem); // Nếu có từ khóa tìm kiếm thì thêm vào query
+      }
+
+      if (idLoai) {
+        queryParams.append("tenLoai", idLoai); // Nếu có loại sản phẩm thì thêm vào query
+      }
+
+      if (trangThaiTimKiem !== undefined) {
+        queryParams.append("trangThai", trangThaiTimKiem); // Nếu có trạng thái tìm kiếm thì thêm vào query
+      }
+
+      let url = `http://localhost:8080/api/sanpham/list?${queryParams.toString()}`;
+
+      const response = await axios.get(url);
+
+      // Lấy dữ liệu danh mục loại sản phẩm
       const loai = await axios.get(ApiGetAllLoai);
       setLoaiSelect(loai.data.result);
+      // setProduct(DetailPD.data);
+      // Set danh sách sản phẩm và tổng số trang
       setDanhSachSanPham(response.data.result.result);
       setTongSoTrang(
         response.data.result.totalPages === undefined
           ? 0
           : response.data.result.totalPages,
       );
-      console.log();
+      // console.log(DetailPD.data);
     } catch (error) {
       console.error("có lỗi xảy ra", error);
     }
   };
+
   const openModal = () => {
     setIsModalOpen(true);
   };
@@ -49,13 +75,14 @@ export default function ListProduct() {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
   const handlePageChange = (selectedPage) => {
     setTrangHienTai(selectedPage.selected + 1);
   };
 
-  useEffect(() => {
-    loadSanPham(trangHienTai);
-  }, [trangHienTai]);
+  // useEffect(() => {
+  //   loadSanPham(trangHienTai);
+  // }, [trangHienTai]);
 
   const handleOptionSelect = (selectedOption) => {
     // console.log(`Selected ID: ${selectedOption.ten}`); // In ID ra console
@@ -67,7 +94,9 @@ export default function ListProduct() {
     setTenTimKiem(tenTimKiemValue); // Lưu giá trị vào state loaiTimKiem
 
     // Lấy giá trị trạng thái từ radio button
-    const trangThaiValue = trangThaiTimKiem; // Trạng thái từ radio button
+    const trangThaiValue = document.querySelector(
+      'input[name="color"]:checked',
+    )?.value; // Lấy giá trị của radio button đã chọn
     setTrangThaiTimKiem(trangThaiValue); // Lưu giá trị vào state trangThaiTimKiem
 
     // Gọi hàm loadSanPham với các giá trị đã lấy
@@ -78,15 +107,39 @@ export default function ListProduct() {
     setTenTimKiem(""); // Đặt lại giá trị tìm kiếm
     setTrangThaiTimKiem(""); // Đặt lại trạng thái
     setidLoai(""); // Đặt lại loại nếu cần
-    setLoaiTimKiem(""); // Đặt lại loại tìm kiếm nếu cần
+    // setLoaiTimKiem(""); // Đặt lại loại tìm kiếm nếu cần
     // Bỏ chọn radio button
     const radioButtons = document.querySelectorAll('input[name="color"]');
     radioButtons.forEach((radio) => {
       radio.checked = false; // Bỏ chọn tất cả radio button
     });
+    // Xóa nội dung ô tìm kiếm
+    const searchInput = document.querySelector('input[type="text"]');
+    if (searchInput) {
+      searchInput.value = ""; // Đặt lại giá trị ô tìm kiếm
+    }
+
     loadSanPham(1);
   };
 
+  const openDetailProduct = () => {
+    setIsDetailProductOpen(true); // Function to open the DetailProduct modal
+  };
+
+  // const
+  const handleDetail = async (id) => {
+    setIdSP(id);
+    try {
+      const DetailPD = await axios.get(
+        `http://localhost:8080/api/sanpham/${id}`,
+      );
+      setProduct(DetailPD.data.result); // Cập nhật sản phẩm chi tiết
+      console.log("Dữ liệu sản phẩm chi tiết:", DetailPD.data.result); // Kiểm tra dữ liệu
+      openDetailProduct(); // Mở modal chi tiết sản phẩm
+    } catch (error) {
+      console.error("Có lỗi xảy ra khi lấy chi tiết sản phẩm", error);
+    }
+  };
   useEffect(() => {
     loadSanPham(trangHienTai, tenTimKiem, trangThaiTimKiem);
   }, [trangHienTai, tenTimKiem, trangThaiTimKiem]);
@@ -196,7 +249,48 @@ export default function ListProduct() {
                           {sp.trangThai ? "Kinh doanh" : "Ngung kinh doanh"}
                         </td>
                         <td className="px-6 py-4">
-                          <button>Chi tiet</button>
+                          {/* <button>Chi tiet</button> */}
+                          {/* Xem detail */}
+                          <div className="ml-5 flex gap-4">
+                            <div
+                              onClick={(e) => {
+                                handleDetail(sp.id);
+                              }}
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                                className="size-6 cursor-pointer text-blue-500 transition-transform duration-500 hover:scale-150"
+                              >
+                                <path
+                                  fillRule="evenodd"
+                                  d="M7.502 6h7.128A3.375 3.375 0 0 1 18 9.375v9.375a3 3 0 0 0 3-3V6.108c0-1.505-1.125-2.811-2.664-2.94a48.972 48.972 0 0 0-.673-.05A3 3 0 0 0 15 1.5h-1.5a3 3 0 0 0-2.663 1.618c-.225.015-.45.032-.673.05C8.662 3.295 7.554 4.542 7.502 6ZM13.5 3A1.5 1.5 0 0 0 12 4.5h4.5A1.5 1.5 0 0 0 15 3h-1.5Z"
+                                  clipRule="evenodd"
+                                />
+                                <path
+                                  fillRule="evenodd"
+                                  d="M3 9.375C3 8.339 3.84 7.5 4.875 7.5h9.75c1.036 0 1.875.84 1.875 1.875v11.25c0 1.035-.84 1.875-1.875 1.875h-9.75A1.875 1.875 0 0 1 3 20.625V9.375ZM6 12a.75.75 0 0 1 .75-.75h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75H6.75a.75.75 0 0 1-.75-.75V12Zm2.25 0a.75.75 0 0 1 .75-.75h3.75a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75ZM6 15a.75.75 0 0 1 .75-.75h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75H6.75a.75.75 0 0 1-.75-.75V15Zm2.25 0a.75.75 0 0 1 .75-.75h3.75a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75ZM6 18a.75.75 0 0 1 .75-.75h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75H6.75a.75.75 0 0 1-.75-.75V18Zm2.25 0a.75.75 0 0 1 .75-.75h3.75a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75Z"
+                                  clipRule="evenodd"
+                                />
+                              </svg>
+                            </div>
+                            {/* update trang thai */}
+                            <div>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                                className="size-6 text-yellow-500 transition-transform duration-500 hover:rotate-180 hover:scale-150 hover:cursor-pointer"
+                              >
+                                <path
+                                  fillRule="evenodd"
+                                  d="M4.755 10.059a7.5 7.5 0 0 1 12.548-3.364l1.903 1.903h-3.183a.75.75 0 1 0 0 1.5h4.992a.75.75 0 0 0 .75-.75V4.356a.75.75 0 0 0-1.5 0v3.18l-1.9-1.9A9 9 0 0 0 3.306 9.67a.75.75 0 1 0 1.45.388Zm15.408 3.352a.75.75 0 0 0-.919.53 7.5 7.5 0 0 1-12.548 3.364l-1.902-1.903h3.183a.75.75 0 0 0 0-1.5H2.984a.75.75 0 0 0-.75.75v4.992a.75.75 0 0 0 1.5 0v-3.18l1.9 1.9a9 9 0 0 0 15.059-4.035.75.75 0 0 0-.53-.918Z"
+                                  clipRule="evenodd"
+                                />
+                              </svg>
+                            </div>
+                          </div>
                         </td>
                       </tr>
                     ))}{" "}
@@ -254,6 +348,20 @@ export default function ListProduct() {
             <AddProduct />
             <button
               onClick={closeModal}
+              className="mt-4 rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600"
+            >
+              Đóng
+            </button>
+          </div>
+        </div>
+      )}
+      {isDetailProductOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="rounded-lg bg-white p-8">
+            <DetailProduct sp={product} />{" "}
+            {/* Render the DetailProduct component */}
+            <button
+              onClick={() => setIsDetailProductOpen(false)} // Close the modal
               className="mt-4 rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600"
             >
               Đóng
