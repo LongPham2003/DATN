@@ -20,6 +20,7 @@ import DoiMatKhau from "./pages/client/auth/DoiMatKhau";
 import ResetPass from "./pages/client/auth/QuenMatKhau";
 // import page from "./pages/util/test";
 import PhanThan from "./pages/util/test";
+import DiaChi from "./pages/admin/KhachHang/DiaChi";
 function App() {
   return (
     <>
@@ -78,6 +79,17 @@ function App() {
           {/* roter dashboard */}
 
           <Route path="/admin" element={<Dashboard />}>
+            <Route
+              path="diachi"
+              element={
+                <>
+                  <Helmet>
+                    <title>Thống kê</title>
+                  </Helmet>
+                  <DiaChi />
+                </>
+              }
+            />
             {/* roter thong ke */}
             <Route
               path="thongke"

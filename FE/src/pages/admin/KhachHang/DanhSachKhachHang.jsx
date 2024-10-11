@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import ThemMoiKhachHang from "../KhachHang/ThemMoiKhachHang";
 
 export default function DanhSachNhanVien() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -61,7 +62,7 @@ export default function DanhSachNhanVien() {
       {/* Modal Thêm Mới  */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="relative w-full max-w-md rounded-lg bg-white p-4">
+          <div className="relative w-full max-w-4xl rounded-lg bg-white p-4">
             <button
               onClick={closeModal}
               className="absolute right-2 top-2 text-gray-500 hover:text-gray-700"
@@ -81,16 +82,17 @@ export default function DanhSachNhanVien() {
                 />
               </svg>
             </button>
+            <ThemMoiKhachHang button={closeModal} />
           </div>
         </div>
       )}
 
       {/* Ô tìm kiếm tách biệt */}
       <div className="mb-6 rounded bg-white p-4 shadow">
-        <h2 className="mb-2 text-xl font-semibold">Tìm Kiếm Nhân Viên</h2>
+        <h2 className="mb-2 text-xl font-semibold">Tìm Kiếm Khách Hàng</h2>
         <input
           type="text"
-          placeholder="Nhập tên hoặc mã nhân viên..."
+          placeholder="Nhập tên hoặc mã khách hàng..."
           className="w-full rounded border border-gray-300 p-2"
           onChange={(event) => setKeyword(event.target.value)}
         />
@@ -142,7 +144,7 @@ export default function DanhSachNhanVien() {
                     </button>
                   </td>
                   <td>
-                    <Link to={`/admin/nhanvien/${item.id}`}>Chi Tiết</Link>
+                    <Link to={`/admin/khachhang/${item.id}`}>Chi Tiết</Link>
                   </td>
                 </tr>
               ))}

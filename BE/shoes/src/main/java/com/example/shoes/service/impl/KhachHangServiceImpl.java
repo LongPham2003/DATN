@@ -23,6 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -80,11 +81,15 @@ public class KhachHangServiceImpl implements KhachHangService {
         if (khachHangRepo.existsByEmail(request.getEmail())) {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
+        if(khachHangRepo.existsBySdt(request.getSdt())){
+            throw new AppException(ErrorCode.SDT_EXISTED);
+        }
 
         TaiKhoan taiKhoan = new TaiKhoan();
         taiKhoan.setEmail(request.getEmail());
         taiKhoan.setTrangThai(true);
-        taiKhoan.setPassword(passwordEncoder.encode(request.getMatKhau()));
+        String pass = generatePass();
+        taiKhoan.setPassword(passwordEncoder.encode(pass));
         taiKhoan.setRoles(Roles.ROLE_KHACHHANG.name());
 
         taiKhoanRepo.save(taiKhoan);
@@ -106,6 +111,7 @@ public class KhachHangServiceImpl implements KhachHangService {
         diaChi.setTinhThanhPho(request.getTinhThanhPho());
         diaChi.setXaPhuong(request.getXaPhuong());
         diaChi.setHuyenQuan(request.getHuyenQuan());
+        diaChi.setDiaChiChiTiet(request.getDiaChiChiTiet());
         diaChiRepo.save(diaChi);
 
         GioHang gioHang = new GioHang();
@@ -113,7 +119,16 @@ public class KhachHangServiceImpl implements KhachHangService {
         gioHang.setIdKhachHang(newKhachHang);
         gioHangRepo.save(gioHang);
 
+        String subject = "Xin chào";
+        emailService.sendEmailPasword(request.getEmail(),subject, pass);
+
         return newKhachHang;
+    }
+
+
+    @Override
+    public KhachHang getById(Integer id) {
+        return khachHangRepo.findById(id).get();
     }
 
     @Override
@@ -148,5 +163,19 @@ public class KhachHangServiceImpl implements KhachHangService {
         khachHang.setTaiKhoan(taiKhoan);
         return khachHangRepo.save(khachHang);
 
+    }
+
+    public String generatePass() {
+        // Các ký tự để tạo mật khẩu
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
+        SecureRandom random = new SecureRandom();
+        StringBuilder password = new StringBuilder();
+
+        for (int i = 0; i < 9; i++) {
+            int index = random.nextInt(chars.length());
+            password.append(chars.charAt(index));
+        }
+
+        return password.toString();
     }
 }

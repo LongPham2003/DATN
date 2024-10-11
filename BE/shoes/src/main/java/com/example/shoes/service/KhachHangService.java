@@ -12,5 +12,5 @@ public interface KhachHangService {
     List<KhachHangResponse> findAll();
     KhachHang add(KhachHangRequest request);
     KhachHang update(KhachHangRequest request);
-
+    KhachHang getById(Integer id);
 }

@@ -26,6 +26,13 @@ public class KhachHangController {
                 .build();
     }
 
+    @GetMapping("/{id}")
+    public ApiResponse<KhachHang> getById(@PathVariable int id){
+        return ApiResponse.<KhachHang>builder()
+                .result(khachHangService.getById(id))
+                .build();
+    }
+
     @GetMapping("/search")
     public ApiResponse<PhanTrangResponse<KhachHang>> search(
             @RequestParam(value = "keyword", defaultValue = "") String keyword,
