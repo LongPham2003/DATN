@@ -13,6 +13,7 @@ import ThuongHieu from "./pages/admin/ThuocTinhSP/ThuongHieu/ThuongHieu";
 import { Helmet } from "react-helmet";
 import DanhSachNhanVien from "./pages/admin/NhanVien/DanhSachNhanVien";
 import ChiTietNhanVien from "./pages/admin/NhanVien/ChiTietNhanVien";
+import ChiTietKhachHang from "./pages/admin/KhachHang/ChiTietKhachHang";
 import DanhSachKhachHang from "./pages/admin/KhachHang/DanhSachKhachHang";
 import Login from "./pages/client/auth/Login";
 import SignUp from "./pages/client/auth/SignUp";
@@ -231,6 +232,17 @@ function App() {
                     <title>Danh sách khách hàng</title>
                   </Helmet>
                   <DanhSachKhachHang />
+                </>
+              }
+            />
+            <Route
+              path="khachhang/:id"
+              element={
+                <>
+                  <Helmet>
+                    <title>Chi tiết khách hàng</title>
+                  </Helmet>
+                  <ChiTietKhachHang />
                 </>
               }
             />

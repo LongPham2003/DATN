@@ -37,6 +37,9 @@ public class NhanVien extends CrudByAt {
     @Column(name = "dia_chi")
     private String diaChi;
 
+    @Column(name = "trang_thai")
+    Boolean trangThai;
+
     @OneToOne
     @JoinColumn(name = "id_tai_khoan", referencedColumnName = "id")
     private TaiKhoan taiKhoan;

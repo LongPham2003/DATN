@@ -1,8 +1,10 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 
 export default function ThemMoiKhachHang() {
+  const navigate = useNavigate();
   const [error, setError] = useState("");
   const [selectedProvince, setSelectedProvince] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState("");
@@ -13,6 +15,8 @@ export default function ThemMoiKhachHang() {
     district: [],
     commune: [],
   });
+
+  const [fullAddress, setFullAddress] = useState(""); // Biến lưu địa chỉ đầy đủ
   const [formData, setFormData] = useState({
     hoTen: "",
     email: "",
@@ -37,6 +41,21 @@ export default function ThemMoiKhachHang() {
         console.error("Error loading diachi.json", error);
       });
   }, []);
+
+  useEffect(() => {
+    if (
+      detailAddress &&
+      formData.ward &&
+      formData.district &&
+      formData.province
+    ) {
+      const fullAddr = `${detailAddress} - ${formData.ward} - ${formData.district} - ${formData.province}`;
+      console.log("Cập nhật địa chỉ đầy đủ:", fullAddr);
+      setFullAddress(fullAddr);
+    } else {
+      setFullAddress("");
+    }
+  }, [detailAddress, formData.ward, formData.district, formData.province]);
 
   const handleProvinceChange = (event) => {
     const selectedProvinceId = event.target.value;
@@ -91,7 +110,8 @@ export default function ThemMoiKhachHang() {
   };
 
   const handleDetailAddressChange = (event) => {
-    setDetailAddress(event.target.value);
+    const newDetailAddress = event.target.value;
+    setDetailAddress(newDetailAddress);
   };
 
   const handleChange = (e) => {
@@ -130,6 +150,8 @@ export default function ThemMoiKhachHang() {
       diaChiChiTiet: fullAddress, // Cập nhật địa chỉ đầy đủ vào formData
     }));
 
+    setFullAddress(fullAddress);
+
     try {
       const response = await axios.post("http://localhost:8080/khachhang/add", {
         hoTen: formData.hoTen,
@@ -145,7 +167,9 @@ export default function ThemMoiKhachHang() {
 
       if (response.status === 200) {
         // Nếu thành công, có thể xử lý thông báo hoặc reset form
-        toast.success("Thành công");
+        toast.success("Thành công", {
+          onClose: () => navigate("/admin/khachhang"),
+        });
         // Reset form về trạng thái ban đầu
         setFormData({
           hoTen: "",
@@ -306,11 +330,21 @@ export default function ThemMoiKhachHang() {
               </select>
             </div>
             <div className="w-full p-2">
-              <label className="mb-1 block">Địa Chỉ Chi Tiết:</label>
+              <label className="mb-1 block">Số Nhà, Làng :</label>
               <input
                 type="text"
                 value={detailAddress}
                 onChange={handleDetailAddressChange}
+                className="w-full rounded border p-2"
+                required
+              />
+            </div>
+            <div className="w-full p-2">
+              <label className="mb-1 block">Địa Chỉ chi tiết:</label>
+              <input
+                type="text"
+                value={fullAddress}
+                onChange={fullAddress}
                 className="w-full rounded border p-2"
                 required
               />

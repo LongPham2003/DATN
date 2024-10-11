@@ -54,10 +54,10 @@ public class KhachHangController {
                 .build();
     }
 
-    @PostMapping("/update")
-    public ApiResponse<KhachHang> update(@RequestBody  KhachHangRequest request){
+    @PostMapping("/update/{id}")
+    public ApiResponse<KhachHang> update(@PathVariable("id") Integer id, @RequestBody  KhachHangRequest request){
         return ApiResponse.<KhachHang>builder()
-                .result(khachHangService.update(request))
+                .result(khachHangService.update(id,request))
                 .build();
     }
 }

@@ -81,7 +81,7 @@ public class KhachHangServiceImpl implements KhachHangService {
         if (khachHangRepo.existsByEmail(request.getEmail())) {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
-        if(khachHangRepo.existsBySdt(request.getSdt())){
+        if (khachHangRepo.existsBySdt(request.getSdt())) {
             throw new AppException(ErrorCode.SDT_EXISTED);
         }
 
@@ -119,8 +119,9 @@ public class KhachHangServiceImpl implements KhachHangService {
         gioHang.setIdKhachHang(newKhachHang);
         gioHangRepo.save(gioHang);
 
+
         String subject = "Xin chào";
-        emailService.sendEmailPasword(request.getEmail(),subject, pass);
+        emailService.sendEmailPasword(request.getEmail(), subject, pass);
 
         return newKhachHang;
     }
@@ -132,8 +133,8 @@ public class KhachHangServiceImpl implements KhachHangService {
     }
 
     @Override
-    public KhachHang update(KhachHangRequest request) {
-        Optional<KhachHang> khachHangOptional = khachHangRepo.findById(request.getId());
+    public KhachHang update(Integer id, KhachHangRequest request) {
+        Optional<KhachHang> khachHangOptional = khachHangRepo.findById(id);
 
         if (!khachHangOptional.isPresent()) {
             throw new AppException(ErrorCode.USER_NOT_EXISTED);
@@ -147,12 +148,6 @@ public class KhachHangServiceImpl implements KhachHangService {
 
         KhachHang khachHang = khachHangOptional.get();
 
-        TaiKhoan taiKhoan = khachHang.getTaiKhoan();
-        taiKhoan.setEmail(request.getEmail());
-        taiKhoan.setPassword(request.getMatKhau());
-        taiKhoan.setTrangThai(request.getTrangThai());
-
-        taiKhoanRepo.save(taiKhoan);
 
         khachHang.setHoTen(request.getHoTen());
         khachHang.setSdt(request.getSdt());
@@ -160,8 +155,26 @@ public class KhachHangServiceImpl implements KhachHangService {
         khachHang.setNgaySinh(request.getNgaySinh());
         khachHang.setTrangThai(request.getTrangThai());
         khachHang.setGioiTinh(request.getGioiTinh());
-        khachHang.setTaiKhoan(taiKhoan);
-        return khachHangRepo.save(khachHang);
+
+        khachHangRepo.save(khachHang);
+
+        DiaChi diaChiKhachHang = diaChiRepo.getDiaChiByKhachHangIdAndDiaChiMacDinh(id, true);
+
+        DiaChi diaChi = new DiaChi();
+
+        if (diaChiKhachHang != null) {
+            diaChi.setId(diaChiKhachHang.getId());
+        }
+
+        diaChi.setDiaChiMacDinh(true);
+        diaChi.setTinhThanhPho(request.getTinhThanhPho());
+        diaChi.setXaPhuong(request.getXaPhuong());
+        diaChi.setHuyenQuan(request.getHuyenQuan());
+        diaChi.setDiaChiChiTiet(request.getDiaChiChiTiet());
+        diaChi.setKhachHang(khachHang);
+        diaChiRepo.save(diaChi);
+
+        return khachHang;
 
     }
 
