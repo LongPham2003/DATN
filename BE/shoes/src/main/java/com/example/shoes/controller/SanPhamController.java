@@ -28,12 +28,12 @@ public class SanPhamController {
     @GetMapping("/list")
     public ApiResponse<PhanTrangResponse<SanPhamResponse>> getAllSanPham(
             @RequestParam(value = "keyword", required = false) String keyword,
-            @RequestParam(value = "tenLoai", required = false) String tenLoai,
+            @RequestParam(value = "idLoai", required = false) Integer idLoai,
             @RequestParam(value = "trangThai", required = false) Boolean trangThai,
             @RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber,
             @RequestParam(value = "pageSize", defaultValue = "5") int pageSize
     ) {
-        PhanTrangResponse<SanPhamResponse> sanPhamPhanTrangResponse = sanPhamService.getSanPham(pageNumber, pageSize, keyword,  tenLoai, trangThai);
+        PhanTrangResponse<SanPhamResponse> sanPhamPhanTrangResponse = sanPhamService.getSanPham(pageNumber, pageSize, keyword,  idLoai, trangThai);
         return ApiResponse.<PhanTrangResponse<SanPhamResponse>>builder()
                 .result(sanPhamPhanTrangResponse)
                 .build();

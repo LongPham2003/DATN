@@ -12,7 +12,7 @@ public interface SanPhamChiTietService {
     SanPhamChiTietResponse getById(Integer id);
     SanPhamChiTietResponse create(SanPhamChiTietRequest request);
     SanPhamChiTietResponse update(Integer id, SanPhamChiTietRequest request);
-    List<SanPhamChiTietResponse> locPhamChiTietList(String tenSanPham, String tenMauSac, String kichThuoc, String tenChatLieu, String tenThuongHieu, String tenDeGiay, Boolean trangThai, BigDecimal minDonGia, BigDecimal maxDonGia);
+    List<SanPhamChiTietResponse> locPhamChiTietList(Integer idSanPham, Integer idMauSac, Integer idkichThuoc, Integer idChatLieu, Integer idThuongHieu, Integer idDeGiay, Boolean trangThai, BigDecimal minDonGia, BigDecimal maxDonGia);
     List<SanPhamChiTietResponse> getAll();
     void updateTheoTrangThai(Integer id);
 }

@@ -72,10 +72,16 @@ public class KichThuocServiceImpl implements KichThuocService {
 
     @Override
     public void delete(Integer id) {
-        if (!kichThuocRepo.existsById(id)) {
-            throw new AppException(ErrorCode.MATERIAL_NOT_FOUND);
-        }
-        kichThuocRepo.DeleteKichThuoc(id);
+
+        KichThuoc kichThuoc=kichThuocRepo.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.SIZE_NOT_FOUND));
+        boolean tt=kichThuoc.getTrangThai();
+        if(tt==true){
+            kichThuoc.setTrangThai(false);
+        }else {
+            kichThuoc.setTrangThai(true);
+        };
+        kichThuocRepo.save(kichThuoc);
     }
 
 

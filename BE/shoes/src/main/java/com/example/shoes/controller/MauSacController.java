@@ -71,7 +71,7 @@ public class MauSacController {
                 .build();
     }
 
-    @DeleteMapping("/delete/{id}")
+    @PutMapping("/updatetrangthai/{id}")
     public ApiResponse<Void> delete(@PathVariable Integer id) {
         mausacService.delete(id);
         return ApiResponse.<Void>builder()

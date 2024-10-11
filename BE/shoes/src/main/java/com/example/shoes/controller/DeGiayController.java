@@ -66,7 +66,7 @@ public class DeGiayController {
                 .build();
     }
 
-    @DeleteMapping("/delete/{id}")
+    @PutMapping("/updatetrangthai/{id}")
     public ApiResponse<Void> delete(@PathVariable Integer id) {
        deGiayService.delete(id);
         return ApiResponse.<Void>builder()

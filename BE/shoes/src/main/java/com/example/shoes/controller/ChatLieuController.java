@@ -70,11 +70,10 @@ public class ChatLieuController {
                 .build();
     }
 
-    @DeleteMapping("/delete/{id}")
+    @PutMapping ("/updatetrangthai/{id}")
     public ApiResponse<Void> deleteChatLieu(@PathVariable Integer id) {
         chatLieuService.delete(id);
         return ApiResponse.<Void>builder()
-                .message("Xóa chất liệu thành công")
                 .build();
     }
 }

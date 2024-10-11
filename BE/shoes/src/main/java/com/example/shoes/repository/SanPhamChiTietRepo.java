@@ -20,30 +20,26 @@ public interface SanPhamChiTietRepo extends JpaRepository<SanPhamChiTiet, Intege
     Page<SanPhamChiTiet> getSanPhamChiTiet(Pageable pageable);
 //   loc san pham chi tiet theo ten thuoc tinh
     @Query("SELECT s FROM SanPhamChiTiet s \n" +
-            "WHERE (:tenSanPham IS NULL OR s.idSanPham.id IN (SELECT sp.id FROM SanPham sp WHERE sp.tenSanPham LIKE CONCAT('%', :tenSanPham, '%'))) \n" +
-            "AND (:tenMauSac IS NULL OR s.idMauSac.id IN (SELECT ms.id FROM MauSac ms WHERE ms.ten LIKE CONCAT('%', :tenMauSac, '%'))) \n" +
-            "AND (:kichThuoc IS NULL OR s.idKichThuoc.id IN (SELECT kt.id FROM KichThuoc kt WHERE kt.kichThuoc LIKE CONCAT('%', :kichThuoc, '%'))) \n" +
-            "AND (:tenChatLieu IS NULL OR s.idChatLieu.id IN (SELECT cl.id FROM ChatLieu cl WHERE cl.ten LIKE CONCAT('%', :tenChatLieu, '%'))) \n" +
-            "AND (:tenThuongHieu IS NULL OR s.idThuongHieu.id IN (SELECT th.id FROM ThuongHieu th WHERE th.ten LIKE CONCAT('%', :tenThuongHieu, '%'))) \n" +
-            "AND (:tenDeGiay IS NULL OR s.idDeGiay.id IN (SELECT dg.id FROM DeGiay dg WHERE dg.ten LIKE CONCAT('%', :tenDeGiay, '%'))) \n" +
+            "WHERE (:idSanPham IS NULL OR s.idSanPham.id= :idSanPham) \n" +
+            "AND (:idMauSac IS NULL OR s.idMauSac.id= :idMauSac) \n" +
+            "AND (:idkichThuoc IS NULL OR s.idKichThuoc.id= :idkichThuoc) \n" +
+            "AND (:idChatLieu IS NULL OR s.idChatLieu.id= :idChatLieu) \n" +
+            "AND (:idThuongHieu IS NULL OR s.idThuongHieu.id= :idThuongHieu) \n" +
+            "AND (:idDeGiay IS NULL OR s.idDeGiay.id= :idDeGiay) \n" +
             "AND (:trangThai IS NULL OR s.trangThai = :trangThai) \n" +
             "AND (:minDonGia IS NULL OR s.donGia >= :minDonGia) \n" +
             "AND (:maxDonGia IS NULL OR s.donGia <= :maxDonGia)")
     List<SanPhamChiTiet> locSanPhamChiTietList(
-            @Param("tenSanPham") String tenSanPham,
-            @Param("tenMauSac") String tenMauSac,
-            @Param("kichThuoc") String kichThuoc,
-            @Param("tenChatLieu") String tenChatLieu,
-            @Param("tenThuongHieu") String tenThuongHieu,
-            @Param("tenDeGiay") String tenDeGiay,
+            @Param("idSanPham") Integer idSanPham,
+            @Param("idMauSac") Integer idMauSac,
+            @Param("idkichThuoc") Integer idkichThuoc,
+            @Param("idChatLieu") Integer idChatLieu,
+            @Param("idThuongHieu") Integer idThuongHieu,
+            @Param("idDeGiay") Integer idDeGiay,
             @Param("trangThai") Boolean trangThai,
             @Param("minDonGia") BigDecimal minDonGia,
             @Param("maxDonGia") BigDecimal maxDonGia);
-//     xoa mem
-    @Modifying
-    @Transactional
-    @Query("UPDATE SanPhamChiTiet sp SET sp.trangThai = false WHERE sp.id = :id")
-    void UpdateTrangThai(@Param("id") Integer id);
+
 
 }
 

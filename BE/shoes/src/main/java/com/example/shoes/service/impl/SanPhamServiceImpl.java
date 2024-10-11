@@ -44,9 +44,9 @@ public class SanPhamServiceImpl implements SanPhamService {
 
 
     @Override
-    public PhanTrangResponse<SanPhamResponse> getSanPham(int pageNumber, int pageSize, String keyword, String tenLoai, Boolean trangThai) {
+    public PhanTrangResponse<SanPhamResponse> getSanPham(int pageNumber, int pageSize, String keyword, Integer idLoai, Boolean trangThai) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-        Page<SanPham> page = sanPhamRepo.getSanPham(keyword, tenLoai, trangThai, pageable);
+        Page<SanPham> page = sanPhamRepo.getSanPham(keyword, idLoai, trangThai, pageable);
 
         List<SanPhamResponse> responses = page.getContent().stream()
                 .map(this::convertToSanPhamResponse)
@@ -116,10 +116,14 @@ public class SanPhamServiceImpl implements SanPhamService {
 
     @Override
     public void updateTheoTrangThai(Integer id) {
-        if (!sanPhamRepo.existsById(id)) {
-            throw new AppException(ErrorCode.PRODUCT_NOT_FOUND);
+        SanPham sanPham=sanPhamRepo.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
+        if(sanPham.getTrangThai()==true) {
+            sanPham.setTrangThai(false);
+        }else {
+            sanPham.setTrangThai(true);
         }
-        sanPhamRepo.UpdateTrangThai(id);
+        sanPhamRepo.save(sanPham);
     }
 
 }
