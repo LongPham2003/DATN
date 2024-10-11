@@ -69,10 +69,15 @@ public class DeGiayServiceImpl implements DeGiayService {
 
     @Override
     public void delete(Integer id) {
-       if(!deGiayRepo.existsById(id)) {
-           throw new AppException(ErrorCode.SHOE_SOLE_NOT_FOUND);
-       }
-       deGiayRepo.DeleteDeGiay(id);
+
+        DeGiay deGiay=deGiayRepo.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.SHOE_SOLE_NOT_FOUND));
+        if(deGiay.getTrangThai()==true) {
+            deGiay.setTrangThai(false);
+        }else {
+            deGiay.setTrangThai(true);
+        }
+        deGiayRepo.save(deGiay);
     }
 
     @Override

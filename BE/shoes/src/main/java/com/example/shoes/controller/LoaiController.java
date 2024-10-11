@@ -62,7 +62,7 @@ public class LoaiController {
                 .build();
     }
 
-    @DeleteMapping("/delete/{id}")
+    @PutMapping("/updatetrangthai/{id}")
     public ApiResponse<Void> delete(@PathVariable Integer id) {
         loaiService.delete(id);
         return ApiResponse.<Void>builder()

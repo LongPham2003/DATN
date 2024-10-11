@@ -70,10 +70,15 @@ public class MauSacServiceImpl implements MauSacService {
 
     @Override
     public void delete(Integer id) {
-        if (!mauSacRepo.existsById(id)) {
-            throw new AppException(ErrorCode.MATERIAL_NOT_FOUND);
+
+        MauSac mauSac=mauSacRepo.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.COLOR_NOT_FOUND));
+        if(mauSac.getTrangThai()==true){
+            mauSac.setTrangThai(false);
+        }else {
+            mauSac.setTrangThai(true);
         }
-        mauSacRepo.deleteById(id);
+        mauSacRepo.save(mauSac);
     }
 
 

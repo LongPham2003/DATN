@@ -65,7 +65,7 @@ public class KichThuocController {
                 .build();
     }
 
-    @DeleteMapping("/delete/{id}")
+    @PutMapping("/updatetrangthai/{id}")
     public ApiResponse<Void> delete(@PathVariable Integer id) {
         kichThuocService.delete(id);
         return ApiResponse.<Void>builder()

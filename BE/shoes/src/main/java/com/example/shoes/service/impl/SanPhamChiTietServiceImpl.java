@@ -159,10 +159,10 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     }
 
     @Override
-    public List<SanPhamChiTietResponse> locPhamChiTietList(String tenSanPham, String tenMauSac, String kichThuoc, String tenChatLieu, String tenThuongHieu, String tenDeGiay, Boolean trangThai, BigDecimal minDonGia, BigDecimal maxDonGia) {
+    public List<SanPhamChiTietResponse> locPhamChiTietList(Integer idSanPham, Integer idMauSac, Integer idkichThuoc, Integer idChatLieu, Integer idThuongHieu, Integer idDeGiay, Boolean trangThai, BigDecimal minDonGia, BigDecimal maxDonGia) {
         // Gọi phương thức trong repository
         List<SanPhamChiTiet> sanPhamChiTietList = sanPhamChiTietRepo.locSanPhamChiTietList(
-                tenSanPham, tenMauSac, kichThuoc, tenChatLieu, tenThuongHieu, tenDeGiay, trangThai, minDonGia, maxDonGia);
+                idSanPham, idMauSac, idkichThuoc, idChatLieu, idThuongHieu, idDeGiay, trangThai, minDonGia, maxDonGia);
 
         // Chuyển đổi danh sách `SanPhamChiTiet` sang `SanPhamChiTietResponse`
         return sanPhamChiTietList.stream()
@@ -179,6 +179,18 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         return list.stream()
                 .map(this::converToResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void updateTheoTrangThai(Integer id) {
+        SanPhamChiTiet sanPhamChiTiet=sanPhamChiTietRepo.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_DETAIL_NOT_FOUND));
+        if(sanPhamChiTiet.getTrangThai()==true){
+            sanPhamChiTiet.setTrangThai(false);
+        }else {
+            sanPhamChiTiet.setTrangThai(true);
+        }
+        sanPhamChiTietRepo.save(sanPhamChiTiet);
     }
 
 

@@ -71,10 +71,15 @@ public class ChatLieuServiceImpl implements ChatLieuService {
 
     @Override
     public void delete(Integer id) {
-        if (!chatLieuRepo.existsById(id)) {
-            throw new AppException(ErrorCode.MATERIAL_NOT_FOUND);
+
+        ChatLieu chatLieu=chatLieuRepo.findById(id).orElseThrow(
+                () -> new AppException(ErrorCode.MATERIAL_NOT_FOUND));
+        if(chatLieu.getTrangThai()==true){
+            chatLieu.setTrangThai(false);
+        }else {
+            chatLieu.setTrangThai(true);
         }
-        chatLieuRepo.DeleteChatLieu(id);
+        chatLieuRepo.save(chatLieu);
     }
 // phương thức tim kiem theo ten va trang thai
     @Override

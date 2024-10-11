@@ -21,11 +21,7 @@ public interface ChatLieuRepo extends JpaRepository<ChatLieu, Integer> {
     List<ChatLieu> findByTenContainingIgnoreCaseAndTrangThai(String ten, Boolean trangThai);
     // Phương thức tìm kiếm  theo trạng thái
     List<ChatLieu> findByTrangThai(Boolean trangThai);
-    // Phương thức xóa  bằng cách cập nhật trạng thái thành false(xóa mem)
-    @Modifying
-    @Transactional
-    @Query("UPDATE ChatLieu cl SET cl.trangThai = false WHERE cl.id = :id")
-    void DeleteChatLieu(@Param("id") Integer id);
+
     // Phương thức lấy danh sach với phân trang và từ khóa tìm kiếm
     @Query(value = "SELECT cl FROM ChatLieu cl WHERE cl.trangThai = true AND cl.ten LIKE %:keyword% order by cl.id desc")
     Page<ChatLieu> getChatLieu(Pageable pageable,  String keyword);

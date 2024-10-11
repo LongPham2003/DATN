@@ -51,19 +51,19 @@ public class SanPhamChiTietController {
     }
     @GetMapping("/loc")
     public ApiResponse<List<SanPhamChiTietResponse>> locSanPhamChiTiet(
-            @RequestParam(required = false) String tenSanPham,
-            @RequestParam(required = false) String tenMauSac,
-            @RequestParam(required = false) String kichThuoc,
-            @RequestParam(required = false) String tenChatLieu,
-            @RequestParam(required = false) String tenThuongHieu,
-            @RequestParam(required = false) String tenDeGiay,
+            @RequestParam(required = false) Integer idSanPham,
+            @RequestParam(required = false) Integer idMauSac,
+            @RequestParam(required = false) Integer idkichThuoc,
+            @RequestParam(required = false) Integer idChatLieu,
+            @RequestParam(required = false) Integer idThuongHieu,
+            @RequestParam(required = false) Integer idDeGiay,
             @RequestParam(required = false) Boolean trangThai,
             @RequestParam(required = false) BigDecimal minDonGia,
             @RequestParam(required = false) BigDecimal maxDonGia
     ) {
         // Gọi service để lọc sản phẩm chi tiết
         List<SanPhamChiTietResponse> responses = sanPhamChiTietService.locPhamChiTietList(
-                tenSanPham, tenMauSac, kichThuoc, tenChatLieu, tenThuongHieu, tenDeGiay, trangThai, minDonGia, maxDonGia);
+                idSanPham, idMauSac, idkichThuoc, idChatLieu, idThuongHieu, idDeGiay, trangThai, minDonGia, maxDonGia);
 
         // Trả về API response
         return ApiResponse.<List<SanPhamChiTietResponse>>builder()
@@ -78,6 +78,13 @@ public class SanPhamChiTietController {
         // Tạo đối tượng ApiResponse để trả về danh sách ChatLieuResponse
         return ApiResponse.<List<SanPhamChiTietResponse>>builder()
                 .result(list)
+                .build();
+    }
+    @PutMapping ("/updatetrangthai/{id}")
+    public ApiResponse<Void> updateTrangThai(@PathVariable Integer id) {
+        sanPhamChiTietService.updateTheoTrangThai(id);
+        return ApiResponse.<Void>builder()
+                .message("Update thành công")
                 .build();
     }
 }

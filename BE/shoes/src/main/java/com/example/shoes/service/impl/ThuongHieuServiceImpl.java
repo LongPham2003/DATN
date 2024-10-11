@@ -68,10 +68,15 @@ public class ThuongHieuServiceImpl implements ThuongHieuService {
 
     @Override
     public void delete(Integer id) {
-        if (!thuongHieuRepo.existsById(id)) {
-            throw new AppException(ErrorCode.BRAND_NOT_FOUND);
+
+        ThuongHieu thuongHieu=thuongHieuRepo.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.BRAND_NOT_FOUND));
+        if(thuongHieu.getTrangThai()==true){
+            thuongHieu.setTrangThai(false);
+        }else {
+            thuongHieu.setTrangThai(true);
         }
-        thuongHieuRepo.DeleteThuongHieu(id);
+        thuongHieuRepo.save(thuongHieu);
     }
 
     @Override

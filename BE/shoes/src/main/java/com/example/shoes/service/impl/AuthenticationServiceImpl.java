@@ -95,7 +95,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public boolean singIn(LoginRequest loginRequest) {
+    public TaiKhoan singIn(LoginRequest loginRequest) {
         TaiKhoan taiKhoan = taiKhoanRepo.findByEmail(loginRequest.getEmail()).get();
         if (taiKhoan == null) {
             throw new AppException(ErrorCode.PASSWORD_OR_EMAIL_FALSE);
@@ -109,7 +109,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if(!taiKhoan.getTrangThai()){
             throw new AppException(ErrorCode.PASSWORD_OR_EMAIL_FALSE);
         }
-        return true;
+        return taiKhoan;
     }
 
     @Override

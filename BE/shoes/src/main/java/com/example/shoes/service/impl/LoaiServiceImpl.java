@@ -70,10 +70,15 @@ public class LoaiServiceImpl implements LoaiService {
 
     @Override
     public void delete(Integer id) {
-        if (!loaiRepository.existsById(id)) {
-            throw new AppException(ErrorCode.MATERIAL_NOT_FOUND);
+
+        Loai loai=loaiRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
+        if(loai.getTrangThai()==true){
+            loai.setTrangThai(false);
+        }else {
+            loai.setTrangThai(true);
         }
-        loaiRepository.DeleteLoai(id);
+        loaiRepository.save(loai);
     }
 
     @Override

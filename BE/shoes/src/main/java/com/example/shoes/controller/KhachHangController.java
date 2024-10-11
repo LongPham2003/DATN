@@ -21,7 +21,6 @@ public class KhachHangController {
     @GetMapping("/getall")
     public ApiResponse<List<KhachHangResponse>> getAll(){
 
-        System.out.println("long");
         return ApiResponse.<List<KhachHangResponse>>builder()
                 .result(khachHangService.findAll())
                 .build();
