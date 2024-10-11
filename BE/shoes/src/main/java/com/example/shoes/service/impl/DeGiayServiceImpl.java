@@ -3,7 +3,6 @@ package com.example.shoes.service.impl;
 import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.degiay.request.DeGiayRequet;
 import com.example.shoes.dto.degiay.response.DeGiayResponse;
-import com.example.shoes.entity.ChatLieu;
 import com.example.shoes.entity.DeGiay;
 import com.example.shoes.exception.AppException;
 import com.example.shoes.exception.ErrorCode;
@@ -26,7 +25,9 @@ public class DeGiayServiceImpl implements DeGiayService {
 
     @Override
     public PhanTrangResponse<DeGiay> getDeGiay(int pageNumber, int pageSize, String keyword) {
+        // Tạo đối tượng Pageable với số trang và kích thước trang
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+        // Lấy danh sách  từ repo
         Page<DeGiay> page = deGiayRepo.getDeGiay(pageable, keyword);
         PhanTrangResponse<DeGiay> phanTrangResponse = new PhanTrangResponse<>();
         phanTrangResponse.setPageNumber(page.getNumber());
@@ -36,14 +37,14 @@ public class DeGiayServiceImpl implements DeGiayService {
         phanTrangResponse.setResult(page.getContent());
         return phanTrangResponse;
     }
-
+    // Phương thức lấy  theo id
     @Override
     public DeGiayResponse getById(Integer id) {
         DeGiay deGiay = deGiayRepo.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.SHOE_SOLE_NOT_FOUND));
         return convertToResponse(deGiay);
     }
-
+    // Phương thức thêm moi
     @Override
     public DeGiayResponse create(DeGiayRequet request) {
         if (deGiayRepo.existsByTen(request.getTen())) {
@@ -68,10 +69,15 @@ public class DeGiayServiceImpl implements DeGiayService {
 
     @Override
     public void delete(Integer id) {
-       if(!deGiayRepo.existsById(id)) {
-           throw new AppException(ErrorCode.SHOE_SOLE_NOT_FOUND);
-       }
-       deGiayRepo.DeleteDeGiay(id);
+
+        DeGiay deGiay=deGiayRepo.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.SHOE_SOLE_NOT_FOUND));
+        if(deGiay.getTrangThai()==true) {
+            deGiay.setTrangThai(false);
+        }else {
+            deGiay.setTrangThai(true);
+        }
+        deGiayRepo.save(deGiay);
     }
 
     @Override
@@ -87,12 +93,24 @@ public class DeGiayServiceImpl implements DeGiayService {
         } else {
             deGiayListList = deGiayRepo.findAll();
         }
-
+    // Chuyển đổi danh sách  thành danh sách DeGiayResponse
         return deGiayListList.stream()
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<DeGiayResponse> getAll() {
+        // Lấy tất cả các ChatLieu từ repository
+        List<DeGiay> list =deGiayRepo.findAll();
+
+        // Chuyển đổi từ ChatLieu sang ChatLieuResponse
+        return list.stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
+    }
+
+    // Phương thức chuyển đổi DeGiay thành DeGiayResponse
     private DeGiayResponse convertToResponse(DeGiay deGiay) {
         DeGiayResponse deGiayResponse = new DeGiayResponse();
         deGiayResponse.setId(deGiay.getId());

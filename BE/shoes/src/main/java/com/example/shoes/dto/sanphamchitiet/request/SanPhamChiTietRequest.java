@@ -21,6 +21,4 @@ public class SanPhamChiTietRequest {
     private BigDecimal donGia;
     private Integer soLuong;
     private Boolean trangThai;
-
-
 }

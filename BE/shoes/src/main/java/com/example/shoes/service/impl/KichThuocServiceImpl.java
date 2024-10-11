@@ -4,7 +4,6 @@ package com.example.shoes.service.impl;
 import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.kichthuoc.request.KichThuocRequest;
 import com.example.shoes.dto.kichthuoc.response.KichThuocResponse;
-import com.example.shoes.entity.ChatLieu;
 import com.example.shoes.entity.KichThuoc;
 import com.example.shoes.exception.AppException;
 import com.example.shoes.exception.ErrorCode;
@@ -27,8 +26,11 @@ public class KichThuocServiceImpl implements KichThuocService {
 
     @Override
     public PhanTrangResponse<KichThuoc> getKichThuoc(int pageNumber, int pageSize, String keyword) {
+        // Tạo đối tượng Pageable với số trang và kích thước trang
         Pageable pageable = PageRequest.of(pageNumber-1, pageSize);
+        // Lấy danh sách  từ repo
         Page<KichThuoc> page = kichThuocRepo.getKichThuoc(pageable, keyword);
+        // Tạo đối tượng PhanTrangResponse để trả về kết quả
         PhanTrangResponse<KichThuoc> phanTrangResponse = new PhanTrangResponse<>();
         phanTrangResponse.setPageNumber(page.getNumber());
         phanTrangResponse.setPageSize(page.getSize());
@@ -38,14 +40,14 @@ public class KichThuocServiceImpl implements KichThuocService {
         return phanTrangResponse;
     }
 
-
+    // Phương thức lấy  theo id
     @Override
     public KichThuocResponse getById(Integer id) {
         KichThuoc kichThuoc = kichThuocRepo.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.SIZE_NOT_FOUND));
         return convertToResponse(kichThuoc);
     }
-
+    // Phương thức thêm moi
     @Override
     public KichThuocResponse create(KichThuocRequest request) {
         if(kichThuocRepo.existsByKichThuoc(request.getKichThuoc())){
@@ -70,10 +72,16 @@ public class KichThuocServiceImpl implements KichThuocService {
 
     @Override
     public void delete(Integer id) {
-        if (!kichThuocRepo.existsById(id)) {
-            throw new AppException(ErrorCode.MATERIAL_NOT_FOUND);
-        }
-        kichThuocRepo.DeleteKichThuoc(id);
+
+        KichThuoc kichThuoc=kichThuocRepo.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.SIZE_NOT_FOUND));
+        boolean tt=kichThuoc.getTrangThai();
+        if(tt==true){
+            kichThuoc.setTrangThai(false);
+        }else {
+            kichThuoc.setTrangThai(true);
+        };
+        kichThuocRepo.save(kichThuoc);
     }
 
 
@@ -90,12 +98,24 @@ public class KichThuocServiceImpl implements KichThuocService {
         } else {
             kichThuocList = kichThuocRepo.findAll();
         }
-
+     // Chuyển đổi danh sách  thành danh sách KichThuocResponse
         return kichThuocList.stream()
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<KichThuocResponse> getAll() {
+        // Lấy tất cả các ChatLieu từ repository
+        List<KichThuoc> list =kichThuocRepo.findAll();
+
+        // Chuyển đổi từ ChatLieu sang ChatLieuResponse
+        return list.stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
+    }
+
+    // Phương thức chuyển đổi KichThuoc thành KichThuocResponse
     private KichThuocResponse convertToResponse(KichThuoc kichThuoc) {
         KichThuocResponse kichThuocResponse = new KichThuocResponse();
         kichThuocResponse.setId(kichThuoc.getId());

@@ -4,7 +4,6 @@ import com.example.shoes.dto.PhanTrangResponse;
 
 import com.example.shoes.dto.kichthuoc.request.KichThuocRequest;
 import com.example.shoes.dto.kichthuoc.response.KichThuocResponse;
-
 import com.example.shoes.entity.KichThuoc;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.service.KichThuocService;
@@ -66,7 +65,7 @@ public class KichThuocController {
                 .build();
     }
 
-    @DeleteMapping("/delete/{id}")
+    @PutMapping("/updatetrangthai/{id}")
     public ApiResponse<Void> delete(@PathVariable Integer id) {
         kichThuocService.delete(id);
         return ApiResponse.<Void>builder()
@@ -80,6 +79,15 @@ public class KichThuocController {
         List<KichThuocResponse> kichThuocResponses = kichThuocService.search(kichThuoc, trangThai);
         return ApiResponse.<List<KichThuocResponse>>builder()
                 .result(kichThuocResponses)
+                .build();
+    }
+    @GetMapping("/getall")
+    public ApiResponse<List<KichThuocResponse>> getAll() {
+        // Gọi hàm getAllChatLieu() để lấy danh sách các ChatLieuResponse
+        List<KichThuocResponse> list = kichThuocService.getAll();
+        // Tạo đối tượng ApiResponse để trả về danh sách ChatLieuResponse
+        return ApiResponse.<List<KichThuocResponse>>builder()
+                .result(list)
                 .build();
     }
 }
