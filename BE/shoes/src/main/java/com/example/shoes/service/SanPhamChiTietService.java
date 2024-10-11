@@ -14,4 +14,5 @@ public interface SanPhamChiTietService {
     SanPhamChiTietResponse update(Integer id, SanPhamChiTietRequest request);
     List<SanPhamChiTietResponse> locPhamChiTietList(String tenSanPham, String tenMauSac, String kichThuoc, String tenChatLieu, String tenThuongHieu, String tenDeGiay, Boolean trangThai, BigDecimal minDonGia, BigDecimal maxDonGia);
     List<SanPhamChiTietResponse> getAll();
+    void updateTheoTrangThai(Integer id);
 }

@@ -57,6 +57,7 @@ public class ChatLieuController {
         ChatLieuResponse newChatLieu = chatLieuService.create(request);
         return ApiResponse.<ChatLieuResponse>builder()
                 .result(newChatLieu)
+                .message("Thêm thành công")
                 .build();
     }
 
@@ -65,6 +66,7 @@ public class ChatLieuController {
         ChatLieuResponse updatedChatLieu = chatLieuService.update(id, request);
         return ApiResponse.<ChatLieuResponse>builder()
                 .result(updatedChatLieu)
+                .message("cập nhận thành công ")
                 .build();
     }
 

@@ -114,4 +114,12 @@ public class SanPhamServiceImpl implements SanPhamService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public void updateTheoTrangThai(Integer id) {
+        if (!sanPhamRepo.existsById(id)) {
+            throw new AppException(ErrorCode.PRODUCT_NOT_FOUND);
+        }
+        sanPhamRepo.UpdateTrangThai(id);
+    }
+
 }

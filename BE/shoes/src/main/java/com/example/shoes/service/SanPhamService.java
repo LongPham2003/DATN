@@ -12,5 +12,6 @@ public interface SanPhamService {
     SanPhamResponse create(SanPhamRequest request);
     SanPhamResponse update(Integer id, SanPhamRequest request);
     List<SanPhamResponse> getAll();
+    void updateTheoTrangThai(Integer id);
 
 }

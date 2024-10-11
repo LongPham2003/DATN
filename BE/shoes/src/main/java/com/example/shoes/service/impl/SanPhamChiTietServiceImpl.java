@@ -181,6 +181,14 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public void updateTheoTrangThai(Integer id) {
+        if (!sanPhamChiTietRepo.existsById(id)) {
+            throw new AppException(ErrorCode.PRODUCT_DETAIL_NOT_FOUND);
+        }
+        sanPhamChiTietRepo.UpdateTrangThai(id);
+    }
+
 
     private SanPhamChiTietResponse converToResponse(SanPhamChiTiet sanPhamChiTiet) {
         SanPhamChiTietResponse response = new SanPhamChiTietResponse();

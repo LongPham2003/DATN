@@ -80,4 +80,11 @@ public class SanPhamChiTietController {
                 .result(list)
                 .build();
     }
+    @PutMapping ("/updatetrangthai/{id}")
+    public ApiResponse<Void> updateTrangThai(@PathVariable Integer id) {
+        sanPhamChiTietService.updateTheoTrangThai(id);
+        return ApiResponse.<Void>builder()
+                .message("Update thành công")
+                .build();
+    }
 }
