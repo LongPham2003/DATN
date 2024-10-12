@@ -32,6 +32,7 @@ public class KhachHangRequest {
     private String huyenQuan;
     private String tinhThanhPho;
     private String xaPhuong;
+    private  String diaChiChiTiet;
 
 
 }

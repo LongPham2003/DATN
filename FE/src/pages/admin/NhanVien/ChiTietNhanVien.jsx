@@ -17,6 +17,10 @@ const ChiTietNhanVien = () => {
     gioiTinh: "",
     diaChi: "",
     trangThai: null,
+    ngayTao: null,
+    ngayCapNhat: null,
+    nguoiTao: null,
+    nguoiCapNhat: null,
     chucVu: "ROLE_NHANVIEN",
   });
 
@@ -62,6 +66,10 @@ const ChiTietNhanVien = () => {
           diaChi: nhanVienData.diaChi || "",
           trangThai: nhanVienData.taiKhoan.trangThai,
           chucVu: nhanVienData.taiKhoan.roles,
+          ngayTao: nhanVienData.createdAt,
+          ngayCapNhat: nhanVienData.updatedAt,
+          nguoiTao: nhanVienData.createdBy,
+          nguoiCapNhat: nhanVienData.updatedBy,
         });
       })
       .catch((error) => {
@@ -74,7 +82,7 @@ const ChiTietNhanVien = () => {
 
   return (
     <div className="flex h-auto items-center justify-center bg-gray-100">
-      <div className="w-full max-w-2xl rounded-lg bg-white p-8 shadow-md">
+      <div className="h-full w-full max-w-4xl rounded-lg bg-white p-8 shadow-md">
         <h1 className="mb-6 text-center text-2xl font-bold">
           Chi Tiết Nhân Viên
         </h1>
@@ -100,6 +108,7 @@ const ChiTietNhanVien = () => {
               </label>
               <input
                 type="email"
+                disabled
                 id="email"
                 name="email"
                 value={formData.email}
@@ -195,7 +204,69 @@ const ChiTietNhanVien = () => {
                 <option value="ROLE_NHANVIEN">Nhân Viên</option>
               </select>
             </div>
+
+            <div className="w-full p-2 sm:w-1/2">
+              <label htmlFor="ngayTao" className="mb-1 block">
+                Ngày Tạo:
+              </label>
+              <input
+                type="date"
+                id="ngayTao"
+                name="ngayTao"
+                disabled
+                value={formData.ngayTao}
+                onChange={handleChange}
+                className="w-full rounded border p-2"
+                required
+              />
+            </div>
+            <div className="w-full p-2 sm:w-1/2">
+              <label htmlFor="nguoiTao" className="mb-1 block">
+                Người Tạo:
+              </label>
+              <input
+                type="text"
+                id="nguoiTao"
+                disabled
+                name="nguoiTao"
+                value={formData.nguoiTao}
+                onChange={handleChange}
+                className="w-full rounded border p-2"
+                required
+              />
+            </div>
+            <div className="w-full p-2 sm:w-1/2">
+              <label htmlFor="ngayCapNhat" className="mb-1 block">
+                Ngày Cập Nhật:
+              </label>
+              <input
+                type="date"
+                id="ngayCapNhat"
+                disabled
+                name="ngayCapNhat"
+                value={formData.ngayCapNhat}
+                onChange={handleChange}
+                className="w-full rounded border p-2"
+                required
+              />
+            </div>
+            <div className="w-full p-2 sm:w-1/2">
+              <label htmlFor="nguoiCapNhat" className="mb-1 block">
+                Người Cập Nhật:
+              </label>
+              <input
+                type="text"
+                id="nguoiCapNhat"
+                name="nguoiCapNhat"
+                disabled
+                value={formData.nguoiCapNhat}
+                onChange={handleChange}
+                className="w-full rounded border p-2"
+                required
+              />
+            </div>
           </div>
+
           {error && <p className="mb-4 text-sm text-red-500">{error}</p>}
           <button
             type="submit"

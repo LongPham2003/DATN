@@ -11,6 +11,6 @@ public interface KhachHangService {
     PhanTrangResponse<KhachHang> getKhachHang(int pageNumber, int pageSize, String keyword);
     List<KhachHangResponse> findAll();
     KhachHang add(KhachHangRequest request);
-    KhachHang update(KhachHangRequest request);
-
+    KhachHang update(Integer id,KhachHangRequest request);
+    KhachHang getById(Integer id);
 }

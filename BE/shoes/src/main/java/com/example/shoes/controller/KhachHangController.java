@@ -26,6 +26,13 @@ public class KhachHangController {
                 .build();
     }
 
+    @GetMapping("/{id}")
+    public ApiResponse<KhachHang> getById(@PathVariable int id){
+        return ApiResponse.<KhachHang>builder()
+                .result(khachHangService.getById(id))
+                .build();
+    }
+
     @GetMapping("/search")
     public ApiResponse<PhanTrangResponse<KhachHang>> search(
             @RequestParam(value = "keyword", defaultValue = "") String keyword,
@@ -47,10 +54,10 @@ public class KhachHangController {
                 .build();
     }
 
-    @PostMapping("/update")
-    public ApiResponse<KhachHang> update(@RequestBody  KhachHangRequest request){
+    @PostMapping("/update/{id}")
+    public ApiResponse<KhachHang> update(@PathVariable("id") Integer id, @RequestBody  KhachHangRequest request){
         return ApiResponse.<KhachHang>builder()
-                .result(khachHangService.update(request))
+                .result(khachHangService.update(id,request))
                 .build();
     }
 }

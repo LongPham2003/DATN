@@ -26,6 +26,9 @@ public class DiaChi {
     @Column(name = "xa_phuong")
     private String xaPhuong;
 
+    @Column(name = "dia_chi_chi_tiet")
+    private String diaChiChiTiet;
+
     @Column(name = "dia_chi_mac_dinh")
     private Boolean diaChiMacDinh;
 
