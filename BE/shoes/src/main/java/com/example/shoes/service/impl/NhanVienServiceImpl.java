@@ -9,6 +9,7 @@ import com.example.shoes.entity.TaiKhoan;
 import com.example.shoes.enums.Roles;
 import com.example.shoes.exception.AppException;
 import com.example.shoes.exception.ErrorCode;
+import com.example.shoes.repository.KhachHangRepo;
 import com.example.shoes.repository.NhanVienRepo;
 import com.example.shoes.repository.TaiKhoanRepo;
 import com.example.shoes.service.NhanVienService;
@@ -31,6 +32,7 @@ public class NhanVienServiceImpl implements NhanVienService {
     private final NhanVienRepo nhanVienRepo;
     private final TaiKhoanRepo taiKhoanRepo;
     private  final EmailService emailService;
+    private  final KhachHangRepo khachHangRepo;
 
 
     @Override
@@ -56,6 +58,12 @@ public class NhanVienServiceImpl implements NhanVienService {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
         if (nhanVienRepo.existsBySdt(request.getSdt())) {
+            throw new AppException(ErrorCode.SDT_EXISTED);
+        }
+        if(khachHangRepo.existsByEmail(request.getEmail())) {
+            throw new AppException(ErrorCode.USER_EXISTED);
+        }
+        if(khachHangRepo.existsBySdt(request.getSdt())) {
             throw new AppException(ErrorCode.SDT_EXISTED);
         }
 

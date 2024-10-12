@@ -129,14 +129,12 @@ export default function DanhSachNhanVien() {
                   <td className="mx-auto flex justify-center border-b px-4 py-2 text-center">
                     <button
                       className={`relative flex h-6 w-[50px] items-center rounded-full bg-blue-500 transition-all duration-300 ${
-                        item.taiKhoan.trangThai
-                          ? "justify-end"
-                          : "justify-start"
+                        item.trangThai ? "justify-end" : "justify-start"
                       }`}
                     >
                       <div
                         className={`h-6 w-6 transform rounded-full shadow-md ${
-                          item.taiKhoan.trangThai
+                          item.trangThai
                             ? "translate-x bg-green-400"
                             : "translate-x bg-red-600"
                         } transition-transform duration-300`}

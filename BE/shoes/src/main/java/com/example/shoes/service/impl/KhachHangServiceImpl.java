@@ -8,10 +8,7 @@ import com.example.shoes.entity.*;
 import com.example.shoes.enums.Roles;
 import com.example.shoes.exception.AppException;
 import com.example.shoes.exception.ErrorCode;
-import com.example.shoes.repository.DiaChiRepo;
-import com.example.shoes.repository.GioHangRepo;
-import com.example.shoes.repository.KhachHangRepo;
-import com.example.shoes.repository.TaiKhoanRepo;
+import com.example.shoes.repository.*;
 import com.example.shoes.service.GioHangService;
 import com.example.shoes.service.KhachHangService;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +35,7 @@ public class KhachHangServiceImpl implements KhachHangService {
     private final EmailService emailService;
     private final DiaChiRepo diaChiRepo;
     private final GioHangRepo gioHangRepo;
+    private  final NhanVienRepo nhanVienRepo;
 
     @Override
     public PhanTrangResponse<KhachHang> getKhachHang(int pageNumber, int pageSize, String keyword) {
@@ -84,6 +82,13 @@ public class KhachHangServiceImpl implements KhachHangService {
         if (khachHangRepo.existsBySdt(request.getSdt())) {
             throw new AppException(ErrorCode.SDT_EXISTED);
         }
+        if(nhanVienRepo.existsByEmail(request.getEmail())) {
+            throw new AppException(ErrorCode.USER_EXISTED);
+        }
+        if(nhanVienRepo.existsBySdt(request.getSdt())) {
+            throw new AppException(ErrorCode.SDT_EXISTED);
+        }
+
 
         TaiKhoan taiKhoan = new TaiKhoan();
         taiKhoan.setEmail(request.getEmail());
@@ -111,6 +116,7 @@ public class KhachHangServiceImpl implements KhachHangService {
         diaChi.setTinhThanhPho(request.getTinhThanhPho());
         diaChi.setXaPhuong(request.getXaPhuong());
         diaChi.setHuyenQuan(request.getHuyenQuan());
+        diaChi.setSoNhaDuongThonXom(request.getSoNhaDuongThonXom());
         diaChi.setDiaChiChiTiet(request.getDiaChiChiTiet());
         diaChiRepo.save(diaChi);
 
@@ -171,6 +177,7 @@ public class KhachHangServiceImpl implements KhachHangService {
         diaChi.setXaPhuong(request.getXaPhuong());
         diaChi.setHuyenQuan(request.getHuyenQuan());
         diaChi.setDiaChiChiTiet(request.getDiaChiChiTiet());
+        diaChi.setSoNhaDuongThonXom(request.getSoNhaDuongThonXom());
         diaChi.setKhachHang(khachHang);
         diaChiRepo.save(diaChi);
 
