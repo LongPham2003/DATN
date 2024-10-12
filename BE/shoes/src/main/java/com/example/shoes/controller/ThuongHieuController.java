@@ -9,6 +9,7 @@ import com.example.shoes.entity.ThuongHieu;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.service.ThuongHieuService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -78,6 +79,12 @@ public class ThuongHieuController {
         return ApiResponse.<List<ThuongHieuResponse>>builder()
                 .result(thuongHieuResponses)
                 .build();
+    }
+
+    @GetMapping("/ten")
+    public ResponseEntity<List<String>> getAllTen(){
+        List<String> listTen = thuongHieuService.getAllTenThuongHieu();
+        return ResponseEntity.ok(listTen);
     }
 
 }
