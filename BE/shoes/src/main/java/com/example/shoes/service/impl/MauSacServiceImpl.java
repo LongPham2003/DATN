@@ -73,6 +73,7 @@ public class MauSacServiceImpl implements MauSacService {
 
         MauSac mauSac=mauSacRepo.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.COLOR_NOT_FOUND));
+
         if(mauSac.getTrangThai()==true){
             mauSac.setTrangThai(false);
         }else {

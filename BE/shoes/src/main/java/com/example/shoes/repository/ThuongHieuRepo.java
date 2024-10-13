@@ -21,7 +21,7 @@ public interface ThuongHieuRepo extends JpaRepository<ThuongHieu, Integer> {
     List<ThuongHieu> findByTrangThai(Boolean trangThai);
 
     // Phương thức lấy danh sach với phân trang và từ khóa tìm kiếm
-    @Query(value = "select th from ThuongHieu th where th.trangThai=true and th.ten like %:keyword% order by th.id desc")
+    @Query(value = "select th from ThuongHieu th where   th.ten like %:keyword% order by  th.trangThai desc, th.id desc ")
     Page<ThuongHieu> getThuongHieu(Pageable pageable, String keyword);
     // Phương thức kiểm tra xem  có tồn tại theo tên không
     boolean existsByTen(String ten);

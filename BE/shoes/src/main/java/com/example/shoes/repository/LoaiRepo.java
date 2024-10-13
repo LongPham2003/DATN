@@ -21,7 +21,7 @@ public interface LoaiRepo extends JpaRepository<Loai, Integer> {
     List<Loai> findByTrangThai(Boolean trangThai);
 
     // Phương thức lấy danh sach với phân trang và từ khóa tìm kiếm
-    @Query(value = "select l  from Loai l where l.trangThai=true and l.ten like %:keyword% order by l.id desc")
+    @Query(value = "select l  from Loai l where   l.ten like %:keyword% order by l.trangThai desc ,l.id desc")
     Page<Loai> getLoai(Pageable pageable, String keyword);
     // Phương thức kiểm tra xem  có tồn tại theo tên không
     boolean existsByTen(String ten);
