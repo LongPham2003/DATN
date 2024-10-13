@@ -5,7 +5,6 @@ import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.loai.request.LoaiRequest;
 import com.example.shoes.dto.loai.response.LoaiResponse;
 import com.example.shoes.entity.Loai;
-import com.example.shoes.entity.ThuongHieu;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.service.LoaiService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +62,7 @@ public class LoaiController {
                 .build();
     }
 
-    @DeleteMapping("/delete/{id}")
+    @PutMapping("/updatetrangthai/{id}")
     public ApiResponse<Void> delete(@PathVariable Integer id) {
         loaiService.delete(id);
         return ApiResponse.<Void>builder()
@@ -77,6 +76,16 @@ public class LoaiController {
         List<LoaiResponse> loaiResponses = loaiService.search(ten, trangThai);
         return ApiResponse.<List<LoaiResponse>>builder()
                 .result(loaiResponses)
+                .build();
+    }
+    @GetMapping("/getall")
+    public ApiResponse<List<LoaiResponse>> getAll() {
+        // Gọi hàm getAllChatLieu() để lấy danh sách các ChatLieuResponse
+        List<LoaiResponse> list = loaiService.getAll();
+
+        // Tạo đối tượng ApiResponse để trả về danh sách ChatLieuResponse
+        return ApiResponse.<List<LoaiResponse>>builder()
+                .result(list)
                 .build();
     }
 }

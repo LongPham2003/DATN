@@ -17,13 +17,10 @@ public interface DeGiayRepo extends JpaRepository<DeGiay, Integer> {
     List<DeGiay> findByTenContainingIgnoreCaseAndTrangThai(String ten, Boolean trangThai);
     // Phương thức tìm kiếm  theo trạng thái
     List<DeGiay> findByTrangThai(Boolean trangThai);
-    // Phương thức xóa  bằng cách cập nhật trạng thái thành false(xóa mem)
-    @Modifying
-    @Transactional
-    @Query("UPDATE DeGiay dg SET dg.trangThai = false WHERE dg.id = :id")
-    void DeleteDeGiay(@Param("id") Integer id);
+
+
     // Phương thức lấy danh sach với phân trang và từ khóa tìm kiếm
-    @Query(value = "select dg  from DeGiay dg where dg.trangThai=true and dg.ten like %:keyword% order by dg.id desc")
+    @Query(value = "select dg  from DeGiay dg where   dg.ten like %:keyword% order by dg.trangThai desc ,dg.id desc")
     Page<DeGiay> getDeGiay(Pageable pageable, String keyword);
     // Phương thức kiểm tra xem  có tồn tại theo tên không
     boolean existsByTen(String ten);

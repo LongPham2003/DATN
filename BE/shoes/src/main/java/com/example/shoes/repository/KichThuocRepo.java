@@ -19,11 +19,7 @@ public interface KichThuocRepo extends JpaRepository<KichThuoc, Integer> {
     List<KichThuoc> findByKichThuocContainingIgnoreCaseAndTrangThai(String kichThuoc, Boolean trangThai);
     // Phương thức tìm kiếm  theo trạng thái
     List<KichThuoc> findByTrangThai(Boolean trangThai);
-    // Phương thức xóa  bằng cách cập nhật trạng thái thành false(xóa mem)
-    @Modifying
-    @Transactional
-    @Query("UPDATE KichThuoc kt SET kt.trangThai = false WHERE kt.id = :id")
-    void DeleteKichThuoc(@Param("id") Integer id);
+
     // Phương thức lấy danh sach với phân trang và từ khóa tìm kiếm
     @Query(value = "select kt  from KichThuoc kt where kt.trangThai=true and kt.kichThuoc like %:keyword% order by kt.id desc")
     Page<KichThuoc> getKichThuoc(Pageable pageable, String keyword);

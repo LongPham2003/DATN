@@ -20,13 +20,10 @@ public interface MauSacRepo extends JpaRepository<MauSac, Integer> {
     List<MauSac> findByTenContainingIgnoreCaseAndTrangThai(String ten, Boolean trangThai);
     // Phương thức tìm kiếm  theo trạng thái
     List<MauSac> findByTrangThai(Boolean trangThai);
-    // Phương thức xóa  bằng cách cập nhật trạng thái thành false(xóa mem)
-    @Modifying
-    @Transactional
-    @Query("UPDATE MauSac ms SET ms.trangThai = false WHERE ms.id = :id")
-    void DeleteMauSac(@Param("id") Integer id);
+
+
     // Phương thức lấy danh sach với phân trang và từ khóa tìm kiếm
-    @Query(value = "select ms from MauSac ms where ms.trangThai=true and ms.ten like %:keyword% order by ms.id desc")
+    @Query(value = "select ms from MauSac ms where ms.ten like %:keyword% order by  ms.trangThai desc,ms.id desc")
     Page<MauSac> getMauSac(Pageable pageable, String keyword);
     // Phương thức kiểm tra xem  có tồn tại theo tên không
     boolean existsByTen(String ten);

@@ -5,7 +5,6 @@ import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.sanpham.request.SanPhamRequest;
 import com.example.shoes.dto.sanpham.response.SanPhamResponse;
 import com.example.shoes.entity.Loai;
-import com.example.shoes.entity.MauSac;
 import com.example.shoes.entity.SanPham;
 import com.example.shoes.exception.AppException;
 import com.example.shoes.exception.ErrorCode;
@@ -19,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,9 +44,9 @@ public class SanPhamServiceImpl implements SanPhamService {
 
 
     @Override
-    public PhanTrangResponse<SanPhamResponse> getSanPham(int pageNumber, int pageSize, String keyword, String tenLoai, Boolean trangThai) {
+    public PhanTrangResponse<SanPhamResponse> getSanPham(int pageNumber, int pageSize, String keyword, Integer idLoai, Boolean trangThai) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-        Page<SanPham> page = sanPhamRepo.getSanPham(keyword, tenLoai, trangThai, pageable);
+        Page<SanPham> page = sanPhamRepo.getSanPham(keyword, idLoai, trangThai, pageable);
 
         List<SanPhamResponse> responses = page.getContent().stream()
                 .map(this::convertToSanPhamResponse)
@@ -76,7 +76,7 @@ public class SanPhamServiceImpl implements SanPhamService {
         SanPham sanPham = new SanPham();
         sanPham.setLoai(loai); // Gán đối tượng Loai cho SanPham
         sanPham.setTenSanPham(request.getTenSanPham());
-        sanPham.setNgayTao(request.getNgayTao());
+        sanPham.setNgayTao(LocalDate.now());
         sanPham.setMoTa(request.getMoTa());
         sanPham.setTrangThai(request.getTrangThai());
 
@@ -95,12 +95,35 @@ public class SanPhamServiceImpl implements SanPhamService {
 
         sanPham.setLoai(loai); // Gán đối tượng Loai cho SanPham
         sanPham.setTenSanPham(request.getTenSanPham());
-        sanPham.setNgayTao(request.getNgayTao());
+        sanPham.setNgayTao(LocalDate.now());
         sanPham.setMoTa(request.getMoTa());
         sanPham.setTrangThai(request.getTrangThai());
 
         SanPham saved = sanPhamRepo.save(sanPham);
         return convertToSanPhamResponse(saved);
+    }
+
+    @Override
+    public List<SanPhamResponse> getAll() {
+        // Lấy tất cả các ChatLieu từ repository
+        List<SanPham> list =sanPhamRepo.findAll();
+
+        // Chuyển đổi từ ChatLieu sang ChatLieuResponse
+        return list.stream()
+                .map(this::convertToSanPhamResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void updateTheoTrangThai(Integer id) {
+        SanPham sanPham=sanPhamRepo.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
+        if(sanPham.getTrangThai()==true) {
+            sanPham.setTrangThai(false);
+        }else {
+            sanPham.setTrangThai(true);
+        }
+        sanPhamRepo.save(sanPham);
     }
 
 }

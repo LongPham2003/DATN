@@ -1,6 +1,6 @@
 package com.example.shoes.entity;
 
-import com.example.shoes.enums.Roles;
+import com.example.shoes.entity.base.CrudByAt;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +12,7 @@ import java.util.Date;
 @Setter
 @Entity
 @Table(name = "nhan_vien")
-public class NhanVien {
+public class NhanVien extends CrudByAt {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -36,6 +36,9 @@ public class NhanVien {
 
     @Column(name = "dia_chi")
     private String diaChi;
+
+    @Column(name = "trang_thai")
+    Boolean trangThai;
 
     @OneToOne
     @JoinColumn(name = "id_tai_khoan", referencedColumnName = "id")

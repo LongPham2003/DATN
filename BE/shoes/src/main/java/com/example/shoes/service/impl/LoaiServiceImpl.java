@@ -4,7 +4,6 @@ package com.example.shoes.service.impl;
 import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.loai.request.LoaiRequest;
 import com.example.shoes.dto.loai.response.LoaiResponse;
-import com.example.shoes.entity.ChatLieu;
 import com.example.shoes.entity.Loai;
 import com.example.shoes.exception.AppException;
 import com.example.shoes.exception.ErrorCode;
@@ -14,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -71,10 +70,15 @@ public class LoaiServiceImpl implements LoaiService {
 
     @Override
     public void delete(Integer id) {
-        if (!loaiRepository.existsById(id)) {
-            throw new AppException(ErrorCode.MATERIAL_NOT_FOUND);
+
+        Loai loai=loaiRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
+        if(loai.getTrangThai()==true){
+            loai.setTrangThai(false);
+        }else {
+            loai.setTrangThai(true);
         }
-        loaiRepository.DeleteLoai(id);
+        loaiRepository.save(loai);
     }
 
     @Override
@@ -92,6 +96,17 @@ public class LoaiServiceImpl implements LoaiService {
         }
         // Chuyển đổi danh sách  thành danh sách LoaiResponse
         return loaiList.stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<LoaiResponse> getAll() {
+        // Lấy tất cả các ChatLieu từ repository
+        List<Loai> list =loaiRepository.findAll();
+
+        // Chuyển đổi từ ChatLieu sang ChatLieuResponse
+        return list.stream()
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());
     }

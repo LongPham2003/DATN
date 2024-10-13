@@ -12,7 +12,8 @@ import ThuongHieu from "./pages/admin/ThuocTinhSP/ThuongHieu/ThuongHieu";
 
 import { Helmet } from "react-helmet";
 import DanhSachNhanVien from "./pages/admin/NhanVien/DanhSachNhanVien";
-import TheMoiNhanVien from "./pages/admin/NhanVien/TheMoiNhanVien";
+import ChiTietNhanVien from "./pages/admin/NhanVien/ChiTietNhanVien";
+import ChiTietKhachHang from "./pages/admin/KhachHang/ChiTietKhachHang";
 import DanhSachKhachHang from "./pages/admin/KhachHang/DanhSachKhachHang";
 import Login from "./pages/client/auth/Login";
 import SignUp from "./pages/client/auth/SignUp";
@@ -20,6 +21,7 @@ import DoiMatKhau from "./pages/client/auth/DoiMatKhau";
 import ResetPass from "./pages/client/auth/QuenMatKhau";
 // import page from "./pages/util/test";
 import PhanThan from "./pages/util/test";
+import DiaChi from "./pages/admin/KhachHang/DiaChi";
 function App() {
   return (
     <>
@@ -78,6 +80,17 @@ function App() {
           {/* roter dashboard */}
 
           <Route path="/admin" element={<Dashboard />}>
+            <Route
+              path="diachi"
+              element={
+                <>
+                  <Helmet>
+                    <title>Thống kê</title>
+                  </Helmet>
+                  <DiaChi />
+                </>
+              }
+            />
             {/* roter thong ke */}
             <Route
               path="thongke"
@@ -186,6 +199,7 @@ function App() {
                 </>
               }
             />
+
             {/* roter danh sach nhan vien */}
             <Route
               path="nhanvien"
@@ -198,6 +212,17 @@ function App() {
                 </>
               }
             />
+            <Route
+              path="nhanvien/:id"
+              element={
+                <>
+                  <Helmet>
+                    <title>Chi tiết nhân viên</title>
+                  </Helmet>
+                  <ChiTietNhanVien />
+                </>
+              }
+            />
             {/* roter danh sach khach hang */}
             <Route
               path="khachhang"
@@ -207,6 +232,17 @@ function App() {
                     <title>Danh sách khách hàng</title>
                   </Helmet>
                   <DanhSachKhachHang />
+                </>
+              }
+            />
+            <Route
+              path="khachhang/:id"
+              element={
+                <>
+                  <Helmet>
+                    <title>Chi tiết khách hàng</title>
+                  </Helmet>
+                  <ChiTietKhachHang />
                 </>
               }
             />

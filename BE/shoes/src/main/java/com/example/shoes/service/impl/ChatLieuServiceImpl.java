@@ -71,10 +71,15 @@ public class ChatLieuServiceImpl implements ChatLieuService {
 
     @Override
     public void delete(Integer id) {
-        if (!chatLieuRepo.existsById(id)) {
-            throw new AppException(ErrorCode.MATERIAL_NOT_FOUND);
+
+        ChatLieu chatLieu=chatLieuRepo.findById(id).orElseThrow(
+                () -> new AppException(ErrorCode.MATERIAL_NOT_FOUND));
+        if(chatLieu.getTrangThai()==true){
+            chatLieu.setTrangThai(false);
+        }else {
+            chatLieu.setTrangThai(true);
         }
-        chatLieuRepo.DeleteChatLieu(id);
+        chatLieuRepo.save(chatLieu);
     }
 // phương thức tim kiem theo ten va trang thai
     @Override
@@ -100,6 +105,18 @@ public class ChatLieuServiceImpl implements ChatLieuService {
     public List<String> getAllTenChatLieu() {
         return chatLieuRepo.findAll().stream().map(ChatLieu::getTen).collect(Collectors.toList());
     }
+
+    @Override
+    public List<ChatLieuResponse> getAllChatLieu() {
+        // Lấy tất cả các ChatLieu từ repository
+        List<ChatLieu> chatLieuList = chatLieuRepo.findAll();
+
+        // Chuyển đổi từ ChatLieu sang ChatLieuResponse
+        return chatLieuList.stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
+    }
+
 
     // Phương thức chuyển đổi ChatLieu thành ChatLieuResponse
     private ChatLieuResponse convertToResponse(ChatLieu chatLieu) {

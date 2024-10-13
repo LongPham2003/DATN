@@ -21,9 +21,15 @@ public class KhachHangController {
     @GetMapping("/getall")
     public ApiResponse<List<KhachHangResponse>> getAll(){
 
-        System.out.println("long");
         return ApiResponse.<List<KhachHangResponse>>builder()
                 .result(khachHangService.findAll())
+                .build();
+    }
+
+    @GetMapping("/{id}")
+    public ApiResponse<KhachHang> getById(@PathVariable int id){
+        return ApiResponse.<KhachHang>builder()
+                .result(khachHangService.getById(id))
                 .build();
     }
 
@@ -48,10 +54,10 @@ public class KhachHangController {
                 .build();
     }
 
-    @PostMapping("/update")
-    public ApiResponse<KhachHang> update(@RequestBody  KhachHangRequest request){
+    @PostMapping("/update/{id}")
+    public ApiResponse<KhachHang> update(@PathVariable("id") Integer id, @RequestBody  KhachHangRequest request){
         return ApiResponse.<KhachHang>builder()
-                .result(khachHangService.update(request))
+                .result(khachHangService.update(id,request))
                 .build();
     }
 }
