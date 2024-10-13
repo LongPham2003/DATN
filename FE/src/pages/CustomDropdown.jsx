@@ -13,15 +13,15 @@ const CustomDropdown = ({ options, onSelect }) => {
   };
   // Hàm để xử lý khi một option được click
   const handleOptionClick = (option) => {
-    // console.log(`Option clicked: ${option.id}`);
-   
+    console.log(`Option clicked: ${option.id}`);
+
     setSelectedOption(option.ten);
     setIsOpen(false);
-    onSelect(option)
+    onSelect(option);
   };
 
   // Thêm lựa chọn giá trị rỗng
-  const optionsWithEmpty = [{ id: '', ten: ' ' }, ...options];
+  const optionsWithEmpty = [{ id: "", ten: " " }, ...options];
 
   return (
     <div className="relative inline-block w-96 text-left">
@@ -45,7 +45,7 @@ const CustomDropdown = ({ options, onSelect }) => {
       </button>
 
       {isOpen && (
-        <div className="absolute z-10 mt-2 max-h-48 w-full overflow-auto rounded-md bg-white shadow-lg"> 
+        <div className="absolute z-10 mt-2 max-h-48 w-full overflow-auto rounded-md bg-white shadow-lg">
           <ul className="py-1 text-gray-700 hover:border-blue-400">
             {optionsWithEmpty.map((option, index) => (
               <li

@@ -13,7 +13,7 @@ export default function ListProduct() {
   const [loaiSelect, setLoaiSelect] = useState([]);
   const [tongSoTrang, setTongSoTrang] = useState(0);
   const [trangHienTai, setTrangHienTai] = useState(1);
-  const [idLoai, setidLoai] = useState("");
+  const [idLoai, setidLoai] = useState();
   const [tenTimKiem, setTenTimKiem] = useState("");
   const [loaiTimKiem, setLoaiTimKiem] = useState("");
   const [idSP, setIdSP] = useState();
@@ -40,7 +40,7 @@ export default function ListProduct() {
       }
 
       if (idLoai) {
-        queryParams.append("tenLoai", idLoai); // Nếu có loại sản phẩm thì thêm vào query
+        queryParams.append("idLoai", idLoai); // Nếu có loại sản phẩm thì thêm vào query
       }
 
       if (trangThaiTimKiem !== undefined) {
@@ -48,6 +48,7 @@ export default function ListProduct() {
       }
 
       let url = `http://localhost:8080/api/sanpham/list?${queryParams.toString()}`;
+      // console.log(url);
 
       const response = await axios.get(url);
 
@@ -86,7 +87,7 @@ export default function ListProduct() {
 
   const handleOptionSelect = (selectedOption) => {
     // console.log(`Selected ID: ${selectedOption.ten}`); // In ID ra console
-    setidLoai(selectedOption.ten); // Cập nhật idLoai với ID đã chọn
+    setidLoai(selectedOption.id); // Cập nhật idLoai với ID đã chọn
   };
   const handleSearch = () => {
     // Lấy giá trị từ ô tìm kiếm
@@ -134,7 +135,7 @@ export default function ListProduct() {
         `http://localhost:8080/api/sanpham/${id}`,
       );
       setProduct(DetailPD.data.result); // Cập nhật sản phẩm chi tiết
-      console.log("Dữ liệu sản phẩm chi tiết:", DetailPD.data.result); // Kiểm tra dữ liệu
+      // console.log("Dữ liệu sản phẩm chi tiết:", DetailPD.data.result); // Kiểm tra dữ liệu
       openDetailProduct(); // Mở modal chi tiết sản phẩm
     } catch (error) {
       console.error("Có lỗi xảy ra khi lấy chi tiết sản phẩm", error);
