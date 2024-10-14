@@ -24,7 +24,10 @@ export default function ChiTietKhachHang() {
     ngaySinh: "",
     gioiTinh: "",
     diaChi: "",
+<<<<<<< HEAD
     soNhaDuongThonXom: "",
+=======
+>>>>>>> origin/master
     province: "",
     district: "",
     ward: "",
@@ -119,6 +122,7 @@ export default function ChiTietKhachHang() {
           `http://localhost:8080/khachhang/${id}`,
         );
         const customerData = response.data.result;
+<<<<<<< HEAD
 
         // Lấy thông tin địa chỉ từ phần tử đầu tiên trong mảng diaChis
         const addressData = customerData.diaChis[0];
@@ -134,6 +138,8 @@ export default function ChiTietKhachHang() {
         );
 
         // Cập nhật dữ liệu vào form
+=======
+>>>>>>> origin/master
         setFormData({
           hoTen: customerData.hoTen,
           email: customerData.email,
@@ -141,6 +147,7 @@ export default function ChiTietKhachHang() {
           ngaySinh: customerData.ngaySinh,
           gioiTinh: customerData.gioiTinh,
           trangThai: customerData.trangThai,
+<<<<<<< HEAD
           province: addressData.tinhThanhPho,
           district: addressData.huyenQuan,
           ward: addressData.xaPhuong,
@@ -153,17 +160,30 @@ export default function ChiTietKhachHang() {
         setSelectedDistrict(districtData ? districtData.idDistrict : "");
         setSelectedCommune(communeData ? communeData.idCommune : "");
         setFullAddress(addressData.diaChiChiTiet);
+=======
+          province: customerData.tinhThanhPho,
+          district: customerData.huyenQuan,
+          ward: customerData.xaPhuong,
+          diaChi: customerData.diaChiChiTiet,
+        });
+        setFullAddress(customerData.diaChiChiTiet);
+>>>>>>> origin/master
       } catch (error) {
         setError("Không tìm thấy thông tin khách hàng.");
         console.error("Error fetching customer data", error);
       }
     };
+<<<<<<< HEAD
 
     // Gọi fetchCustomerData mỗi khi diaChiData thay đổi
     if (diaChiData.province.length > 0) {
       fetchCustomerData();
     }
   }, [id, diaChiData]);
+=======
+    fetchCustomerData();
+  }, [id]);
+>>>>>>> origin/master
 
   useEffect(() => {
     if (
@@ -191,7 +211,10 @@ export default function ChiTietKhachHang() {
           ngaySinh: formData.ngaySinh,
           gioiTinh: formData.gioiTinh,
           trangThai: formData.trangThai,
+<<<<<<< HEAD
           soNhaDuongThonXom: formData.diaChi,
+=======
+>>>>>>> origin/master
           diaChiChiTiet: fullAddress, // Gửi địa chỉ đầy đủ
           tinhThanhPho: formData.province,
           huyenQuan: formData.district,
@@ -357,11 +380,19 @@ export default function ChiTietKhachHang() {
                     ))}
               </select>
             </div>
+<<<<<<< HEAD
             <div className="w-full p-2 sm:w-1/2">
               <label className="mb-1 block">Số Nhà, Làng :</label>
               <input
                 type="text"
                 value={formData.soNhaDuongThonXom}
+=======
+            <div className="w-full p-2">
+              <label className="mb-1 block">Số Nhà, Làng :</label>
+              <input
+                type="text"
+                value={formData.diaChi}
+>>>>>>> origin/master
                 className="w-full rounded border p-2"
                 onChange={handleChange}
                 name="diaChi" // Đảm bảo có name để xử lý
