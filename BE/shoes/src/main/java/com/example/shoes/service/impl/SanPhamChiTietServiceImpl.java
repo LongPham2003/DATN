@@ -193,6 +193,17 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         sanPhamChiTietRepo.save(sanPhamChiTiet);
     }
 
+    @Override
+    public List<SanPhamChiTietResponse> findByIdSanPhamAndTrangThaiTrue(Integer idSanPham) {
+        // Gọi phương thức trong repository
+        List<SanPhamChiTiet> sanPhamChiTietList = sanPhamChiTietRepo.findByIdSanPhamAndTrangThaiTrue(idSanPham);
+
+        // Chuyển đổi danh sách `SanPhamChiTiet` sang `SanPhamChiTietResponse`
+        return sanPhamChiTietList.stream()
+                .map(this::converToResponse) // Sử dụng phương thức convertToResponse để chuyển đổi
+                .collect(Collectors.toList());
+    }
+
 
     private SanPhamChiTietResponse converToResponse(SanPhamChiTiet sanPhamChiTiet) {
         SanPhamChiTietResponse response = new SanPhamChiTietResponse();

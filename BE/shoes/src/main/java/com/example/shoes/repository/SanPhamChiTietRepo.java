@@ -42,6 +42,9 @@ public interface SanPhamChiTietRepo extends JpaRepository<SanPhamChiTiet, Intege
     // Tính tổng số lượng SanPhamChiTiet theo idSanPham
     @Query("SELECT SUM(s.soLuong) FROM SanPhamChiTiet s WHERE s.idSanPham.id= :idSanPham")
     Integer sumSoLuongByIdSanPham(@Param("idSanPham") Integer idSanPham);
+    // lay tat ca  spct theo idsanpham va co trang thai la true
+    @Query("SELECT spct FROM SanPhamChiTiet spct WHERE spct.idSanPham.id = :idSanPham AND spct.trangThai = true")
+    List<SanPhamChiTiet> findByIdSanPhamAndTrangThaiTrue(@Param("idSanPham") Integer idSanPham);
 
 }
 
