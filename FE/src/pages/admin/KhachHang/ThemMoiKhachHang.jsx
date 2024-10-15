@@ -1,8 +1,9 @@
+/* eslint-disable react/prop-types */
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 
-export default function ThemMoiKhachHang() {
+export default function ThemMoiKhachHang({ button, onAdd }) {
   const [error, setError] = useState("");
   const [selectedProvince, setSelectedProvince] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState("");
@@ -192,6 +193,8 @@ export default function ThemMoiKhachHang() {
         setSelectedDistrict("");
         setSelectedCommune("");
       }
+      button();
+      onAdd();
     } catch (error) {
       // Xử lý lỗi nếu có
       setError(error.response?.data?.message || error.message);
@@ -204,6 +207,7 @@ export default function ThemMoiKhachHang() {
         <h1 className="mb-6 text-center text-2xl font-bold">
           Thêm Mới Khách Hàng
         </h1>
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="flex flex-wrap">
             <div className="w-full p-2 sm:w-1/2">

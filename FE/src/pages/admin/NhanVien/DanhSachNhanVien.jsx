@@ -9,11 +9,13 @@ export default function DanhSachNhanVien() {
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+  const [added, setAdded] = useState(false);
 
   const [nhanvien, setNhanVien] = useState([]);
   const [trangHienTai, setTrangHienTai] = useState(1);
   const [tongSoTrang, setTongSoTrang] = useState(0);
   const [keyword, setKeyword] = useState("");
+  const [trangThai, setTrangThai] = useState(null);
   const pageSize = 5;
 
   const handlePageChange = (selectedPage) => {
@@ -26,6 +28,7 @@ export default function DanhSachNhanVien() {
         params: {
           pageNumber: trangHienTai,
           keyword: keyword,
+          trangThai: trangThai !== null ? trangThai : undefined, // Nếu trangThai là null, không gửi tham số
         },
       })
       .then(async (res) => {
@@ -36,7 +39,7 @@ export default function DanhSachNhanVien() {
       .catch((error) => {
         console.error("Lỗi" + error);
       });
-  }, [trangHienTai, keyword]);
+  }, [trangHienTai, keyword, added, trangThai]);
 
   return (
     <div className="p-4">
@@ -75,20 +78,41 @@ export default function DanhSachNhanVien() {
                 />
               </svg>
             </button>
-            <TheMoiNhanVien button={closeModal} />
+            <TheMoiNhanVien button={closeModal} onAdd={() => setAdded(true)} />
           </div>
         </div>
       )}
 
       {/* Ô tìm kiếm tách biệt */}
-      <div className="mb-6 rounded bg-white p-4 shadow">
-        <h2 className="mb-2 text-xl font-semibold">Tìm Kiếm Nhân Viên</h2>
-        <input
-          type="text"
-          placeholder="Nhập tên hoặc mã nhân viên..."
-          className="w-full rounded border border-gray-300 p-2"
-          onChange={(event) => setKeyword(event.target.value)}
-        />
+
+      <div className="flex gap-10">
+        <div className="mb-6 w-[50%] rounded bg-white p-4 shadow">
+          <h2 className="mb-2 text-xl font-semibold">Tìm Kiếm Nhân Viên</h2>
+          <input
+            type="text"
+            placeholder="Nhập tên hoặc mã nhân viên..."
+            className="w-full rounded border border-gray-300 p-2"
+            onChange={(event) => setKeyword(event.target.value)}
+          />
+        </div>
+
+        <div className="mb-6 w-[50%] rounded bg-white p-4 shadow">
+          <h2 className="mb-2 text-xl font-semibold">Trạng Thái Nhân Viên</h2>
+          <select
+            name="trangThai"
+            id="trangThai"
+            className="w-full rounded border border-gray-300 p-2"
+            onChange={(e) => {
+              const value =
+                e.target.value === "" ? null : e.target.value === "true";
+              setTrangThai(value);
+            }}
+          >
+            <option value="">Tất cả</option>
+            <option value="true">Hoạt động</option>
+            <option value="false">Không hoạt động</option>
+          </select>
+        </div>
       </div>
 
       {/* Danh sách nhân viên */}
@@ -99,6 +123,7 @@ export default function DanhSachNhanVien() {
             <thead>
               <tr className="bg-gray-100">
                 <th className="border-b px-4 py-2">STT</th>
+                <th className="border-b px-4 py-2">Mã</th>
                 <th className="border-b px-4 py-2">Họ tên</th>
                 <th className="border-b px-4 py-2">Email</th>
                 <th className="border-b px-4 py-2">SDT</th>
@@ -114,6 +139,7 @@ export default function DanhSachNhanVien() {
                   <td className="border-b px-4 py-2">
                     {index + 1 + (trangHienTai - 1) * pageSize}
                   </td>
+                  <td className="border-b px-4 py-2">{item.ma}</td>
                   <td className="border-b px-4 py-2">{item.hoTen}</td>
                   <td className="border-b px-4 py-2">{item.email}</td>
                   <td className="border-b px-4 py-2">{item.sdt}</td>
@@ -122,14 +148,12 @@ export default function DanhSachNhanVien() {
                   <td className="mx-auto flex justify-center border-b px-4 py-2 text-center">
                     <button
                       className={`relative flex h-6 w-[50px] items-center rounded-full bg-blue-500 transition-all duration-300 ${
-                        item.taiKhoan.trangThai
-                          ? "justify-end"
-                          : "justify-start"
+                        item.trangThai ? "justify-end" : "justify-start"
                       }`}
                     >
                       <div
                         className={`h-6 w-6 transform rounded-full shadow-md ${
-                          item.taiKhoan.trangThai
+                          item.trangThai
                             ? "translate-x bg-green-400"
                             : "translate-x bg-red-600"
                         } transition-transform duration-300`}
@@ -137,7 +161,9 @@ export default function DanhSachNhanVien() {
                     </button>
                   </td>
                   <td>
-                    <Link to={`/admin/nhanvien/${item.id}`}>Chi Tiết</Link>
+                    <button className="rounded bg-blue-500 px-2 py-1 text-white">
+                      <Link to={`/admin/nhanvien/${item.id}`}>Chi Tiết</Link>
+                    </button>
                   </td>
                 </tr>
               ))}

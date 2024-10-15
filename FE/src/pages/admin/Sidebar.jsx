@@ -46,7 +46,7 @@ export function Sidebar() {
     localStorage.removeItem("userRole");
 
     // Điều hướng về trang đăng nhập
-    navigate("/login"); // Hoặc đường dẫn đến trang đăng nhập của bạn
+    navigate("/login");
   };
 
   // Render component

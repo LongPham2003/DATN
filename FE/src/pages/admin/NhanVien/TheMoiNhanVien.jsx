@@ -1,8 +1,9 @@
+/* eslint-disable react/prop-types */
 import axios from "axios";
 import { useState } from "react";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 
-export default function TheMoiNhanVien() {
+export default function TheMoiNhanVien({ button, onAdd }) {
   const [error, setError] = useState("");
 
   const [formData, setFormData] = useState({
@@ -24,6 +25,7 @@ export default function TheMoiNhanVien() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     // Xử lý logic gửi dữ liệu form ở đây
     try {
       const response = await axios.post("http://localhost:8080/nhanvien/add", {
@@ -38,6 +40,7 @@ export default function TheMoiNhanVien() {
       if (response.status === 200) {
         // Nếu thành công, có thể xử lý thông báo hoặc reset form
         toast.success("Thành công");
+
         // Reset form về trạng thái ban đầu
         setFormData({
           hoTen: "",
@@ -47,6 +50,8 @@ export default function TheMoiNhanVien() {
           gioiTinh: "",
           diaChi: "",
         });
+        button();
+        onAdd();
       }
     } catch (error) {
       // Xử lý lỗi nếu có
