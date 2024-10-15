@@ -110,6 +110,11 @@ public class DeGiayServiceImpl implements DeGiayService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<String> getAllTenDeGiay() {
+        return deGiayRepo.findAll().stream().map(DeGiay::getTen).collect(Collectors.toList());
+    }
+
     // Phương thức chuyển đổi DeGiay thành DeGiayResponse
     private DeGiayResponse convertToResponse(DeGiay deGiay) {
         DeGiayResponse deGiayResponse = new DeGiayResponse();

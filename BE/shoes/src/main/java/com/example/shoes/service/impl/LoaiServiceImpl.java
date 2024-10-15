@@ -111,6 +111,11 @@ public class LoaiServiceImpl implements LoaiService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<String> getAllTenLoai() {
+        return loaiRepository.findAll().stream().map(Loai::getTen).collect(Collectors.toList());
+    }
+
     // Phương thức chuyển đổi Loai thành LoaiResponse
     private LoaiResponse convertToResponse(Loai loai) {
         LoaiResponse loaiResponse = new LoaiResponse();

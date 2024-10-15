@@ -19,4 +19,6 @@ public interface DeGiayService {
     void delete(Integer id);
     List<DeGiayResponse> search(String ten, Boolean trangThai);
     List<DeGiayResponse> getAll();
+    List<String> getAllTenDeGiay();
+
 }
