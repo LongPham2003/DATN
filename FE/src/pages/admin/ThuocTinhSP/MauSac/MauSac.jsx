@@ -241,15 +241,6 @@ export default function MauSac() {
     loadMauSac(trangHienTai); // Tải lại danh sách màu sắc với từ khóa tìm kiếm
   };
 
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-
-  // Hàm đóng modal
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-
   const handleRowClick = (item) => {
     console.log("Dữ liệu dòng được chọn:", item); // Log dữ liệu dòng được chọn
     setMauSacMoi({ ten: item.ten, trangThai: item.trangThai }); // Lưu dữ liệu vào state mauSacMoi
