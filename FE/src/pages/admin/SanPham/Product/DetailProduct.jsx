@@ -9,7 +9,7 @@ export default function DetailProduct() {
   const { id } = useParams();
   const [sanPham, setSanPham] = useState();
 
-  const [idLoai, setidLoai] = useState();
+  const [idLoai] = useState();
 
   const [loaiSelect, setLoaiSelect] = useState([]);
   const [error, setError] = useState("");
@@ -18,7 +18,7 @@ export default function DetailProduct() {
     ngayTao: "",
     idLoai: 0,
     moTa: "",
-    trangThai: null,
+    trangThai: true,
   });
   const navigate = useNavigate();
   let ApiGetById = `http://localhost:8080/api/sanpham/${id}`;
@@ -39,7 +39,7 @@ export default function DetailProduct() {
         idLoai: res.data.result.idLoai || idLoai,
         ngayTao: res.data.result.ngayTao || "",
         moTa: res.data.result.moTa || "",
-        trangThai: res.data.result.trangThai || null,
+        trangThai: res.data.result.trangThai || false,
       });
     } catch (error) {
       console.log(error);
@@ -80,20 +80,6 @@ export default function DetailProduct() {
     }
   };
 
-  const handleBlur = (e) => {
-    const { name, value } = e.target;
-
-    // Kiểm tra nếu tên sản phẩm bị bỏ trống
-    if (name === "tenSanPham" && value.trim() === "") {
-      setError("Tên sản phẩm không được để trống");
-    }
-  };
-  const handleMouseDown = (e) => {
-    e.preventDefault(); // Chặn sự kiện click chuột
-  };
-  // const getSelectedOption = () => {
-  //   return loaiSelect.find((option) => option.id === formData.idLoai) || null;
-  // };
   useEffect(() => {
     getById();
   }, []);
@@ -123,7 +109,7 @@ export default function DetailProduct() {
                   className="w-[400px] rounded-md border-2 border-gray-300 p-2 outline-none transition-colors duration-300 hover:border-blue-500 focus:border-blue-500"
                   value={formData.tenSanPham}
                   name="tenSanPham"
-                  onBlur={handleBlur}
+                  onChange={handleChange}
                 />
                 {error && <p className="text-red-500">{error}</p>}
               </div>
@@ -175,7 +161,7 @@ export default function DetailProduct() {
                       type="radio"
                       name="trangThai"
                       value="false"
-                      checked={formData.trangThai !== false}
+                      checked={formData.trangThai === false}
                       onChange={() =>
                         setFormData({ ...formData, trangThai: false })
                       }

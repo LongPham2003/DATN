@@ -21,7 +21,6 @@ const CustomDropdown = ({ options, onSelect }) => {
   };
 
   // Thêm lựa chọn giá trị rỗng
-  const optionsWithEmpty = [{ id: "", ten: "Select an option" }, ...options];
 
   // Thêm props để reset dropdown
   const resetDropdown = () => {
@@ -52,7 +51,7 @@ const CustomDropdown = ({ options, onSelect }) => {
       {isOpen && (
         <div className="absolute z-10 mt-2 max-h-48 w-full overflow-auto rounded-md bg-white shadow-lg">
           <ul className="py-1 text-gray-700 hover:border-blue-400">
-            {optionsWithEmpty.map((option, index) => (
+            {options.map((option, index) => (
               <li
                 key={index}
                 onClick={() => handleOptionClick(option)}

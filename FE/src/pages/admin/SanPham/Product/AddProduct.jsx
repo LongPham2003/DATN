@@ -6,7 +6,7 @@ import { Bounce, toast, ToastContainer } from "react-toastify";
 export default function AddProduct() {
   const [tenSanPham, settenSanPham] = useState("");
   const [idLoai, setidLoai] = useState(0);
-  const [mota, setmota] = useState("");
+  const [moTa, setmota] = useState("");
   const [loaiSelect, setLoaiSelect] = useState([]);
   const [errorTenSP, setErrorTenSP] = useState("");
   const [errorLoai, setErrorLoai] = useState("");
@@ -57,7 +57,7 @@ export default function AddProduct() {
       const newProduct = {
         tenSanPham,
         idLoai,
-        mota,
+        moTa,
         trangThai, // Mặc định true
       };
 
@@ -142,13 +142,13 @@ export default function AddProduct() {
           {errorLoai && <p className="text-red-500">{errorLoai}</p>}
         </div>
         <div>
-          <label htmlFor="mota" className="mb-1 block">
+          <label htmlFor="moTa" className="mb-1 block">
             Mô tả:
           </label>
           <textarea
-            id="mota"
-            value={mota}
-            name="mota"
+            id="moTa"
+            value={moTa}
+            name="moTa"
             onChange={(e) => setmota(e.target.value)}
             className="w-full rounded-md border px-3 py-2"
             rows="4"
