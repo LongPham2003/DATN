@@ -114,6 +114,8 @@ public class SanPhamServiceImpl implements SanPhamService {
                 .collect(Collectors.toList());
     }
 
+
+
     @Override
     public void updateTheoTrangThai(Integer id) {
         SanPham sanPham=sanPhamRepo.findById(id)
@@ -124,6 +126,11 @@ public class SanPhamServiceImpl implements SanPhamService {
             sanPham.setTrangThai(true);
         }
         sanPhamRepo.save(sanPham);
+    }
+
+    @Override
+    public List<String> getAlltenSP() {
+        return sanPhamRepo.findAll().stream().map(SanPham::getTenSanPham).collect(Collectors.toList());
     }
 
 }
