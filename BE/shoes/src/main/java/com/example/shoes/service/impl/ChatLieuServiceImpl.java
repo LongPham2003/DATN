@@ -110,7 +110,6 @@ public class ChatLieuServiceImpl implements ChatLieuService {
     public List<ChatLieuResponse> getAllChatLieu() {
         // Lấy tất cả các ChatLieu từ repository
         List<ChatLieu> chatLieuList = chatLieuRepo.findAll();
-
         // Chuyển đổi từ ChatLieu sang ChatLieuResponse
         return chatLieuList.stream()
                 .map(this::convertToResponse)

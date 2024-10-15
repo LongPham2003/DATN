@@ -39,7 +39,9 @@ public interface SanPhamChiTietRepo extends JpaRepository<SanPhamChiTiet, Intege
             @Param("trangThai") Boolean trangThai,
             @Param("minDonGia") BigDecimal minDonGia,
             @Param("maxDonGia") BigDecimal maxDonGia);
-
+    // Tính tổng số lượng SanPhamChiTiet theo idSanPham
+    @Query("SELECT SUM(s.soLuong) FROM SanPhamChiTiet s WHERE s.idSanPham.id= :idSanPham")
+    Integer sumSoLuongByIdSanPham(@Param("idSanPham") Integer idSanPham);
 
 }
 

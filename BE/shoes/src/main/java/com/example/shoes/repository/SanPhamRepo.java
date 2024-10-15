@@ -23,5 +23,8 @@ public interface SanPhamRepo extends JpaRepository<SanPham, Integer> {
 
     boolean existsByTenSanPham(String ten);
 
+    // Query để lấy mã sản phẩm lớn nhất
+    @Query("SELECT s.ma FROM SanPham s ORDER BY s.ma DESC LIMIT 1")
+    String findMaxMaSanPham();
 
 }
