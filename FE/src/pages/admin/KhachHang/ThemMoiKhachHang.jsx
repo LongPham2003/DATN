@@ -1,10 +1,9 @@
+/* eslint-disable react/prop-types */
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 
-export default function ThemMoiKhachHang() {
-  const navigate = useNavigate();
+export default function ThemMoiKhachHang({ button, onAdd }) {
   const [error, setError] = useState("");
   const [selectedProvince, setSelectedProvince] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState("");
@@ -24,6 +23,7 @@ export default function ThemMoiKhachHang() {
     ngaySinh: "",
     gioiTinh: "",
     diaChi: "",
+    soNhaDuongThonXom: "",
     province: "",
     district: "",
     ward: "",
@@ -112,6 +112,10 @@ export default function ThemMoiKhachHang() {
   const handleDetailAddressChange = (event) => {
     const newDetailAddress = event.target.value;
     setDetailAddress(newDetailAddress);
+    setFormData((prevState) => ({
+      ...prevState,
+      soNhaDuongThonXom: newDetailAddress, // Cập nhật soNhaDuongThonXom
+    }));
   };
 
   const handleChange = (e) => {
@@ -158,6 +162,7 @@ export default function ThemMoiKhachHang() {
         email: formData.email,
         sdt: formData.sdt,
         ngaySinh: formData.ngaySinh,
+        soNhaDuongThonXom: formData.soNhaDuongThonXom,
         gioiTinh: formData.gioiTinh,
         diaChiChiTiet: fullAddress, // Gửi địa chỉ đầy đủ
         tinhThanhPho: formData.province,
@@ -165,11 +170,11 @@ export default function ThemMoiKhachHang() {
         xaPhuong: formData.ward,
       });
 
+      console.log(formData);
       if (response.status === 200) {
         // Nếu thành công, có thể xử lý thông báo hoặc reset form
-        toast.success("Thành công", {
-          onClose: () => navigate("/admin/khachhang"),
-        });
+        toast.success("Thành công");
+
         // Reset form về trạng thái ban đầu
         setFormData({
           hoTen: "",
@@ -181,12 +186,15 @@ export default function ThemMoiKhachHang() {
           province: "",
           district: "",
           ward: "",
+          soNhaDuongThonXom: "",
         });
         setDetailAddress("");
         setSelectedProvince("");
         setSelectedDistrict("");
         setSelectedCommune("");
       }
+      button();
+      onAdd();
     } catch (error) {
       // Xử lý lỗi nếu có
       setError(error.response?.data?.message || error.message);
@@ -199,6 +207,7 @@ export default function ThemMoiKhachHang() {
         <h1 className="mb-6 text-center text-2xl font-bold">
           Thêm Mới Khách Hàng
         </h1>
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="flex flex-wrap">
             <div className="w-full p-2 sm:w-1/2">

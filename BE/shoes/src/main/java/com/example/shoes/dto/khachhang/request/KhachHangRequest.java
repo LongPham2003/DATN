@@ -13,6 +13,8 @@ public class KhachHangRequest {
 
     private Integer id;
 
+    private String ma;
+
     private String hoTen;
 
     private String sdt;
@@ -33,6 +35,7 @@ public class KhachHangRequest {
     private String tinhThanhPho;
     private String xaPhuong;
     private  String diaChiChiTiet;
+    private String soNhaDuongThonXom;
 
 
 }

@@ -53,7 +53,7 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                        // .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
-                        .requestMatchers("/khachhang/getall").hasRole("NHANVIEN")
+//                        .requestMatchers("/khachhang/getall").hasRole("NHANVIEN")
                         .anyRequest().permitAll())
                 .exceptionHandling(ex -> ex.accessDeniedHandler(new CustomAccessDeniedHandler()))
                 .httpBasic(Customizer.withDefaults());

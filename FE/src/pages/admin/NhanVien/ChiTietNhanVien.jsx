@@ -22,6 +22,7 @@ const ChiTietNhanVien = () => {
     nguoiTao: null,
     nguoiCapNhat: null,
     chucVu: "ROLE_NHANVIEN",
+    ma: "",
   });
 
   const handleChange = (e) => {
@@ -58,13 +59,14 @@ const ChiTietNhanVien = () => {
 
         setNhanVien(nhanVienData);
         setFormData({
-          hoTen: nhanVienData.hoTen || "",
-          email: nhanVienData.email || "",
-          sdt: nhanVienData.sdt || "",
-          ngaySinh: nhanVienData.ngaySinh || "",
-          gioiTinh: nhanVienData.gioiTinh || "",
-          diaChi: nhanVienData.diaChi || "",
-          trangThai: nhanVienData.taiKhoan.trangThai,
+          hoTen: nhanVienData.hoTen,
+          ma: nhanVienData.ma,
+          email: nhanVienData.email,
+          sdt: nhanVienData.sdt,
+          ngaySinh: nhanVienData.ngaySinh,
+          gioiTinh: nhanVienData.gioiTinh,
+          diaChi: nhanVienData.diaChi,
+          trangThai: nhanVienData.trangThai,
           chucVu: nhanVienData.taiKhoan.roles,
           ngayTao: nhanVienData.createdAt,
           ngayCapNhat: nhanVienData.updatedAt,
@@ -82,12 +84,27 @@ const ChiTietNhanVien = () => {
 
   return (
     <div className="flex h-auto items-center justify-center bg-gray-100">
-      <div className="h-full w-full max-w-4xl rounded-lg bg-white p-8 shadow-md">
-        <h1 className="mb-6 text-center text-2xl font-bold">
+      <div className="h-full w-full max-w-4xl rounded-lg bg-white px-8 py-2 shadow-md">
+        <h1 className="mb-3 text-center text-2xl font-bold">
           Chi Tiết Nhân Viên
         </h1>
         <form onSubmit={handleSubmit} className="mt-5 space-y-4">
           <div className="flex flex-wrap">
+            <div className="w-full p-2 sm:w-1/2">
+              <label htmlFor="hoTen" className="mb-1 block">
+                Họ Tên:
+              </label>
+              <input
+                type="text"
+                id="hoTen"
+                name="hoTen"
+                value={formData.ma}
+                onChange={handleChange}
+                className="w-full rounded border p-2"
+                required
+                disabled
+              />
+            </div>
             <div className="w-full p-2 sm:w-1/2">
               <label htmlFor="hoTen" className="mb-1 block">
                 Họ Tên:

@@ -20,6 +20,9 @@ public class KhachHang extends CrudByAt {
     @Column(name = "id")
     private Integer id;
 
+    @Column(name = "ma")
+    private String ma;
+
     @Column(name = "ho_ten")
     private String hoTen;
 
