@@ -23,7 +23,7 @@ public interface ChatLieuRepo extends JpaRepository<ChatLieu, Integer> {
     List<ChatLieu> findByTrangThai(Boolean trangThai);
 
     // Phương thức lấy danh sach với phân trang và từ khóa tìm kiếm
-    @Query(value = "SELECT cl FROM ChatLieu cl WHERE cl.trangThai = true AND cl.ten LIKE %:keyword% order by cl.id desc")
+    @Query(value = "SELECT cl FROM ChatLieu cl WHERE   cl.ten LIKE %:keyword% order by cl.trangThai desc , cl.id desc")
     Page<ChatLieu> getChatLieu(Pageable pageable,  String keyword);
     // Phương thức kiểm tra xem  có tồn tại theo tên không
     boolean existsByTen(String ten);

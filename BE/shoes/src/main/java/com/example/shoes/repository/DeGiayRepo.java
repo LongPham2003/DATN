@@ -20,7 +20,7 @@ public interface DeGiayRepo extends JpaRepository<DeGiay, Integer> {
 
 
     // Phương thức lấy danh sach với phân trang và từ khóa tìm kiếm
-    @Query(value = "select dg  from DeGiay dg where dg.trangThai=true and dg.ten like %:keyword% order by dg.id desc")
+    @Query(value = "select dg  from DeGiay dg where   dg.ten like %:keyword% order by dg.trangThai desc ,dg.id desc")
     Page<DeGiay> getDeGiay(Pageable pageable, String keyword);
     // Phương thức kiểm tra xem  có tồn tại theo tên không
     boolean existsByTen(String ten);

@@ -15,7 +15,7 @@ export default function Dashboard() {
         <Sidebar />
       </aside>
       <main className="w-4/5">
-        <div className="ml-[-20px] min-h-screen rounded bg-white drop-shadow-2xl">
+        <div className="ml-[-30px] min-h-screen rounded bg-white drop-shadow-2xl">
           <Outlet />
         </div>
       </main>
