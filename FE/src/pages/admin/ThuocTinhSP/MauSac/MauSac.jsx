@@ -81,8 +81,12 @@ export default function MauSac() {
       }
     }
   };
-  const themMauSac = async () => {
-    // Kiểm tra xem tên màu sắc có bị trống hay không
+
+  
+  const themMauSac = async (e) => {
+    e.preventDefault();
+    // Nếu không, gọi hàm thêm mới
+
     if (mauSacMoi.ten.trim() === "") {
       setError("Tên không được để trống");
       return;
