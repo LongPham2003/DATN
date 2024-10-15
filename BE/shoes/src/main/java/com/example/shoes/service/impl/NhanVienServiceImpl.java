@@ -9,6 +9,7 @@ import com.example.shoes.entity.TaiKhoan;
 import com.example.shoes.enums.Roles;
 import com.example.shoes.exception.AppException;
 import com.example.shoes.exception.ErrorCode;
+import com.example.shoes.repository.KhachHangRepo;
 import com.example.shoes.repository.NhanVienRepo;
 import com.example.shoes.repository.TaiKhoanRepo;
 import com.example.shoes.service.NhanVienService;
@@ -31,13 +32,14 @@ public class NhanVienServiceImpl implements NhanVienService {
     private final NhanVienRepo nhanVienRepo;
     private final TaiKhoanRepo taiKhoanRepo;
     private  final EmailService emailService;
+    private  final KhachHangRepo khachHangRepo;
 
 
     @Override
-    public PhanTrangResponse<NhanVien> getNhanVien(int pageNumber, int pageSize, String keyword) {
+    public PhanTrangResponse<NhanVien> getNhanVien(int pageNumber, int pageSize, String keyword,Boolean trangThai) {
         Pageable pageable = PageRequest.of(pageNumber-1,pageSize);
 
-        Page<NhanVien> page = nhanVienRepo.getNhanVien(pageable,keyword);
+        Page<NhanVien> page = nhanVienRepo.getNhanVien(pageable,keyword,trangThai);
 
         PhanTrangResponse<NhanVien> phanTrangResponse = new PhanTrangResponse<>();
         phanTrangResponse.setPageNumber(page.getNumber());
@@ -58,6 +60,12 @@ public class NhanVienServiceImpl implements NhanVienService {
         if (nhanVienRepo.existsBySdt(request.getSdt())) {
             throw new AppException(ErrorCode.SDT_EXISTED);
         }
+        if(khachHangRepo.existsByEmail(request.getEmail())) {
+            throw new AppException(ErrorCode.USER_EXISTED);
+        }
+        if(khachHangRepo.existsBySdt(request.getSdt())) {
+            throw new AppException(ErrorCode.SDT_EXISTED);
+        }
 
         TaiKhoan taiKhoan = new TaiKhoan();
 
@@ -70,11 +78,13 @@ public class NhanVienServiceImpl implements NhanVienService {
         taiKhoanRepo.save(taiKhoan);
 
         NhanVien nhanVien = new NhanVien();
+        nhanVien.setMa(generateMaSanPham());
         nhanVien.setHoTen(request.getHoTen());
         nhanVien.setEmail(request.getEmail());
         nhanVien.setSdt(request.getSdt());
         nhanVien.setGioiTinh(request.getGioiTinh());
         nhanVien.setDiaChi(request.getDiaChi());
+        nhanVien.setTrangThai(true);
         nhanVien.setNgaySinh(request.getNgaySinh());
 
         String subject = "Xin chào";
@@ -98,11 +108,14 @@ public class NhanVienServiceImpl implements NhanVienService {
         }
         NhanVien nhanVien = nhanVienOptional.get();
         nhanVien.setHoTen(request.getHoTen());
+        nhanVien.setMa(request.getMa());
+        nhanVien.setMa(request.getMa());
         nhanVien.setEmail(request.getEmail());
         nhanVien.setSdt(request.getSdt());
         nhanVien.setGioiTinh(request.getGioiTinh());
         nhanVien.setDiaChi(request.getDiaChi());
         nhanVien.setNgaySinh(request.getNgaySinh());
+        nhanVien.setTrangThai(request.getTrangThai());
 
 
 //        TaiKhoan taiKhoan = nhanVienOptional.get().getTaiKhoan();
@@ -151,5 +164,28 @@ public class NhanVienServiceImpl implements NhanVienService {
         }
 
         return password.toString();
+    }
+
+
+    public String generateMaSanPham() {
+        // Lấy danh sách mã sản phẩm lớn nhất (SPxx)
+        List<String> maNV = nhanVienRepo.findTopMaSanPham();
+
+        // Kiểm tra nếu không có sản phẩm nào thì bắt đầu từ SP01
+        if (maNV.isEmpty()) {
+            return "NV01";
+        }
+
+        // Lấy mã sản phẩm lớn nhất (ví dụ: SP05)
+        String maxMaSanPham = maNV.get(0);
+
+        // Tách phần số ra khỏi chuỗi, ví dụ: "SP05" -> "05"
+        int maxNumber = Integer.parseInt(maxMaSanPham.substring(2));
+
+        // Tăng giá trị lên 1
+        int newNumber = maxNumber + 1;
+
+        // Trả về mã sản phẩm mới theo định dạng "SPxx" (ví dụ: SP06)
+        return String.format("NV%02d", newNumber);
     }
 }

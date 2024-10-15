@@ -1,11 +1,13 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 
 export default function ChiTietKhachHang() {
   const { id } = useParams();
   const [error, setError] = useState("");
+
+  const navigate = useNavigate();
 
   const [selectedProvince, setSelectedProvince] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState("");
@@ -24,10 +26,12 @@ export default function ChiTietKhachHang() {
     ngaySinh: "",
     gioiTinh: "",
     diaChi: "",
+    soNhaDuongThonXom: "",
     province: "",
     district: "",
     ward: "",
     trangThai: null,
+    ma: "",
   });
 
   // API địa chỉ
@@ -59,7 +63,7 @@ export default function ChiTietKhachHang() {
         province: selectedProvinceData.name,
         district: "",
         ward: "",
-        diaChi: "", // Reset địa chỉ khi thay đổi tỉnh
+        soNhaDuongThonXom: "", // Reset địa chỉ khi thay đổi tỉnh
       }));
     } else {
       setError("Không tìm thấy tỉnh/thành phố.");
@@ -118,61 +122,91 @@ export default function ChiTietKhachHang() {
           `http://localhost:8080/khachhang/${id}`,
         );
         const customerData = response.data.result;
+
+        // Lấy thông tin địa chỉ từ phần tử đầu tiên trong mảng diaChis
+        const addressData = customerData.diaChis[0];
+
+        const provinceData = diaChiData.province.find(
+          (province) => province.name === addressData.tinhThanhPho,
+        );
+        const districtData = diaChiData.district.find(
+          (district) => district.name === addressData.huyenQuan,
+        );
+        const communeData = diaChiData.commune.find(
+          (commune) => commune.name === addressData.xaPhuong,
+        );
+
+        // Cập nhật dữ liệu vào form
         setFormData({
           hoTen: customerData.hoTen,
           email: customerData.email,
           sdt: customerData.sdt,
           ngaySinh: customerData.ngaySinh,
           gioiTinh: customerData.gioiTinh,
+          ma: customerData.ma,
           trangThai: customerData.trangThai,
-          province: customerData.tinhThanhPho,
-          district: customerData.huyenQuan,
-          ward: customerData.xaPhuong,
-          diaChi: customerData.diaChiChiTiet,
+          province: addressData.tinhThanhPho,
+          district: addressData.huyenQuan,
+          ward: addressData.xaPhuong,
+          soNhaDuongThonXom: addressData.soNhaDuongThonXom,
+          diaChiChiTiet: addressData.diaChiChiTiet,
         });
-        setFullAddress(customerData.diaChiChiTiet);
+
+        // Cập nhật các giá trị cho dropdown
+        setSelectedProvince(provinceData ? provinceData.idProvince : "");
+        setSelectedDistrict(districtData ? districtData.idDistrict : "");
+        setSelectedCommune(communeData ? communeData.idCommune : "");
+        setFullAddress(addressData.diaChiChiTiet);
       } catch (error) {
         setError("Không tìm thấy thông tin khách hàng.");
         console.error("Error fetching customer data", error);
       }
     };
-    fetchCustomerData();
-  }, [id]);
+
+    // Gọi fetchCustomerData mỗi khi diaChiData thay đổi
+    if (diaChiData.province.length > 0) {
+      fetchCustomerData();
+    }
+  }, [id, diaChiData]);
 
   useEffect(() => {
     if (
-      formData.diaChi &&
+      formData.soNhaDuongThonXom &&
       formData.ward &&
       formData.district &&
       formData.province
     ) {
-      const fullAddr = `${formData.diaChi} - ${formData.ward} - ${formData.district} - ${formData.province}`;
+      const fullAddr = `${formData.soNhaDuongThonXom} - ${formData.ward} - ${formData.district} - ${formData.province}`;
       setFullAddress(fullAddr);
     } else {
       setFullAddress("");
     }
-  }, [formData.diaChi, formData.ward, formData.district, formData.province]);
+  }, [
+    formData.soNhaDuongThonXom,
+    formData.ward,
+    formData.district,
+    formData.province,
+  ]);
 
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        `http://localhost:8080/khachhang/update/${id}`,
-        {
-          hoTen: formData.hoTen,
-          email: formData.email,
-          sdt: formData.sdt,
-          ngaySinh: formData.ngaySinh,
-          gioiTinh: formData.gioiTinh,
-          trangThai: formData.trangThai,
-          diaChiChiTiet: fullAddress, // Gửi địa chỉ đầy đủ
-          tinhThanhPho: formData.province,
-          huyenQuan: formData.district,
-          xaPhuong: formData.ward,
-        },
-      );
+      await axios.post(`http://localhost:8080/khachhang/update/${id}`, {
+        hoTen: formData.hoTen,
+        email: formData.email,
+        sdt: formData.sdt,
+        ngaySinh: formData.ngaySinh,
+        gioiTinh: formData.gioiTinh,
+        ma: formData.ma,
+        trangThai: formData.trangThai,
+        soNhaDuongThonXom: formData.soNhaDuongThonXom,
+        diaChiChiTiet: fullAddress, // Gửi địa chỉ đầy đủ
+        tinhThanhPho: formData.province,
+        huyenQuan: formData.district,
+        xaPhuong: formData.ward,
+      });
       toast.success("Cập nhật thông tin thành công!");
-      console.log("Cập nhật thành công:", response.data);
+      navigate("/admin/khachhang");
     } catch (error) {
       toast.error("Cập nhật thông tin không thành công.");
       console.error("Error updating customer data", error);
@@ -181,12 +215,25 @@ export default function ChiTietKhachHang() {
 
   return (
     <div className="flex h-auto items-center justify-center bg-gray-100">
-      <div className="w-full max-w-4xl rounded-lg bg-white p-8 shadow-md">
+      <div className="w-full max-w-4xl rounded-lg bg-white px-8 shadow-md">
         <h1 className="mb-6 text-center text-2xl font-bold">
           Chi Tiết Khách Hàng
         </h1>
         <form className="space-y-4">
           <div className="flex flex-wrap">
+            <div className="w-full p-2 sm:w-1/2">
+              <label htmlFor="ma" className="mb-1 block">
+                Mã:
+              </label>
+              <input
+                type="text"
+                id="ma"
+                name="ma"
+                value={formData.ma}
+                onChange={handleChange}
+                className="w-full rounded border p-2"
+              />
+            </div>
             <div className="w-full p-2 sm:w-1/2">
               <label htmlFor="hoTen" className="mb-1 block">
                 Họ Tên:
@@ -330,14 +377,14 @@ export default function ChiTietKhachHang() {
                     ))}
               </select>
             </div>
-            <div className="w-full p-2">
+            <div className="w-full p-2 sm:w-1/2">
               <label className="mb-1 block">Số Nhà, Làng :</label>
               <input
                 type="text"
-                value={formData.diaChi}
+                value={formData.soNhaDuongThonXom}
                 className="w-full rounded border p-2"
                 onChange={handleChange}
-                name="diaChi" // Đảm bảo có name để xử lý
+                name="soNhaDuongThonXom" // Đảm bảo có name để xử lý
               />
             </div>
             <div className="w-full p-2">
@@ -346,7 +393,8 @@ export default function ChiTietKhachHang() {
                 type="text"
                 value={fullAddress}
                 className="w-full rounded border p-2"
-                readOnly
+                onChange={fullAddress}
+                disabled
               />
             </div>
           </div>

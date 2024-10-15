@@ -20,6 +20,7 @@ public class ChatLieu {
     @Column(name = "id")
     private Integer id;
 
+
     @Size(max = 255)
     @NotNull
     @Column(name = "ten")

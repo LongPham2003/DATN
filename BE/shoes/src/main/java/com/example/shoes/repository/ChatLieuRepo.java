@@ -27,4 +27,6 @@ public interface ChatLieuRepo extends JpaRepository<ChatLieu, Integer> {
     Page<ChatLieu> getChatLieu(Pageable pageable,  String keyword);
     // Phương thức kiểm tra xem  có tồn tại theo tên không
     boolean existsByTen(String ten);
+
+
 }
