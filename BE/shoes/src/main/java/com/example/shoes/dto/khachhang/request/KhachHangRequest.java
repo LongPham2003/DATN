@@ -13,6 +13,8 @@ public class KhachHangRequest {
 
     private Integer id;
 
+    private String ma;
+
     private String hoTen;
 
     private String sdt;

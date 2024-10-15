@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface NhanVienService {
 
-    PhanTrangResponse<NhanVien> getNhanVien(int pageNumber, int pageSize, String keyword);
+    PhanTrangResponse<NhanVien> getNhanVien(int pageNumber, int pageSize, String keyword,Boolean trangThai);
     NhanVien addNhanVien(NhanvienAddRequest request);
     NhanVien updateNhanVien(Integer id , NhanVienUpdateRequest request);
     NhanVien deleteNhanVien(Integer id);

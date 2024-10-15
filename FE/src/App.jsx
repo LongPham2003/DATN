@@ -22,6 +22,7 @@ import ResetPass from "./pages/client/auth/QuenMatKhau";
 // import page from "./pages/util/test";
 import PhanThan from "./pages/util/test";
 import DiaChi from "./pages/admin/KhachHang/DiaChi";
+import DetailProduct from "./pages/admin/SanPham/Product/DetailProduct";
 function App() {
   return (
     <>
@@ -196,6 +197,17 @@ function App() {
                     <title>Sản phẩm</title>
                   </Helmet>
                   <SanPham />
+                </>
+              }
+            />
+            <Route
+              path="chitietsanpham/:id"
+              element={
+                <>
+                  <Helmet>
+                    <title>Chi tiết sản phẩm</title>
+                  </Helmet>
+                  <DetailProduct />
                 </>
               }
             />

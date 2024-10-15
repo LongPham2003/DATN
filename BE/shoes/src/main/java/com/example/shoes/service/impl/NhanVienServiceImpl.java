@@ -36,10 +36,10 @@ public class NhanVienServiceImpl implements NhanVienService {
 
 
     @Override
-    public PhanTrangResponse<NhanVien> getNhanVien(int pageNumber, int pageSize, String keyword) {
+    public PhanTrangResponse<NhanVien> getNhanVien(int pageNumber, int pageSize, String keyword,Boolean trangThai) {
         Pageable pageable = PageRequest.of(pageNumber-1,pageSize);
 
-        Page<NhanVien> page = nhanVienRepo.getNhanVien(pageable,keyword);
+        Page<NhanVien> page = nhanVienRepo.getNhanVien(pageable,keyword,trangThai);
 
         PhanTrangResponse<NhanVien> phanTrangResponse = new PhanTrangResponse<>();
         phanTrangResponse.setPageNumber(page.getNumber());
@@ -78,11 +78,13 @@ public class NhanVienServiceImpl implements NhanVienService {
         taiKhoanRepo.save(taiKhoan);
 
         NhanVien nhanVien = new NhanVien();
+        nhanVien.setMa(generateMaSanPham());
         nhanVien.setHoTen(request.getHoTen());
         nhanVien.setEmail(request.getEmail());
         nhanVien.setSdt(request.getSdt());
         nhanVien.setGioiTinh(request.getGioiTinh());
         nhanVien.setDiaChi(request.getDiaChi());
+        nhanVien.setTrangThai(true);
         nhanVien.setNgaySinh(request.getNgaySinh());
 
         String subject = "Xin chào";
@@ -106,11 +108,14 @@ public class NhanVienServiceImpl implements NhanVienService {
         }
         NhanVien nhanVien = nhanVienOptional.get();
         nhanVien.setHoTen(request.getHoTen());
+        nhanVien.setMa(request.getMa());
+        nhanVien.setMa(request.getMa());
         nhanVien.setEmail(request.getEmail());
         nhanVien.setSdt(request.getSdt());
         nhanVien.setGioiTinh(request.getGioiTinh());
         nhanVien.setDiaChi(request.getDiaChi());
         nhanVien.setNgaySinh(request.getNgaySinh());
+        nhanVien.setTrangThai(request.getTrangThai());
 
 
 //        TaiKhoan taiKhoan = nhanVienOptional.get().getTaiKhoan();
@@ -159,5 +164,28 @@ public class NhanVienServiceImpl implements NhanVienService {
         }
 
         return password.toString();
+    }
+
+
+    public String generateMaSanPham() {
+        // Lấy danh sách mã sản phẩm lớn nhất (SPxx)
+        List<String> maNV = nhanVienRepo.findTopMaSanPham();
+
+        // Kiểm tra nếu không có sản phẩm nào thì bắt đầu từ SP01
+        if (maNV.isEmpty()) {
+            return "NV01";
+        }
+
+        // Lấy mã sản phẩm lớn nhất (ví dụ: SP05)
+        String maxMaSanPham = maNV.get(0);
+
+        // Tách phần số ra khỏi chuỗi, ví dụ: "SP05" -> "05"
+        int maxNumber = Integer.parseInt(maxMaSanPham.substring(2));
+
+        // Tăng giá trị lên 1
+        int newNumber = maxNumber + 1;
+
+        // Trả về mã sản phẩm mới theo định dạng "SPxx" (ví dụ: SP06)
+        return String.format("NV%02d", newNumber);
     }
 }

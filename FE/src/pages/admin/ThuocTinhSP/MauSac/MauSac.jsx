@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import UpdateMauSac from "./UpdateMauSac";
+import { useNavigate } from "react-router-dom";
 
 export default function MauSac() {
   const [listMauSac, setListMauSac] = useState([]);
@@ -23,6 +24,8 @@ export default function MauSac() {
 
   // Tính toán số dòng cần hiển thị
   const totalRows = itemsPerPage; // Số dòng cần hiển thị trên mỗi trang
+
+  const navigate = useNavigate();
   const emptyRows = totalRows - listMauSac.length; // Số dòng trống cần thêm
 
   const loadMauSac = async (page) => {
@@ -63,12 +66,11 @@ export default function MauSac() {
     // console.log(e.target.value);
 
     if (name === "ten") {
-      if(value.trim()!==""){
+      if (value.trim() !== "") {
         setError("");
-      }else if (value.trim() === "") {
+      } else if (value.trim() === "") {
         setError("Tên màu sắc không được để trống");
       } else {
-        
         const tenDaTonTai = tenMauSac.includes(value);
         if (tenDaTonTai) {
           setError("Tên màu sắc đã tồn tại");
@@ -79,18 +81,30 @@ export default function MauSac() {
       }
     }
   };
-  const themMauSac = async () => {
+
+  
+  const themMauSac = async (e) => {
+    e.preventDefault();
     // Nếu không, gọi hàm thêm mới
+
     if (mauSacMoi.ten.trim() === "") {
       setError("Tên không được để trống");
       return;
     }
+
+    // Xác nhận người dùng có muốn thêm màu sắc mới hay không
+    if (!window.confirm("Bạn có chắc chắn muốn thêm sản phẩm này không?")) {
+      return; // Nếu người dùng chọn Cancel, dừng thao tác
+    }
+
     try {
+      // Gọi API để thêm màu sắc mới
       await axios.post(`http://localhost:8080/api/mausac/add`, mauSacMoi);
-      if (!window.confirm("Bạn có chắc chắn muốn thêm sản phẩm này không?")) {
-        return; // Nếu người dùng chọn Cancel, dừng thao tác
-      }
+
+      // Sau khi thêm thành công, gọi lại loadMauSac để cập nhật bảng
       loadMauSac(trangHienTai);
+
+      // Hiển thị thông báo thành công
       toast.success("Thêm màu sắc mới thành công", {
         position: "top-right",
         autoClose: 1000,
@@ -109,12 +123,16 @@ export default function MauSac() {
         },
       });
 
+      // Reset form sau khi thêm mới thành công
       setMauSacMoi({ ten: "", trangThai: true });
+
+      // Đặt lại giá trị ô tìm kiếm
       const searchInput = document.querySelector('input[type="text"]');
       if (searchInput) {
-        searchInput.value = ""; // Đặt lại giá trị ô tìm kiếm
+        searchInput.value = "";
       }
     } catch (error) {
+      // Hiển thị thông báo lỗi nếu xảy ra lỗi trong quá trình thêm
       toast.error("Thêm mới thất bại", {
         position: "top-right",
         autoClose: 1000,
@@ -126,7 +144,7 @@ export default function MauSac() {
         theme: "light",
         transition: Bounce,
       });
-    } // Gọi hàm thêm mới màu sắc
+    }
   };
 
   const capNhatMauSac = async () => {
@@ -244,6 +262,7 @@ export default function MauSac() {
     setMauSacMoi({ ten: "", trangThai: true }); // Reset the form to initial state
     setIsEditing(false); // Set editing mode to false
     setCurrentId(null); // Clear the current ID
+    setError("");
   };
 
   return (
@@ -353,9 +372,6 @@ export default function MauSac() {
                       onClick={() => capNhatTrangThai(item.id)} // Gọi hàm cập nhật trạng thái
                     >
                       {item.trangThai ? "Ngừng kinh doanh" : "Kinh doanh"}
-                    </button>
-                    <button className="ml-7" onClick={() => openModal()}>
-                      Sua
                     </button>
                   </td>
                 </tr>

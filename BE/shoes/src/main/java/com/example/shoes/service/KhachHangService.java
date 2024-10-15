@@ -8,7 +8,7 @@ import com.example.shoes.entity.KhachHang;
 import java.util.List;
 
 public interface KhachHangService {
-    PhanTrangResponse<KhachHang> getKhachHang(int pageNumber, int pageSize, String keyword);
+    PhanTrangResponse<KhachHang> getKhachHang(int pageNumber, int pageSize, String keyword,Boolean trangThai);
     List<KhachHangResponse> findAll();
     KhachHang add(KhachHangRequest request);
     KhachHang update(Integer id,KhachHangRequest request);

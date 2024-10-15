@@ -1,11 +1,13 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 
 export default function ChiTietKhachHang() {
   const { id } = useParams();
   const [error, setError] = useState("");
+
+  const navigate = useNavigate();
 
   const [selectedProvince, setSelectedProvince] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState("");
@@ -29,6 +31,7 @@ export default function ChiTietKhachHang() {
     district: "",
     ward: "",
     trangThai: null,
+    ma: "",
   });
 
   // API địa chỉ
@@ -140,6 +143,7 @@ export default function ChiTietKhachHang() {
           sdt: customerData.sdt,
           ngaySinh: customerData.ngaySinh,
           gioiTinh: customerData.gioiTinh,
+          ma: customerData.ma,
           trangThai: customerData.trangThai,
           province: addressData.tinhThanhPho,
           district: addressData.huyenQuan,
@@ -187,24 +191,22 @@ export default function ChiTietKhachHang() {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        `http://localhost:8080/khachhang/update/${id}`,
-        {
-          hoTen: formData.hoTen,
-          email: formData.email,
-          sdt: formData.sdt,
-          ngaySinh: formData.ngaySinh,
-          gioiTinh: formData.gioiTinh,
-          trangThai: formData.trangThai,
-          soNhaDuongThonXom: formData.soNhaDuongThonXom,
-          diaChiChiTiet: fullAddress, // Gửi địa chỉ đầy đủ
-          tinhThanhPho: formData.province,
-          huyenQuan: formData.district,
-          xaPhuong: formData.ward,
-        },
-      );
+      await axios.post(`http://localhost:8080/khachhang/update/${id}`, {
+        hoTen: formData.hoTen,
+        email: formData.email,
+        sdt: formData.sdt,
+        ngaySinh: formData.ngaySinh,
+        gioiTinh: formData.gioiTinh,
+        ma: formData.ma,
+        trangThai: formData.trangThai,
+        soNhaDuongThonXom: formData.soNhaDuongThonXom,
+        diaChiChiTiet: fullAddress, // Gửi địa chỉ đầy đủ
+        tinhThanhPho: formData.province,
+        huyenQuan: formData.district,
+        xaPhuong: formData.ward,
+      });
       toast.success("Cập nhật thông tin thành công!");
-      console.log("Cập nhật thành công:", response.data);
+      navigate("/admin/khachhang");
     } catch (error) {
       toast.error("Cập nhật thông tin không thành công.");
       console.error("Error updating customer data", error);
@@ -213,12 +215,25 @@ export default function ChiTietKhachHang() {
 
   return (
     <div className="flex h-auto items-center justify-center bg-gray-100">
-      <div className="w-full max-w-4xl rounded-lg bg-white p-8 shadow-md">
+      <div className="w-full max-w-4xl rounded-lg bg-white px-8 shadow-md">
         <h1 className="mb-6 text-center text-2xl font-bold">
           Chi Tiết Khách Hàng
         </h1>
         <form className="space-y-4">
           <div className="flex flex-wrap">
+            <div className="w-full p-2 sm:w-1/2">
+              <label htmlFor="ma" className="mb-1 block">
+                Mã:
+              </label>
+              <input
+                type="text"
+                id="ma"
+                name="ma"
+                value={formData.ma}
+                onChange={handleChange}
+                className="w-full rounded border p-2"
+              />
+            </div>
             <div className="w-full p-2 sm:w-1/2">
               <label htmlFor="hoTen" className="mb-1 block">
                 Họ Tên:

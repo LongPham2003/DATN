@@ -25,13 +25,13 @@ public class NhanVienController {
     public ApiResponse<PhanTrangResponse<NhanVien>> search(
             @RequestParam(value = "keyword", defaultValue = "") String keyword,
             @RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber,
-            @RequestParam(value = "pageSize", defaultValue = "5") int pageSize
-    ) {
+            @RequestParam(value = "pageSize", defaultValue = "5") int pageSize,
+            @RequestParam(value = "trangThai",required = false) Boolean trangThai) {
         System.out.println("long");
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         log.info("username : "+authentication.getName());
         log.info("role : "+authentication.getAuthorities());
-        PhanTrangResponse<NhanVien> list = nhanVienService.getNhanVien(pageNumber, pageSize, keyword);
+        PhanTrangResponse<NhanVien> list = nhanVienService.getNhanVien(pageNumber, pageSize, keyword,trangThai);
 
         return ApiResponse.<PhanTrangResponse<NhanVien>>builder()
                 .result(list).build();
