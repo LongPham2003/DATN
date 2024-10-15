@@ -1,106 +1,180 @@
-import React, { useState } from 'react';
+/* eslint-disable react/prop-types */
+import axios from "axios";
+import { useState } from "react";
+import { Bounce, toast, ToastContainer } from "react-toastify";
 
-export default function TheMoiNhanVien() {
+export default function TheMoiNhanVien({ button, onAdd }) {
+  const [error, setError] = useState("");
+
   const [formData, setFormData] = useState({
-    hoTen: '',
-    sdt: '',
-    ngaySinh: '',
-    gioiTinh: '',
-    chucVu: ''
+    hoTen: "",
+    email: "",
+    sdt: "",
+    ngaySinh: "",
+    gioiTinh: "",
+    diaChi: "",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prevState => ({
+    setFormData((prevState) => ({
       ...prevState,
-      [name]: value
+      [name]: value,
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     // Xử lý logic gửi dữ liệu form ở đây
-    console.log(formData);
+    try {
+      const response = await axios.post("http://localhost:8080/nhanvien/add", {
+        hoTen: formData.hoTen,
+        email: formData.email,
+        sdt: formData.sdt,
+        ngaySinh: formData.ngaySinh,
+        gioiTinh: formData.gioiTinh,
+        diaChi: formData.diaChi,
+      });
+
+      if (response.status === 200) {
+        // Nếu thành công, có thể xử lý thông báo hoặc reset form
+        toast.success("Thành công");
+
+        // Reset form về trạng thái ban đầu
+        setFormData({
+          hoTen: "",
+          email: "",
+          sdt: "",
+          ngaySinh: "",
+          gioiTinh: "",
+          diaChi: "",
+        });
+        button();
+        onAdd();
+      }
+    } catch (error) {
+      // Xử lý lỗi nếu có
+      setError(error.response?.data?.message || error.message);
+    }
   };
 
   return (
-    <div className="flex justify-center items-center h-auto bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-6 text-center">Thêm Mới Nhân Viên</h1>
+    <div className="flex h-auto items-center justify-center bg-gray-100">
+      <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-md">
+        <h1 className="mb-6 text-center text-2xl font-bold">
+          Thêm Mới Nhân Viên
+        </h1>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="hoTen" className="block mb-1">Họ Tên:</label>
+            <label htmlFor="hoTen" className="mb-1 block">
+              Họ Tên:
+            </label>
             <input
               type="text"
               id="hoTen"
               name="hoTen"
               value={formData.hoTen}
               onChange={handleChange}
-              className="w-full p-2 border rounded"
+              className="w-full rounded border p-2"
               required
             />
           </div>
           <div>
-            <label htmlFor="sdt" className="block mb-1">Số Điện Thoại:</label>
+            <label htmlFor="hoTen" className="mb-1 block">
+              Email:
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full rounded border p-2"
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="sdt" className="mb-1 block">
+              Số Điện Thoại:
+            </label>
             <input
               type="tel"
               id="sdt"
               name="sdt"
               value={formData.sdt}
               onChange={handleChange}
-              className="w-full p-2 border rounded"
+              className="w-full rounded border p-2"
               required
             />
           </div>
           <div>
-            <label htmlFor="ngaySinh" className="block mb-1">Ngày Sinh:</label>
+            <label htmlFor="ngaySinh" className="mb-1 block">
+              Ngày Sinh:
+            </label>
             <input
               type="date"
               id="ngaySinh"
               name="ngaySinh"
               value={formData.ngaySinh}
               onChange={handleChange}
-              className="w-full p-2 border rounded"
+              className="w-full rounded border p-2"
               required
             />
           </div>
           <div>
-            <label htmlFor="gioiTinh" className="block mb-1">Giới Tính:</label>
+            <label htmlFor="gioiTinh" className="mb-1 block">
+              Giới Tính:
+            </label>
             <select
               id="gioiTinh"
               name="gioiTinh"
               value={formData.gioiTinh}
               onChange={handleChange}
-              className="w-full p-2 border rounded"
+              className="w-full rounded border p-2"
               required
             >
               <option value="">Chọn giới tính</option>
               <option value="Nam">Nam</option>
               <option value="Nữ">Nữ</option>
-              <option value="Khác">Khác</option>
             </select>
           </div>
           <div>
-            <label htmlFor="chucVu" className="block mb-1">Chức Vụ:</label>
-            <select
-              id="chucVu"
-              name="chucVu"
-              value={formData.chucVu}
+            <label htmlFor="diaChi" className="mb-1 block">
+              Địa chỉ:
+            </label>
+            <input
+              type="text"
+              id="diaChi"
+              name="diaChi"
+              value={formData.diaChi}
               onChange={handleChange}
-              className="w-full p-2 border rounded"
+              className="w-full rounded border p-2"
               required
-            >
-              <option value="">Chọn chức vụ</option>
-              <option value="Nhân viên">Nhân viên</option>
-              <option value="Quản lý">Quản lý</option>
-              <option value="Giám đốc">Giám đốc</option>
-            </select>
+            />
           </div>
-          <button type="submit" className="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+          {error && <p className="mb-4 text-sm text-red-500">{error}</p>}
+          <button
+            type="submit"
+            className="w-full rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+          >
             Thêm Mới Nhân Viên
           </button>
         </form>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
     </div>
   );
 }

@@ -14,6 +14,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -23,7 +25,9 @@ public class DeGiayServiceImpl implements DeGiayService {
 
     @Override
     public PhanTrangResponse<DeGiay> getDeGiay(int pageNumber, int pageSize, String keyword) {
-        Pageable pageable = PageRequest.of(pageNumber-1, pageSize);
+        // Tạo đối tượng Pageable với số trang và kích thước trang
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+        // Lấy danh sách  từ repo
         Page<DeGiay> page = deGiayRepo.getDeGiay(pageable, keyword);
         PhanTrangResponse<DeGiay> phanTrangResponse = new PhanTrangResponse<>();
         phanTrangResponse.setPageNumber(page.getNumber());
@@ -33,23 +37,23 @@ public class DeGiayServiceImpl implements DeGiayService {
         phanTrangResponse.setResult(page.getContent());
         return phanTrangResponse;
     }
-
+    // Phương thức lấy  theo id
     @Override
     public DeGiayResponse getById(Integer id) {
         DeGiay deGiay = deGiayRepo.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.SHOE_SOLE_NOT_FOUND));
         return convertToResponse(deGiay);
     }
-
+    // Phương thức thêm moi
     @Override
     public DeGiayResponse create(DeGiayRequet request) {
-        if(deGiayRepo.existsByTen(request.getTen())){
+        if (deGiayRepo.existsByTen(request.getTen())) {
             throw new AppException(ErrorCode.ATTRIBUTE_EXISTED);
         }
         DeGiay deGiay = new DeGiay();
         deGiay.setTen(request.getTen());
         deGiay.setTrangThai(request.getTrangThai());
-        DeGiay saveDeGiay =deGiayRepo.save(deGiay);
+        DeGiay saveDeGiay = deGiayRepo.save(deGiay);
         return convertToResponse(saveDeGiay);
     }
 
@@ -59,17 +63,59 @@ public class DeGiayServiceImpl implements DeGiayService {
                 .orElseThrow(() -> new AppException(ErrorCode.SHOE_SOLE_NOT_FOUND));
         deGiay.setTen(request.getTen());
         deGiay.setTrangThai(request.getTrangThai());
-        DeGiay updated =deGiayRepo.save(deGiay);
+        DeGiay updated = deGiayRepo.save(deGiay);
         return convertToResponse(updated);
     }
 
     @Override
     public void delete(Integer id) {
-        if (!deGiayRepo.existsById(id)) {
-            throw new AppException(ErrorCode.SHOE_SOLE_NOT_FOUND);
+
+        DeGiay deGiay=deGiayRepo.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.SHOE_SOLE_NOT_FOUND));
+        if(deGiay.getTrangThai()==true) {
+            deGiay.setTrangThai(false);
+        }else {
+            deGiay.setTrangThai(true);
         }
-        deGiayRepo.deleteById(id);
+        deGiayRepo.save(deGiay);
     }
+
+    @Override
+    public List<DeGiayResponse> search(String ten, Boolean trangThai) {
+        List<DeGiay> deGiayListList;
+
+        if (ten != null && trangThai != null) {
+            deGiayListList = deGiayRepo.findByTenContainingIgnoreCaseAndTrangThai(ten, trangThai);
+        } else if (ten != null) {
+            deGiayListList = deGiayRepo.findByTenContainingIgnoreCase(ten);
+        } else if (trangThai != null) {
+            deGiayListList = deGiayRepo.findByTrangThai(trangThai);
+        } else {
+            deGiayListList = deGiayRepo.findAll();
+        }
+    // Chuyển đổi danh sách  thành danh sách DeGiayResponse
+        return deGiayListList.stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<DeGiayResponse> getAll() {
+        // Lấy tất cả các ChatLieu từ repository
+        List<DeGiay> list =deGiayRepo.findAll();
+
+        // Chuyển đổi từ ChatLieu sang ChatLieuResponse
+        return list.stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<String> getAllTenDeGiay() {
+        return deGiayRepo.findAll().stream().map(DeGiay::getTen).collect(Collectors.toList());
+    }
+
+    // Phương thức chuyển đổi DeGiay thành DeGiayResponse
     private DeGiayResponse convertToResponse(DeGiay deGiay) {
         DeGiayResponse deGiayResponse = new DeGiayResponse();
         deGiayResponse.setId(deGiay.getId());

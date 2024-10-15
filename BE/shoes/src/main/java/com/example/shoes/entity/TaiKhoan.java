@@ -1,15 +1,18 @@
 package com.example.shoes.entity;
 
+import com.example.shoes.enums.Roles;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import jakarta.validation.constraints.Size;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
+@Data
 @Table(name = "tai_khoan")
 public class TaiKhoan {
     @Id
@@ -28,5 +31,8 @@ public class TaiKhoan {
 
     @Column(name = "trang_thai")
     private Boolean trangThai;
+
+    @Column(name = "roles")
+    private String roles;
 
 }

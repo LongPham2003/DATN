@@ -1,5 +1,6 @@
 package com.example.shoes.dto.authentication.request;
 
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import lombok.Builder;
@@ -20,6 +21,12 @@ public class SignUpRequest {
     private Boolean trangThai;
 
     private String hoTen;
+
+    private String tinhThanhPho;
+
+    private String huyenQuan;
+
+    private String xaPhuong;
 
 
 

@@ -1,6 +1,6 @@
 package com.example.shoes.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.example.shoes.entity.base.CrudByAt;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,11 +14,14 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "khach_hang")
-public class KhachHang {
+public class KhachHang extends CrudByAt {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
+
+    @Column(name = "ma")
+    private String ma;
 
     @Column(name = "ho_ten")
     private String hoTen;

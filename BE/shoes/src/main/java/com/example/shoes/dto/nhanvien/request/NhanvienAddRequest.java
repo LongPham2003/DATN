@@ -14,6 +14,8 @@ public class NhanvienAddRequest {
 
     private String hoTen;
 
+    private String ma;
+
     private String sdt;
 
     private String gioiTinh;
