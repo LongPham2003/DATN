@@ -63,12 +63,11 @@ export default function MauSac() {
     // console.log(e.target.value);
 
     if (name === "ten") {
-      if(value.trim()!==""){
+      if (value.trim() !== "") {
         setError("");
-      }else if (value.trim() === "") {
+      } else if (value.trim() === "") {
         setError("Tên màu sắc không được để trống");
       } else {
-        
         const tenDaTonTai = tenMauSac.includes(value);
         if (tenDaTonTai) {
           setError("Tên màu sắc đã tồn tại");
@@ -79,7 +78,8 @@ export default function MauSac() {
       }
     }
   };
-  const themMauSac = async () => {
+  const themMauSac = async (e) => {
+    e.preventDefault();
     // Nếu không, gọi hàm thêm mới
     if (mauSacMoi.ten.trim() === "") {
       setError("Tên không được để trống");
@@ -244,6 +244,7 @@ export default function MauSac() {
     setMauSacMoi({ ten: "", trangThai: true }); // Reset the form to initial state
     setIsEditing(false); // Set editing mode to false
     setCurrentId(null); // Clear the current ID
+    setError("");
   };
 
   return (
