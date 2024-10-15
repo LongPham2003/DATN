@@ -38,10 +38,10 @@ public class KhachHangServiceImpl implements KhachHangService {
     private  final NhanVienRepo nhanVienRepo;
 
     @Override
-    public PhanTrangResponse<KhachHang> getKhachHang(int pageNumber, int pageSize, String keyword) {
+    public PhanTrangResponse<KhachHang> getKhachHang(int pageNumber, int pageSize, String keyword,Boolean trangThai) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
 
-        Page<KhachHang> page = khachHangRepo.getKhachHang(pageable, keyword);
+        Page<KhachHang> page = khachHangRepo.getKhachHang(pageable, keyword,trangThai);
 
         PhanTrangResponse<KhachHang> phanTrangResponse = new PhanTrangResponse<>();
         phanTrangResponse.setPageNumber(page.getNumber());
@@ -101,6 +101,7 @@ public class KhachHangServiceImpl implements KhachHangService {
 
         KhachHang khachHang = new KhachHang();
         khachHang.setHoTen(request.getHoTen());
+        khachHang.setMa(generateMaKhachHang());
         khachHang.setSdt(request.getSdt());
         khachHang.setEmail(request.getEmail());
         khachHang.setNgaySinh(request.getNgaySinh());
@@ -157,6 +158,7 @@ public class KhachHangServiceImpl implements KhachHangService {
 
         khachHang.setHoTen(request.getHoTen());
         khachHang.setSdt(request.getSdt());
+        khachHang.setMa(request.getMa());
         khachHang.setEmail(request.getEmail());
         khachHang.setNgaySinh(request.getNgaySinh());
         khachHang.setTrangThai(request.getTrangThai());
@@ -197,5 +199,27 @@ public class KhachHangServiceImpl implements KhachHangService {
         }
 
         return password.toString();
+    }
+
+    public String generateMaKhachHang() {
+        // Lấy danh sách mã sản phẩm lớn nhất (SPxx)
+        List<String> maKH = khachHangRepo.findTopMaNhanVien();
+
+        // Kiểm tra nếu không có sản phẩm nào thì bắt đầu từ SP01
+        if (maKH.isEmpty()) {
+            return "KH01";
+        }
+
+        // Lấy mã sản phẩm lớn nhất (ví dụ: SP05)
+        String maxMaSanPham = maKH.get(0);
+
+        // Tách phần số ra khỏi chuỗi, ví dụ: "SP05" -> "05"
+        int maxNumber = Integer.parseInt(maxMaSanPham.substring(2));
+
+        // Tăng giá trị lên 1
+        int newNumber = maxNumber + 1;
+
+        // Trả về mã sản phẩm mới theo định dạng "SPxx" (ví dụ: SP06)
+        return String.format("KH%02d", newNumber);
     }
 }

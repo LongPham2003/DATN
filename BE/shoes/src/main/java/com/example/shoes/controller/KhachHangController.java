@@ -37,10 +37,11 @@ public class KhachHangController {
     public ApiResponse<PhanTrangResponse<KhachHang>> search(
             @RequestParam(value = "keyword", defaultValue = "") String keyword,
             @RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber,
-            @RequestParam(value = "pageSize", defaultValue = "5") int pageSize
+            @RequestParam(value = "pageSize", defaultValue = "5") int pageSize,
+            @RequestParam(value = "trangThai", required = false) Boolean trangThai
     ) {
 
-        PhanTrangResponse<KhachHang> list = khachHangService.getKhachHang(pageNumber, pageSize, keyword);
+        PhanTrangResponse<KhachHang> list = khachHangService.getKhachHang(pageNumber, pageSize, keyword,trangThai);
 
         return ApiResponse.<PhanTrangResponse<KhachHang>>builder()
                 .result(list).build();
