@@ -1,16 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // CustomDropdown là một component nhận vào một prop là options
-const CustomDropdown = ({ options, onSelect }) => {
+const CustomDropdown = ({ options, selectedValue, onSelect }) => {
   // Sử dụng useState để quản lý trạng thái của dropdown
   const [isOpen, setIsOpen] = useState(false);
   // Quản lý giá trị của option được chọn
-  const [selectedOption, setSelectedOption] = useState("Select an option");
+  const [selectedOption, setSelectedOption] = useState(
+    selectedValue?.ten || "Select an option",
+  );
 
   // Hàm để toggle trạng thái của dropdown
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
+
   // Hàm để xử lý khi một option được click
   const handleOptionClick = (option) => {
     console.log(`Option clicked: ${option.id}`);
@@ -20,12 +23,10 @@ const CustomDropdown = ({ options, onSelect }) => {
     onSelect(option);
   };
 
-  // Thêm lựa chọn giá trị rỗng
-
-  // Thêm props để reset dropdown
-  const resetDropdown = () => {
-    setSelectedOption("Select an option"); // Đặt lại giá trị đã chọn về mặc định
-  };
+  // Sử dụng useEffect để cập nhật selectedOption khi selectedValue thay đổi
+  useEffect(() => {
+    setSelectedOption(selectedValue?.ten || "Select an option");
+  }, [selectedValue]);
 
   return (
     <div className="relative inline-block w-96 text-left">
