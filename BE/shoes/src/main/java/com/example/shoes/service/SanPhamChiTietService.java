@@ -1,11 +1,7 @@
 package com.example.shoes.service;
-
 import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.sanphamchitiet.request.SanPhamChiTietRequest;
 import com.example.shoes.dto.sanphamchitiet.response.SanPhamChiTietResponse;
-import com.example.shoes.entity.SanPhamChiTiet;
-import org.springframework.data.repository.query.Param;
-
 import java.math.BigDecimal;
 import java.util.List;
 

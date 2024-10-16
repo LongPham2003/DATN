@@ -1,5 +1,6 @@
 package com.example.shoes.repository;
 
+import com.example.shoes.entity.KichThuoc;
 import com.example.shoes.entity.SanPham;
 import com.example.shoes.entity.SanPhamChiTiet;
 import jakarta.transaction.Transactional;
@@ -45,6 +46,9 @@ public interface SanPhamChiTietRepo extends JpaRepository<SanPhamChiTiet, Intege
     // lay tat ca  spct theo idsanpham va co trang thai la true
     @Query("SELECT spct FROM SanPhamChiTiet spct WHERE spct.idSanPham.id = :idSanPham AND spct.trangThai = true")
     List<SanPhamChiTiet> findByIdSanPhamAndTrangThaiTrue(@Param("idSanPham") Integer idSanPham);
+    // lấy tat ca danh sach sp co trang thai true
+    @Query("SELECT spct FROM SanPhamChiTiet  spct WHERE spct.trangThai = true")
+    List<SanPhamChiTiet> getAllTrangThaiTrue();
 
 }
 

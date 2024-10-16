@@ -87,9 +87,9 @@ public class SanPhamChiTietController {
                 .message("Update thành công")
                 .build();
     }
-    @GetMapping("/getidsanpham/{id}")
+    @GetMapping("/getidsanpham/{idsanpham}")
     public ApiResponse<List<SanPhamChiTietResponse>> findByIdSanPhamAndTrangThaiTrue(
-            @RequestParam(required = false) Integer idSanPham) {
+            @PathVariable("idsanpham") Integer idSanPham) {
         List<SanPhamChiTietResponse> responses = sanPhamChiTietService.findByIdSanPhamAndTrangThaiTrue(idSanPham);
         // Trả về API response
         return ApiResponse.<List<SanPhamChiTietResponse>>builder()

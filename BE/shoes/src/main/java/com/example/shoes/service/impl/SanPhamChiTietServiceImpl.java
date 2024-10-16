@@ -173,7 +173,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     @Override
     public List<SanPhamChiTietResponse> getAll() {
         // Lấy tất cả các ChatLieu từ repository
-        List<SanPhamChiTiet> list =sanPhamChiTietRepo.findAll();
+        List<SanPhamChiTiet> list =sanPhamChiTietRepo.getAllTrangThaiTrue();
 
         // Chuyển đổi từ ChatLieu sang ChatLieuResponse
         return list.stream()

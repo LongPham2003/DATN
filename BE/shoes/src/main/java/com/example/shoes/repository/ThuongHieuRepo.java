@@ -1,6 +1,7 @@
 package com.example.shoes.repository;
 
 
+import com.example.shoes.entity.KichThuoc;
 import com.example.shoes.entity.ThuongHieu;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
@@ -25,4 +26,7 @@ public interface ThuongHieuRepo extends JpaRepository<ThuongHieu, Integer> {
     Page<ThuongHieu> getThuongHieu(Pageable pageable, String keyword);
     // Phương thức kiểm tra xem  có tồn tại theo tên không
     boolean existsByTen(String ten);
+    // lấy tat ca danh sach sp co trang thai true
+    @Query("SELECT th FROM ThuongHieu  th WHERE th.trangThai = true")
+    List<ThuongHieu> getAllTrangThaiTrue();
 }

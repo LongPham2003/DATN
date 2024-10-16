@@ -37,6 +37,7 @@ public class SanPhamServiceImpl implements SanPhamService {
         response.setId(sanPham.getId());
         response.setIdLoai(sanPham.getLoai() != null ? sanPham.getLoai().getId() : null);// Tránh lỗi null pointer
      // lay ten loai cho de hieu
+        response.setTenLoai(sanPham.getLoai().getTen());
         response.setMa(sanPham.getMa());
         response.setTenSanPham(sanPham.getTenSanPham());
         response.setNgayTao(sanPham.getNgayTao());
@@ -133,7 +134,7 @@ public class SanPhamServiceImpl implements SanPhamService {
     @Override
     public List<SanPhamResponse> getAll() {
         // Lấy tất cả các ChatLieu từ repository
-        List<SanPham> list =sanPhamRepo.findAll();
+        List<SanPham> list =sanPhamRepo.getAllTrangThaiTrue();
 
         // Chuyển đổi từ ChatLieu sang ChatLieuResponse
         return list.stream()
