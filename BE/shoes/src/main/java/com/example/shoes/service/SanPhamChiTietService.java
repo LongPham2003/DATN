@@ -6,11 +6,11 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public interface SanPhamChiTietService {
-    PhanTrangResponse<SanPhamChiTietResponse> getSanPhamChiTiet(int pageNumber, int pageSize);
+    PhanTrangResponse<SanPhamChiTietResponse> getspctAndLocspct(Integer idSanPham, Integer idMauSac, Integer idkichThuoc, Integer idChatLieu, Integer idThuongHieu, Integer idDeGiay,
+                                                                Boolean trangThai, BigDecimal minDonGia, BigDecimal maxDonGia,int pageNumber, int pageSize);
     SanPhamChiTietResponse getById(Integer id);
     SanPhamChiTietResponse create(SanPhamChiTietRequest request);
     SanPhamChiTietResponse update(Integer id, SanPhamChiTietRequest request);
-    List<SanPhamChiTietResponse> locPhamChiTietList(Integer idSanPham, Integer idMauSac, Integer idkichThuoc, Integer idChatLieu, Integer idThuongHieu, Integer idDeGiay, Boolean trangThai, BigDecimal minDonGia, BigDecimal maxDonGia);
     List<SanPhamChiTietResponse> getAll();
     void updateTheoTrangThai(Integer id);
     List<SanPhamChiTietResponse> findByIdSanPhamAndTrangThaiTrue( Integer idSanPham);
