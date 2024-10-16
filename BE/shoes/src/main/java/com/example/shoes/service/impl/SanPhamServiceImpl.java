@@ -9,6 +9,7 @@ import com.example.shoes.entity.SanPham;
 import com.example.shoes.exception.AppException;
 import com.example.shoes.exception.ErrorCode;
 import com.example.shoes.repository.LoaiRepo;
+import com.example.shoes.repository.SanPhamChiTietRepo;
 import com.example.shoes.repository.SanPhamRepo;
 import com.example.shoes.service.SanPhamService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,8 @@ public class SanPhamServiceImpl implements SanPhamService {
     private SanPhamRepo sanPhamRepo;
     @Autowired
     private LoaiRepo loaiRepo;
+    @Autowired
+    private SanPhamChiTietRepo sanPhamChiTietRepo;
 
     private SanPhamResponse convertToSanPhamResponse(SanPham sanPham) {
         SanPhamResponse response = new SanPhamResponse();
@@ -35,10 +38,14 @@ public class SanPhamServiceImpl implements SanPhamService {
         response.setIdLoai(sanPham.getLoai() != null ? sanPham.getLoai().getId() : null);// Tránh lỗi null pointer
      // lay ten loai cho de hieu
         response.setTenLoai(sanPham.getLoai().getTen());
+        response.setMa(sanPham.getMa());
         response.setTenSanPham(sanPham.getTenSanPham());
         response.setNgayTao(sanPham.getNgayTao());
         response.setMoTa(sanPham.getMoTa());
         response.setTrangThai(sanPham.getTrangThai());
+        // Tính tổng số lượng tồn từ bảng SanPhamChiTiet
+        Integer tongSoLuong = sanPhamChiTietRepo.sumSoLuongByIdSanPham(sanPham.getId());
+        response.setSoLuongTon(tongSoLuong != null ? tongSoLuong : 0);  // Set tổng số lượng vào DTO
         return response;
     }
 
@@ -51,12 +58,14 @@ public class SanPhamServiceImpl implements SanPhamService {
         List<SanPhamResponse> responses = page.getContent().stream()
                 .map(this::convertToSanPhamResponse)
                 .collect(Collectors.toList());
+
         PhanTrangResponse<SanPhamResponse> phanTrangResponse = new PhanTrangResponse<>();
         phanTrangResponse.setPageNumber(page.getNumber() + 1);
         phanTrangResponse.setPageSize(page.getSize());
         phanTrangResponse.setTotalElements(page.getTotalElements());
         phanTrangResponse.setTotalPages(page.getTotalPages());
         phanTrangResponse.setResult(responses);
+
         return phanTrangResponse;
     }
 
@@ -66,7 +75,22 @@ public class SanPhamServiceImpl implements SanPhamService {
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
         return convertToSanPhamResponse(sanPham);
     }
+    // Hàm để sinh mã sản phẩm tự động
+    public String generateMaSanPham() {
+        // Lấy mã sản phẩm lớn nhất từ database
+        String maxMaSanPham = sanPhamRepo.findMaxMaSanPham();
 
+        // Tách số thứ tự từ mã sản phẩm
+        if (maxMaSanPham != null) {
+            int soThuTu = Integer.parseInt(maxMaSanPham.substring(2)); // Bỏ phần "SP"
+            soThuTu++;
+            // Trả về mã sản phẩm mới dạng "SP" + số thứ tự (đảm bảo số thứ tự có ít nhất 2 chữ số)
+            return String.format("SP%02d", soThuTu);
+        } else {
+            // Trường hợp chưa có sản phẩm nào, trả về mã sản phẩm đầu tiên là "SP01"
+            return "SP01";
+        }
+    }
     @Override
     public SanPhamResponse create(SanPhamRequest request) {
         // Lấy đối tượng Loai dựa trên idLoai từ request
@@ -75,6 +99,9 @@ public class SanPhamServiceImpl implements SanPhamService {
 
         SanPham sanPham = new SanPham();
         sanPham.setLoai(loai); // Gán đối tượng Loai cho SanPham
+        // Gọi hàm generateMaSanPham để tự động sinh mã sản phẩm
+        String maSanPham = generateMaSanPham();
+        sanPham.setMa(maSanPham);
         sanPham.setTenSanPham(request.getTenSanPham());
         sanPham.setNgayTao(LocalDate.now());
         sanPham.setMoTa(request.getMoTa());
@@ -94,6 +121,7 @@ public class SanPhamServiceImpl implements SanPhamService {
                 .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
 
         sanPham.setLoai(loai); // Gán đối tượng Loai cho SanPham
+        sanPham.setMa(request.getMa());
         sanPham.setTenSanPham(request.getTenSanPham());
         sanPham.setNgayTao(LocalDate.now());
         sanPham.setMoTa(request.getMoTa());
@@ -106,7 +134,7 @@ public class SanPhamServiceImpl implements SanPhamService {
     @Override
     public List<SanPhamResponse> getAll() {
         // Lấy tất cả các ChatLieu từ repository
-        List<SanPham> list =sanPhamRepo.findAll();
+        List<SanPham> list =sanPhamRepo.getAllTrangThaiTrue();
 
         // Chuyển đổi từ ChatLieu sang ChatLieuResponse
         return list.stream()

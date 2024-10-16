@@ -108,7 +108,7 @@ public class KichThuocServiceImpl implements KichThuocService {
     @Override
     public List<KichThuocResponse> getAll() {
         // Lấy tất cả các ChatLieu từ repository
-        List<KichThuoc> list =kichThuocRepo.findAll();
+        List<KichThuoc> list =kichThuocRepo.getAllTrangThaiTrue();
 
         // Chuyển đổi từ ChatLieu sang ChatLieuResponse
         return list.stream()
