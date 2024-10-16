@@ -6,13 +6,13 @@ import { Bounce, toast, ToastContainer } from "react-toastify";
 
 export default function DetailProduct() {
   const { id } = useParams();
-  const [sanPham, setSanPham] = useState();
 
   const [idLoai] = useState();
 
   const [loaiSelect, setLoaiSelect] = useState([]);
   const [error, setError] = useState("");
   const [formData, setFormData] = useState({
+    ma: "",
     tenSanPham: "",
     ngayTao: "",
     idLoai: 0,
@@ -29,11 +29,12 @@ export default function DetailProduct() {
       const res = await axios.get(ApiGetById);
       const loai = await axios.get(ApiGetAllLoai);
       // console.log(res.data.result.tenSanPham);
-      setSanPham(res.data.result);
+
       setLoaiSelect(loai.data.result);
       // console.log(loai.data.result);
 
       setFormData({
+        ma: res.data.result.ma || "",
         tenSanPham: res.data.result.tenSanPham || "",
         idLoai: res.data.result.idLoai || idLoai,
         ngayTao: res.data.result.ngayTao || "",
@@ -96,6 +97,21 @@ export default function DetailProduct() {
           <span className="text-xl font-bold">Chi tiết Sản phẩm</span>
           <div className="flex gap-9">
             <div>
+              <div className="mb-4">
+                <label
+                  htmlFor="tenSanPham"
+                  className="mb-1 block font-semibold"
+                >
+                  Ma San Phẩm:
+                </label>
+                <input
+                  type="text"
+                  className="w-[400px] rounded-md border-2 border-gray-300 p-2 outline-none transition-colors duration-300 hover:border-blue-500 focus:border-blue-500"
+                  value={formData.ma}
+                  name="tenSanPham"
+                  onChange={handleChange}
+                />
+              </div>
               <div className="mb-4">
                 <label
                   htmlFor="tenSanPham"

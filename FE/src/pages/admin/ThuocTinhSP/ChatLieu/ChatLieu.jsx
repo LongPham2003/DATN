@@ -172,6 +172,9 @@ export default function ChatLieu() {
         return; // Nếu người dùng chọn Cancel, dừng thao tác
       }
       loadChatLieu(trangHienTai); // Tải lại danh sách màu sắc
+      setChatLieuMoi({ ten: "", trangThai: true }); // Reset the form to initial state
+      setIsEditing(false); // Set editing mode to false
+      setCurrentId(null); // Clear the current ID
       toast.success("Cập nhật trạng thái thành công", {
         position: "top-right",
         autoClose: 1000,
@@ -229,8 +232,8 @@ export default function ChatLieu() {
   return (
     <>
       <div className="h-screen w-full overflow-auto">
-        <div className="my-2 flex justify-around gap-3 rounded bg-white p-4 shadow">
-          <div className="mb-4 w-[500px] rounded bg-white p-4 shadow">
+        <div className="my-2 flex justify-around gap-3 rounded bg-white p-4 shadow drop-shadow-lg">
+          <div className="mb-4 w-[500px] rounded bg-white p-4 shadow drop-shadow-lg">
             <h2 className="mb-2 text-xl font-bold">Thêm Chất Liệu Mới</h2>
             <form onSubmit={themMoiChatLieu} className="-mx-2 flex flex-wrap">
               <div className="mb-4 h-[150px] w-1/2 px-2">
@@ -277,7 +280,7 @@ export default function ChatLieu() {
             </form>
           </div>
           {/* Tim kiem  */}
-          <div className="mb-4 w-[500px] rounded bg-white p-4 shadow">
+          <div className="mb-4 w-[500px] rounded bg-white p-4 shadow drop-shadow-lg">
             <span className="mb-2 text-xl font-bold">Tìm kiếm</span>
             <div className="flex">
               <div className="mb-4 h-[150px] px-2">
@@ -308,29 +311,31 @@ export default function ChatLieu() {
           <span className="mb-2 text-xl font-bold">Danh sách</span>
           <table className="w-full border-collapse">
             <thead>
-              <tr className="bg-gray-200">
-                <th className="w-10 border border-gray-300 p-2">STT</th>
-                <th className="w-1/3 border border-gray-300 p-2">Tên</th>
-                <th className="w-1/3 border border-gray-300 p-2">Trạng thái</th>
-                <th className="w-1/3 border border-gray-300 p-2">Hành động</th>
+              <tr className="border border-b-gray-300 bg-gray-200 hover:bg-slate-100">
+                <th className="w-10 p-2">STT</th>
+                <th className="w-1/3 p-2">Tên</th>
+                <th className="w-1/3 p-2">Trạng thái</th>
+                <th className="w-1/3 p-2">Hành động</th>
               </tr>
             </thead>
             <tbody>
               {chatlieu.map((item, index) => (
-                <tr key={item.id} onClick={() => handleRowClick(item)}>
+                <tr
+                  key={item.id}
+                  onClick={() => handleRowClick(item)}
+                  className="border border-b-gray-300 hover:bg-slate-100"
+                >
                   {/* Thêm sự kiện nhấp chuột */}
-                  <td className="w-10 border border-gray-300 p-2 text-center">
+                  <td className="w-10 p-2 text-center">
                     {index + 1 + (trangHienTai - 1) * itemsPerPage}
                   </td>
-                  <td className="w-1/3 border border-gray-300 p-2 text-center">
-                    {item.ten}
-                  </td>
-                  <td className="w-1/3 border border-gray-300 p-2 text-center">
+                  <td className="w-1/3 p-2 text-center">{item.ten}</td>
+                  <td className="w-1/3 p-2 text-center">
                     {item.trangThai ? "Kinh doanh" : "Ngừng kinh doanh"}
                   </td>
-                  <td className="border border-gray-300 p-2 text-center">
+                  <td className="p-2 text-center">
                     <button
-                      className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+                      className="rounded bg-yellow-500 px-4 py-2 text-white hover:bg-green-600"
                       onClick={() => capNhatTrangThai(item.id)} // Gọi hàm cập nhật trạng thái
                     >
                       {item.trangThai ? "Ngừng kinh doanh" : "Kinh doanh"}
@@ -341,10 +346,10 @@ export default function ChatLieu() {
               {emptyRows > 0 &&
                 Array.from({ length: emptyRows }).map((_, index) => (
                   <tr key={`empty-${index}`} style={{ height: "57px" }}>
-                    <td className="border border-gray-300 p-2"></td>
-                    <td className="border border-gray-300 p-2"></td>
-                    <td className="border border-gray-300 p-2"></td>
-                    <td className="border border-gray-300 p-2"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                   </tr>
                 ))}
             </tbody>
