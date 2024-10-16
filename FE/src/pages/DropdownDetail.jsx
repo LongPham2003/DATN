@@ -9,7 +9,9 @@ const DropdownDetail = ({ options, onSelect, selectedValue }) => {
 
   // Cập nhật selectedOption khi selectedValue thay đổi
   useEffect(() => {
-    const selectedOption = options.find(option => option.id === selectedValue);
+    const selectedOption = options.find(
+      (option) => option.id === selectedValue,
+    );
     if (selectedOption) {
       setSelectedOption(selectedOption.ten);
     } else {
@@ -31,7 +33,7 @@ const DropdownDetail = ({ options, onSelect, selectedValue }) => {
   };
 
   // Thêm lựa chọn giá trị rỗng
-  const optionsWithEmpty = [{ id: "", ten: "Select an option" }, ...options];
+  // const optionsWithEmpty = [{ id: "", ten: "Select an option" }, ...options];
 
   // Thêm props để reset dropdown
   const resetDropdown = () => {
@@ -41,6 +43,7 @@ const DropdownDetail = ({ options, onSelect, selectedValue }) => {
   return (
     <div className="relative inline-block w-96 text-left">
       <button
+        type="button" // Thêm dòng này để ngăn chặn việc submit form
         onClick={toggleDropdown}
         className="inline-flex w-full justify-between rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:border-blue-500 hover:bg-gray-50"
       >
@@ -58,11 +61,10 @@ const DropdownDetail = ({ options, onSelect, selectedValue }) => {
           />
         </svg>
       </button>
-
       {isOpen && (
         <div className="absolute z-10 mt-2 max-h-48 w-full overflow-auto rounded-md bg-white shadow-lg">
           <ul className="py-1 text-gray-700 hover:border-blue-400">
-            {optionsWithEmpty.map((option, index) => (
+            {options.map((option, index) => (
               <li
                 key={index}
                 onClick={() => handleOptionClick(option)}

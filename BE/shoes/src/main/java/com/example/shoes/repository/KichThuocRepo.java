@@ -21,7 +21,9 @@ public interface KichThuocRepo extends JpaRepository<KichThuoc, Integer> {
     List<KichThuoc> findByTrangThai(Boolean trangThai);
 
     // Phương thức lấy danh sach với phân trang và từ khóa tìm kiếm
+
     @Query(value = "select kt  from KichThuoc kt where  kt.kichThuoc like %:keyword% order by kt.trangThai desc , kt.id desc")
+
     Page<KichThuoc> getKichThuoc(Pageable pageable, String keyword);
     // Phương thức kiểm tra xem  có tồn tại theo kich thuoc không
     boolean existsByKichThuoc(String kichThuoc);

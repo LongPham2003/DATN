@@ -7,6 +7,7 @@ import com.example.shoes.dto.sanpham.response.SanPhamResponse;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.service.SanPhamService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,6 +48,11 @@ public class SanPhamController {
                 .build();
     }
 
+    @GetMapping("/ten")
+    public ResponseEntity<List<String>> getAllTen(){
+        List<String> listTen = sanPhamService.getAlltenSP();
+        return ResponseEntity.ok(listTen);
+    }
 
     @PostMapping("/add")
     public ApiResponse<SanPhamResponse> create(@RequestBody SanPhamRequest request) {

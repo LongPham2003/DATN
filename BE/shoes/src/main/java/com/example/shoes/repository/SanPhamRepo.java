@@ -15,7 +15,9 @@ public interface SanPhamRepo extends JpaRepository<SanPham, Integer> {
             "WHERE (:keyword IS NULL OR sp.tenSanPham LIKE %:keyword%) " +
             "AND (:idLoai IS NULL OR lo.id= :idLoai) " +
             "AND (:trangThai IS NULL OR sp.trangThai = :trangThai) " +
+
             "ORDER BY sp.trangThai desc , sp.id DESC")
+
     Page<SanPham> getSanPham(@Param("keyword") String keyword,
                                 @Param("idLoai") Integer idLoai,
                                 @Param("trangThai") Boolean trangThai,

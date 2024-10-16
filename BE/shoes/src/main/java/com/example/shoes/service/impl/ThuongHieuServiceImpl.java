@@ -109,6 +109,11 @@ public class ThuongHieuServiceImpl implements ThuongHieuService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<String> getAllTenThuongHieu() {
+        return thuongHieuRepo.findAll().stream().map(ThuongHieu::getTen).collect(Collectors.toList());
+    }
+
     // Phương thức chuyển đổi ThuongHieu thành ThuongHieuResponse
     private ThuongHieuResponse convertToResponse(ThuongHieu thuongHieu) {
         ThuongHieuResponse thuongHieuResponse = new ThuongHieuResponse();

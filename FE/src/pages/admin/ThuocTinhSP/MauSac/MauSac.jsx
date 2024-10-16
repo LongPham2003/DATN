@@ -18,25 +18,23 @@ export default function MauSac() {
   const [error, setError] = useState("");
   const [tenMauSac, setTenMauSac] = useState("");
   const [tenTimKiem, setTenTimKiem] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false); // State để quản lý modal
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(false); //CHe do them moi
   const [currentId, setCurrentId] = useState(null); // State để lưu id của màu sắc đang sửa
 
   // Tính toán số dòng cần hiển thị
   const totalRows = itemsPerPage; // Số dòng cần hiển thị trên mỗi trang
 
-  const navigate = useNavigate();
   const emptyRows = totalRows - listMauSac.length; // Số dòng trống cần thêm
 
   const loadMauSac = async (page) => {
     let url = `http://localhost:8080/api/mausac/list?pageNumber=${page}`;
+    // Kiểm tra và thêm tham số có điều kiện
     if (tenTimKiem) {
       url += `&keyword=${encodeURIComponent(tenTimKiem)}`; // Thêm từ khóa tìm kiếm nếu có sẵn
     }
     // console.log(url);
     try {
       const response = await axios.get(url);
-      // Kiểm tra và thêm tham số có điều kiện
 
       setListMauSac(response.data.result.result);
       setTongSoTrang(response.data.result.totalPages); // Cập nhật tổng số trang
@@ -54,11 +52,6 @@ export default function MauSac() {
       console.log(error);
     }
   };
-
-  useEffect(() => {
-    layTenMauSac();
-    loadMauSac(trangHienTai, tenTimKiem);
-  }, [trangHienTai, tenTimKiem]);
 
   const onInputChange = (e) => {
     const { name, value } = e.target;
@@ -82,15 +75,8 @@ export default function MauSac() {
     }
   };
 
-  
-  const themMauSac = async (e) => {
-    e.preventDefault();
+  const themMauSac = async () => {
     // Nếu không, gọi hàm thêm mới
-
-    if (mauSacMoi.ten.trim() === "") {
-      setError("Tên không được để trống");
-      return;
-    }
 
     // Xác nhận người dùng có muốn thêm màu sắc mới hay không
     if (!window.confirm("Bạn có chắc chắn muốn thêm sản phẩm này không?")) {
@@ -127,9 +113,9 @@ export default function MauSac() {
       setMauSacMoi({ ten: "", trangThai: true });
 
       // Đặt lại giá trị ô tìm kiếm
-      const searchInput = document.querySelector('input[type="text"]');
-      if (searchInput) {
-        searchInput.value = "";
+      const addInput = document.querySelector('input[type="text"]');
+      if (addInput) {
+        addInput.value = "";
       }
     } catch (error) {
       // Hiển thị thông báo lỗi nếu xảy ra lỗi trong quá trình thêm
@@ -189,7 +175,10 @@ export default function MauSac() {
 
   const themMoiMauSac = async (e) => {
     e.preventDefault();
-
+    if (mauSacMoi.ten.trim() === "") {
+      setError("Tên không được để trống");
+      return;
+    }
     if (isEditing) {
       // Nếu đang ở chế độ sửa, gọi hàm cập nhật
       await capNhatMauSac(); // Gọi hàm cập nhật màu sắc
@@ -241,30 +230,25 @@ export default function MauSac() {
     loadMauSac(trangHienTai); // Tải lại danh sách màu sắc với từ khóa tìm kiếm
   };
 
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-
-  // Hàm đóng modal
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-
   const handleRowClick = (item) => {
-    console.log("Dữ liệu dòng được chọn:", item); // Log dữ liệu dòng được chọn
+    // console.log("Dữ liệu dòng được chọn:", item); // Log dữ liệu dòng được chọn
     setMauSacMoi({ ten: item.ten, trangThai: item.trangThai }); // Lưu dữ liệu vào state mauSacMoi
     setIsEditing(true);
     setCurrentId(item.id);
     setError("");
   };
 
-  const resetForm = () => {
+  const resetForm = (e) => {
+    e.preventDefault();
     setMauSacMoi({ ten: "", trangThai: true }); // Reset the form to initial state
     setIsEditing(false); // Set editing mode to false
     setCurrentId(null); // Clear the current ID
     setError("");
   };
-
+  useEffect(() => {
+    layTenMauSac();
+    loadMauSac(trangHienTai, tenTimKiem);
+  }, [trangHienTai, tenTimKiem]);
   return (
     <>
       <div>
@@ -355,7 +339,6 @@ export default function MauSac() {
             <tbody>
               {listMauSac.map((item, index) => (
                 <tr key={item.id} onClick={() => handleRowClick(item)}>
-                  {" "}
                   {/* Thêm sự kiện nhấp chuột */}
                   <td className="border border-gray-300 p-2 text-center">
                     {index + 1 + (trangHienTai - 1) * itemsPerPage}
