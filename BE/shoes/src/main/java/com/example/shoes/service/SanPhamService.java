@@ -13,5 +13,6 @@ public interface SanPhamService {
     SanPhamResponse update(Integer id, SanPhamRequest request);
     List<SanPhamResponse> getAll();
     void updateTheoTrangThai(Integer id);
+    List<String> getAlltenSP();
 
 }

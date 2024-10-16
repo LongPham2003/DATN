@@ -103,7 +103,7 @@ public class LoaiServiceImpl implements LoaiService {
     @Override
     public List<LoaiResponse> getAll() {
         // Lấy tất cả các ChatLieu từ repository
-        List<Loai> list =loaiRepository.findAll();
+        List<Loai> list =loaiRepository.getAllTrangThaiTrue();
 
         // Chuyển đổi từ ChatLieu sang ChatLieuResponse
         return list.stream()

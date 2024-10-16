@@ -7,6 +7,7 @@ import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.service.SanPhamChiTietService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -15,16 +16,28 @@ import java.util.List;
 public class SanPhamChiTietController {
     @Autowired
     private SanPhamChiTietService sanPhamChiTietService;
+
     @GetMapping("/list")
-   public ApiResponse<PhanTrangResponse<SanPhamChiTietResponse>> getAllChatLieu(
+    public ApiResponse<PhanTrangResponse<SanPhamChiTietResponse>> getAllChatLieu(
+            @RequestParam(required = false) Integer idSanPham,
+            @RequestParam(required = false) Integer idMauSac,
+            @RequestParam(required = false) Integer idkichThuoc,
+            @RequestParam(required = false) Integer idChatLieu,
+            @RequestParam(required = false) Integer idThuongHieu,
+            @RequestParam(required = false) Integer idDeGiay,
+            @RequestParam(required = false) Boolean trangThai,
+            @RequestParam(required = false) BigDecimal minDonGia,
+            @RequestParam(required = false) BigDecimal maxDonGia,
             @RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber,
             @RequestParam(value = "pageSize", defaultValue = "5") int pageSize
     ) {
-        PhanTrangResponse<SanPhamChiTietResponse> sanPhamPhanTrangResponse = sanPhamChiTietService.getSanPhamChiTiet(pageNumber, pageSize);
+        PhanTrangResponse<SanPhamChiTietResponse> sanPhamPhanTrangResponse = sanPhamChiTietService.getspctAndLocspct(
+                idSanPham, idMauSac, idkichThuoc, idChatLieu, idThuongHieu, idDeGiay, trangThai, minDonGia, maxDonGia, pageNumber, pageSize);
         return ApiResponse.<PhanTrangResponse<SanPhamChiTietResponse>>builder()
                 .result(sanPhamPhanTrangResponse)
                 .build();
     }
+
     @GetMapping("/{id}")
     public ApiResponse<SanPhamChiTietResponse> getById(@PathVariable Integer id) {
         SanPhamChiTietResponse sanPhamChiTietResponse = sanPhamChiTietService.getById(id);
@@ -49,27 +62,8 @@ public class SanPhamChiTietController {
                 .result(updated)
                 .build();
     }
-    @GetMapping("/loc")
-    public ApiResponse<List<SanPhamChiTietResponse>> locSanPhamChiTiet(
-            @RequestParam(required = false) Integer idSanPham,
-            @RequestParam(required = false) Integer idMauSac,
-            @RequestParam(required = false) Integer idkichThuoc,
-            @RequestParam(required = false) Integer idChatLieu,
-            @RequestParam(required = false) Integer idThuongHieu,
-            @RequestParam(required = false) Integer idDeGiay,
-            @RequestParam(required = false) Boolean trangThai,
-            @RequestParam(required = false) BigDecimal minDonGia,
-            @RequestParam(required = false) BigDecimal maxDonGia
-    ) {
-        // Gọi service để lọc sản phẩm chi tiết
-        List<SanPhamChiTietResponse> responses = sanPhamChiTietService.locPhamChiTietList(
-                idSanPham, idMauSac, idkichThuoc, idChatLieu, idThuongHieu, idDeGiay, trangThai, minDonGia, maxDonGia);
 
-        // Trả về API response
-        return ApiResponse.<List<SanPhamChiTietResponse>>builder()
-                .result(responses)
-                .build();
-    }
+
     @GetMapping("/getall")
     public ApiResponse<List<SanPhamChiTietResponse>> getAll() {
         // Gọi hàm getAllChatLieu() để lấy danh sách các ChatLieuResponse
@@ -80,11 +74,22 @@ public class SanPhamChiTietController {
                 .result(list)
                 .build();
     }
-    @PutMapping ("/updatetrangthai/{id}")
+
+    @PutMapping("/updatetrangthai/{id}")
     public ApiResponse<Void> updateTrangThai(@PathVariable Integer id) {
         sanPhamChiTietService.updateTheoTrangThai(id);
         return ApiResponse.<Void>builder()
                 .message("Update thành công")
+                .build();
+    }
+
+    @GetMapping("/getidsanpham/{idsanpham}")
+    public ApiResponse<List<SanPhamChiTietResponse>> findByIdSanPhamAndTrangThaiTrue(
+            @PathVariable("idsanpham") Integer idSanPham) {
+        List<SanPhamChiTietResponse> responses = sanPhamChiTietService.findByIdSanPhamAndTrangThaiTrue(idSanPham);
+        // Trả về API response
+        return ApiResponse.<List<SanPhamChiTietResponse>>builder()
+                .result(responses)
                 .build();
     }
 }

@@ -16,8 +16,6 @@ export default function ListProduct() {
   const [trangHienTai, setTrangHienTai] = useState(1);
   const [idLoai, setidLoai] = useState();
   const [tenTimKiem, setTenTimKiem] = useState("");
-  const [loaiTimKiem, setLoaiTimKiem] = useState("");
-  const [idSP, setIdSP] = useState();
 
   const [trangThaiTimKiem, setTrangThaiTimKiem] = useState();
   const itemsPerPage = 5;
@@ -87,20 +85,6 @@ export default function ListProduct() {
     // console.log(`Selected ID: ${selectedOption.ten}`); // In ID ra console
     setidLoai(selectedOption.id); // Cập nhật idLoai với ID đã chọn
   };
-  const handleSearch = () => {
-    // Lấy giá trị từ ô tìm kiếm
-    const tenTimKiemValue = document.querySelector('input[type="text"]').value;
-    setTenTimKiem(tenTimKiemValue); // Lưu giá trị vào state loaiTimKiem
-
-    // Lấy giá trị trạng thái từ radio button
-    const trangThaiValue = document.querySelector(
-      'input[name="color"]:checked',
-    )?.value; // Lấy giá trị của radio button đã chọn
-    setTrangThaiTimKiem(trangThaiValue); // Lưu giá trị vào state trangThaiTimKiem
-
-    // Gọi hàm loadSanPham với các giá trị đã lấy
-    loadSanPham(trangHienTai, tenTimKiemValue, trangThaiValue);
-  };
 
   const handleReset = () => {
     setTenTimKiem(""); // Đặt lại giá trị tìm kiếm
@@ -122,8 +106,8 @@ export default function ListProduct() {
   };
 
   useEffect(() => {
-    loadSanPham(trangHienTai, tenTimKiem, trangThaiTimKiem);
-  }, [trangHienTai, tenTimKiem, trangThaiTimKiem]);
+    loadSanPham(trangHienTai, tenTimKiem, trangThaiTimKiem, idLoai);
+  }, [trangHienTai, tenTimKiem, trangThaiTimKiem, idLoai]);
 
   return (
     <>
@@ -136,6 +120,7 @@ export default function ListProduct() {
               type="text"
               placeholder="Nhập tên Sản Phẩm"
               className="w-[500px] rounded-md border-2 border-gray-300 p-2 outline-none transition-colors duration-300 hover:border-blue-500 focus:border-blue-500"
+              onChange={(e) => setTenTimKiem(e.target.value)}
             />
           </div>
         </div>
@@ -156,30 +141,31 @@ export default function ListProduct() {
             </label>
             <CustomDropdown
               options={loaiSelect}
-              onSelect={handleOptionSelect}
+              onSelect={(e) => setidLoai(e.id)}
             />
           </div>
           <div className="ml-72 justify-center">
             <label className="mr-3 text-xl">Trạng thái:</label>
             Đang kinh doanh
-            <Radio name="color" className="mr-14" value={true} />
+            <Radio
+              name="color"
+              className="mr-14"
+              value={true}
+              onChange={(e) => setTrangThaiTimKiem(true)} // Cập nhật trực tiếp
+            />
             Ngừng kinh doanh
-            <Radio name="color" value={false} />
+            <Radio
+              name="color"
+              value={false}
+              onChange={(e) => setTrangThaiTimKiem(false)} // Cập nhật trực tiếp
+            />
           </div>
         </div>
         <div className="flex justify-center gap-4">
-          <div className="flex justify-center" onClick={handleSearch}>
-            <button
-              type="button"
-              className="mt-10 h-10 w-32 rounded-md bg-blue-400 font-semibold text-black transition-colors duration-300 hover:bg-blue-600 focus:bg-blue-700 active:bg-blue-300"
-            >
-              Tìm kiếm
-            </button>
-          </div>
           <div onClick={handleReset}>
             <button
               type="button"
-              className="ml-4 mt-10 h-10 w-32 rounded-md bg-red-400 font-semibold text-white transition-colors duration-300 hover:bg-red-600 focus:bg-red-700 active:bg-red-300" // Thêm margin-left để tạo khoảng cách
+              className="mt-10 h-10 w-32 rounded-md bg-red-400 font-semibold text-white transition-colors duration-300 hover:bg-red-600 focus:bg-red-700 active:bg-red-300" // Thêm margin-left để tạo khoảng cách
               // Gọi hàm reset khi nhấn nút
             >
               Reset
@@ -272,38 +258,40 @@ export default function ListProduct() {
                       ))}
                   </tbody>
                 </table>
-                <div className="mr-14 mt-4 flex justify-end">
-                  <ReactPaginate
-                    previousLabel={"< Previous"}
-                    nextLabel={"Next >"}
-                    breakLabel={"..."}
-                    pageCount={tongSoTrang}
-                    marginPagesDisplayed={2}
-                    pageRangeDisplayed={2}
-                    onPageChange={handlePageChange}
-                    containerClassName={"flex"}
-                    previousClassName={"mx-1"}
-                    previousLinkClassName={
-                      "px-3 py-1 border border-gray-300 rounded-full hover:bg-gray-200 transition duration-200"
-                    }
-                    nextClassName={"mx-1"}
-                    nextLinkClassName={
-                      "px-3 py-1 border border-gray-300 rounded-full hover:bg-gray-200 transition duration-200"
-                    }
-                    breakClassName={"mx-1"}
-                    breakLinkClassName={
-                      "px-3 py-1 border border-gray-300 rounded-full hover:bg-gray-200 transition duration-200"
-                    }
-                    pageClassName={"mx-1"}
-                    pageLinkClassName={
-                      "px-3 py-1 border-b border-green-300 rounded-full hover:bg-green-500 transition duration-200"
-                    }
-                    activeClassName={"bg-green-500 rounded-full text-white"}
-                    activeLinkClassName={
-                      "px-4 py-2 bg-green-500 text-white rounded-full"
-                    }
-                  />
-                </div>
+                {tongSoTrang > 1 && (
+                  <div className="mr-14 mt-4 flex justify-end">
+                    <ReactPaginate
+                      previousLabel={"< Previous"}
+                      nextLabel={"Next >"}
+                      breakLabel={"..."}
+                      pageCount={tongSoTrang}
+                      marginPagesDisplayed={2}
+                      pageRangeDisplayed={2}
+                      onPageChange={handlePageChange}
+                      containerClassName={"flex"}
+                      previousClassName={"mx-1"}
+                      previousLinkClassName={
+                        "px-3 py-1 border border-gray-300 rounded-full hover:bg-gray-200 transition duration-200"
+                      }
+                      nextClassName={"mx-1"}
+                      nextLinkClassName={
+                        "px-3 py-1 border border-gray-300 rounded-full hover:bg-gray-200 transition duration-200"
+                      }
+                      breakClassName={"mx-1"}
+                      breakLinkClassName={
+                        "px-3 py-1 border border-gray-300 rounded-full hover:bg-gray-200 transition duration-200"
+                      }
+                      pageClassName={"mx-1"}
+                      pageLinkClassName={
+                        "px-3 py-1 border-b border-green-300 rounded-full hover:bg-green-500 transition duration-200"
+                      }
+                      activeClassName={"bg-green-500 rounded-full text-white"}
+                      activeLinkClassName={
+                        "px-4 py-2 bg-green-500 text-white rounded-full"
+                      }
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </div>

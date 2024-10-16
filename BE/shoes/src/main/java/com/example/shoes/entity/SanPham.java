@@ -31,6 +31,11 @@ public class SanPham {
 
     @Size(max = 255)
     @NotNull
+    @Column(name = "ma")
+    private String ma;
+
+    @Size(max = 255)
+    @NotNull
     @Column(name = "ten_san_pham")
     private String tenSanPham;
 

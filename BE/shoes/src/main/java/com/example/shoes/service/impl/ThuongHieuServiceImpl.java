@@ -101,7 +101,7 @@ public class ThuongHieuServiceImpl implements ThuongHieuService {
     @Override
     public List<ThuongHieuResponse> getAll() {
         // Lấy tất cả các ChatLieu từ repository
-        List<ThuongHieu> list =thuongHieuRepo.findAll();
+        List<ThuongHieu> list =thuongHieuRepo.getAllTrangThaiTrue();
 
         // Chuyển đổi từ ChatLieu sang ChatLieuResponse
         return list.stream()
