@@ -150,6 +150,9 @@ export default function KichThuoc() {
         return;
       }
       loadKichThuoc(trangHienTai);
+      setKichThuocMoi({ kichThuoc: "", trangThai: true });
+      setIsEditing(false);
+      setCurrentId(null);
       toast.success("Cập nhật trạng thái thành công", {
         position: "top-right",
         autoClose: 1000,
@@ -198,8 +201,8 @@ export default function KichThuoc() {
   return (
     <>
       <div className="h-screen w-full overflow-auto">
-        <div className="my-2 flex justify-around gap-3 rounded bg-white p-4 shadow">
-          <div className="mb-4 w-[500px] rounded bg-white p-4 shadow">
+        <div className="my-2 flex justify-around gap-3 rounded bg-white p-4 shadow drop-shadow-xl">
+          <div className="mb-4 w-[500px] rounded bg-white p-4 shadow drop-shadow-xl">
             <h2 className="mb-2 text-xl font-bold">Thêm Kích Thước Mới</h2>
             <form onSubmit={themMoiKichThuoc} className="-mx-2 flex flex-wrap">
               <div className="mb-4 h-[150px] w-1/2 px-2">
@@ -245,19 +248,21 @@ export default function KichThuoc() {
           </div>
 
           {/* Search Section */}
-          <div className="mb-4 w-[500px] rounded bg-white p-4 shadow">
+          <div className="mb-4 w-[500px] rounded bg-white p-4 shadow drop-shadow-xl">
             <h2 className="mb-2 text-xl font-bold">Tìm kiếm kích thước</h2>
             <div className="-mx-2 flex flex-wrap">
-              <div className="mb-4 w-full">
+              <div className="mb-4 h-[150px] w-full">
                 <input
                   type="text"
                   name="tenTimKiem"
                   placeholder="Nhập tên kích thước"
-                  className="w-[300px] rounded border p-2"
+                  className="mt-6 w-[400px] rounded border p-2"
                 />
+              </div>
+              <div className="">
                 <button
                   onClick={handleSetTenTimKiem}
-                  className="ml-2 rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+                  className="ml-[190px] rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
                 >
                   Tìm kiếm
                 </button>
@@ -267,22 +272,16 @@ export default function KichThuoc() {
         </div>
 
         {/* Table Section */}
-        <div className="mx-5 rounded bg-white p-8 shadow">
+        <div className="rounded bg-white p-8">
           <h2 className="mb-2 text-xl font-bold">Danh Sách Kích Thước</h2>
           <div className="rounded">
             <table className="min-w-full table-auto border-collapse text-center">
               <thead>
-                <tr>
-                  <th className="border border-gray-400 px-4 py-2">STT</th>
-                  <th className="border border-gray-400 px-4 py-2">
-                    Tên Kích Thước
-                  </th>
-                  <th className="border border-gray-400 px-4 py-2">
-                    Trạng Thái
-                  </th>
-                  <th className="border border-gray-400 px-4 py-2">
-                    Hành động
-                  </th>
+                <tr className="border border-b-gray-300 bg-slate-300">
+                  <th className="px-4 py-2">STT</th>
+                  <th className="px-4 py-2">Tên Kích Thước</th>
+                  <th className="px-4 py-2">Trạng Thái</th>
+                  <th className="px-4 py-2">Hành động</th>
                 </tr>
               </thead>
               <tbody>
@@ -292,23 +291,22 @@ export default function KichThuoc() {
                   </tr>
                 ) : (
                   kichthuoc.map((item, index) => (
-                    <tr key={item.id}>
-                      <td className="border border-gray-400 px-4 py-2">
-                        {index + 1}
+                    <tr
+                      onClick={() => handleRowClick(item)}
+                      key={item.id}
+                      className="border border-b-gray-300 hover:bg-slate-100"
+                    >
+                      <td className="px-4 py-2">
+                        {index + 1 + (trangHienTai - 1) * itemsPerPage}
                       </td>
-                      <td
-                        className="cursor-pointer border border-gray-400 px-4 py-2"
-                        onClick={() => handleRowClick(item)}
-                      >
-                        {item.kichThuoc}
-                      </td>
-                      <td className="border border-gray-400 px-4 py-2">
+                      <td className="px-4 py-2">{item.kichThuoc}</td>
+                      <td className="px-4 py-2">
                         {item.trangThai ? "Đang sử dụng" : "Ngừng sử dụng"}
                       </td>
-                      <td className="border border-gray-400 px-4 py-2">
+                      <td className="px-4 py-2">
                         <button
                           onClick={() => capNhatTrangThai(item.id)}
-                          className="rounded bg-yellow-500 px-4 py-2 text-white hover:bg-yellow-600"
+                          className="rounded bg-yellow-500 px-4 py-2 text-white hover:bg-green-600"
                         >
                           Cập nhật trạng thái
                         </button>
@@ -317,54 +315,51 @@ export default function KichThuoc() {
                   ))
                 )}
                 {emptyRows > 0 &&
-                  Array(emptyRows)
-                    .fill(0)
-                    .map((_, index) => (
-                      <tr key={index}>
-                        <td className="border border-gray-400 px-4 py-2">
-                          &nbsp;
-                        </td>
-                        <td className="border border-gray-400 px-4 py-2"></td>
-                        <td className="border border-gray-400 px-4 py-2"></td>
-                        <td className="border border-gray-400 px-4 py-2"></td>
-                      </tr>
-                    ))}
+                  Array.from({ length: emptyRows }).map((_, index) => (
+                    <tr key={`empty-${index}`} style={{ height: "57px" }}>
+                      {/* Đặt ộ cao hàng là 57px */}
+                      <td className=""></td>
+                      <td className=""></td>
+                      <td className=""></td>
+                      <td className=""></td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
-          </div>
-        </div>
 
-        <div className="flex justify-center p-4">
-          <ReactPaginate
-            previousLabel={"< Previous"}
-            nextLabel={"Next >"}
-            breakLabel={"..."}
-            pageCount={tongSoTrang}
-            marginPagesDisplayed={2}
-            pageRangeDisplayed={2}
-            onPageChange={handlePageChange}
-            containerClassName={"flex"}
-            previousClassName={"mx-1"}
-            previousLinkClassName={
-              "px-3 py-1 border border-gray-300 rounded-full hover:bg-gray-200 transition duration-200"
-            }
-            nextClassName={"mx-1"}
-            nextLinkClassName={
-              "px-3 py-1 border border-gray-300 rounded-full hover:bg-gray-200 transition duration-200"
-            }
-            breakClassName={"mx-1"}
-            breakLinkClassName={
-              "px-3 py-1 border border-gray-300 rounded-full hover:bg-gray-200 transition duration-200"
-            }
-            pageClassName={"mx-1"}
-            pageLinkClassName={
-              "px-3 py-1 border-b border-green-300 rounded-full hover:bg-green-500 transition duration-200"
-            }
-            activeClassName={"bg-green-500 rounded-full text-white"}
-            activeLinkClassName={
-              "px-4 py-2 bg-green-500 text-white rounded-full"
-            }
-          />
+            <div className="flex justify-end p-4">
+              <ReactPaginate
+                previousLabel={"< Previous"}
+                nextLabel={"Next >"}
+                breakLabel={"..."}
+                pageCount={tongSoTrang}
+                marginPagesDisplayed={2}
+                pageRangeDisplayed={2}
+                onPageChange={handlePageChange}
+                containerClassName={"flex"}
+                previousClassName={"mx-1"}
+                previousLinkClassName={
+                  "px-3 py-1 border border-gray-300 rounded-full hover:bg-gray-200 transition duration-200"
+                }
+                nextClassName={"mx-1"}
+                nextLinkClassName={
+                  "px-3 py-1 border border-gray-300 rounded-full hover:bg-gray-200 transition duration-200"
+                }
+                breakClassName={"mx-1"}
+                breakLinkClassName={
+                  "px-3 py-1 border border-gray-300 rounded-full hover:bg-gray-200 transition duration-200"
+                }
+                pageClassName={"mx-1"}
+                pageLinkClassName={
+                  "px-3 py-1 border-b border-green-300 rounded-full hover:bg-green-500 transition duration-200"
+                }
+                activeClassName={"bg-green-500 rounded-full text-white"}
+                activeLinkClassName={
+                  "px-4 py-2 bg-green-500 text-white rounded-full"
+                }
+              />
+            </div>
+          </div>
         </div>
       </div>
       <ToastContainer />

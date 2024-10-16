@@ -29,10 +29,17 @@ export default function AddProduct() {
       console.log(error);
     }
   };
+  const newProduct = {
+    tenSanPham,
+    idLoai,
+    moTa,
+    trangThai, // Mặc định true
+  };
 
   const add = async (newProduct) => {
     try {
       await axios.post(ApiAddSPMoi, newProduct); // Gửi dữ liệu sản phẩm mới
+
       return true; // Trả về true khi thêm thành công
     } catch (error) {
       console.log(error);
@@ -59,12 +66,6 @@ export default function AddProduct() {
       if (!window.confirm("Bạn có chắc chắn muốn thêm sản phẩm này không?")) {
         return; // Nếu người dùng chọn Cancel, dừng thao tác
       }
-      const newProduct = {
-        tenSanPham,
-        idLoai,
-        moTa,
-        trangThai, // Mặc định true
-      };
 
       const result = await add(newProduct); // Chờ kết quả từ hàm add
 
@@ -83,7 +84,7 @@ export default function AddProduct() {
           theme: "light",
           transition: Bounce,
         });
-
+        console.log(newProduct);
         setTimeout(() => {
           window.location.reload(); // Load lại trang sau 1 giây
         }, 1700);
@@ -91,6 +92,7 @@ export default function AddProduct() {
         throw new Error("Thêm mới thất bại");
       }
     } catch (error) {
+      console.log(newProduct);
       toast.error(error.message || "Thêm mới thất bại", {
         position: "top-right",
         autoClose: 1000,

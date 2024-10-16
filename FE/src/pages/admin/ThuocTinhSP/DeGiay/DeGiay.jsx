@@ -241,123 +241,113 @@ export default function DeGiay() {
           <div className="mb-4 w-[500px] rounded bg-white p-4 shadow">
             <span className="mb-2 text-xl font-bold">Tìm kiếm</span>
             <div className="flex flex-wrap">
-              <div className="mb-4 w-full">
+              <div className="mb-4 h-[150px] w-full">
                 <input
                   type="text"
                   name="tenTimKiem"
                   placeholder="Nhập tên đế giày"
                   className="w-[300px] rounded border p-2"
                 />
-                <button
-                  onClick={handleSetTenTimKiem}
-                  className="ml-2 rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
-                >
-                  Tìm kiếm
-                </button>
               </div>
+              <button
+                onClick={handleSetTenTimKiem}
+                className="ml-[190px] rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+              >
+                Tìm kiếm
+              </button>
             </div>
           </div>
         </div>
 
         {/* Table Section */}
-        <div className="mx-5 rounded bg-white p-8 shadow">
+        <div className="rounded bg-white p-8">
           <h2 className="mb-2 text-xl font-bold">Danh Sách Đế Giày</h2>
           <div className="rounded">
-            <table className="min-w-full table-auto border-collapse text-center">
-              <thead>
-                <tr>
-                  <th className="border border-gray-400 px-4 py-2">STT</th>
-                  <th className="border border-gray-400 px-4 py-2">
-                    Tên Đế Giày
+            <table className="w-full border-collapse">
+              <thead className="h-[50px] text-lg">
+                <tr className="rounded-t-lg border bg-gray-200">
+                  <th className="w-10 border border-b-gray-300 p-2">STT</th>
+                  <th className="w-1/3 border border-b-gray-300 p-2">Tên</th>
+                  <th className="w-1/3 border border-b-gray-300 p-2">
+                    Trạng thái
                   </th>
-                  <th className="border border-gray-400 px-4 py-2">
-                    Trạng Thái
-                  </th>
-                  <th className="border border-gray-400 px-4 py-2">
+                  <th className="w-1/3 border border-gray-300 p-2">
                     Hành động
                   </th>
+                  {/* Add more headers as needed */}
                 </tr>
               </thead>
               <tbody>
-                {degiay.length === 0 ? (
-                  <tr>
-                    <td colSpan="4">Không có dữ liệu</td>
-                  </tr>
-                ) : (
-                  degiay.map((item, index) => (
-                    <tr key={item.id}>
-                      <td className="border border-gray-400 px-4 py-2">
-                        {index + 1}
-                      </td>
-                      <td
-                        className="cursor-pointer border border-gray-400 px-4 py-2"
-                        onClick={() => handleRowClick(item)}
+                {degiay.map((item, index) => (
+                  <tr
+                    key={item.id}
+                    onClick={() => handleRowClick(item)}
+                    className="border border-b-gray-300 hover:bg-slate-100"
+                  >
+                    {/* Thêm sự kiện nhấp chuột */}
+                    <td className="p-2 text-center">
+                      {index + 1 + (trangHienTai - 1) * itemsPerPage}
+                    </td>
+                    <td className="p-2 text-center">{item.ten}</td>
+                    <td className="p-2 text-center">
+                      {item.trangThai ? "Kinh doanh" : "Ngừng kinh doanh"}
+                    </td>
+                    <td className="p-2 text-center">
+                      <button
+                        className="rounded bg-yellow-500 px-4 py-2 text-white hover:bg-green-600"
+                        onClick={() => capNhatTrangThai(item.id)} // Gọi hàm cập nhật trạng thái
                       >
-                        {item.ten}
-                      </td>
-                      <td className="border border-gray-400 px-4 py-2">
-                        {item.trangThai ? "Đang sử dụng" : "Ngừng sử dụng"}
-                      </td>
-                      <td className="border border-gray-400 px-4 py-2">
-                        <button
-                          onClick={() => capNhatTrangThai(item.id)}
-                          className="rounded bg-yellow-500 px-4 py-2 text-white hover:bg-yellow-600"
-                        >
-                          Cập nhật trạng thái
-                        </button>
-                      </td>
-                    </tr>
-                  ))
-                )}
+                        {item.trangThai ? "Ngừng kinh doanh" : "Kinh doanh"}
+                      </button>
+                    </td>
+                  </tr>
+                ))}
                 {emptyRows > 0 &&
-                  Array(emptyRows)
-                    .fill(0)
-                    .map((_, index) => (
-                      <tr key={index}>
-                        <td className="border border-gray-400 px-4 py-2">
-                          &nbsp;
-                        </td>
-                        <td className="border border-gray-400 px-4 py-2"></td>
-                        <td className="border border-gray-400 px-4 py-2"></td>
-                        <td className="border border-gray-400 px-4 py-2"></td>
-                      </tr>
-                    ))}
+                  Array.from({ length: emptyRows }).map((_, index) => (
+                    <tr key={`empty-${index}`} style={{ height: "57px" }}>
+                      {/* Đặt ộ cao hàng là 57px */}
+                      <td className=""></td>
+                      <td className=""></td>
+                      <td className=""></td>
+                      <td className=""></td>
+                    </tr>
+                  ))}
+                {/* Add more rows as needed */}
               </tbody>
             </table>
+            <div className="flex justify-end p-4">
+              <ReactPaginate
+                previousLabel={"< Previous"}
+                nextLabel={"Next >"}
+                breakLabel={"..."}
+                pageCount={tongSoTrang}
+                marginPagesDisplayed={2}
+                pageRangeDisplayed={2}
+                onPageChange={handlePageChange}
+                containerClassName={"flex"}
+                previousClassName={"mx-1"}
+                previousLinkClassName={
+                  "px-3 py-1 border border-gray-300 rounded-full hover:bg-gray-200 transition duration-200"
+                }
+                nextClassName={"mx-1"}
+                nextLinkClassName={
+                  "px-3 py-1 border border-gray-300 rounded-full hover:bg-gray-200 transition duration-200"
+                }
+                breakClassName={"mx-1"}
+                breakLinkClassName={
+                  "px-3 py-1 border border-gray-300 rounded-full hover:bg-gray-200 transition duration-200"
+                }
+                pageClassName={"mx-1"}
+                pageLinkClassName={
+                  "px-3 py-1 border-b border-green-300 rounded-full hover:bg-green-500 transition duration-200"
+                }
+                activeClassName={"bg-green-500 rounded-full text-white"}
+                activeLinkClassName={
+                  "px-4 py-2 bg-green-500 text-white rounded-full"
+                }
+              />
+            </div>
           </div>
-        </div>
-
-        <div className="flex justify-center p-4">
-          <ReactPaginate
-            previousLabel={"< Previous"}
-            nextLabel={"Next >"}
-            breakLabel={"..."}
-            pageCount={tongSoTrang}
-            marginPagesDisplayed={2}
-            pageRangeDisplayed={2}
-            onPageChange={handlePageChange}
-            containerClassName={"flex"}
-            previousClassName={"mx-1"}
-            previousLinkClassName={
-              "px-3 py-1 border border-gray-300 rounded-full hover:bg-gray-200 transition duration-200"
-            }
-            nextClassName={"mx-1"}
-            nextLinkClassName={
-              "px-3 py-1 border border-gray-300 rounded-full hover:bg-gray-200 transition duration-200"
-            }
-            breakClassName={"mx-1"}
-            breakLinkClassName={
-              "px-3 py-1 border border-gray-300 rounded-full hover:bg-gray-200 transition duration-200"
-            }
-            pageClassName={"mx-1"}
-            pageLinkClassName={
-              "px-3 py-1 border-b border-green-300 rounded-full hover:bg-green-500 transition duration-200"
-            }
-            activeClassName={"bg-green-500 rounded-full text-white"}
-            activeLinkClassName={
-              "px-4 py-2 bg-green-500 text-white rounded-full"
-            }
-          />
         </div>
       </div>
       <ToastContainer />

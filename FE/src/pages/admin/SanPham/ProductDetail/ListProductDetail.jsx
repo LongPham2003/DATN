@@ -63,15 +63,25 @@ export default function ListProductDetail() {
             <div className="flex items-center">
               <label className="mr-3 text-xl">Trạng thái:</label>
               <label className="mr-4">
-                <input type="radio" name="status" value="active" className="mr-2" />
+                <input
+                  type="radio"
+                  name="status"
+                  value="active"
+                  className="mr-2"
+                />
                 Đang kinh doanh
               </label>
               <label>
-                <input type="radio" name="status" value="inactive" className="mr-2" />
+                <input
+                  type="radio"
+                  name="status"
+                  value="inactive"
+                  className="mr-2"
+                />
                 Ngừng kinh doanh
               </label>
             </div>
-            <div className="flex items-center mr-52">
+            <div className="mr-52 flex items-center">
               <label className="mr-2">Khoảng giá:</label>
               <div className="flex items-center">
                 <input
@@ -89,11 +99,11 @@ export default function ListProductDetail() {
             </div>
           </div>
         </div>
-        
+
         <div className="mt-4 flex justify-center">
           <button
             type="button"
-            className="h-10 w-28 px-4 rounded-md bg-blue-500 font-semibold text-white transition-colors duration-300 hover:bg-white hover:text-black hover:border-2 hover:border-blue-500 focus:bg-blue-700 active:bg-blue-500"
+            className="h-10 w-28 rounded-md bg-blue-500 px-4 font-semibold text-white transition-colors duration-300 hover:border-2 hover:border-blue-500 hover:bg-white hover:text-black focus:bg-blue-700 active:bg-blue-500"
           >
             Lọc
           </button>
@@ -101,14 +111,14 @@ export default function ListProductDetail() {
       </div>
       <hr className="my-5" />
       <div>
-        <div className="flex justify-between items-center mb-4">
+        <div className="mb-4 flex items-center justify-between">
           <span className="text-3xl font-semibold uppercase">
             Danh sách sản phẩm Chi tiết
           </span>
           <button
             type="button"
             onClick={openModal}
-            className="mr-16 h-10 px-4 rounded-md bg-green-500 font-semibold text-white transition-colors duration-300 hover:bg-green-600 focus:bg-green-700 active:bg-green-400"
+            className="mr-16 h-10 rounded-md bg-green-500 px-4 font-semibold text-white transition-colors duration-300 hover:bg-green-600 focus:bg-green-700 active:bg-green-400"
           >
             Thêm sản phẩm
           </button>
@@ -155,19 +165,6 @@ export default function ListProductDetail() {
           </div>
         </div>
       </div>
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-8 rounded-lg">
-            <AddProductDetail />
-            <button
-              onClick={closeModal}
-              className="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-            >
-              Đóng
-            </button>
-          </div>
-        </div>
-      )}
     </>
   );
 }

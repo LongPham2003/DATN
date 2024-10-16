@@ -141,6 +141,11 @@ export default function ListProduct() {
             </label>
             <CustomDropdown
               options={loaiSelect}
+              selectedValue={
+                idLoai
+                  ? loaiSelect.find((loai) => loai.id === idLoai)
+                  : { ten: "tất cả SP", id: "" }
+              }
               onSelect={(e) => setidLoai(e.id)}
             />
           </div>
@@ -195,9 +200,11 @@ export default function ListProduct() {
                   <thead className="bg-green-300 text-xl font-medium">
                     <tr>
                       <th className="w-10 px-6 py-4">STT</th>
-                      <th className="w-80 px-6 py-4">Ten</th>
-                      <th className="w-96 px-6 py-4">Loai</th>
+                      <th className="w-14 px-6 py-4">Mã</th>
+                      <th className="w-64 px-6 py-4">Ten</th>
+                      <th className="w-52 px-6 py-4">Loai</th>
                       <th className="w-72 px-6 py-4">Ngay Tao</th>
+                      <th className="w-72 px-6 py-4">SO luong ton</th>
                       <th className="w-72 px-6 py-4">Trang Thai</th>
                       <th className="px-6 py-4">Hanh DOng</th>
                     </tr>
@@ -209,9 +216,11 @@ export default function ListProduct() {
                         className="border-b border-neutral-950 text-xl font-medium"
                       >
                         <td className="px-6 py-4">{index + 1}</td>
+                        <td className="px-6 py-4">{sp.ma}</td>
                         <td className="px-6 py-4">{sp.tenSanPham}</td>
                         <td className="px-6 py-4">{sp.tenLoai}</td>
                         <td className="px-6 py-4">{sp.ngayTao}</td>
+                        <td className="px-6 py-4">{sp.soLuongTon}</td>
                         <td className="px-6 py-4">
                           {sp.trangThai ? "Kinh doanh" : "Ngung kinh doanh"}
                         </td>

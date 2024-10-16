@@ -19,20 +19,15 @@ import Login from "./pages/client/auth/Login";
 import SignUp from "./pages/client/auth/SignUp";
 import DoiMatKhau from "./pages/client/auth/DoiMatKhau";
 import ResetPass from "./pages/client/auth/QuenMatKhau";
-// import page from "./pages/util/test";
 import PhanThan from "./pages/util/test";
 import DiaChi from "./pages/admin/KhachHang/DiaChi";
 import DetailProduct from "./pages/admin/SanPham/Product/DetailProduct";
+import AddProductDetail from "./pages/admin/SanPham/ProductDetail/AddProductDetail";
 function App() {
   return (
     <>
       <BrowserRouter>
         <Routes>
-          {/* <Route path="/login" element={<Login />}></Route>
-          <Route path="/signup" element={<SignUp />}></Route>
-          <Route path="/doimatkhau" element={<DoiMatKhau />}></Route>*/}
-          <Route path="/" element={<PhanThan />}></Route>
-
           {/* router login */}
           <Route
             path="/login"
@@ -208,6 +203,17 @@ function App() {
                     <title>Chi tiết sản phẩm</title>
                   </Helmet>
                   <DetailProduct />
+                </>
+              }
+            />
+            <Route
+              path="themsanphamchitiet"
+              element={
+                <>
+                  <Helmet>
+                    <title>Thêm sản phẩm chi tiết</title>
+                  </Helmet>
+                  <AddProductDetail />
                 </>
               }
             />

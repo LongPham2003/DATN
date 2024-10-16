@@ -204,11 +204,12 @@ export default function Loai() {
   };
 
   const handleSetTenTimKiem = () => {
+    // Lấy giá trị từ ô tìm kiếm
     const tenTimKiemValue = document.querySelector(
       'input[name="tenTimKiem"]',
-    ).value;
-    setTenTimKiem(tenTimKiemValue);
-    loadLoai(trangHienTai);
+    ).value; // Sử dụng name để lấy giá trị
+    setTenTimKiem(tenTimKiemValue); // Lưu giá trị vào state tenTimKiem
+    loadLoai(trangHienTai); // Tải lại danh sách màu sắc với từ khóa tìm kiếm
   };
 
   const resetForm = (e) => {
@@ -229,13 +230,13 @@ export default function Loai() {
 
   return (
     <>
-      <div className="mx-auto h-auto min-w-full overflow-auto p-4">
-        <div className="my-2 gap-3 rounded bg-white p-4 shadow">
-          <div className="flex gap-5">
-            <div className="mb-4 w-[500px] rounded bg-white p-4 shadow">
+      <div className="h-screen min-w-full overflow-auto">
+        <div className="rounded bg-white p-4">
+          <div className="mb-[20px] flex h-auto justify-around gap-5 shadow drop-shadow-xl">
+            <div className="mb-7 w-[500px] rounded bg-white p-4 shadow drop-shadow-xl">
               <h2 className="mb-2 text-xl font-bold">Thêm Loại Mới</h2>
-              <form onSubmit={themMoiLoai} className="-mx-2 flex flex-wrap">
-                <div className="mb-4 h-20 w-1/2 px-2">
+              <form onSubmit={themMoiLoai} className="-mx-2">
+                <div className="mb-4 h-[150px] w-1/2 px-2">
                   <label htmlFor="tenLoai" className="mb-1 block">
                     Tên Loại:
                   </label>
@@ -245,21 +246,21 @@ export default function Loai() {
                     name="ten"
                     onChange={onInputChange}
                     value={loaiMoi.ten}
-                    className="w-full rounded border p-2"
+                    className="w-[400px] rounded border p-2"
                     placeholder="Nhập tên loại"
                   />
                   {error && <p className="text-red-500">{error}</p>}
                 </div>
-                <div className="ml-4 flex items-center gap-2">
+                <div className="ml-4 flex items-center justify-center gap-2">
                   <button
                     type="submit"
                     className="mr-2 rounded bg-blue-500 p-2 text-white hover:bg-blue-600"
                   >
-                    {isEditing ? "Cập Nhật" : "Thêm"}
+                    {isEditing ? "Cập Nhật" : "Thêm Mới"}
                   </button>
                   <button
                     onClick={resetForm}
-                    className="rounded border p-2 hover:bg-gray-300"
+                    className="rounded border bg-yellow-500 p-2 text-white hover:bg-yellow-600"
                   >
                     Nhập Lại
                   </button>
@@ -269,106 +270,114 @@ export default function Loai() {
 
             <div className="mb-4 w-[500px] rounded bg-white p-4 shadow">
               <h2 className="mb-2 text-xl font-bold">Danh Sách Các Loại</h2>
-              <input
-                type="text"
-                name="tenTimKiem"
-                onChange={(e) => setTenTimKiem(e.target.value)}
-                className="mb-4 w-full rounded border p-2"
-                placeholder="Tìm kiếm theo tên loại"
-              />
+              <div className="h-[150px]">
+                <input
+                  type="text"
+                  name="tenTimKiem"
+                  // onChange={(e) => setTenTimKiem(e.target.value)}
+                  className="mb-4 w-full rounded border p-2"
+                  placeholder="Tìm kiếm theo tên loại"
+                />
+              </div>
               <button
                 onClick={handleSetTenTimKiem}
-                className="rounded border p-2 hover:bg-gray-300"
+                className="ml-[190px] rounded border bg-blue-500 p-2 text-white hover:bg-blue-600"
               >
                 Tìm Kiếm
               </button>
             </div>
           </div>
-          <table className="mt-4 w-full border-collapse border border-gray-200">
-            <thead>
-              <tr>
-                <th className="w-12 border p-2">ID</th>
-                <th className="border p-2">Tên Loại</th>
-                <th className="border p-2">Trạng Thái</th>
-                <th className="border p-2">Hành Động</th>
-              </tr>
-            </thead>
-            <tbody>
-              {loai.length === 0 && (
-                <tr>
-                  <td colSpan={4} className="border p-2 text-center">
-                    Không có dữ liệu
-                  </td>
+          <div className="mx-3">
+            <table className="w-full border-collapse">
+              <thead className="h-[50px] text-lg">
+                <tr className="rounded-t-lg border bg-gray-200">
+                  <th className="w-10 border border-b-gray-300 p-2">STT</th>
+                  <th className="w-1/3 border border-b-gray-300 p-2">Tên</th>
+                  <th className="w-1/3 border border-b-gray-300 p-2">
+                    Trạng thái
+                  </th>
+                  <th className="w-1/3 border border-gray-300 p-2">
+                    Hành động
+                  </th>
+                  {/* Add more headers as needed */}
                 </tr>
-              )}
-              {loai.map((item, index) => (
-                <tr
-                  key={item.id}
-                  onClick={() => handleRowClick(item)}
-                  className="cursor-pointer hover:bg-gray-100"
-                >
-                  <td className="border p-2">
-                    {index + 1 + (trangHienTai - 1) * itemsPerPage}
-                  </td>
-                  <td className="border p-2">{item.ten}</td>
-                  <td className="border p-2">
-                    {item.trangThai ? "Kích hoạt" : "Không kích hoạt"}
-                  </td>
-                  <td className="border p-2">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        capNhatTrangThai(item.id);
-                      }}
-                      className="rounded bg-yellow-500 p-1 text-white hover:bg-yellow-600"
-                    >
-                      {item.trangThai ? "Khóa" : "Mở"}
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          {emptyRows > 0 && (
-            <div className="border-t border-gray-200">
-              {Array.from({ length: emptyRows }).map((_, i) => (
-                <tr key={i} className="h-[48px]">
-                  <td></td>
-                </tr>
-              ))}
-            </div>
-          )}
+              </thead>
+              <tbody>
+                {loai.map((item, index) => (
+                  <tr
+                    key={item.id}
+                    onClick={() => handleRowClick(item)}
+                    className="border border-b-gray-300 hover:bg-slate-100"
+                  >
+                    {/* Thêm sự kiện nhấp chuột */}
+                    <td className="p-2 text-center">
+                      {index + 1 + (trangHienTai - 1) * itemsPerPage}
+                    </td>
+                    <td className="p-2 text-center">{item.ten}</td>
+                    <td className="p-2 text-center">
+                      {item.trangThai ? "Kinh doanh" : "Ngừng kinh doanh"}
+                    </td>
+                    <td className="p-2 text-center">
+                      <button
+                        className="rounded bg-yellow-500 px-4 py-2 text-white hover:bg-green-600"
+                        onClick={() => capNhatTrangThai(item.id)} // Gọi hàm cập nhật trạng thái
+                      >
+                        {item.trangThai ? "Ngừng kinh doanh" : "Kinh doanh"}
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+                {emptyRows > 0 &&
+                  Array.from({ length: emptyRows }).map((_, index) => (
+                    <tr key={`empty-${index}`} style={{ height: "57px" }}>
+                      {/* Đặt ộ cao hàng là 57px */}
+                      <td className=""></td>
+                      <td className=""></td>
+                      <td className=""></td>
+                      <td className=""></td>
+                    </tr>
+                  ))}
+                {/* Add more rows as needed */}
+              </tbody>
+            </table>
+          </div>
+          <div className="mr-14 mt-4 flex justify-end">
+            <ReactPaginate
+              previousLabel={"< Previous"}
+              nextLabel={"Next >"}
+              breakLabel={"..."}
+              pageCount={tongSoTrang} // Tổng số trang
+              marginPagesDisplayed={2}
+              pageRangeDisplayed={2}
+              onPageChange={handlePageChange} // Hàm xử lý khi người dùng chọn trang
+              containerClassName={"flex"}
+              previousClassName={"mx-1"}
+              previousLinkClassName={
+                "px-3 py-1 border border-gray-300 rounded-full hover:bg-gray-200 transition duration-200"
+              }
+              nextClassName={"mx-1"}
+              nextLinkClassName={
+                "px-3 py-1 border border-gray-300 rounded-full hover:bg-gray-200 transition duration-200"
+              }
+              breakClassName={"mx-1"}
+              breakLinkClassName={
+                "px-3 py-1 border border-gray-300 rounded-full hover:bg-gray-200 transition duration-200"
+              }
+              pageClassName={"mx-1"}
+              pageLinkClassName={
+                "px-3 py-1 border-b border-green-300 rounded-full hover:bg-green-500 transition duration-200"
+              }
+              activeClassName={"bg-green-500 rounded-full text-white"}
+              activeLinkClassName={
+                "px-4 py-2 bg-green-500 text-white rounded-full"
+              } // Đảm bảo nền đầy đủ cho nút đang hoạt động
+            />
+          </div>
         </div>
-        <ReactPaginate
-          previousLabel={"< Previous"}
-          nextLabel={"Next >"}
-          breakLabel={"..."}
-          pageCount={tongSoTrang}
-          marginPagesDisplayed={2}
-          pageRangeDisplayed={2}
-          onPageChange={handlePageChange}
-          containerClassName={"flex"}
-          previousClassName={"mx-1"}
-          previousLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-full hover:bg-gray-200 transition duration-200"
-          }
-          nextClassName={"mx-1"}
-          nextLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-full hover:bg-gray-200 transition duration-200"
-          }
-          breakClassName={"mx-1"}
-          breakLinkClassName={
-            "px-3 py-1 border border-gray-300 rounded-full hover:bg-gray-200 transition duration-200"
-          }
-          pageClassName={"mx-1"}
-          pageLinkClassName={
-            "px-3 py-1 border-b border-green-300 rounded-full hover:bg-green-500 transition duration-200"
-          }
-          activeClassName={"bg-green-500 rounded-full text-white"}
-          activeLinkClassName={"px-4 py-2 bg-green-500 text-white rounded-full"}
-        />
+        {/* Modal */}
+
+        <ToastContainer />
       </div>
-      <ToastContainer />
     </>
   );
 }
