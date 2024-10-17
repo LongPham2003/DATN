@@ -115,6 +115,15 @@ export function Sidebar() {
                 </ListItem>
               </Link>
               <hr />
+              <Link to="/admin/sanphamchitiet">
+                <ListItem>
+                  <ListItemPrefix>
+                    <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
+                  </ListItemPrefix>
+                  Sản phẩm chi tiết
+                </ListItem>
+              </Link>
+              <hr />
               {/* Mục Thuộc tính */}
               <ListItem onClick={handleAttributeOpen}>
                 <ListItemPrefix>

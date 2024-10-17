@@ -27,7 +27,9 @@ public enum ErrorCode {
     PRODUCT_NOT_FOUND(1005,"Không tìm thấy sản phẩm",HttpStatus.NOT_FOUND),
     BRAND_NOT_FOUND(1005,"Không tìm thấy thuong hieu",HttpStatus.NOT_FOUND),
     ATTRIBUTE_EXISTED(1005, "Đã Tồn Tại ", HttpStatus.BAD_REQUEST),
-    PRODUCT_DETAIL_NOT_FOUND(1005, "khong tim thay san pham chi tiet ", HttpStatus.NOT_FOUND)
+    PRODUCT_DETAIL_NOT_FOUND(1005, "khong tim thay san pham chi tiet ", HttpStatus.NOT_FOUND),
+    STAFF(1005, "khong tim thay nhan vien ", HttpStatus.NOT_FOUND),
+    CUSTOMER(1005, "khong tim thay khach hang ", HttpStatus.NOT_FOUND)
     ;
 
     private int code;

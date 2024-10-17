@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -66,5 +67,7 @@ public class HoaDon {
     @NotNull
     @Column(name = "trang_thai")
     private Boolean trangThai;
-
+    // Thiết lập quan hệ OneToMany với HoaDonChiTiet
+    @OneToMany(mappedBy = "idHoaDon", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<HoaDonChiTiet> hoaDonChiTiets; // Phương thức getHoaDonChiTiets() sẽ lấy danh sách chi tiết hóa đơn
 }
