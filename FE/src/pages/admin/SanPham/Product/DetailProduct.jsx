@@ -10,6 +10,7 @@ export default function DetailProduct() {
   const [idLoai] = useState();
 
   const [loaiSelect, setLoaiSelect] = useState([]);
+  const [SPCTbyIdSP, setSPCTbyIdSP] = useState([]);
   const [error, setError] = useState("");
   const [formData, setFormData] = useState({
     ma: "",
@@ -23,6 +24,8 @@ export default function DetailProduct() {
   let ApiGetById = `http://localhost:8080/api/sanpham/${id}`;
 
   let ApiGetAllLoai = `http://localhost:8080/api/loai/getall`;
+
+  let ApiLaySPCTTheoIdSP = `http://localhost:8080/api/sanphamchitiet/getidsanpham/${id}`;
 
   const getById = async () => {
     try {
@@ -58,6 +61,11 @@ export default function DetailProduct() {
       console.log("Error during update:", error);
       toast.error("Có lỗi sảy ra");
     }
+  };
+
+  const getByIdSP = async () => {
+    const data = await axios.get(ApiLaySPCTTheoIdSP);
+    setSPCTbyIdSP(data.data.result.result);
   };
 
   const handleOptionSelect = (selectedOption) => {
@@ -128,16 +136,6 @@ export default function DetailProduct() {
                 />
                 {error && <p className="text-red-500">{error}</p>}
               </div>
-              <div className="mb-4">
-                <label htmlFor="loai" className="mb-1 block font-semibold">
-                  Loại:
-                </label>
-                <DropdownDetail
-                  options={loaiSelect}
-                  onSelect={handleOptionSelect}
-                  selectedValue={formData.idLoai} // Truyền giá trị đã chọn
-                />
-              </div>
             </div>
             <div>
               <div className="mb-4">
@@ -151,6 +149,29 @@ export default function DetailProduct() {
                   onChange={handleChange}
                   readOnly={true}
                   className="w-[400px] rounded-md border-2 border-gray-300 p-2 outline-none transition-colors duration-300 hover:border-blue-500 focus:border-blue-500"
+                />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="loai" className="mb-1 block font-semibold">
+                  Loại:
+                </label>
+                <DropdownDetail
+                  options={loaiSelect}
+                  onSelect={handleOptionSelect}
+                  selectedValue={formData.idLoai} // Truyền giá trị đã chọn
+                />
+              </div>
+            </div>
+            <div>
+              <div className="mb-4">
+                <label htmlFor="moTa" className="mb-1 block font-semibold">
+                  Mô tả:
+                </label>
+                <textarea
+                  value={formData.moTa}
+                  name="moTa"
+                  className="h-[70px] w-[400px] rounded-md border-2 border-gray-300 p-2 outline-none transition-colors duration-300 hover:border-blue-500 focus:border-blue-500"
+                  onChange={handleChange}
                 />
               </div>
               <div className="mb-4">
@@ -187,23 +208,10 @@ export default function DetailProduct() {
                 </div>
               </div>
             </div>
-            <div>
-              <div className="mb-4">
-                <label htmlFor="moTa" className="mb-1 block font-semibold">
-                  Mô tả:
-                </label>
-                <textarea
-                  value={formData.moTa}
-                  name="moTa"
-                  className="h-[70px] w-[400px] rounded-md border-2 border-gray-300 p-2 outline-none transition-colors duration-300 hover:border-blue-500 focus:border-blue-500"
-                  onChange={handleChange}
-                />
-              </div>
-              <button className="h-[40px] w-[100px] rounded-xl border-2 border-green-500 font-semibold shadow-inner duration-300 hover:bg-green-500">
-                Sua
-              </button>
-            </div>
           </div>
+          <button className="h-[40px] w-[100px] rounded-xl border-2 border-green-500 font-semibold shadow-inner duration-300 hover:bg-green-500">
+            Sua
+          </button>
         </form>
       </div>
       <div className="mx-5 my-5">

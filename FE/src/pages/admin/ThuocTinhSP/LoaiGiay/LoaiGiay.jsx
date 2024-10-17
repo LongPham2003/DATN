@@ -1,113 +1,123 @@
+import { Radio } from "@material-tailwind/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 
 export default function Loai() {
-  const [loai, setLoai] = useState([]); // Changed state name
-  const [loaiMoi, setLoaiMoi] = useState({ ten: "", trangThai: true }); // Changed state name
+  const [listloai, setListloai] = useState([]);
+  const [tongSoTrang, setTongSoTrang] = useState(0); // Tổng số trang
   const [trangHienTai, setTrangHienTai] = useState(1);
-  const [tongSoTrang, setTongSoTrang] = useState(0);
-  const [danhSachTenLoai, setDanhSachTenLoai] = useState([]); // Changed state name
-  const [tenTimKiem, setTenTimKiem] = useState("");
+  const itemsPerPage = 5; // Đặt số mục trên mỗi trang là 5
+  const [loaiMoi, setloaiMoi] = useState({
+    ten: "",
+    trangThai: true,
+  });
   const [error, setError] = useState("");
-  const [isEditing, setIsEditing] = useState(false);
-  const [currentId, setCurrentId] = useState(null);
+  const [tenloai, setTenloai] = useState("");
+  const [tenTimKiem, setTenTimKiem] = useState("");
+  const [isEditing, setIsEditing] = useState(false); //CHe do them moi
+  const [currentId, setCurrentId] = useState(null); // State để lưu id của loại đang sửa
 
-  const itemsPerPage = 5;
-  const totalRows = itemsPerPage;
-  const emptyRows = totalRows - loai.length; // Updated variable name
+  // Tính toán số dòng cần hiển thị
+  const totalRows = itemsPerPage; // Số dòng cần hiển thị trên mỗi trang
 
-  const loadLoai = async (page) => {
-    // Updated function name
+  const emptyRows = totalRows - listloai.length; // Số dòng trống cần thêm
+
+  const loadloai = async (page) => {
     let url = `http://localhost:8080/api/loai/list?pageNumber=${page}`;
+    // Kiểm tra và thêm tham số có điều kiện
     if (tenTimKiem) {
-      url += `&keyword=${encodeURIComponent(tenTimKiem)}`;
+      url += `&keyword=${encodeURIComponent(tenTimKiem)}`; // Thêm từ khóa tìm kiếm nếu có sẵn
     }
-
+    // console.log(url);
     try {
       const response = await axios.get(url);
-      setLoai(response.data.result.result); // Updated variable name
 
-      setTongSoTrang(
-        response.data.result.totalPages === undefined
-          ? 0
-          : response.data.result.totalPages,
-      );
+      setListloai(response.data.result.result);
+      setTongSoTrang(response.data.result.totalPages); // Cập nhật tổng số trang
+      // console.log(response.data.result.result);
     } catch (error) {
-      console.error("Có lỗi xảy ra", error);
+      console.error("Failed to fetch mau sac data", error);
     }
   };
 
-  const layTenLoai = async () => {
-    // Updated function name
+  const layTenloai = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/api/loai/ten`);
-      setDanhSachTenLoai(response.data); // Updated variable name
+      let response = await axios.get(`http://localhost:8080/api/loai/ten`);
+      setTenloai(response.data);
     } catch (error) {
       console.log(error);
     }
   };
-
-  const themMoiLoai = async (e) => {
-    // Updated function name
-    e.preventDefault();
-    if (isEditing) {
-      await capNhatLoai();
-    } else {
-      await themLoai();
-    }
-  };
-
   const onInputChange = (e) => {
     const { name, value } = e.target;
-    setLoaiMoi({ ...loaiMoi, [name]: value }); // Updated variable name
+    setloaiMoi({ ...loaiMoi, [name]: value });
+
     if (name === "ten") {
-      if (value.trim() === "") {
-        setError("Tên loại không được để trống"); // Updated error message
-      } else {
-        const tenDaTonTai = danhSachTenLoai.includes(value); // Updated variable name
-        if (tenDaTonTai) {
-          setError("Tên loại đã tồn tại"); // Updated error message
-        } else {
-          setError("");
-        }
+      const input = value.trim();
+
+      // Check trong
+      if (input === "") {
+        setError("Tên loại không được để trống");
+        return;
       }
+
+      // Check ton tai
+      const tenDaTonTai = tenloai.includes(input);
+      if (tenDaTonTai) {
+        setError("Tên loại đã tồn tại");
+        return;
+      }
+
+      setError("");
     }
   };
 
-  const themLoai = async () => {
-    // Updated function name
-    if (loaiMoi.ten.trim() === "") {
-      // Updated variable name
-      setError("Tên loại không được để trống"); // Updated error message
-      return;
+  const themloai = async () => {
+    // Nếu không, gọi hàm thêm mới
+
+    // Xác nhận người dùng có muốn thêm loại mới hay không
+    if (!window.confirm("Bạn có chắc chắn muốn thêm sản phẩm này không?")) {
+      return; // Nếu người dùng chọn Cancel, dừng thao tác
     }
-    if (!window.confirm("Bạn có chắc chắn muốn thêm loại này không?")) {
-      return;
-    }
+
     try {
-      await axios.post(`http://localhost:8080/api/loai/add`, loaiMoi); // Updated endpoint
-      loadLoai(trangHienTai); // Updated function name
-      setLoaiMoi({ ten: "", trangThai: true }); // Updated variable name
+      // Gọi API để thêm loại mới
+      await axios.post(`http://localhost:8080/api/loai/add`, loaiMoi);
+
+      // Sau khi thêm thành công, gọi lại loadloai để cập nhật bảng
+      loadloai(trangHienTai);
+
+      // Hiển thị thông báo thành công
       toast.success("Thêm loại mới thành công", {
         position: "top-right",
         autoClose: 1000,
         hideProgressBar: false,
+        newestOnTop: false,
         closeOnClick: true,
+        rtl: false,
         pauseOnFocusLoss: true,
         draggable: true,
         pauseOnHover: true,
         theme: "light",
         transition: Bounce,
+        style: {
+          zIndex: 9999,
+          overflowY: "hidden",
+        },
       });
 
+      // Reset form sau khi thêm mới thành công
+      setloaiMoi({ ten: "", trangThai: true });
+
+      // Đặt lại giá trị ô tìm kiếm
       const addInput = document.querySelector('input[type="text"]');
       if (addInput) {
         addInput.value = "";
       }
     } catch (error) {
-      console.error("Thêm mới thất bại", error);
+      // Hiển thị thông báo lỗi nếu xảy ra lỗi trong quá trình thêm
       toast.error("Thêm mới thất bại", {
         position: "top-right",
         autoClose: 1000,
@@ -115,25 +125,31 @@ export default function Loai() {
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
+        progress: undefined,
         theme: "light",
         transition: Bounce,
       });
     }
   };
 
-  const capNhatLoai = async () => {
-    // Updated function name
+  const capNhatloai = async () => {
     if (loaiMoi.ten.trim() === "") {
       setError("Tên không được để trống");
+      return; // Ngăn không cho tiếp tục nếu tên trống
+    }
+
+    if (tenloai.includes(loaiMoi.ten)) {
+      setError("Ten da ton tai");
       return;
     }
+    // onInputChange();
     try {
       await axios.put(
         `http://localhost:8080/api/loai/update/${currentId}`,
         loaiMoi,
-      ); // Updated endpoint
-      if (!window.confirm("Bạn có chắc chắn muốn sửa loại này không?")) {
-        return;
+      );
+      if (!window.confirm("Bạn có chắc chắn muốn sửa sản phẩm này không?")) {
+        return; // Nếu người dùng chọn Cancel, dừng thao tác
       }
       toast.success("Cập nhật loại thành công", {
         position: "top-right",
@@ -144,10 +160,10 @@ export default function Loai() {
         draggable: true,
         theme: "light",
       });
-      loadLoai(trangHienTai);
-      setLoaiMoi({ ten: "", trangThai: true });
-      setIsEditing(false);
-      setCurrentId(null);
+      loadloai(trangHienTai); // Tải lại danh sách loại
+      setloaiMoi({ ten: "", trangThai: true }); // Đặt lại giá trị ô nhập liệu
+      setIsEditing(false); // Đặt lại chế độ về thêm mới
+      setCurrentId(null); // Đặt lại id
     } catch (error) {
       console.error("Cập nhật loại thất bại", error);
       toast.error("Cập nhật loại thất bại", {
@@ -162,15 +178,33 @@ export default function Loai() {
     }
   };
 
+  const themMoiloai = async (e) => {
+    e.preventDefault();
+    if (loaiMoi.ten.trim() === "") {
+      setError("Tên không được để trống");
+      return;
+    }
+    if (isEditing) {
+      // Nếu đang ở chế độ sửa, gọi hàm cập nhật
+      await capNhatloai(); // Gọi hàm cập nhật loại
+    } else {
+      await themloai();
+    }
+  };
+
   const capNhatTrangThai = async (id) => {
     try {
-      await axios.put(`http://localhost:8080/api/loai/updatetrangthai/${id}`); // Updated endpoint
-      if (
-        !window.confirm("Bạn có chắc chắn muốn cập nhật trạng thái này không?")
-      ) {
-        return;
+      if (!window.confirm("Bạn có chắc chắn không?")) {
+        return; // Nếu người dùng chọn Cancel, dừng thao tác
       }
-      loadLoai(trangHienTai);
+
+      // Gửi yêu cầu cập nhật trạng thái trên server
+      await axios.put(`http://localhost:8080/api/loai/updatetrangthai/${id}`);
+
+      loadloai(trangHienTai);
+      setloaiMoi({ ten: "", trangThai: true }); // Reset the form to initial state
+      setIsEditing(false); // Set editing mode to false
+      setCurrentId(null); // Clear the current ID
       toast.success("Cập nhật trạng thái thành công", {
         position: "top-right",
         autoClose: 1000,
@@ -182,6 +216,7 @@ export default function Loai() {
       });
     } catch (error) {
       console.log(error);
+
       toast.error("Cập nhật trạng thái thất bại", {
         position: "top-right",
         autoClose: 1000,
@@ -194,13 +229,8 @@ export default function Loai() {
     }
   };
 
-  useEffect(() => {
-    loadLoai(trangHienTai);
-    layTenLoai(); // Updated function name
-  }, [trangHienTai, tenTimKiem]);
-
-  const handlePageChange = (selectedPage) => {
-    setTrangHienTai(selectedPage.selected + 1);
+  const handlePageChange = (newPage) => {
+    setTrangHienTai(+newPage.selected + 1);
   };
 
   const handleSetTenTimKiem = () => {
@@ -209,82 +239,105 @@ export default function Loai() {
       'input[name="tenTimKiem"]',
     ).value; // Sử dụng name để lấy giá trị
     setTenTimKiem(tenTimKiemValue); // Lưu giá trị vào state tenTimKiem
-    loadLoai(trangHienTai); // Tải lại danh sách màu sắc với từ khóa tìm kiếm
-  };
-
-  const resetForm = (e) => {
-    e.preventDefault();
-    setLoaiMoi({ ten: "", trangThai: true });
-    setIsEditing(false);
-    setCurrentId(null);
-    setError("");
+    loadloai(trangHienTai); // Tải lại danh sách loại với từ khóa tìm kiếm
   };
 
   const handleRowClick = (item) => {
-    console.log("Dữ liệu dòng được chọn:", item);
-    setLoaiMoi({ ten: item.ten, trangThai: item.trangThai });
+    // console.log("Dữ liệu dòng được chọn:", item); // Log dữ liệu dòng được chọn
+    setloaiMoi({ ten: item.ten, trangThai: item.trangThai }); // Lưu dữ liệu vào state loaiMoi
     setIsEditing(true);
     setCurrentId(item.id);
     setError("");
   };
 
+  const resetForm = (e) => {
+    e.preventDefault();
+    setloaiMoi({ ten: "", trangThai: true }); // Reset the form to initial state
+    setIsEditing(false); // Set editing mode to false
+    setCurrentId(null); // Clear the current ID
+    setError("");
+  };
+  useEffect(() => {
+    layTenloai();
+    loadloai(trangHienTai, tenTimKiem);
+  }, [trangHienTai, tenTimKiem]);
   return (
     <>
-      <div className="h-screen min-w-full overflow-auto">
-        <div className="rounded bg-white p-4">
-          <div className="mb-[20px] flex h-auto justify-around gap-5 shadow drop-shadow-xl">
-            <div className="mb-7 w-[500px] rounded bg-white p-4 shadow drop-shadow-xl">
-              <h2 className="mb-2 text-xl font-bold">Thêm Loại Mới</h2>
-              <form onSubmit={themMoiLoai} className="-mx-2">
-                <div className="mb-4 h-[150px] w-1/2 px-2">
-                  <label htmlFor="tenLoai" className="mb-1 block">
-                    Tên Loại:
-                  </label>
-                  <input
-                    type="text"
-                    id="tenLoai"
-                    name="ten"
-                    onChange={onInputChange}
-                    value={loaiMoi.ten}
-                    className="w-[400px] rounded border p-2"
-                    placeholder="Nhập tên loại"
-                  />
-                  {error && <p className="text-red-500">{error}</p>}
-                </div>
-                <div className="ml-4 flex items-center justify-center gap-2">
-                  <button
-                    type="submit"
-                    className="mr-2 rounded bg-blue-500 p-2 text-white hover:bg-blue-600"
-                  >
-                    {isEditing ? "Cập Nhật" : "Thêm Mới"}
-                  </button>
-                  <button
-                    onClick={resetForm}
-                    className="rounded border bg-yellow-500 p-2 text-white hover:bg-yellow-600"
-                  >
-                    Nhập Lại
-                  </button>
-                </div>
-              </form>
-            </div>
+      <div>
+        <div className="overflow-none h-screen w-auto">
+          <div className="mb-5 shadow drop-shadow-xl">
+            <div className="flex justify-around gap-3 shadow drop-shadow-lg">
+              <div className="mb-8 mt-4 w-[500px] rounded bg-white p-4 shadow">
+                <h2 className="mb-2 text-xl font-bold">Thêm Loại Mới</h2>
+                <form onSubmit={themMoiloai} className="-mx-2 flex flex-wrap">
+                  <div className="mb-4 h-[150px] w-1/2 px-2">
+                    <label htmlFor="tenloai" className="mb-1 block">
+                      Tên Loại:
+                    </label>
+                    <input
+                      onChange={onInputChange}
+                      type="text"
+                      id="tenloaiMoi"
+                      name="ten"
+                      value={loaiMoi.ten} // Sử dụng giá trị từ state loaiMoi
+                      className="w-[450px] rounded border p-2 transition-colors duration-300 hover:border-blue-500 focus:border-blue-500"
+                      placeholder="Nhập tên loại"
+                    />
+                    {error && <p className="text-red-500">{error}</p>}
+                  </div>
+                  <div className="flex w-full justify-center px-2">
+                    <div className="w-[150px]">
+                      <button
+                        type="submit"
+                        className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+                        onClick={(e) => {
+                          if (error) {
+                            e.preventDefault(); // Ngăn chặn hành động nếu có lỗi
+                            toast.error("Vui lòng sửa lỗi trước khi thêm mới."); // Hiển thị thông báo lỗi
+                          }
+                        }}
+                      >
+                        {isEditing ? "Sửa" : "Thêm Mới"}
 
-            <div className="mb-4 w-[500px] rounded bg-white p-4 shadow">
-              <h2 className="mb-2 text-xl font-bold">Danh Sách Các Loại</h2>
-              <div className="h-[150px]">
-                <input
-                  type="text"
-                  name="tenTimKiem"
-                  // onChange={(e) => setTenTimKiem(e.target.value)}
-                  className="mb-4 w-full rounded border p-2"
-                  placeholder="Tìm kiếm theo tên loại"
-                />
+                        {/* Thay đổi nội dung nút */}
+                      </button>
+                    </div>
+                    <div>
+                      <button
+                        className="ml-7 rounded bg-yellow-400 px-4 py-2 text-white hover:bg-yellow-600"
+                        onClick={resetForm}
+                      >
+                        Làm Mới
+                      </button>
+                    </div>
+                  </div>
+                </form>
               </div>
-              <button
-                onClick={handleSetTenTimKiem}
-                className="ml-[190px] rounded border bg-blue-500 p-2 text-white hover:bg-blue-600"
-              >
-                Tìm Kiếm
-              </button>
+              <div className="mb-8 mt-4 w-[500px] rounded bg-white p-4 shadow">
+                <span className="mb-2 text-xl font-bold">Tìm kiếm</span>
+                <div className="flex">
+                  <div className="mb-4 h-[150px] px-2">
+                    <label htmlFor="tenloai" className="mb-1 block">
+                      Tên Loại:
+                    </label>
+                    <input
+                      type="text"
+                      id="tenloai"
+                      name="tenTimKiem"
+                      className="w-[450px] rounded border p-2 hover:border-blue-500"
+                      placeholder="Nhập tên loại"
+                    />
+                  </div>
+                </div>
+                <div className="flex justify-center">
+                  <button
+                    className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+                    onClick={handleSetTenTimKiem}
+                  >
+                    Tìm kiếm
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
           <div className="mx-3">
@@ -303,7 +356,7 @@ export default function Loai() {
                 </tr>
               </thead>
               <tbody>
-                {loai.map((item, index) => (
+                {listloai.map((item, index) => (
                   <tr
                     key={item.id}
                     onClick={() => handleRowClick(item)}

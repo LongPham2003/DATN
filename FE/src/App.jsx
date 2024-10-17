@@ -7,8 +7,10 @@ import KichThuoc from "./pages/admin/ThuocTinhSP/KichThuoc/KichThuoc";
 import LoaiGiay from "./pages/admin/ThuocTinhSP/LoaiGiay/LoaiGiay";
 import MauSac from "./pages/admin/ThuocTinhSP/MauSac/MauSac";
 import Voucher from "./pages/admin/Voucher/Voucher";
-import SanPham from "./pages/admin/SanPham/SanPham";
 import ThuongHieu from "./pages/admin/ThuocTinhSP/ThuongHieu/ThuongHieu";
+import ListProduct from "./pages/admin/SanPham/Product/ListProduct";
+
+import ListProductDetail from "./pages/admin/SanPham/ProductDetail/ListProductDetail";
 
 import { Helmet } from "react-helmet";
 import DanhSachNhanVien from "./pages/admin/NhanVien/DanhSachNhanVien";
@@ -19,7 +21,6 @@ import Login from "./pages/client/auth/Login";
 import SignUp from "./pages/client/auth/SignUp";
 import DoiMatKhau from "./pages/client/auth/DoiMatKhau";
 import ResetPass from "./pages/client/auth/QuenMatKhau";
-import PhanThan from "./pages/util/test";
 import DiaChi from "./pages/admin/KhachHang/DiaChi";
 import DetailProduct from "./pages/admin/SanPham/Product/DetailProduct";
 import AddProductDetail from "./pages/admin/SanPham/ProductDetail/AddProductDetail";
@@ -191,7 +192,7 @@ function App() {
                   <Helmet>
                     <title>Sản phẩm</title>
                   </Helmet>
-                  <SanPham />
+                  <ListProduct />
                 </>
               }
             />
@@ -203,6 +204,18 @@ function App() {
                     <title>Chi tiết sản phẩm</title>
                   </Helmet>
                   <DetailProduct />
+                </>
+              }
+            />
+            {/* roter san pham */}
+            <Route
+              path="sanphamchitiet"
+              element={
+                <>
+                  <Helmet>
+                    <title>Sản phẩm chi tiết</title>
+                  </Helmet>
+                  <ListProductDetail />
                 </>
               }
             />

@@ -144,7 +144,7 @@ export default function ListProduct() {
               selectedValue={
                 idLoai
                   ? loaiSelect.find((loai) => loai.id === idLoai)
-                  : { ten: "tất cả SP", id: "" }
+                  : { ten: "Select option", id: "" }
               }
               onSelect={(e) => setidLoai(e.id)}
             />
@@ -203,8 +203,8 @@ export default function ListProduct() {
                       <th className="w-14 px-6 py-4">Mã</th>
                       <th className="w-64 px-6 py-4">Ten</th>
                       <th className="w-52 px-6 py-4">Loai</th>
-                      <th className="w-72 px-6 py-4">Ngay Tao</th>
-                      <th className="w-72 px-6 py-4">SO luong ton</th>
+                      <th className="w-52 px-6 py-4">Ngay Tao</th>
+                      <th className="w-52 px-6 py-4">SO luong ton</th>
                       <th className="w-72 px-6 py-4">Trang Thai</th>
                       <th className="px-6 py-4">Hanh DOng</th>
                     </tr>

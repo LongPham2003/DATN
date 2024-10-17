@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 const CustomDropdown = ({ options, selectedValue, onSelect }) => {
   const [isOpen, setIsOpen] = useState(false); // đóng mở option
   const [selectedOption, setSelectedOption] = useState(
-    selectedValue?.ten || "tất cả SP",
+    selectedValue?.ten || "Select option",
   ); //set lable hiển thị
 
   const toggleDropdown = () => {
@@ -12,13 +12,13 @@ const CustomDropdown = ({ options, selectedValue, onSelect }) => {
   };
 
   const handleOptionClick = (option) => {
-    setSelectedOption(option.ten || "tất cả SP");
+    setSelectedOption(option.ten || "Select option");
     setIsOpen(false);
     onSelect(option);
   }; // thay đổi lable
 
   useEffect(() => {
-    setSelectedOption(selectedValue?.ten || "tất cả SP");
+    setSelectedOption(selectedValue?.ten || "Select option");
   }, [selectedValue]);
 
   return (
@@ -46,7 +46,9 @@ const CustomDropdown = ({ options, selectedValue, onSelect }) => {
         <div className="absolute z-10 mt-2 max-h-48 w-full overflow-auto rounded-md bg-white shadow-lg">
           <ul className="py-1 text-gray-700 hover:border-blue-400">
             <li
-              onClick={() => handleOptionClick({ ten: "tất cả SP", id: "" })}
+              onClick={() =>
+                handleOptionClick({ ten: "Select option", id: "" })
+              }
               className="block cursor-pointer px-4 py-2 hover:bg-blue-500 hover:text-white"
             >
               tất cả SP
