@@ -121,7 +121,6 @@ public class SanPhamServiceImpl implements SanPhamService {
                 .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
 
         sanPham.setLoai(loai); // Gán đối tượng Loai cho SanPham
-        sanPham.setMa(request.getMa());
         sanPham.setTenSanPham(request.getTenSanPham());
         sanPham.setNgayTao(LocalDate.now());
         sanPham.setMoTa(request.getMoTa());

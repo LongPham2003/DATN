@@ -14,27 +14,21 @@ import java.math.BigDecimal;
 public class HoaDonChiTiet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Integer id;
+
+    // Thiết lập quan hệ ManyToOne với HoaDon
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_hoa_don")
+    private HoaDon idHoaDon; // Đây là cột id_hoa_don liên kết với bảng HoaDon
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_spct")
-    private SanPhamChiTiet idSpct;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_hoa_don")
-    private HoaDon idHoaDon;
+    private SanPhamChiTiet idSpct; // Liên kết với bảng SanPhamChiTiet
 
     @NotNull
-    @Column(name = "so_luong")
-    private Integer soLuong;
+    private Integer soLuong; // Số lượng sản phẩm được mua
 
     @NotNull
-    @Column(name = "don_gia")
-    private BigDecimal donGia;
-
-    @NotNull
-    @Column(name = "trang_thai")
-    private Boolean trangThai ;
+    private BigDecimal donGia; // Đơn giá sản phẩm
 
 }

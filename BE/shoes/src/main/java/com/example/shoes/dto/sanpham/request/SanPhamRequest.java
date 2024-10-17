@@ -10,7 +10,6 @@ import java.time.LocalDate;
 @Getter
 public class SanPhamRequest {
     private Integer idLoai;
-    private String ma;
     private String tenSanPham;
     private LocalDate ngayTao;
     private String moTa;
