@@ -12,7 +12,6 @@ public class HinhAnhResponse {
     private Integer id;
     private String tenAnh;
     private String duLieuAnhBase64;
-    private String duLieuAnh;
     private Integer idSanPhamChiTiet;
     private Boolean trangThai;
 
