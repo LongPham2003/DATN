@@ -29,4 +29,6 @@ public class PhieuGiamGiaRequest {
 
     private Boolean trangThai;
 
+    private String hinhThucGiam;
+
 }

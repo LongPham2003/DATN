@@ -1,34 +1,26 @@
 package com.example.shoes.service.impl;
 
-
+import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.phieugiamgia.request.PhieuGiamGiaRequest;
 import com.example.shoes.dto.phieugiamgia.response.PhieuGiamGiaResponse;
-
-import com.example.shoes.repository.PhieuGiamGiaRepo;
-import com.example.shoes.service.PhieuGiamGiaService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import com.example.shoes.entity.PhieuGiamGia;
 import com.example.shoes.exception.AppException;
 import com.example.shoes.exception.ErrorCode;
-import org.springframework.data.domain.Sort;
+import com.example.shoes.repository.PhieuGiamGiaRepo;
+import com.example.shoes.service.PhieuGiamGiaService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 
-import java.util.List;
-import java.util.stream.Collectors;
 @Service
 public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
 
     @Autowired
     private PhieuGiamGiaRepo phieuGiamGiaRepo;
-
-    @Override
-    public List<PhieuGiamGiaResponse> findAll() {
-        List<PhieuGiamGia> list = phieuGiamGiaRepo.findAll(Sort.by(Sort.Direction.DESC, "id"));
-        return list.stream()
-                .map(this::convertToResponse)
-                .collect(Collectors.toList());
-    }
 
     @Override
     public PhieuGiamGiaResponse getById(Integer id) {
@@ -42,6 +34,7 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
         PhieuGiamGia phieuGiamGia = new PhieuGiamGia();
         phieuGiamGia.setTenVoucher(request.getTenVoucher());
         phieuGiamGia.setDieuKienGiamGia(request.getDieuKienGiamGia());
+        phieuGiamGia.setHinhThucGiam(request.getHinhThucGiam());
         phieuGiamGia.setMucGiam(request.getMucGiam());
         phieuGiamGia.setGiamToiDa(request.getGiamToiDa());
         phieuGiamGia.setSoLuong(request.getSoLuong());
@@ -58,6 +51,7 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
                 .orElseThrow(() -> new AppException(ErrorCode.VOUCHER_NOT_FOUND));
         phieuGiamGia.setTenVoucher(request.getTenVoucher());
         phieuGiamGia.setDieuKienGiamGia(request.getDieuKienGiamGia());
+        phieuGiamGia.setHinhThucGiam(request.getHinhThucGiam());
         phieuGiamGia.setMucGiam(request.getMucGiam());
         phieuGiamGia.setGiamToiDa(request.getGiamToiDa());
         phieuGiamGia.setSoLuong(request.getSoLuong());
@@ -77,13 +71,21 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
         return convertToResponse(updated);
     }
 
-//    @Override
-//    public void delete(Integer id) {
-//        if (!phieuGiamGiaRepo.existsById(id)) {
-//            throw new AppException(ErrorCode.VOUCHER_NOT_FOUND);
-//        }
-//        phieuGiamGiaRepo.deleteById(id);
-//    }
+    @Override
+    public PhanTrangResponse<PhieuGiamGia> getPhieuGiamGia(int pageNumber, int pageSize, String keyword,String tenVoucher, String dieuKienGiamGia, Boolean trangThai, LocalDate ngayBatDau, LocalDate ngayKetThuc) {
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+        Page<PhieuGiamGia> page = phieuGiamGiaRepo.searchPhieuGiamGia(pageable, tenVoucher, dieuKienGiamGia, trangThai, ngayBatDau, ngayKetThuc);
+
+        PhanTrangResponse<PhieuGiamGia> phanTrangResponse = new PhanTrangResponse<>();
+        phanTrangResponse.setPageNumber(page.getNumber());
+        phanTrangResponse.setPageSize(page.getSize());
+        phanTrangResponse.setTotalElements(page.getTotalElements());
+        phanTrangResponse.setTotalPages(page.getTotalPages());
+        phanTrangResponse.setResult(page.getContent());
+
+        return phanTrangResponse;
+    }
+
 
     private PhieuGiamGiaResponse convertToResponse(PhieuGiamGia phieuGiamGia) {
         PhieuGiamGiaResponse phieuGiamGiaResponse = new PhieuGiamGiaResponse();
@@ -98,5 +100,4 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
         phieuGiamGiaResponse.setTrangThai(phieuGiamGia.getTrangThai());
         return phieuGiamGiaResponse;
     }
-
 }

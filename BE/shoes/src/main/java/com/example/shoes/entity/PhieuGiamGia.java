@@ -22,9 +22,11 @@ public class PhieuGiamGia {
     @Column(name = "ten_voucher")
     private String tenVoucher;
 
-    @Lob
     @Column(name = "dieu_kien_giam_gia")
     private String dieuKienGiamGia;
+
+    @Column(name = "hinh_thuc_giam")
+    private String hinhThucGiam;
 
     @Column(name = "muc_giam")
     private BigDecimal mucGiam;
