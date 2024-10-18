@@ -8,12 +8,14 @@ import com.example.shoes.exception.ErrorCode;
 import com.example.shoes.repository.HinhAnhRepo;
 import com.example.shoes.service.HinhAnhService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -74,6 +76,19 @@ public class HinhAnhServiceImpl implements HinhAnhService {
             throw new AppException(ErrorCode.IMAGE_NOT_FOUND);
         }
         hinhAnhRepo.deleteById(id);
+    }
+
+    @Override
+    public HinhAnhResponse getFirstBySanPhamChiTietId(Integer idSanPhamChiTiet) {
+        // Sử dụng PageRequest để lấy 1 ảnh đầu tiên
+        List<HinhAnh> hinhAnhList = hinhAnhRepo.findTopByIdSanPhamChiTiet_IdOrderByIdAsc(idSanPhamChiTiet, PageRequest.of(0, 1));
+
+        if (hinhAnhList.isEmpty()) {
+            throw new AppException(ErrorCode.IMAGE_NOT_FOUND);
+        }
+
+        HinhAnh hinhAnh = hinhAnhList.get(0); // Lấy ảnh đầu tiên trong danh sách
+        return convert(hinhAnh); // Chuyển đổi sang HinhAnhResponse
     }
 
     private HinhAnhResponse convert(HinhAnh hinhAnh) {

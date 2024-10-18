@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface NhanVienRepo extends JpaRepository<NhanVien, Integer> {
@@ -20,8 +21,8 @@ public interface NhanVienRepo extends JpaRepository<NhanVien, Integer> {
 
     boolean existsBySdt(String sdt);
 
-    NhanVien findByEmail(String email);
-
+//    NhanVien findByEmail(String email);
+    Optional<NhanVien> findByEmail(String email); // Tìm nhân viên theo email
     NhanVien findById(int id);
 
 
