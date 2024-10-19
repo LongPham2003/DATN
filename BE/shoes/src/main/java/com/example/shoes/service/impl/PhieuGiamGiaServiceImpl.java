@@ -72,9 +72,9 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
     }
 
     @Override
-    public PhanTrangResponse<PhieuGiamGia> getPhieuGiamGia(int pageNumber, int pageSize, String keyword,String tenVoucher, String dieuKienGiamGia, Boolean trangThai, LocalDate ngayBatDau, LocalDate ngayKetThuc) {
+    public PhanTrangResponse<PhieuGiamGia> getPhieuGiamGia(int pageNumber, int pageSize, String keyword,String tenVoucher, Boolean trangThai, LocalDate ngayBatDau, LocalDate ngayKetThuc) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-        Page<PhieuGiamGia> page = phieuGiamGiaRepo.searchPhieuGiamGia(pageable, tenVoucher, dieuKienGiamGia, trangThai, ngayBatDau, ngayKetThuc);
+        Page<PhieuGiamGia> page = phieuGiamGiaRepo.searchPhieuGiamGia(pageable, tenVoucher, trangThai, ngayBatDau, ngayKetThuc);
 
         // Kiểm tra nếu phiếu đã hết hạn và cập nhật trạng thái nếu cần
         page.getContent().forEach(phieuGiamGia -> {
@@ -106,6 +106,11 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
         phieuGiamGiaResponse.setNgayBatDau(phieuGiamGia.getNgayBatDau());
         phieuGiamGiaResponse.setNgayKetThuc(phieuGiamGia.getNgayKetThuc());
         phieuGiamGiaResponse.setTrangThai(phieuGiamGia.getTrangThai());
+        phieuGiamGiaResponse.setHinhThucGiam(phieuGiamGia.getHinhThucGiam());
+        phieuGiamGiaResponse.setNgayTao(phieuGiamGia.getCreatedAt());
+        phieuGiamGiaResponse.setNgayCapNhat(phieuGiamGia.getUpdatedAt());
+        phieuGiamGiaResponse.setNguoiTao(phieuGiamGia.getCreatedBy());
+        phieuGiamGiaResponse.setNguoiCapNhat(phieuGiamGia.getUpdatedBy());
         return phieuGiamGiaResponse;
     }
 }

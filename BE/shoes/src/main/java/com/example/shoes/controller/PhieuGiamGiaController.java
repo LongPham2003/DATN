@@ -6,12 +6,16 @@ import com.example.shoes.dto.phieugiamgia.response.PhieuGiamGiaResponse;
 import com.example.shoes.entity.PhieuGiamGia;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.service.PhieuGiamGiaService;
+import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/phieugiamgia")
@@ -22,7 +26,6 @@ public class PhieuGiamGiaController {
     @GetMapping("/list")
     public ApiResponse<PhanTrangResponse<PhieuGiamGia>> getAllPhieuGiamGia(
             @RequestParam(value = "tenVoucher", defaultValue = "") String tenVoucher,
-            @RequestParam(value = "dieuKienGiamGia", defaultValue = "") String dieuKienGiamGia,
             @RequestParam(value = "keyword", defaultValue = "") String keyword,
             @RequestParam(value = "trangThai", required = false) Boolean trangThai,
             @RequestParam(value = "ngayBatDau", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate ngayBatDau,
@@ -30,7 +33,7 @@ public class PhieuGiamGiaController {
             @RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber,
             @RequestParam(value = "pageSize", defaultValue = "5") int pageSize
     ) {
-        PhanTrangResponse<PhieuGiamGia> phieuGiamGia = phieuGiamGiaService.getPhieuGiamGia(pageNumber, pageSize, keyword,tenVoucher, dieuKienGiamGia, trangThai, ngayBatDau, ngayKetThuc);
+        PhanTrangResponse<PhieuGiamGia> phieuGiamGia = phieuGiamGiaService.getPhieuGiamGia(pageNumber, pageSize, keyword,tenVoucher, trangThai, ngayBatDau, ngayKetThuc);
         return ApiResponse.<PhanTrangResponse<PhieuGiamGia>>builder()
                 .result(phieuGiamGia)
                 .build();
@@ -45,15 +48,21 @@ public class PhieuGiamGiaController {
     }
 
     @PostMapping("/add")
-    public ApiResponse<PhieuGiamGiaResponse> create(@RequestBody PhieuGiamGiaRequest request) {
+    public ApiResponse<PhieuGiamGiaResponse> create(@Valid  @RequestBody PhieuGiamGiaRequest request, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            throw new ValidationException(bindingResult.getFieldError().getDefaultMessage());
+        }
         PhieuGiamGiaResponse phieuGiamGiaResponse = phieuGiamGiaService.create(request);
         return ApiResponse.<PhieuGiamGiaResponse>builder()
                 .result(phieuGiamGiaResponse)
                 .build();
     }
 
-    @PutMapping("/update/{id}")
-    public ApiResponse<PhieuGiamGiaResponse> update(@PathVariable Integer id, @RequestBody PhieuGiamGiaRequest request) {
+    @PostMapping("/update/{id}")
+    public ApiResponse<PhieuGiamGiaResponse> update( @Valid @PathVariable Integer id, @RequestBody PhieuGiamGiaRequest request,BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            throw new ValidationException(bindingResult.getFieldError().getDefaultMessage());
+        }
         PhieuGiamGiaResponse updated = phieuGiamGiaService.update(id, request);
         return ApiResponse.<PhieuGiamGiaResponse>builder()
                 .result(updated)

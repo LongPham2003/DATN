@@ -23,7 +23,6 @@ public interface PhieuGiamGiaRepo extends JpaRepository<PhieuGiamGia, Integer> {
 
     @Query("SELECT p FROM PhieuGiamGia p WHERE "
             + "(:tenVoucher IS NULL OR LOWER(p.tenVoucher) LIKE LOWER(CONCAT('%', :tenVoucher, '%'))) "
-            + "AND (:dieuKienGiam IS NULL OR LOWER(p.dieuKienGiamGia) LIKE LOWER(CONCAT('%', :dieuKienGiam, '%'))) "
             + "AND (:trangThai IS NULL OR p.trangThai = :trangThai) "
             + "AND (:ngayBatDau IS NULL OR p.ngayBatDau >= :ngayBatDau) "
             + "AND (:ngayKetThuc IS NULL OR p.ngayKetThuc <= :ngayKetThuc) "
@@ -31,7 +30,6 @@ public interface PhieuGiamGiaRepo extends JpaRepository<PhieuGiamGia, Integer> {
     Page<PhieuGiamGia> searchPhieuGiamGia(
             Pageable pageable,
             @Param("tenVoucher") String tenVoucher,
-            @Param("dieuKienGiam") String dieuKienGiamGiaGia,
             @Param("trangThai") Boolean trangThai,
             @Param("ngayBatDau") LocalDate ngayBatDau,
             @Param("ngayKetThuc") LocalDate ngayKetThuc);

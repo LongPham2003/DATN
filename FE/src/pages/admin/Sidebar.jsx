@@ -196,7 +196,7 @@ export function Sidebar() {
 
         {/* Phần Voucher */}
         <hr className="border-blue-gray-50 my-2" />
-        <Link to="/admin/voucher">
+        <Link to="/admin/phieugiamgia">
           <ListItem>
             <ListItemPrefix>
               <PercentBadgeIcon className="h-5 w-5" />
