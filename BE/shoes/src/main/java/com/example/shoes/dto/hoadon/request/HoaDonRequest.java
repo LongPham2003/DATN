@@ -1,23 +1,22 @@
 package com.example.shoes.dto.hoadon.request;
 
+import com.example.shoes.dto.hoadonchitiet.request.HoaDonChiTietRequest;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Setter
 @Getter
 
 public class HoaDonRequest {
-    private Integer idKhachHang;
     private Integer idNhanVien;
+    private Integer idKhachHang;
     private Integer idPhieuGiamGia;
     private String soDienThoai;
     private String diaChiGiaoHang;
-    private BigDecimal tongTien;
-    private BigDecimal tienDuocGiam;
-    private BigDecimal tienPhaiThanhToan;
     private String phuongThucThanhToan;
     private String phuongThucGiaoHang;
-    private Boolean trangThai;
+
 }

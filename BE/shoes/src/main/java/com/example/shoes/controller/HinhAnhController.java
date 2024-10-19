@@ -64,4 +64,12 @@ public class HinhAnhController {
                 .message("Xóa thành công")
                 .build();
     }
+    // API lấy ảnh đại diện cho SanPhamChiTiet
+    @GetMapping("/dai-dien/{idSanPhamChiTiet}")
+    public ApiResponse<HinhAnhResponse> getHinhAnhDaiDien(@PathVariable Integer idSanPhamChiTiet) {
+        HinhAnhResponse hinhAnhResponse = hinhAnhService.getFirstBySanPhamChiTietId(idSanPhamChiTiet);
+        return ApiResponse.<HinhAnhResponse>builder()
+                .result(hinhAnhResponse)
+                .build();
+    }
 }

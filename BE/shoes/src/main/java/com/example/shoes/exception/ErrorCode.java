@@ -29,9 +29,12 @@ public enum ErrorCode {
     ATTRIBUTE_EXISTED(1005, "Đã Tồn Tại ", HttpStatus.BAD_REQUEST),
     PRODUCT_DETAIL_NOT_FOUND(1005, "khong tim thay san pham chi tiet ", HttpStatus.NOT_FOUND),
     STAFF(1005, "khong tim thay nhan vien ", HttpStatus.NOT_FOUND),
-    CUSTOMER(1005, "khong tim thay khach hang ", HttpStatus.NOT_FOUND)
+    CUSTOMER(1005, "khong tim thay khach hang ", HttpStatus.NOT_FOUND),
+    BILL_NOT_FOUND(1005,"khong tim thay hoa don",HttpStatus.NOT_FOUND),
+    BILL_DETAIL_NOT_FOUND(1005,"khong tim thay hoa don chi tiet",HttpStatus.NOT_FOUND),
+    INVALID_QUANTITY(1002,"Số lượng yêu cầu không hợp lệ.",HttpStatus.BAD_REQUEST),
+    INVALID_QUANTITY_LONHONO(1002,"Số lượng sản phẩm phải lớn hơn 0.",HttpStatus.BAD_REQUEST),
     ;
-
     private int code;
     private String message;
     private HttpStatusCode statusCode;
