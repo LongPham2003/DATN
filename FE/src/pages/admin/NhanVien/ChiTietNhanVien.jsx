@@ -17,11 +17,7 @@ const ChiTietNhanVien = () => {
     gioiTinh: "",
     diaChi: "",
     trangThai: null,
-    ngayTao: null,
-    ngayCapNhat: null,
-    nguoiTao: null,
-    nguoiCapNhat: null,
-    chucVu: "ROLE_NHANVIEN",
+    chucVu: "",
     ma: "",
   });
 
@@ -38,7 +34,17 @@ const ChiTietNhanVien = () => {
     e.preventDefault(); // Ngăn chặn hành động mặc định của form
 
     axios
-      .post(`http://localhost:8080/nhanvien/update/${id}`, formData)
+      .post(`http://localhost:8080/nhanvien/update/${id}`, {
+        hoTen: formData.hoTen,
+        ma: formData.ma,
+        email: formData.email,
+        sdt: formData.sdt,
+        ngaySinh: formData.ngaySinh,
+        gioiTinh: formData.gioiTinh,
+        diaChi: formData.diaChi,
+        trangThai: formData.trangThai,
+        chucVu: formData.roles,
+      })
       .then((response) => {
         console.log("Cập nhật thành công:", response.data);
         setError("");
@@ -91,13 +97,13 @@ const ChiTietNhanVien = () => {
         <form onSubmit={handleSubmit} className="mt-5 space-y-4">
           <div className="flex flex-wrap">
             <div className="w-full p-2 sm:w-1/2">
-              <label htmlFor="hoTen" className="mb-1 block">
+              <label htmlFor="ma" className="mb-1 block">
                 Họ Tên:
               </label>
               <input
                 type="text"
-                id="hoTen"
-                name="hoTen"
+                id="ma"
+                name="ma"
                 value={formData.ma}
                 onChange={handleChange}
                 className="w-full rounded border p-2"
@@ -213,12 +219,13 @@ const ChiTietNhanVien = () => {
               <label className="mb-1 block">Chức Vụ:</label>
               <select
                 id="chucVu"
-                name="trangThai"
-                value={formData.trangThai}
+                name="chucVu"
+                value={formData.chucVu}
                 className="w-full rounded border p-2"
                 required
               >
                 <option value="ROLE_NHANVIEN">Nhân Viên</option>
+                <option value="ROLE_ADMIN">ADMIN</option>
               </select>
             </div>
 
