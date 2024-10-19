@@ -1,151 +1,96 @@
+import { Radio } from "@material-tailwind/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 
-export default function LoaiGiay() {
-  const [listLoaiGiay, setListLoaiGiay] = useState([]);
+export default function Loai() {
+  const [listloai, setListloai] = useState([]);
   const [tongSoTrang, setTongSoTrang] = useState(0); // Tổng số trang
   const [trangHienTai, setTrangHienTai] = useState(1);
   const itemsPerPage = 5; // Đặt số mục trên mỗi trang là 5
-  const [loaiGiayMoi, setLoaiGiayMoi] = useState({
+  const [loaiMoi, setloaiMoi] = useState({
     ten: "",
     trangThai: true,
   });
   const [error, setError] = useState("");
-  const [tenLoaiGiay, setTenLoaiGiay] = useState("");
+  const [tenloai, setTenloai] = useState("");
+  const [tenTimKiem, setTenTimKiem] = useState("");
+  const [isEditing, setIsEditing] = useState(false); //CHe do them moi
+  const [currentId, setCurrentId] = useState(null); // State để lưu id của loại đang sửa
+
   // Tính toán số dòng cần hiển thị
   const totalRows = itemsPerPage; // Số dòng cần hiển thị trên mỗi trang
-  const emptyRows = totalRows - listLoaiGiay.length; // Số dòng trống cần thêm
 
-  const loadLoaiGiay = async (page) => {
+  const emptyRows = totalRows - listloai.length; // Số dòng trống cần thêm
+
+  const loadloai = async (page) => {
+    let url = `http://localhost:8080/api/loai/list?pageNumber=${page}`;
+    // Kiểm tra và thêm tham số có điều kiện
+    if (tenTimKiem) {
+      url += `&keyword=${encodeURIComponent(tenTimKiem)}`; // Thêm từ khóa tìm kiếm nếu có sẵn
+    }
+    // console.log(url);
     try {
-      const response = await axios.get(
-        `http://localhost:8080/api/loai/list?pageNumber=${page}`,
-      );
-      setListLoaiGiay(response.data.result.result);
+      const response = await axios.get(url);
+
+      setListloai(response.data.result.result);
       setTongSoTrang(response.data.result.totalPages); // Cập nhật tổng số trang
+      // console.log(response.data.result.result);
     } catch (error) {
-      console.error("Failed to fetch loai giay data", error);
+      console.error("Failed to fetch mau sac data", error);
     }
   };
 
-  const layTenLoaiGiay = async () => {
+  const layTenloai = async () => {
     try {
       let response = await axios.get(`http://localhost:8080/api/loai/ten`);
-      setTenLoaiGiay(response.data);
+      setTenloai(response.data);
     } catch (error) {
       console.log(error);
     }
   };
-
-  useEffect(() => {
-    layTenLoaiGiay();
-    loadLoaiGiay(trangHienTai);
-  }, [trangHienTai]);
-
-  // const onInputChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setLoaiGiayMoi({ ...loaiGiayMoi, [e.target.name]: e.target.value }); // go den dau luu den day
-  //   if (name === "ten") {
-  //     if (value.trim() === "") {
-  //       setError("Tên loại giày không được để trống");
-  //     } else {
-  //       const tenDaTonTai = tenLoaiGiay.includes(value);
-  //       if (tenDaTonTai) {
-  //         setError("Tên loại giày đã tồn tại");
-  //       } else {
-  //         setError("");
-  //       }
-  //     }
-  //   }
-  // };
-
   const onInputChange = (e) => {
     const { name, value } = e.target;
-    setLoaiGiayMoi({ ...loaiGiayMoi, [name]: value });
+    setloaiMoi({ ...loaiMoi, [name]: value });
 
     if (name === "ten") {
-      const trimmedValue = value.trim().toLowerCase(); // Loại bỏ khoảng trắng và chuyển thành chữ thường
-      if (trimmedValue === "") {
-        setError("Tên loại giày không được để trống");
-      } else {
-        const tenDaTonTai = tenLoaiGiay.some((ten) => ten.toLowerCase().trim() === trimmedValue);
-        if (tenDaTonTai) {
-          setError("Tên loại giày đã tồn tại");
-        } else {
-          setError("");
-        }
+      const input = value.trim();
+
+      // Check trong
+      if (input === "") {
+        setError("Tên loại không được để trống");
+        return;
       }
+
+      // Check ton tai
+      const tenDaTonTai = tenloai.includes(input);
+      if (tenDaTonTai) {
+        setError("Tên loại đã tồn tại");
+        return;
+      }
+
+      setError("");
     }
   };
 
-  // const themMoiLoaiGiay = async (e) => {
-  //   e.preventDefault();
-  //   if (loaiGiayMoi.ten.trim() === "") {
-  //     setError("Tên không được để trống");
-  //     return;
-  //   }
-  //   try {
-  //     await axios.post(`http://localhost:8080/api/loaiGiay/add`, loaiGiayMoi);
-  //     loadLoaiGiay(trangHienTai);
-  //     toast.success("Thêm loại giày mới thành công", {
-  //       position: "top-right",
-  //       autoClose: 1000,
-  //       hideProgressBar: false,
-  //       newestOnTop: false,
-  //       closeOnClick: true,
-  //       rtl: false,
-  //       pauseOnFocusLoss: true,
-  //       draggable: true,
-  //       pauseOnHover: true,
-  //       theme: "light",
-  //       transition: Bounce,
-  //       style: {
-  //         zIndex: 9999,
-  //         overflowY: "hidden",
-  //       },
-  //     });
+  const themloai = async () => {
+    // Nếu không, gọi hàm thêm mới
 
-  //     setLoaiGiayMoi({ ten: "", trangThai: true });
-  //   } catch (error) {
-  //     toast.error("Thêm mới thất bại", {
-  //       position: "top-right",
-  //       autoClose: 1000,
-  //       hideProgressBar: false,
-  //       closeOnClick: true,
-  //       pauseOnHover: true,
-  //       draggable: true,
-  //       progress: undefined,
-  //       theme: "light",
-  //       transition: Bounce,
-  //     });
-  //   }
-  // };
-
-  const themMoiLoaiGiay = async (e) => {
-    e.preventDefault();
-
-    // Kiểm tra nếu tên loại giày bị trùng
-    const trimmedTen = loaiGiayMoi.ten.trim().toLowerCase();
-    const tenDaTonTai = tenLoaiGiay.some((ten) => ten.toLowerCase().trim() === trimmedTen);
-
-    if (trimmedTen === "") {
-      setError("Tên không được để trống");
-      return;
+    // Xác nhận người dùng có muốn thêm loại mới hay không
+    if (!window.confirm("Bạn có chắc chắn muốn thêm sản phẩm này không?")) {
+      return; // Nếu người dùng chọn Cancel, dừng thao tác
     }
-
-    if (tenDaTonTai) {
-      setError("Tên loại giày đã tồn tại");
-      return; // Nếu tên đã tồn tại, không thêm mới
-    }
-
-    await loadLoaiGiay(trangHienTai);
 
     try {
-      await axios.post(`http://localhost:8080/api/loai/add`, loaiGiayMoi);
-      loadLoaiGiay(trangHienTai);
-      toast.success("Thêm loại giày mới thành công", {
+      // Gọi API để thêm loại mới
+      await axios.post(`http://localhost:8080/api/loai/add`, loaiMoi);
+
+      // Sau khi thêm thành công, gọi lại loadloai để cập nhật bảng
+      loadloai(trangHienTai);
+
+      // Hiển thị thông báo thành công
+      toast.success("Thêm loại mới thành công", {
         position: "top-right",
         autoClose: 1000,
         hideProgressBar: false,
@@ -163,16 +108,16 @@ export default function LoaiGiay() {
         },
       });
 
-      // Sau khi hiển thị thông báo, đợi 1 giây rồi tải lại trang
-      setTimeout(() => {
-        window.location.reload();
-      }, 1500); // Thời gian delay 1 giây (1000ms)
+      // Reset form sau khi thêm mới thành công
+      setloaiMoi({ ten: "", trangThai: true });
 
-      setLoaiGiayMoi({ ten: "", trangThai: true });
-
-
+      // Đặt lại giá trị ô tìm kiếm
+      const addInput = document.querySelector('input[type="text"]');
+      if (addInput) {
+        addInput.value = "";
+      }
     } catch (error) {
-      console.log("Lỗi:", error); // Thêm log lỗi để kiểm tra nếu gặp sự cố
+      // Hiển thị thông báo lỗi nếu xảy ra lỗi trong quá trình thêm
       toast.error("Thêm mới thất bại", {
         position: "top-right",
         autoClose: 1000,
@@ -187,85 +132,268 @@ export default function LoaiGiay() {
     }
   };
 
+  const capNhatloai = async () => {
+    if (loaiMoi.ten.trim() === "") {
+      setError("Tên không được để trống");
+      return; // Ngăn không cho tiếp tục nếu tên trống
+    }
+
+    if (tenloai.includes(loaiMoi.ten)) {
+      setError("Ten da ton tai");
+      return;
+    }
+    // onInputChange();
+    try {
+      await axios.put(
+        `http://localhost:8080/api/loai/update/${currentId}`,
+        loaiMoi,
+      );
+      if (!window.confirm("Bạn có chắc chắn muốn sửa sản phẩm này không?")) {
+        return; // Nếu người dùng chọn Cancel, dừng thao tác
+      }
+      toast.success("Cập nhật loại thành công", {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+      });
+      loadloai(trangHienTai); // Tải lại danh sách loại
+      setloaiMoi({ ten: "", trangThai: true }); // Đặt lại giá trị ô nhập liệu
+      setIsEditing(false); // Đặt lại chế độ về thêm mới
+      setCurrentId(null); // Đặt lại id
+    } catch (error) {
+      console.error("Cập nhật loại thất bại", error);
+      toast.error("Cập nhật loại thất bại", {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+      });
+    }
+  };
+
+  const themMoiloai = async (e) => {
+    e.preventDefault();
+    if (loaiMoi.ten.trim() === "") {
+      setError("Tên không được để trống");
+      return;
+    }
+    if (isEditing) {
+      // Nếu đang ở chế độ sửa, gọi hàm cập nhật
+      await capNhatloai(); // Gọi hàm cập nhật loại
+    } else {
+      await themloai();
+    }
+  };
+
+  const capNhatTrangThai = async (id) => {
+    try {
+      if (!window.confirm("Bạn có chắc chắn không?")) {
+        return; // Nếu người dùng chọn Cancel, dừng thao tác
+      }
+
+      // Gửi yêu cầu cập nhật trạng thái trên server
+      await axios.put(`http://localhost:8080/api/loai/updatetrangthai/${id}`);
+
+      loadloai(trangHienTai);
+      setloaiMoi({ ten: "", trangThai: true }); // Reset the form to initial state
+      setIsEditing(false); // Set editing mode to false
+      setCurrentId(null); // Clear the current ID
+      toast.success("Cập nhật trạng thái thành công", {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+      });
+    } catch (error) {
+      console.log(error);
+
+      toast.error("Cập nhật trạng thái thất bại", {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+      });
+    }
+  };
 
   const handlePageChange = (newPage) => {
     setTrangHienTai(+newPage.selected + 1);
   };
 
+  const handleSetTenTimKiem = () => {
+    // Lấy giá trị từ ô tìm kiếm
+    const tenTimKiemValue = document.querySelector(
+      'input[name="tenTimKiem"]',
+    ).value; // Sử dụng name để lấy giá trị
+    setTenTimKiem(tenTimKiemValue); // Lưu giá trị vào state tenTimKiem
+    loadloai(trangHienTai); // Tải lại danh sách loại với từ khóa tìm kiếm
+  };
+
+  const handleRowClick = (item) => {
+    // console.log("Dữ liệu dòng được chọn:", item); // Log dữ liệu dòng được chọn
+    setloaiMoi({ ten: item.ten, trangThai: item.trangThai }); // Lưu dữ liệu vào state loaiMoi
+    setIsEditing(true);
+    setCurrentId(item.id);
+    setError("");
+  };
+
+  const resetForm = (e) => {
+    e.preventDefault();
+    setloaiMoi({ ten: "", trangThai: true }); // Reset the form to initial state
+    setIsEditing(false); // Set editing mode to false
+    setCurrentId(null); // Clear the current ID
+    setError("");
+  };
+  useEffect(() => {
+    layTenloai();
+    loadloai(trangHienTai, tenTimKiem);
+  }, [trangHienTai, tenTimKiem]);
   return (
     <>
       <div>
-        <div className="h-screen w-full overflow-auto">
-          <div className="mb-4 rounded bg-white p-4 shadow">
-            <h2 className="mb-2 text-xl font-bold">Thêm Loại Giày Mới</h2>
-            <form onSubmit={themMoiLoaiGiay} className="-mx-2 flex flex-wrap">
-              <div className="mb-4 w-1/2 px-2">
-                <label htmlFor="tenLoaiGiay" className="mb-1 block">
-                  Tên Loại Giày:
-                </label>
-                <input
-                  onChange={onInputChange}
-                  type="text"
-                  id="tenLoaiGiay"
-                  name="ten"
-                  className="w-full rounded border p-2"
-                  placeholder="Nhập tên loại giày"
-                />
-                {error && <p className="text-red-500">{error}</p>}
+        <div className="overflow-none h-screen w-auto">
+          <div className="mb-5 shadow drop-shadow-xl">
+            <div className="flex justify-around gap-3 shadow drop-shadow-lg">
+              <div className="mb-8 mt-4 w-[500px] rounded bg-white p-4 shadow">
+                <h2 className="mb-2 text-xl font-bold">Thêm Loại Mới</h2>
+                <form onSubmit={themMoiloai} className="-mx-2 flex flex-wrap">
+                  <div className="mb-4 h-[150px] w-1/2 px-2">
+                    <label htmlFor="tenloai" className="mb-1 block">
+                      Tên Loại:
+                    </label>
+                    <input
+                      onChange={onInputChange}
+                      type="text"
+                      id="tenloaiMoi"
+                      name="ten"
+                      value={loaiMoi.ten} // Sử dụng giá trị từ state loaiMoi
+                      className="w-[450px] rounded border p-2 transition-colors duration-300 hover:border-blue-500 focus:border-blue-500"
+                      placeholder="Nhập tên loại"
+                    />
+                    {error && <p className="text-red-500">{error}</p>}
+                  </div>
+                  <div className="flex w-full justify-center px-2">
+                    <div className="w-[150px]">
+                      <button
+                        type="submit"
+                        className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+                        onClick={(e) => {
+                          if (error) {
+                            e.preventDefault(); // Ngăn chặn hành động nếu có lỗi
+                            toast.error("Vui lòng sửa lỗi trước khi thêm mới."); // Hiển thị thông báo lỗi
+                          }
+                        }}
+                      >
+                        {isEditing ? "Sửa" : "Thêm Mới"}
+
+                        {/* Thay đổi nội dung nút */}
+                      </button>
+                    </div>
+                    <div>
+                      <button
+                        className="ml-7 rounded bg-yellow-400 px-4 py-2 text-white hover:bg-yellow-600"
+                        onClick={resetForm}
+                      >
+                        Làm Mới
+                      </button>
+                    </div>
+                  </div>
+                </form>
               </div>
-              <div className="w-full px-2">
-                <button
-                  type="submit"
-                  className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
-                >
-                  Thêm Mới
-                </button>
+              <div className="mb-8 mt-4 w-[500px] rounded bg-white p-4 shadow">
+                <span className="mb-2 text-xl font-bold">Tìm kiếm</span>
+                <div className="flex">
+                  <div className="mb-4 h-[150px] px-2">
+                    <label htmlFor="tenloai" className="mb-1 block">
+                      Tên Loại:
+                    </label>
+                    <input
+                      type="text"
+                      id="tenloai"
+                      name="tenTimKiem"
+                      className="w-[450px] rounded border p-2 hover:border-blue-500"
+                      placeholder="Nhập tên loại"
+                    />
+                  </div>
+                </div>
+                <div className="flex justify-center">
+                  <button
+                    className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+                    onClick={handleSetTenTimKiem}
+                  >
+                    Tìm kiếm
+                  </button>
+                </div>
               </div>
-            </form>
-            <ToastContainer />
+            </div>
           </div>
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="bg-gray-200">
-                <th className="w-10 border border-gray-300 p-2">STT</th>
-                <th className="w-1/3 border border-gray-300 p-2">Tên</th>
-                <th className="w-1/3 border border-gray-300 p-2">Trạng thái</th>
-                <th className="w-1/3 border border-gray-300 p-2">Hành động</th>
-                {/* Add more headers as needed */}
-              </tr>
-            </thead>
-            <tbody>
-              {listLoaiGiay.map((item, index) => (
-                <tr key={item.id}>
-                  <td className="border border-gray-300 p-2 text-center">
-                    {index + 1 + (trangHienTai - 1) * itemsPerPage}
-                  </td>
-                  <td className="border border-gray-300 p-2 text-center">
-                    {item.ten}
-                  </td>
-                  <td className="border border-gray-300 p-2 text-center">
-                    {item.trangThai ? "Kinh doanh" : "Ngừng kinh doanh"}
-                  </td>
-                  <td className="border border-gray-300 p-2 text-center">
-                    <button className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600">
-                      Xem chi tiết
-                    </button>
-                  </td>
+          <div className="mx-3">
+            <table className="w-full border-collapse">
+              <thead className="h-[50px] text-lg">
+                <tr className="rounded-t-lg border bg-gray-200">
+                  <th className="w-10 border border-b-gray-300 p-2">STT</th>
+                  <th className="w-1/3 border border-b-gray-300 p-2">Tên</th>
+                  <th className="w-1/3 border border-b-gray-300 p-2">
+                    Trạng thái
+                  </th>
+                  <th className="w-1/3 border border-gray-300 p-2">
+                    Hành động
+                  </th>
+                  {/* Add more headers as needed */}
                 </tr>
-              ))}
-              {emptyRows > 0 &&
-                Array.from({ length: emptyRows }).map((_, index) => (
-                  <tr key={`empty-${index}`} style={{ height: "57px" }}>
-                    {/* Đặt độ cao hàng là 57px */}
-                    <td className="border border-gray-300 p-2"></td>
-                    <td className="border border-gray-300 p-2"></td>
-                    <td className="border border-gray-300 p-2"></td>
-                    <td className="border border-gray-300 p-2"></td>
+              </thead>
+              <tbody>
+                {listloai.map((item, index) => (
+                  <tr
+                    key={item.id}
+                    onClick={() => handleRowClick(item)}
+                    className="border border-b-gray-300 hover:bg-slate-100"
+                  >
+                    {/* Thêm sự kiện nhấp chuột */}
+                    <td className="p-2 text-center">
+                      {index + 1 + (trangHienTai - 1) * itemsPerPage}
+                    </td>
+                    <td className="p-2 text-center">{item.ten}</td>
+                    <td className="p-2 text-center">
+                      {item.trangThai ? "Kinh doanh" : "Ngừng kinh doanh"}
+                    </td>
+                    <td className="p-2 text-center">
+                      <button
+                        className="rounded bg-yellow-500 px-4 py-2 text-white hover:bg-green-600"
+                        onClick={() => capNhatTrangThai(item.id)} // Gọi hàm cập nhật trạng thái
+                      >
+                        {item.trangThai ? "Ngừng kinh doanh" : "Kinh doanh"}
+                      </button>
+                    </td>
                   </tr>
                 ))}
-              {/* Add more rows as needed */}
-            </tbody>
-          </table>
+                {emptyRows > 0 &&
+                  Array.from({ length: emptyRows }).map((_, index) => (
+                    <tr key={`empty-${index}`} style={{ height: "57px" }}>
+                      {/* Đặt ộ cao hàng là 57px */}
+                      <td className=""></td>
+                      <td className=""></td>
+                      <td className=""></td>
+                      <td className=""></td>
+                    </tr>
+                  ))}
+                {/* Add more rows as needed */}
+              </tbody>
+            </table>
+          </div>
           <div className="mr-14 mt-4 flex justify-end">
             <ReactPaginate
               previousLabel={"< Previous"}
@@ -299,6 +427,9 @@ export default function LoaiGiay() {
             />
           </div>
         </div>
+        {/* Modal */}
+
+        <ToastContainer />
       </div>
     </>
   );

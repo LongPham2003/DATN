@@ -57,6 +57,11 @@ public class KichThuocController {
                 .result(kichThuocResponse)
                 .build();
     }
+    @GetMapping("/ten")
+    public ResponseEntity<List<String>> getAllTen(){
+        List<String> listTen = kichThuocService.getAllTenKichThuoc();
+        return ResponseEntity.ok(listTen);
+    }
 
     @PutMapping("/update/{id}")
     public ApiResponse<KichThuocResponse> update(@PathVariable Integer id, @RequestBody KichThuocRequest request) {
@@ -74,11 +79,6 @@ public class KichThuocController {
                 .build();
     }
 
-    @GetMapping("/ten")
-    public ResponseEntity<List<String>> getAllTen(){
-        List<String> listTen = kichThuocService.getAllTenKichThuoc();
-        return ResponseEntity.ok(listTen);
-    }
 
     @GetMapping("/search")
     public ApiResponse<List<KichThuocResponse>> search(

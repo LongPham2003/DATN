@@ -52,7 +52,7 @@ public class SecurityConfiguration {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                       // .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
+//                        .requestMatchers(PUBLIC_ENDPOINTS).authenticated()
 //                        .requestMatchers("/khachhang/getall").hasRole("NHANVIEN")
                         .anyRequest().permitAll())
                 .exceptionHandling(ex -> ex.accessDeniedHandler(new CustomAccessDeniedHandler()))

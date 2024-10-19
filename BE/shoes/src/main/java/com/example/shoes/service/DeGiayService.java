@@ -21,4 +21,5 @@ public interface DeGiayService {
     List<String> getAllTenDeGiay();
 
     List<DeGiayResponse> getAll();
+
 }

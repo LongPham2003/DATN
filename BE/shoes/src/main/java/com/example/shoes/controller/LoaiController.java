@@ -38,6 +38,11 @@ public class LoaiController {
                 .build();
     }
 
+    @GetMapping("/ten")
+    public ResponseEntity<List<String>> getAllTen(){
+        List<String> listTen = loaiService.getAllTenLoai();
+        return ResponseEntity.ok(listTen);
+    }
     @GetMapping("/{id}")
     public ApiResponse<LoaiResponse> getById(@PathVariable Integer id) {
         LoaiResponse loaiResponses = loaiService.getById(id);
@@ -70,13 +75,6 @@ public class LoaiController {
                 .message("Xóa thành công")
                 .build();
     }
-
-    @GetMapping("/ten")
-    public ResponseEntity<List<String>> getAllTen(){
-        List<String> listTen = loaiService.getAllTenLoai();
-        return ResponseEntity.ok(listTen);
-    }
-
     @GetMapping("/search")
     public ApiResponse<List<LoaiResponse>> search(
             @RequestParam(value = "ten", required = false) String ten,

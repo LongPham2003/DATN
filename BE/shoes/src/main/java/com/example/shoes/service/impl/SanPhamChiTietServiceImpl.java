@@ -54,10 +54,11 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     @Autowired
     private DeGiayRepo deGiayRepo;
 
+
     @Override
-    public PhanTrangResponse<SanPhamChiTietResponse> getSanPhamChiTiet(int pageNumber, int pageSize) {
+    public PhanTrangResponse<SanPhamChiTietResponse> getspctAndLocspct(Integer idSanPham, Integer idMauSac, Integer idkichThuoc, Integer idChatLieu, Integer idThuongHieu, Integer idDeGiay, Boolean trangThai, BigDecimal minDonGia, BigDecimal maxDonGia, int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize); // Chuyển đổi sang zero-based page
-        Page<SanPhamChiTiet> page = sanPhamChiTietRepo.getSanPhamChiTiet(pageable);
+        Page<SanPhamChiTiet> page = sanPhamChiTietRepo.getspctAndLocspct(idSanPham,idMauSac,idkichThuoc,idChatLieu,idThuongHieu,idDeGiay,trangThai,minDonGia,maxDonGia,pageable);
 
         List<SanPhamChiTietResponse> sanPhamChiTietResponses = page.getContent().stream()
                 .map(this::converToResponse)
@@ -159,21 +160,9 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     }
 
     @Override
-    public List<SanPhamChiTietResponse> locPhamChiTietList(Integer idSanPham, Integer idMauSac, Integer idkichThuoc, Integer idChatLieu, Integer idThuongHieu, Integer idDeGiay, Boolean trangThai, BigDecimal minDonGia, BigDecimal maxDonGia) {
-        // Gọi phương thức trong repository
-        List<SanPhamChiTiet> sanPhamChiTietList = sanPhamChiTietRepo.locSanPhamChiTietList(
-                idSanPham, idMauSac, idkichThuoc, idChatLieu, idThuongHieu, idDeGiay, trangThai, minDonGia, maxDonGia);
-
-        // Chuyển đổi danh sách `SanPhamChiTiet` sang `SanPhamChiTietResponse`
-        return sanPhamChiTietList.stream()
-                .map(this::converToResponse) // Sử dụng phương thức convertToResponse để chuyển đổi
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public List<SanPhamChiTietResponse> getAll() {
         // Lấy tất cả các ChatLieu từ repository
-        List<SanPhamChiTiet> list =sanPhamChiTietRepo.findAll();
+        List<SanPhamChiTiet> list =sanPhamChiTietRepo.getAllTrangThaiTrue();
 
         // Chuyển đổi từ ChatLieu sang ChatLieuResponse
         return list.stream()
@@ -191,6 +180,17 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
             sanPhamChiTiet.setTrangThai(true);
         }
         sanPhamChiTietRepo.save(sanPhamChiTiet);
+    }
+
+    @Override
+    public List<SanPhamChiTietResponse> findByIdSanPhamAndTrangThaiTrue(Integer idSanPham) {
+        // Gọi phương thức trong repository
+        List<SanPhamChiTiet> sanPhamChiTietList = sanPhamChiTietRepo.findByIdSanPhamAndTrangThaiTrue(idSanPham);
+
+        // Chuyển đổi danh sách `SanPhamChiTiet` sang `SanPhamChiTietResponse`
+        return sanPhamChiTietList.stream()
+                .map(this::converToResponse) // Sử dụng phương thức convertToResponse để chuyển đổi
+                .collect(Collectors.toList());
     }
 
 

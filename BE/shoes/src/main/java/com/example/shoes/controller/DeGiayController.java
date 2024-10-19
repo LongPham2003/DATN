@@ -49,7 +49,11 @@ public class DeGiayController {
                 .result(deGiayResponse)
                 .build();
     }
-
+    @GetMapping("/ten")
+    public ResponseEntity<List<String>> getAllTen(){
+        List<String> listTen = deGiayService.getAllTenDeGiay();
+        return ResponseEntity.ok(listTen);
+    }
 
     @PostMapping("/add")
     public ApiResponse<DeGiayResponse> create(@RequestBody DeGiayRequet request) {
@@ -67,11 +71,6 @@ public class DeGiayController {
                 .build();
     }
 
-    @GetMapping("/ten")
-    public ResponseEntity<List<String>> getAllTen(){
-        List<String> listTen = deGiayService.getAllTenDeGiay();
-        return ResponseEntity.ok(listTen);
-    }
 
     @DeleteMapping("/delete/{id}")
     @PutMapping("/updatetrangthai/{id}")

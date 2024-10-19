@@ -1,24 +1,20 @@
 package com.example.shoes.dto.hoadonchitiet.response;
 
+import com.example.shoes.entity.HoaDon;
+import com.example.shoes.entity.SanPhamChiTiet;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-
 @Setter
 @Getter
-
 public class HoaDonChiTietResponse {
     private Integer id;
-    private String tenKhachHang;
-    private String soDienThoai;
-    private String diaChiGiaoHang;
-    private BigDecimal tongTien;
-    private BigDecimal tienDuocGiam;
-    private BigDecimal tienPhaiThanhToan;
-    private String phuongThucThanhToan;
-    private String phuongThucGiaoHang;
-    private LocalDate ngayTao;
-    private Boolean trangThai;
+    private Integer idHoaDon;
+    private Integer idSpct;
+    private String tenSanPham;
+    private BigDecimal donGia;
+    private BigDecimal soLuong;
+    private BigDecimal tongTienChiTiet;  // Tổng tiền của chi tiết hóa đơn (số lượng * đơn giá)
 }

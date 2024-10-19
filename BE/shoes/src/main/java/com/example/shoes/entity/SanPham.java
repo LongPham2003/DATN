@@ -1,5 +1,6 @@
 package com.example.shoes.entity;
 
+import com.example.shoes.entity.base.CrudByAt;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.*;
@@ -19,7 +20,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SanPham {
+public class SanPham extends CrudByAt {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -28,6 +29,11 @@ public class SanPham {
     @ManyToOne
     @JoinColumn(name = "id_loai", nullable = false) // Liên kết với bảng Loai
     private Loai loai;
+
+    @Size(max = 255)
+    @NotNull
+    @Column(name = "ma")
+    private String ma;
 
     @Size(max = 255)
     @NotNull

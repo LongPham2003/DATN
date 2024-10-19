@@ -1,32 +1,25 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-// CustomDropdown là một component nhận vào một prop là options
-const CustomDropdown = ({ options, onSelect }) => {
-  // Sử dụng useState để quản lý trạng thái của dropdown
-  const [isOpen, setIsOpen] = useState(false);
-  // Quản lý giá trị của option được chọn
-  const [selectedOption, setSelectedOption] = useState("Select an option");
+// Nhận vào 3 props
+const CustomDropdown = ({ options, selectedValue, onSelect }) => {
+  const [isOpen, setIsOpen] = useState(false); // đóng mở option
+  const [selectedOption, setSelectedOption] = useState(
+    selectedValue?.ten || "Select option",
+  ); //set lable hiển thị
 
-  // Hàm để toggle trạng thái của dropdown
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
-  // Hàm để xử lý khi một option được click
-  const handleOptionClick = (option) => {
-    console.log(`Option clicked: ${option.id}`);
 
-    setSelectedOption(option.ten);
+  const handleOptionClick = (option) => {
+    setSelectedOption(option.ten || "Select option");
     setIsOpen(false);
     onSelect(option);
-  };
+  }; // thay đổi lable
 
-  // Thêm lựa chọn giá trị rỗng
-  const optionsWithEmpty = [{ id: "", ten: "Select an option" }, ...options];
-
-  // Thêm props để reset dropdown
-  const resetDropdown = () => {
-    setSelectedOption("Select an option"); // Đặt lại giá trị đã chọn về mặc định
-  };
+  useEffect(() => {
+    setSelectedOption(selectedValue?.ten || "Select option");
+  }, [selectedValue]);
 
   return (
     <div className="relative inline-block w-96 text-left">
@@ -52,12 +45,19 @@ const CustomDropdown = ({ options, onSelect }) => {
       {isOpen && (
         <div className="absolute z-10 mt-2 max-h-48 w-full overflow-auto rounded-md bg-white shadow-lg">
           <ul className="py-1 text-gray-700 hover:border-blue-400">
-            {optionsWithEmpty.map((option, index) => (
+            <li
+              onClick={() =>
+                handleOptionClick({ ten: "Select option", id: "" })
+              }
+              className="block cursor-pointer px-4 py-2 hover:bg-blue-500 hover:text-white"
+            >
+              tất cả SP
+            </li>
+            {options.map((option, index) => (
               <li
                 key={index}
                 onClick={() => handleOptionClick(option)}
                 className="block cursor-pointer px-4 py-2 hover:bg-blue-500 hover:text-white"
-                value={option.id}
               >
                 {option.ten}
               </li>
@@ -69,5 +69,4 @@ const CustomDropdown = ({ options, onSelect }) => {
   );
 };
 
-// Xuất khẩu CustomDropdown với prop options
 export default CustomDropdown;

@@ -1,6 +1,7 @@
 package com.example.shoes.repository;
 
 import com.example.shoes.entity.ChatLieu;
+import com.example.shoes.entity.SanPham;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +28,8 @@ public interface ChatLieuRepo extends JpaRepository<ChatLieu, Integer> {
     Page<ChatLieu> getChatLieu(Pageable pageable,  String keyword);
     // Phương thức kiểm tra xem  có tồn tại theo tên không
     boolean existsByTen(String ten);
-
+    // lấy tat ca danh sach sp co trang thai true
+    @Query("SELECT cl FROM ChatLieu  cl WHERE cl.trangThai = true")
+    List<ChatLieu> getAllTrangThaiTrue();
 
 }

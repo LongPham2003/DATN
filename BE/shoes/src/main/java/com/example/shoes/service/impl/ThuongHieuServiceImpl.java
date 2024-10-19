@@ -107,13 +107,14 @@ public class ThuongHieuServiceImpl implements ThuongHieuService {
 
     public List<ThuongHieuResponse> getAll() {
         // Lấy tất cả các ChatLieu từ repository
-        List<ThuongHieu> list =thuongHieuRepo.findAll();
+        List<ThuongHieu> list =thuongHieuRepo.getAllTrangThaiTrue();
 
         // Chuyển đổi từ ChatLieu sang ChatLieuResponse
         return list.stream()
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());
     }
+
 
     // Phương thức chuyển đổi ThuongHieu thành ThuongHieuResponse
     private ThuongHieuResponse convertToResponse(ThuongHieu thuongHieu) {

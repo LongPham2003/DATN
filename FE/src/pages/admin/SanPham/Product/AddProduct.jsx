@@ -1,4 +1,5 @@
 import axios from "axios";
+import { values } from "lodash";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 import { Bounce, toast, ToastContainer } from "react-toastify";
@@ -6,28 +7,39 @@ import { Bounce, toast, ToastContainer } from "react-toastify";
 export default function AddProduct() {
   const [tenSanPham, settenSanPham] = useState("");
   const [idLoai, setidLoai] = useState(0);
-  const [mota, setmota] = useState("");
+  const [moTa, setmota] = useState("");
   const [loaiSelect, setLoaiSelect] = useState([]);
   const [errorTenSP, setErrorTenSP] = useState("");
   const [errorLoai, setErrorLoai] = useState("");
+  const [danhSachTenSP, setDanhSachTenSP] = useState("");
   const [trangThai] = useState(true); // Sử dụng giá trị mặc định true cho trạng thái
   const navigate = useNavigate(); // Sử dụng useNavigate để điều hướng
 
   let ApiGetAllLoai = `http://localhost:8080/api/loai/getall`;
   let ApiAddSPMoi = `http://localhost:8080/api/sanpham/add`;
+  let ApiGetAllten = `http://localhost:8080/api/sanpham/ten`;
 
   const getAllLoai = async () => {
     try {
       const data = await axios.get(ApiGetAllLoai);
+      const SP = await axios.get(ApiGetAllten);
       setLoaiSelect(data.data.result);
+      setDanhSachTenSP(SP.data);
     } catch (error) {
       console.log(error);
     }
+  };
+  const newProduct = {
+    tenSanPham,
+    idLoai,
+    moTa,
+    trangThai, // Mặc định true
   };
 
   const add = async (newProduct) => {
     try {
       await axios.post(ApiAddSPMoi, newProduct); // Gửi dữ liệu sản phẩm mới
+
       return true; // Trả về true khi thêm thành công
     } catch (error) {
       console.log(error);
@@ -54,12 +66,6 @@ export default function AddProduct() {
       if (!window.confirm("Bạn có chắc chắn muốn thêm sản phẩm này không?")) {
         return; // Nếu người dùng chọn Cancel, dừng thao tác
       }
-      const newProduct = {
-        tenSanPham,
-        idLoai,
-        mota,
-        trangThai, // Mặc định true
-      };
 
       const result = await add(newProduct); // Chờ kết quả từ hàm add
 
@@ -78,7 +84,7 @@ export default function AddProduct() {
           theme: "light",
           transition: Bounce,
         });
-
+        console.log(newProduct);
         setTimeout(() => {
           window.location.reload(); // Load lại trang sau 1 giây
         }, 1700);
@@ -86,6 +92,7 @@ export default function AddProduct() {
         throw new Error("Thêm mới thất bại");
       }
     } catch (error) {
+      console.log(newProduct);
       toast.error(error.message || "Thêm mới thất bại", {
         position: "top-right",
         autoClose: 1000,
@@ -97,6 +104,16 @@ export default function AddProduct() {
         theme: "light",
         transition: Bounce,
       });
+    }
+  };
+
+  const handelInput = (e) => {
+    settenSanPham(e.target.value);
+    const tenDaTonTai = danhSachTenSP.includes(e.target.value);
+    if (tenDaTonTai) {
+      setErrorTenSP("Ten Da Ton Tai");
+    } else {
+      setErrorTenSP("");
     }
   };
 
@@ -113,9 +130,7 @@ export default function AddProduct() {
             id="tenSanPham"
             value={tenSanPham}
             name="tenSanPham"
-            onChange={(e) => {
-              settenSanPham(e.target.value), setErrorTenSP("");
-            }}
+            onChange={handelInput}
             className="w-full rounded-md border px-3 py-2"
           />
           {errorTenSP && <p className="text-red-500">{errorTenSP}</p>}
@@ -142,13 +157,13 @@ export default function AddProduct() {
           {errorLoai && <p className="text-red-500">{errorLoai}</p>}
         </div>
         <div>
-          <label htmlFor="mota" className="mb-1 block">
+          <label htmlFor="moTa" className="mb-1 block">
             Mô tả:
           </label>
           <textarea
-            id="mota"
-            value={mota}
-            name="mota"
+            id="moTa"
+            value={moTa}
+            name="moTa"
             onChange={(e) => setmota(e.target.value)}
             className="w-full rounded-md border px-3 py-2"
             rows="4"
