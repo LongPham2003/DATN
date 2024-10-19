@@ -1,3 +1,4 @@
+import { Modal } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -33,28 +34,37 @@ const ChiTietNhanVien = () => {
   const handleSubmit = (e) => {
     e.preventDefault(); // Ngăn chặn hành động mặc định của form
 
-    axios
-      .post(`http://localhost:8080/nhanvien/update/${id}`, {
-        hoTen: formData.hoTen,
-        ma: formData.ma,
-        email: formData.email,
-        sdt: formData.sdt,
-        ngaySinh: formData.ngaySinh,
-        gioiTinh: formData.gioiTinh,
-        diaChi: formData.diaChi,
-        trangThai: formData.trangThai,
-        chucVu: formData.roles,
-      })
-      .then((response) => {
-        console.log("Cập nhật thành công:", response.data);
-        setError("");
-        toast.success("Thành công");
-        navigate("/admin/nhanvien");
-      })
-      .catch((error) => {
-        console.error("Lỗi khi cập nhật:", error);
-        setError("Cập nhật thất bại. Vui lòng thử lại.");
-      });
+    Modal.confirm({
+      title: "Xác nhận cập nhật",
+      content: "Bạn có chắc chắn muốn cập nhật voucher này không?",
+      onOk() {
+        axios
+          .post(`http://localhost:8080/nhanvien/update/${id}`, {
+            hoTen: formData.hoTen,
+            ma: formData.ma,
+            email: formData.email,
+            sdt: formData.sdt,
+            ngaySinh: formData.ngaySinh,
+            gioiTinh: formData.gioiTinh,
+            diaChi: formData.diaChi,
+            trangThai: formData.trangThai,
+            chucVu: formData.roles,
+          })
+          .then((response) => {
+            console.log("Cập nhật thành công:", response.data);
+            setError("");
+            toast.success("Thành công");
+            navigate("/admin/nhanvien");
+          })
+          .catch((error) => {
+            console.error("Lỗi khi cập nhật:", error);
+            setError("Cập nhật thất bại. Vui lòng thử lại.");
+          });
+      },
+      onCancel() {
+        // Nếu người dùng hủy, có thể không cần làm gì cả
+      },
+    });
   };
 
   useEffect(() => {

@@ -2,8 +2,10 @@
 import axios from "axios";
 import { useState } from "react";
 import { Bounce, toast, ToastContainer } from "react-toastify";
+import { Modal } from "antd";
 
 export default function TheMoiNhanVien({ button, onAdd }) {
+  const { confirm } = Modal;
   const [error, setError] = useState("");
 
   const [formData, setFormData] = useState({
@@ -27,36 +29,48 @@ export default function TheMoiNhanVien({ button, onAdd }) {
     e.preventDefault();
 
     // Xử lý logic gửi dữ liệu form ở đây
-    try {
-      const response = await axios.post("http://localhost:8080/nhanvien/add", {
-        hoTen: formData.hoTen,
-        email: formData.email,
-        sdt: formData.sdt,
-        ngaySinh: formData.ngaySinh,
-        gioiTinh: formData.gioiTinh,
-        diaChi: formData.diaChi,
-      });
+    confirm({
+      title: "Bạn có chắc chắn muốn thêm phiếu giảm giá này?",
+      content: "Vui lòng xác nhận trước khi tiếp tục.",
+      onOk: async () => {
+        try {
+          const response = await axios.post(
+            "http://localhost:8080/nhanvien/add",
+            {
+              hoTen: formData.hoTen,
+              email: formData.email,
+              sdt: formData.sdt,
+              ngaySinh: formData.ngaySinh,
+              gioiTinh: formData.gioiTinh,
+              diaChi: formData.diaChi,
+            },
+          );
 
-      if (response.status === 200) {
-        // Nếu thành công, có thể xử lý thông báo hoặc reset form
-        toast.success("Thành công");
+          if (response.status === 200) {
+            // Nếu thành công, có thể xử lý thông báo hoặc reset form
+            toast.success("Thành công");
 
-        // Reset form về trạng thái ban đầu
-        setFormData({
-          hoTen: "",
-          email: "",
-          sdt: "",
-          ngaySinh: "",
-          gioiTinh: "",
-          diaChi: "",
-        });
-        button();
-        onAdd();
-      }
-    } catch (error) {
-      // Xử lý lỗi nếu có
-      setError(error.response?.data?.message || error.message);
-    }
+            // Reset form về trạng thái ban đầu
+            setFormData({
+              hoTen: "",
+              email: "",
+              sdt: "",
+              ngaySinh: "",
+              gioiTinh: "",
+              diaChi: "",
+            });
+            button();
+            onAdd();
+          }
+        } catch (error) {
+          // Xử lý lỗi nếu có
+          setError(error.response?.data?.message || error.message);
+        }
+      },
+      onCancel() {
+        console.log("Hủy bỏ thao tác thêm nhân viên");
+      },
+    });
   };
 
   return (

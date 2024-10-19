@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 
+import { Modal } from "antd";
+
 const ChiTietPhieuGiamGia = () => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -33,28 +35,38 @@ const ChiTietPhieuGiamGia = () => {
   const handleSubmit = (e) => {
     e.preventDefault(); // Ngăn chặn hành động mặc định của form
 
-    axios
-      .post(`http://localhost:8080/api/phieugiamgia/update/${id}`, {
-        tenVoucher: formData.tenVoucher,
-        dieuKienGiamGia: formData.dieuKienGiamGia,
-        hinhThucGiam: formData.hinhThucGiam,
-        mucGiam: formData.mucGiam,
-        giamToiDa: formData.giamToiDa,
-        soLuong: formData.soLuong,
-        ngayBatDau: formData.ngayBatDau,
-        ngayKetThuc: formData.ngayKetThuc,
-        trangThai: formData.trangThai,
-      })
-      .then((response) => {
-        console.log("Cập nhật thành công:", response.data);
-        setError("");
-        toast.success("Thành công");
-        navigate("/admin/phieugiamgia");
-      })
-      .catch((error) => {
-        console.error("Lỗi khi cập nhật:", error);
-        setError("Cập nhật thất bại. Vui lòng thử lại.");
-      });
+    Modal.confirm({
+      title: "Xác nhận cập nhật",
+      content: "Bạn có chắc chắn muốn cập nhật voucher này không?",
+      onOk() {
+        // Nếu người dùng xác nhận, gửi yêu cầu cập nhật
+        axios
+          .post(`http://localhost:8080/api/phieugiamgia/update/${id}`, {
+            tenVoucher: formData.tenVoucher,
+            dieuKienGiamGia: formData.dieuKienGiamGia,
+            hinhThucGiam: formData.hinhThucGiam,
+            mucGiam: formData.mucGiam,
+            giamToiDa: formData.giamToiDa,
+            soLuong: formData.soLuong,
+            ngayBatDau: formData.ngayBatDau,
+            ngayKetThuc: formData.ngayKetThuc,
+            trangThai: formData.trangThai,
+          })
+          .then((response) => {
+            console.log("Cập nhật thành công:", response.data);
+            setError("");
+            toast.success("Cập nhật thành công");
+            navigate("/admin/phieugiamgia");
+          })
+          .catch((error) => {
+            console.error("Lỗi khi cập nhật:", error);
+            setError("Cập nhật thất bại. Vui lòng thử lại.");
+          });
+      },
+      onCancel() {
+        // Nếu người dùng hủy, có thể không cần làm gì cả
+      },
+    });
   };
 
   // chi tiết nhân viên

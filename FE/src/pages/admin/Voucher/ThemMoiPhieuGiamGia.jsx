@@ -1,9 +1,12 @@
 import { useState } from "react";
 import axios from "../../../api/axiosConfig";
 import { Bounce, toast, ToastContainer } from "react-toastify";
+import { Modal } from "antd";
 
 // eslint-disable-next-line react/prop-types
 const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
+  const { confirm } = Modal;
+
   const [error, setError] = useState("");
 
   const [formData, setFormData] = useState({
@@ -30,45 +33,52 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
     e.preventDefault();
 
     // Xử lý logic gửi dữ liệu form ở đây
-    try {
-      const response = await axios.post(
-        "http://localhost:8080/api/phieugiamgia/add",
-        {
-          tenVoucher: formData.tenVoucher,
-          dieuKienGiamGia: formData.dieuKienGiamGia,
-          hinhThucGiam: formData.hinhThucGiam,
-          mucGiam: formData.mucGiam,
-          giamToiDa: formData.giamToiDa,
-          soLuong: formData.soLuong,
-          ngayBatDau: formData.ngayBatDau,
-          ngayKetThuc: formData.ngayKetThuc,
-          trangThai: true,
-        },
-      );
+    confirm({
+      title: "Bạn có chắc chắn muốn thêm phiếu giảm giá này?",
+      content: "Vui lòng xác nhận trước khi tiếp tục.",
+      onOk: async () => {
+        try {
+          const response = await axios.post(
+            "http://localhost:8080/api/phieugiamgia/add",
+            {
+              tenVoucher: formData.tenVoucher,
+              dieuKienGiamGia: formData.dieuKienGiamGia,
+              hinhThucGiam: formData.hinhThucGiam,
+              mucGiam: formData.mucGiam,
+              giamToiDa: formData.giamToiDa,
+              soLuong: formData.soLuong,
+              ngayBatDau: formData.ngayBatDau,
+              ngayKetThuc: formData.ngayKetThuc,
+              trangThai: true,
+            },
+          );
 
-      if (response.status === 200) {
-        // Nếu thành công, có thể xử lý thông báo hoặc reset form
-        toast.success("Thành công");
+          if (response.status === 200) {
+            toast.success("Thành công");
 
-        // Reset form về trạng thái ban đầu
-        setFormData({
-          tenVoucher: "",
-          dieuKienGiamGia: "",
-          hinhThucGiam: "",
-          mucGiam: "",
-          giamToiDa: "",
-          soLuong: "",
-          ngayBatDau: "",
-          ngayKetThuc: "",
-          trangThai: "",
-        });
-        button();
-        onAdd();
-      }
-    } catch (error) {
-      // Xử lý lỗi nếu có
-      setError(error.response?.data?.message || error.message);
-    }
+            // Reset form về trạng thái ban đầu
+            setFormData({
+              tenVoucher: "",
+              dieuKienGiamGia: "",
+              hinhThucGiam: "",
+              mucGiam: "",
+              giamToiDa: "",
+              soLuong: "",
+              ngayBatDau: "",
+              ngayKetThuc: "",
+              trangThai: "",
+            });
+            button();
+            onAdd();
+          }
+        } catch (error) {
+          setError(error.response?.data?.message || error.message);
+        }
+      },
+      onCancel() {
+        console.log("Hủy bỏ thao tác thêm phiếu giảm giá");
+      },
+    });
   };
   return (
     <div className="flex h-auto items-center justify-center bg-gray-100">
