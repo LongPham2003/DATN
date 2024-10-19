@@ -8,8 +8,8 @@ export default function Voucher() {
   const [showModal, setShowModal] = useState(false);
 
   //edit
-  const [showDetailModal, setShowDetailModal] = useState(false); 
-  
+  const [showDetailModal, setShowDetailModal] = useState(false);
+
   //detail
   const [showDetailModal1, setShowDetailModal1] = useState(false);
 
@@ -17,6 +17,7 @@ export default function Voucher() {
 
   const [tongSoTrang, setTongSoTrang] = useState(0); // Tổng số trang
   const [trangHienTai, setTrangHienTai] = useState(1);
+
   const itemsPerPage = 5; // Đặt số mục trên mỗi trang là 5
 
   const totalRows = itemsPerPage; // Số dòng cần hiển thị trên mỗi trang
@@ -33,6 +34,56 @@ export default function Voucher() {
     ngayKetThuc: "",
     trangThai: "",
   });
+
+  const handleResetFilters = () => {
+    // Reload lại trang để reset toàn bộ dữ liệu
+    window.location.reload();
+  };
+
+
+  const [filterParams, setFilterParams] = useState({
+    tenVoucher: "",
+    ngayBatDau: "",
+    dieuKienGiamGia: "",
+    trangThai: "Tất cả",
+    ngayKetThuc: "",
+  });
+
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilterParams((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  // const handleFilterSubmit = () => {
+  //   // Chuyển đổi giá trị trangThai từ string sang boolean
+  //   const updatedFilterParams = {
+  //     ...filterParams,
+  //     trangThai:
+  //       filterParams.trangThai === "Đang kích hoạt"
+  //         ? true
+  //         : filterParams.trangThai === "Ngưng kích hoạt"
+  //           ? false
+  //           : underfined, // "Tất cả" hoặc bất kỳ giá trị nào khác sẽ không lọc theo trạng thái
+  //   };
+
+  //   setTrangHienTai(1); // Đặt lại trang hiện tại về 1
+  //   fetchVouchers(1, updatedFilterParams); // Gọi API với trang đầu tiên và các tham số lọc đã chuyển đổi
+  // };
+
+  const handleFilterSubmit = () => {
+    const updatedFilterParams = {
+      ...filterParams,
+      trangThai: 
+        filterParams.trangThai === "Đang kích hoạt" ? true :
+        filterParams.trangThai === "Ngưng kích hoạt" ? false :
+        null, // Khi là "Tất cả" hoặc bất kỳ giá trị nào khác
+    };
+    setFilterParams(updatedFilterParams);
+    fetchVouchers(1, updatedFilterParams); // Gọi API với trang đầu tiên và bộ lọc
+  };
 
 
   // Các trường nhập liệu cho voucher
@@ -55,7 +106,6 @@ export default function Voucher() {
     loadVoucherDetails(voucher);
     setShowDetailModal(true);
   };
-
 
   const handleOpenDetailModal1 = (voucher) => {
     setSelectedVoucher(voucher);
@@ -96,28 +146,64 @@ export default function Voucher() {
     }));
   };
 
-  // Hàm lưu lại các thay đổi sau khi chỉnh sửa voucher
   const handleSaveEdit = async () => {
-    console.log("Selected voucher before save:", selectedVoucher);
-
-    // Kiểm tra xem selectedVoucher có tồn tại và có ID hay không
     if (!selectedVoucher || !selectedVoucher.id) {
       console.error("Selected voucher is undefined or does not have a valid ID.");
-      toast.error("Không thể lưu thay đổi. Vui lòng kiểm tra lại dữ liệu.");
-      return; // Thoát khỏi hàm nếu không có ID
+      alert("Không thể lưu thay đổi. Vui lòng kiểm tra lại dữ liệu.");
+      return;
     }
+
+    // Validate các trường không được để trống
+    if (!selectedVoucher.tenVoucher || !selectedVoucher.dieuKienGiamGia || !selectedVoucher.mucGiam ||
+      !selectedVoucher.giamToiDa || !selectedVoucher.soLuong || !selectedVoucher.ngayBatDau ||
+      !selectedVoucher.ngayKetThuc || !selectedVoucher.hinhThucGiam) {
+      alert("Vui lòng điền đầy đủ thông tin.");
+      return;
+    }
+
+    const isDuplicateName = vouchers.some(voucher =>
+      voucher.tenVoucher === selectedVoucher.tenVoucher && voucher.id !== selectedVoucher.id
+    );
+    if (isDuplicateName) {
+      alert("Tên voucher đã tồn tại. Vui lòng chọn tên khác.");
+      return;
+    }
+
+    if (selectedVoucher.mucGiam <= 0 || selectedVoucher.giamToiDa <= 0 || selectedVoucher.soLuong <= 0) {
+      alert("Mức giảm, giảm tối đa, và số lượng phải lớn hơn 0.");
+      return;
+    }
+
+    const startDate = new Date(selectedVoucher.ngayBatDau);
+    const endDate = new Date(selectedVoucher.ngayKetThuc);
+    if (startDate >= endDate) {
+      alert("Ngày bắt đầu phải trước ngày kết thúc.");
+      return;
+    }
+
+    // In dữ liệu voucher sẽ gửi đi
+    console.log("Voucher to be sent:", JSON.stringify(selectedVoucher, null, 2));
 
     try {
       const response = await fetch(`http://localhost:8080/api/phieugiamgia/update/${selectedVoucher.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(selectedVoucher),
+        body: JSON.stringify({
+          ...selectedVoucher,
+          trangThai: selectedVoucher.trangThai === "true" // Đảm bảo giá trị đúng kiểu
+        }),
       });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Error details:", errorData);
+        toast.error("Chỉnh sửa voucher thất bại: " + errorData.message);
+        return;
+      }
 
       const data = await response.json();
 
       if (data.code === 1000) {
-        // Cập nhật lại danh sách vouchers sau khi chỉnh sửa
         const updatedVouchers = vouchers.map(voucher =>
           voucher.id === selectedVoucher.id ? selectedVoucher : voucher
         );
@@ -134,6 +220,7 @@ export default function Voucher() {
     }
   };
 
+
   // Hàm để mở modal
   const handleOpenModal = () => {
     setShowModal(true);
@@ -144,10 +231,22 @@ export default function Voucher() {
     setShowModal(false);
   };
 
-  // Hàm để lấy danh sách voucher từ API
-  const fetchVouchers = async (page) => {
+  const fetchVouchers = async (page, filterParams = {}) => {
+    const { tenVoucher = '', dieuKienGiamGia = '', trangThai = '', ngayBatDau = '', ngayKetThuc = '' } = filterParams;
+
+    const query = new URLSearchParams({
+      tenVoucher,
+      dieuKienGiamGia,
+      trangThai: trangThai !== null ? trangThai : '',
+      ngayBatDau,
+      ngayKetThuc,
+      pageNumber: page,
+    });
+
     try {
-      const response = await fetch(`http://localhost:8080/api/phieugiamgia/list?pageNumber=${page}`);
+      const response = await fetch(
+        `http://localhost:8080/api/phieugiamgia/list?${query.toString()}`
+      );
       const data = await response.json();
       if (data.code === 1000) {
         setVouchers(data.result.result); // Lưu dữ liệu voucher vào state
@@ -160,12 +259,28 @@ export default function Voucher() {
     }
   };
 
-  // Gọi fetchVouchers khi component được mount
+
+
+  // // // Gọi fetchVouchers khi component được mount
+  // useEffect(() => {
+
+  //   // handleFilterSubmit();
+  //   fetchVouchers(trangHienTai);
+  //   // fetchVouchers(trangHienTai, filterParams);
+
+  // }, [trangHienTai, filterParams]);
+
+
   useEffect(() => {
-
-    fetchVouchers(trangHienTai);
-
-  }, [trangHienTai]);
+    // Gọi API với trang đầu tiên và các tham số ban đầu
+    const initialParams = {
+      ...filterParams,
+      trangThai: filterParams.trangThai === "Tất cả" ? null : filterParams.trangThai,
+    };
+  
+    fetchVouchers(1, initialParams);
+  }, []);
+  
 
   // Hàm để xử lý thay đổi trong các trường nhập liệu
   const handleChange = (e) => {
@@ -177,6 +292,35 @@ export default function Voucher() {
   };
 
   const handleSave = async () => {
+
+    // Kiểm tra các trường không được để trống
+    if (!newVoucher.tenVoucher || !newVoucher.dieuKienGiamGia || !newVoucher.hinhThucGiam ||
+      !newVoucher.mucGiam || !newVoucher.giamToiDa || !newVoucher.soLuong ||
+      !newVoucher.ngayBatDau || !newVoucher.ngayKetThuc) {
+      alert("Tất cả các trường phải được điền đầy đủ.");
+      return;
+    }
+
+    // Kiểm tra tên voucher không trùng
+    const isDuplicateName = vouchers.some(voucher => voucher.tenVoucher === newVoucher.tenVoucher);
+    if (isDuplicateName) {
+      alert("Tên voucher đã tồn tại. Vui lòng chọn tên khác.");
+      return;
+    }
+
+    // Kiểm tra số lượng, mức giảm, và giảm tối đa lớn hơn 0
+    if (newVoucher.mucGiam <= 0 || newVoucher.giamToiDa <= 0 || newVoucher.soLuong <= 0) {
+      alert("Mức giảm, giảm tối đa, và số lượng phải lớn hơn 0.");
+      return;
+    }
+
+    // Kiểm tra ngày bắt đầu trước ngày kết thúc
+    const startDate = new Date(newVoucher.ngayBatDau);
+    const endDate = new Date(newVoucher.ngayKetThuc);
+    if (startDate >= endDate) {
+      alert("Ngày bắt đầu phải trước ngày kết thúc.");
+      return;
+    }
     try {
       const response = await fetch("http://localhost:8080/api/phieugiamgia/add", {
         method: "POST",
@@ -201,9 +345,34 @@ export default function Voucher() {
     }
   };
 
-  const handlePageChange = (newPage) => {
-    setTrangHienTai(+newPage.selected + 1);
+
+  // const handlePageChange = (selectedPage) => {
+  //   const page = selectedPage.selected + 1; // ReactPaginate sử dụng số 0 cho trang đầu tiên
+  //   setTrangHienTai(page); // Cập nhật trang hiện tại
+  //   fetchVouchers(page, filterParams); // Gọi API với trang mới và bộ lọc hiện tại
+  // };
+
+  // const handlePageChange = (selectedPage) => {
+  //   const page = selectedPage.selected + 1; // ReactPaginate sử dụng số 0 cho trang đầu tiên
+  //   setTrangHienTai(page); // Cập nhật trang hiện tại
+  //   fetchVouchers(page, filterParams); // Gọi API với trang mới và bộ lọc hiện tại
+  // };
+
+  const handlePageChange = (selectedPage) => {
+    const page = selectedPage.selected + 1; // ReactPaginate sử dụng số 0 cho trang đầu tiên
+    setTrangHienTai(page); // Cập nhật trang hiện tại
+  
+    // Cập nhật giá trị trangThai cho API
+    const updatedFilterParams = {
+      ...filterParams,
+      trangThai: filterParams.trangThai === "Tất cả" ? null : filterParams.trangThai,
+    };
+  
+    fetchVouchers(page, updatedFilterParams); // Gọi API với trang mới và bộ lọc hiện tại
   };
+  
+
+
 
   const handleChangeStatus = async (voucher) => {
     // Kiểm tra xem voucher có hợp lệ không
@@ -211,21 +380,21 @@ export default function Voucher() {
       console.error("Selected voucher is undefined or does not have a valid ID.");
       return;
     }
-  
+
     const updatedVoucher = {
       ...voucher,
       trangThai: !voucher.trangThai, // Đổi trạng thái
     };
-  
+
     try {
       const response = await fetch(`http://localhost:8080/api/phieugiamgia/update/${updatedVoucher.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedVoucher),
       });
-  
+
       const data = await response.json();
-  
+
       if (data.code === 1000) {
         // Cập nhật lại danh sách vouchers nếu cần
         const updatedVouchers = vouchers.map(v => (v.id === updatedVoucher.id ? updatedVoucher : v));
@@ -238,8 +407,8 @@ export default function Voucher() {
       console.error("Error changing status:", error);
     }
   };
-  
-  
+
+
 
   return (
     <>
@@ -268,21 +437,15 @@ export default function Voucher() {
             </div>
             <hr />
             <div className="ml-10 grid grid-cols-3 gap-4">
-              {/* Các bộ lọc ở đây */}
-              <div className="flex py-2">
-                <label className="mr-2">Mã khuyến mãi: </label>
-                <input
-                  className="block w-48 rounded-md border border-slate-300 bg-white py-2 pl-2 pr-3 shadow-sm placeholder:italic placeholder:text-slate-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 sm:text-sm"
-                  placeholder="Mã voucher..."
-                  type="text"
-                />
-              </div>
               <div className="flex py-2">
                 <label className="mr-2">Tên khuyến mãi: </label>
                 <input
                   className="block w-48 rounded-md border border-slate-300 bg-white py-2 pl-2 pr-3 shadow-sm placeholder:italic placeholder:text-slate-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 sm:text-sm"
                   placeholder="Tên voucher..."
                   type="text"
+                  name="tenVoucher"
+                  value={filterParams.tenVoucher}
+                  onChange={handleFilterChange}
                 />
               </div>
               <div className="flex py-2">
@@ -290,6 +453,9 @@ export default function Voucher() {
                 <input
                   className="block w-48 rounded-md border border-slate-300 bg-white py-2 pl-2 pr-3 shadow-sm placeholder:italic placeholder:text-slate-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 sm:text-sm"
                   type="date"
+                  name="ngayBatDau"
+                  value={filterParams.ngayBatDau}
+                  onChange={handleFilterChange}
                 />
               </div>
               <div className="flex py-2">
@@ -297,14 +463,21 @@ export default function Voucher() {
                 <input
                   className="block w-48 rounded-md border border-slate-300 bg-white py-2 pl-2 pr-3 shadow-sm placeholder:italic placeholder:text-slate-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 sm:text-sm"
                   type="text"
+                  name="dieuKienGiamGia"
+                  value={filterParams.dieuKienGiamGia}
+                  onChange={handleFilterChange}
                 />
               </div>
               <div className="flex py-2">
                 <label className="mr-2">Trạng thái: </label>
-                <select className="block w-48 rounded border border-gray-300 bg-white px-2 pr-2 leading-tight text-gray-700 focus:border-sky-500 focus:outline-none">
-                  <option>Tất cả</option>
-                  <option>Đang kích hoạt</option>
-                  <option>Ngừng kích hoạt</option>
+                <select className="block w-48 rounded border border-gray-300 bg-white px-2 pr-2 leading-tight text-gray-700 focus:border-sky-500 focus:outline-none"
+                  name="trangThai"
+                  value={filterParams.trangThai}
+                  onChange={handleFilterChange}
+                >
+                  <option value="Tất cả">Tất cả</option>
+                  <option value="Đang kích hoạt">Đang kích hoạt</option>
+                  <option value="Ngưng kích hoạt">Ngưng kích hoạt</option>
                 </select>
               </div>
               <div className="flex py-2">
@@ -312,12 +485,23 @@ export default function Voucher() {
                 <input
                   className="block w-48 rounded-md border border-slate-300 bg-white py-2 pl-2 pr-3 shadow-sm placeholder:italic placeholder:text-slate-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 sm:text-sm"
                   type="date"
+                  name="ngayKetThuc"
+                  value={filterParams.ngayKetThuc}
+                  onChange={handleFilterChange}
                 />
               </div>
             </div>
             <div className="pt-4 text-center">
-              <button className="h-[35px] w-40 rounded-full border-2 bg-sky-500 from-indigo-500 from-10% via-sky-500 via-30% to-emerald-500 to-90% hover:bg-gradient-to-r hover:text-black">
+              <button className="h-[35px] w-40 rounded-full border-2 bg-sky-500 from-indigo-500 from-10% via-sky-500 via-30% to-emerald-500 to-90% hover:bg-gradient-to-r hover:text-black"
+                onClick={handleResetFilters}
+              >
                 Làm mới
+              </button>
+              <button
+                className="h-[35px] w-40 rounded-full border-2 bg-sky-500 from-indigo-500 from-10% via-sky-500 via-30% to-emerald-500 to-90% hover:bg-gradient-to-r hover:text-black"
+                onClick={handleFilterSubmit}
+              >
+                Lọc
               </button>
             </div>
           </div>
@@ -363,7 +547,7 @@ export default function Voucher() {
                             <td className="border border-gray-300 p-2 text-center">
                               {index + 1 + (trangHienTai - 1) * itemsPerPage}
                             </td>
-                            <td className="whitespace-nowrap px-6 py-4">{"PGG" + voucher.id}</td>
+                            <td className="whitespace-nowrap px-6 py-4">{voucher.id}</td>
                             <td className="whitespace-nowrap px-6 py-4">{voucher.tenVoucher}</td>
                             <td className="whitespace-nowrap px-6 py-4">{voucher.dieuKienGiamGia}</td>
                             <td className="whitespace-nowrap px-6 py-4">{voucher.hinhThucGiam}</td>
@@ -376,7 +560,7 @@ export default function Voucher() {
                             <td className="whitespace-nowrap px-6 py-4">
                               <button onClick={() => handleOpenDetailModal(voucher)} className="text-yellow-500 hover:text-blue-700">EDIT</button>
                               <button onClick={() => handleOpenDetailModal1(voucher)} className="text-blue-500 hover:text-red-700 ml-2">Detail</button>
-                              <button  onClick={() => handleChangeStatus(voucher)} className="text-red-500 hover:text-red-700 ml-2">Change</button>
+                              <button onClick={() => handleChangeStatus(voucher)} className="text-red-500 hover:text-red-700 ml-2">Change</button>
                             </td>
                           </tr>
                         ))}
@@ -421,6 +605,7 @@ export default function Voucher() {
                         activeLinkClassName={
                           "px-4 py-2 bg-green-500 text-white rounded-full"
                         }
+                        forcePage={trangHienTai - 1} // Đặt lại trang hiện tại khi dữ liệu thay đổi
                       />
                     </div>
                   </div>
@@ -677,7 +862,7 @@ export default function Voucher() {
             <div className="mt-4">
               <label className="block">Tên khuyến mãi:</label>
               <input
-              disabled
+                disabled
                 name="tenVoucher"
                 value={selectedVoucher.tenVoucher}
                 className="block w-full rounded-md border border-slate-300 bg-white py-2 pl-2 shadow-sm"
@@ -688,7 +873,7 @@ export default function Voucher() {
             <div className="mt-4">
               <label className="block">Điều kiện giảm:</label>
               <input
-              disabled
+                disabled
                 name="dieuKienGiamGia"
                 value={selectedVoucher.dieuKienGiamGia}
                 className="block w-full rounded-md border border-slate-300 bg-white py-2 pl-2 shadow-sm"
@@ -699,7 +884,7 @@ export default function Voucher() {
             <div className="mt-4">
               <label className="block">Hình thức giảm:</label>
               <input
-              disabled
+                disabled
                 name="hinhThucGiam"
                 value={selectedVoucher.hinhThucGiam}
                 className="block w-full rounded-md border border-slate-300 bg-white py-2 pl-2 shadow-sm"
@@ -710,7 +895,7 @@ export default function Voucher() {
             <div className="mt-4">
               <label className="block">Mức giảm:</label>
               <input
-              disabled
+                disabled
                 name="mucGiam"
                 value={selectedVoucher.mucGiam}
                 className="block w-full rounded-md border border-slate-300 bg-white py-2 pl-2 shadow-sm"
@@ -721,7 +906,7 @@ export default function Voucher() {
             <div className="mt-4">
               <label className="block">Giảm tối đa:</label>
               <input
-              disabled
+                disabled
                 name="giamToiDa"
                 value={selectedVoucher.giamToiDa}
                 className="block w-full rounded-md border border-slate-300 bg-white py-2 pl-2 shadow-sm"
@@ -732,7 +917,7 @@ export default function Voucher() {
             <div className="mt-4">
               <label className="block">Số lượng:</label>
               <input
-              disabled
+                disabled
                 name="soLuong"
                 value={selectedVoucher.soLuong}
                 className="block w-full rounded-md border border-slate-300 bg-white py-2 pl-2 shadow-sm"
@@ -741,10 +926,10 @@ export default function Voucher() {
               />
             </div>
             <div className="mt-4">
-              
+
               <label className="block">Ngày bắt đầu:</label>
               <input
-              disabled
+                disabled
                 name="ngayBatDau"
                 value={selectedVoucher.ngayBatDau}
                 className="block w-full rounded-md border border-slate-300 bg-white py-2 pl-2 shadow-sm"
@@ -754,7 +939,7 @@ export default function Voucher() {
             <div className="mt-4">
               <label className="block">Ngày kết thúc:</label>
               <input
-              disabled
+                disabled
                 name="ngayKetThuc"
                 value={selectedVoucher.ngayKetThuc}
                 className="block w-full rounded-md border border-slate-300 bg-white py-2 pl-2 shadow-sm"
