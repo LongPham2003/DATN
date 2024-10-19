@@ -31,4 +31,5 @@ public class HinhAnh {
     @Column(name = "trang_thai")
     private Boolean trangThai ;
 
+
 }
