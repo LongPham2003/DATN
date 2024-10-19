@@ -40,6 +40,11 @@ import java.util.Arrays;
 @EnableMethodSecurity
 public class SecurityConfiguration {
 
+    @Autowired
+    private  JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    @Autowired
+    private CustomAccessDeniedHandler customAccessDeniedHandler;
+
     private final String[] PUBLIC_ENDPOINTS = {"/taikhoan/getall", "/auth/signup", "/auth/login",
             "/auth/resetpass", "/auth/doimatkhau","/nhanvien/search","/api/chatlieu/**",
             "/api/sanpham/**","/api/sanphamchitiet/**","/api/kichthuoc/**","/api/mausac/**",
@@ -50,13 +55,16 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                .cors()
+                .and()
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                        // .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
-//                        .requestMatchers("/khachhang/getall").hasRole("NHANVIEN")
+                        .requestMatchers("/nhanvien/search").hasRole("NHANVIEN")
                         .anyRequest().permitAll())
-                .exceptionHandling(ex -> ex.accessDeniedHandler(new CustomAccessDeniedHandler()))
-                .httpBasic(Customizer.withDefaults());
+                .exceptionHandling(ex -> ex.accessDeniedHandler(customAccessDeniedHandler)
+                        .authenticationEntryPoint(jwtAuthenticationEntryPoint))
+                .httpBasic();
         return http.build();
     }
 
