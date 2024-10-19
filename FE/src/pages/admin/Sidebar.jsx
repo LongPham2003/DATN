@@ -22,10 +22,11 @@ import {
   PercentBadgeIcon,
 } from "@heroicons/react/24/solid";
 import { ChevronRightIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 // import { logoppng } from "./../../../logo";
 // Component Sidebar chính
 export function Sidebar() {
+  const navigate = useNavigate();
   // Khai báo state cho accordion và thuộc tính
   const [open, setOpen] = React.useState(0);
   const [openAttribute, setOpenAttribute] = React.useState(false);
@@ -38,6 +39,14 @@ export function Sidebar() {
   // Hàm xử lý mở/đóng thuộc tính
   const handleAttributeOpen = () => {
     setOpenAttribute(!openAttribute);
+  };
+
+  const handleLogout = () => {
+    // Xóa quyền khỏi localStorage
+    localStorage.removeItem("userRole");
+
+    // Điều hướng về trang đăng nhập
+    navigate("/login");
   };
 
   // Render component
@@ -225,7 +234,7 @@ export function Sidebar() {
           </div>
         </div>
         {/* Phần Log Out */}
-        <ListItem>
+        <ListItem onClick={handleLogout}>
           <ListItemPrefix>
             <PowerIcon className="h-5 w-5" />
           </ListItemPrefix>

@@ -4,7 +4,6 @@ package com.example.shoes.service;
 
 
 import com.example.shoes.dto.PhanTrangResponse;
-
 import com.example.shoes.dto.degiay.request.DeGiayRequet;
 import com.example.shoes.dto.degiay.response.DeGiayResponse;
 
@@ -21,4 +20,5 @@ public interface DeGiayService {
     List<DeGiayResponse> search(String ten, Boolean trangThai);
     List<String> getAllTenDeGiay();
 
+    List<DeGiayResponse> getAll();
 }

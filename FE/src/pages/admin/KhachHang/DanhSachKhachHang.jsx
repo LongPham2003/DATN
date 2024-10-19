@@ -1,58 +1,221 @@
-function DanhSachKhachHang() {
-  // Giả sử chúng ta có một mảng dữ liệu khách hàng
-  const customers = [
-    {
-      id: 1,
-      name: "Nguyễn Văn A",
-      phone: "0123456789",
-      email: "nguyenvana@example.com",
-      address: "Hà Nội",
-    },
-    {
-      id: 2,
-      name: "Trần Thị B",
-      phone: "0987654321",
-      email: "tranthib@example.com",
-      address: "Hồ Chí Minh",
-    },
-    // Thêm nhiều khách hàng khác nếu cần
-  ];
+import { useEffect, useState } from "react";
+import ReactPaginate from "react-paginate";
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
+import ThemMoiKhachHang from "../KhachHang/ThemMoiKhachHang";
+
+export default function DanhSachNhanVien() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [added, setAdded] = useState(false);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
+  const [nhanvien, setNhanVien] = useState([]);
+  const [trangHienTai, setTrangHienTai] = useState(1);
+  const [tongSoTrang, setTongSoTrang] = useState(0);
+  const [keyword, setKeyword] = useState("");
+  const [trangThai, setTrangThai] = useState(null);
+  const pageSize = 5;
+
+  const navigate = useNavigate();
+
+  const handlePageChange = (selectedPage) => {
+    setTrangHienTai(selectedPage.selected + 1);
+  };
+
+  useEffect(() => {
+    const role = localStorage.getItem("userRole");
+    if (role !== "ROLE_NHANVIEN") {
+      navigate("/home");
+      return;
+    }
+    axios
+      .get("http://localhost:8080/khachhang/search", {
+        params: {
+          pageNumber: trangHienTai,
+          keyword: keyword,
+          trangThai: trangThai !== null ? trangThai : undefined,
+        },
+      })
+      .then(async (res) => {
+        const data = res.data;
+        setNhanVien(data.result.result);
+        setTongSoTrang(data.result.totalPages);
+      })
+      .catch((error) => {
+        console.error("Lỗi" + error);
+      });
+  }, [trangHienTai, keyword, trangThai, added, navigate]);
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="mb-6 text-3xl font-bold">Danh sách khách hàng</h1>
-      <div className="overflow-x-auto">
-        <table className="w-full overflow-hidden rounded-lg bg-white shadow-md">
-          <thead className="bg-gray-200">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600">
-                Họ tên
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600">
-                SDT
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600">
-                Email
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600">
-                Địa chỉ mặc định
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            {customers.map(({ id, name, phone, email, address }) => (
-              <tr key={id} className="hover:bg-gray-50">
-                <td className="whitespace-nowrap px-6 py-4">{name}</td>
-                <td className="whitespace-nowrap px-6 py-4">{phone}</td>
-                <td className="whitespace-nowrap px-6 py-4">{email}</td>
-                <td className="whitespace-nowrap px-6 py-4">{address}</td>
+    <div className="p-4">
+      <h1 className="mb-4 text-2xl font-bold">Quản Lý Khách Hàng</h1>
+
+      {/* Nút thêm mới nhân viên */}
+      <div className="mb-4">
+        <button
+          onClick={openModal}
+          className="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-600"
+        >
+          Thêm Mới Khách Hàng
+        </button>
+      </div>
+
+      {/* Modal Thêm Mới  */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="relative w-full max-w-4xl rounded-lg bg-white p-4">
+            <button
+              onClick={closeModal}
+              className="absolute right-2 top-2 text-gray-500 hover:text-gray-700"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6 transition-colors duration-200 hover:text-red-500"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+            <ThemMoiKhachHang
+              button={closeModal}
+              onAdd={() => setAdded(true)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Ô tìm kiếm tách biệt */}
+      <div className="flex gap-8">
+        <div className="mb-6 w-[50%] rounded bg-white p-4 shadow">
+          <h2 className="mb-2 text-xl font-semibold">Tìm Kiếm Khách Hàng</h2>
+          <input
+            type="text"
+            placeholder="Nhập tên hoặc mã khách hàng..."
+            className="w-full rounded border border-gray-300 p-2"
+            onChange={(event) => setKeyword(event.target.value)}
+          />
+        </div>
+        <div className="mb-6 w-[50%] rounded bg-white p-4 shadow">
+          <h2 className="mb-2 text-xl font-semibold">Trạng Thái Nhân Viên</h2>
+          <select
+            name="trangThai"
+            id="trangThai"
+            className="w-full rounded border border-gray-300 p-2"
+            onChange={(e) => {
+              const value =
+                e.target.value === "" ? null : e.target.value === "true";
+              setTrangThai(value);
+            }}
+          >
+            <option value="">Tất cả</option>
+            <option value="true">Hoạt động</option>
+            <option value="false">Không hoạt động</option>
+          </select>
+        </div>
+      </div>
+
+      {/* Danh sách  */}
+      <div className="rounded bg-white p-4 shadow">
+        <h2 className="mb-4 text-xl font-semibold">Danh Sách Khách Hàng</h2>
+        <div className="overflow-x-auto">
+          <table className="min-w-full border border-gray-300 bg-white">
+            <thead>
+              <tr className="bg-gray-100">
+                <th className="border-b px-4 py-2">STT</th>
+                <th className="border-b px-4 py-2">Họ tên</th>
+                <th className="border-b px-4 py-2">Email</th>
+                <th className="border-b px-4 py-2">SDT</th>
+                <th className="border-b px-4 py-2">Ngày Sinh</th>
+                <th className="border-b px-4 py-2">Giới Tính</th>
+                <th className="border-b px-4 py-2">Trạng Thái</th>
+                <th className="border-b px-4 py-2">Hành Động</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="text-center">
+              {nhanvien.map((item, index) => (
+                <tr key={index}>
+                  <td className="border-b px-4 py-2">
+                    {index + 1 + (trangHienTai - 1) * pageSize}
+                  </td>
+                  <td className="border-b px-4 py-2">{item.ma}</td>
+                  <td className="border-b px-4 py-2">{item.hoTen}</td>
+                  <td className="border-b px-4 py-2">{item.email}</td>
+                  <td className="border-b px-4 py-2">{item.sdt}</td>
+                  <td className="border-b px-4 py-2">{item.ngaySinh}</td>
+                  <td className="border-b px-4 py-2">{item.gioiTinh}</td>
+                  <td className="mx-auto flex justify-center border-b px-4 py-2 text-center">
+                    <button
+                      className={`relative flex h-6 w-[50px] items-center rounded-full bg-blue-500 transition-all duration-300 ${
+                        item.trangThai ? "justify-end" : "justify-start"
+                      }`}
+                    >
+                      <div
+                        className={`h-6 w-6 transform rounded-full shadow-md ${
+                          item.trangThai
+                            ? "translate-x bg-green-400"
+                            : "translate-x bg-red-600"
+                        } transition-transform duration-300`}
+                      ></div>
+                    </button>
+                  </td>
+                  <td>
+                    <button className="rounded bg-blue-500 px-2 py-1 text-white">
+                      <Link
+                        to={`/admin/khachhang/${item.id}`}
+                        className="text-white"
+                      >
+                        Chi Tiết
+                      </Link>
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="mr-14 mt-4 flex justify-center">
+          <ReactPaginate
+            previousLabel={"< Previous"}
+            nextLabel={"Next >"}
+            breakLabel={"..."}
+            pageCount={tongSoTrang}
+            marginPagesDisplayed={2}
+            pageRangeDisplayed={2}
+            onPageChange={handlePageChange}
+            containerClassName={"flex"}
+            previousClassName={"mx-1"}
+            previousLinkClassName={
+              "px-3 py-1 border border-gray-300 rounded-full hover:bg-gray-200 transition duration-200"
+            }
+            nextClassName={"mx-1"}
+            nextLinkClassName={
+              "px-3 py-1 border border-gray-300 rounded-full hover:bg-gray-200 transition duration-200"
+            }
+            breakClassName={"mx-1"}
+            breakLinkClassName={
+              "px-3 py-1 border border-gray-300 rounded-full hover:bg-gray-200 transition duration-200"
+            }
+            pageClassName={"mx-1"}
+            pageLinkClassName={
+              "px-3 py-1 border-b border-green-300 rounded-full hover:bg-green-500 transition duration-200"
+            }
+            activeClassName={"bg-green-500 rounded-full text-white"}
+            activeLinkClassName={
+              "px-4 py-2 bg-green-500 text-white rounded-full"
+            }
+          />
+        </div>
       </div>
     </div>
   );
 }
-
-export default DanhSachKhachHang;

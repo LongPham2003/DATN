@@ -4,7 +4,6 @@ package com.example.shoes.controller;
 import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.thuonghieu.request.ThuongHieuRequest;
 import com.example.shoes.dto.thuonghieu.response.ThuongHieuResponse;
-import com.example.shoes.entity.ChatLieu;
 import com.example.shoes.entity.ThuongHieu;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.service.ThuongHieuService;
@@ -64,7 +63,7 @@ public class ThuongHieuController {
                 .build();
     }
 
-    @DeleteMapping("/delete/{id}")
+    @PutMapping("/updatetrangthai/{id}")
     public ApiResponse<Void> delete(@PathVariable Integer id) {
         thuongHieuService.delete(id);
         return ApiResponse.<Void>builder()
@@ -78,6 +77,16 @@ public class ThuongHieuController {
         List<ThuongHieuResponse> thuongHieuResponses = thuongHieuService.search(ten,trangThai);
         return ApiResponse.<List<ThuongHieuResponse>>builder()
                 .result(thuongHieuResponses)
+                .build();
+    }
+    @GetMapping("/getall")
+    public ApiResponse<List<ThuongHieuResponse>> getAll() {
+        // Gọi hàm getAllChatLieu() để lấy danh sách các ChatLieuResponse
+        List<ThuongHieuResponse> list = thuongHieuService.getAll();
+
+        // Tạo đối tượng ApiResponse để trả về danh sách ChatLieuResponse
+        return ApiResponse.<List<ThuongHieuResponse>>builder()
+                .result(list)
                 .build();
     }
 

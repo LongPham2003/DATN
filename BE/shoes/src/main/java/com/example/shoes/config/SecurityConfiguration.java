@@ -41,7 +41,9 @@ import java.util.Arrays;
 public class SecurityConfiguration {
 
     private final String[] PUBLIC_ENDPOINTS = {"/taikhoan/getall", "/auth/signup", "/auth/login",
-            "/auth/resetpass", "/auth/doimatkhau","/nhanvien/search","/khachhang/add"};
+            "/auth/resetpass", "/auth/doimatkhau","/nhanvien/search","/api/chatlieu/**",
+            "/api/sanpham/**","/api/sanphamchitiet/**","/api/kichthuoc/**","/api/mausac/**",
+            "/api/thuonghieu/**","/api/degiay/**","/api/hinhanh/**"};
 
 //    private final String[] PUBLIC_ENDPOINTS = {};
 
@@ -51,7 +53,7 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                        // .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
-                        .requestMatchers("/khachhang/getall").hasRole("NHANVIEN")
+//                        .requestMatchers("/khachhang/getall").hasRole("NHANVIEN")
                         .anyRequest().permitAll())
                 .exceptionHandling(ex -> ex.accessDeniedHandler(new CustomAccessDeniedHandler()))
                 .httpBasic(Customizer.withDefaults());
@@ -86,6 +88,7 @@ public class SecurityConfiguration {
 
         return new CorsFilter(source); // Trả về một CorsFilter với cấu hình đã định
     }
+
 
 
 }

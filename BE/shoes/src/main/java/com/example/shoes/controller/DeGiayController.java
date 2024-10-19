@@ -74,6 +74,7 @@ public class DeGiayController {
     }
 
     @DeleteMapping("/delete/{id}")
+    @PutMapping("/updatetrangthai/{id}")
     public ApiResponse<Void> delete(@PathVariable Integer id) {
        deGiayService.delete(id);
         return ApiResponse.<Void>builder()
@@ -87,6 +88,15 @@ public class DeGiayController {
         List<DeGiayResponse> deGiayResponses = deGiayService.search(ten, trangThai);
         return ApiResponse.<List<DeGiayResponse>>builder()
                 .result(deGiayResponses)
+                .build();
+    }
+    @GetMapping("/getall")
+    public ApiResponse<List<DeGiayResponse>> getAll() {
+        // Gọi hàm getAllChatLieu() để lấy danh sách các ChatLieuResponse
+        List<DeGiayResponse> list = deGiayService.getAll();
+        // Tạo đối tượng ApiResponse để trả về danh sách ChatLieuResponse
+        return ApiResponse.<List<DeGiayResponse>>builder()
+                .result(list)
                 .build();
     }
 }

@@ -18,4 +18,5 @@ public interface ThuongHieuService {
     List<ThuongHieuResponse> search(String ten, Boolean trangThai);
     List<String> getAllTenThuongHieu();
 
+    List<ThuongHieuResponse> getAll();
 }

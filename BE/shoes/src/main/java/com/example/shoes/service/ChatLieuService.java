@@ -4,6 +4,7 @@ import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.chatlieu.request.ChatLieuRequest;
 import com.example.shoes.dto.chatlieu.response.ChatLieuResponse;
 import com.example.shoes.entity.ChatLieu;
+import org.springframework.data.jpa.repository.Query;
 
 
 import java.util.List;
@@ -16,4 +17,7 @@ public interface ChatLieuService {
     void delete(Integer id);
     List<ChatLieuResponse> searchChatLieu(String ten, Boolean trangThai);
     List<String> getAllTenChatLieu();
+    List<ChatLieuResponse> getAllChatLieu();
+
+
 }

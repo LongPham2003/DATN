@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { Bounce, toast, ToastContainer } from "react-toastify";
+import axios from "axios";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -24,35 +25,38 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:8080/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-        }),
+      const response = await axios.post("http://localhost:8080/auth/login", {
+        email: formData.email,
+        password: formData.password,
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Login failed!");
-      }
+      if (response.data.result) {
+        // Lưu quyền vào localStorage
+        localStorage.setItem("userRole", response.data.result.roles);
 
-      const data = await response.json();
-      if (data.result) {
         setError("");
         toast.success("Đăng nhập thành công");
-
-        setTimeout(() => {
+        const role = localStorage.getItem("userRole");
+        if (role === "ROLE_NHANVIEN") {
+          navigate("/admin");
+          return;
+        } else {
           navigate("/home");
-        }, 500);
+        }
       } else {
-        throw new Error("Login failed!");
+        // Nếu không có result, lấy thông báo lỗi
+        const errorMessage = response.data.message;
+        throw new Error(errorMessage);
       }
     } catch (error) {
-      setError(error.message);
+      // Nếu có lỗi, lấy thông báo lỗi từ error.response nếu có
+      const errorMessage =
+        error.response && error.response.data
+          ? error.response.data.message || error.message
+          : error.message;
+
+      setError(errorMessage); // Cập nhật thông báo lỗi
+      toast.error(errorMessage);
     }
   };
 
@@ -110,7 +114,7 @@ const Login = () => {
         </form>
         <ToastContainer
           position="top-right"
-          autoClose={1000}
+          autoClose={3000}
           hideProgressBar={false}
           newestOnTop={false}
           closeOnClick

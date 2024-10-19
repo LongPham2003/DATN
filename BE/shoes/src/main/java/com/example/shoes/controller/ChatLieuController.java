@@ -28,6 +28,16 @@ public class ChatLieuController {
                 .result(chatLieuResponses)
                 .build();
     }
+    @GetMapping("/getall")
+    public ApiResponse<List<ChatLieuResponse>> getAll() {
+        // Gọi hàm getAllChatLieu() để lấy danh sách các ChatLieuResponse
+        List<ChatLieuResponse> chatLieuResponses = chatLieuService.getAllChatLieu();
+
+        // Tạo đối tượng ApiResponse để trả về danh sách ChatLieuResponse
+        return ApiResponse.<List<ChatLieuResponse>>builder()
+                .result(chatLieuResponses)
+                .build();
+    }
     @GetMapping("/ten")
     public ResponseEntity<List<String>> getAllTen(){
         List<String> listTen = chatLieuService.getAllTenChatLieu();
@@ -47,6 +57,7 @@ public class ChatLieuController {
         ChatLieuResponse newChatLieu = chatLieuService.create(request);
         return ApiResponse.<ChatLieuResponse>builder()
                 .result(newChatLieu)
+                .message("Thêm thành công")
                 .build();
     }
 
@@ -55,14 +66,14 @@ public class ChatLieuController {
         ChatLieuResponse updatedChatLieu = chatLieuService.update(id, request);
         return ApiResponse.<ChatLieuResponse>builder()
                 .result(updatedChatLieu)
+                .message("cập nhận thành công ")
                 .build();
     }
 
-    @DeleteMapping("/delete/{id}")
+    @PutMapping ("/updatetrangthai/{id}")
     public ApiResponse<Void> deleteChatLieu(@PathVariable Integer id) {
         chatLieuService.delete(id);
         return ApiResponse.<Void>builder()
-                .message("Xóa chất liệu thành công")
                 .build();
     }
 }
