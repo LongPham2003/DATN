@@ -76,6 +76,14 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
         Page<PhieuGiamGia> page = phieuGiamGiaRepo.searchPhieuGiamGia(pageable, tenVoucher, dieuKienGiamGia, trangThai, ngayBatDau, ngayKetThuc);
 
+        // Kiểm tra nếu phiếu đã hết hạn và cập nhật trạng thái nếu cần
+        page.getContent().forEach(phieuGiamGia -> {
+            if (phieuGiamGia.getNgayKetThuc() != null && phieuGiamGia.getNgayKetThuc().isBefore(LocalDate.now()) && phieuGiamGia.getTrangThai()) {
+                phieuGiamGia.setTrangThai(false); // Cập nhật trạng thái về false nếu ngayKetThuc đã qua
+                phieuGiamGiaRepo.save(phieuGiamGia); // Lưu lại thay đổi
+            }
+        });
+
         PhanTrangResponse<PhieuGiamGia> phanTrangResponse = new PhanTrangResponse<>();
         phanTrangResponse.setPageNumber(page.getNumber());
         phanTrangResponse.setPageSize(page.getSize());
