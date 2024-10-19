@@ -10,8 +10,6 @@ import Voucher from "./pages/admin/Voucher/Voucher";
 import ThuongHieu from "./pages/admin/ThuocTinhSP/ThuongHieu/ThuongHieu";
 import ListProduct from "./pages/admin/SanPham/Product/ListProduct";
 
-import ListProductDetail from "./pages/admin/SanPham/ProductDetail/ListProductDetail";
-
 import { Helmet } from "react-helmet";
 import DanhSachNhanVien from "./pages/admin/NhanVien/DanhSachNhanVien";
 import ChiTietNhanVien from "./pages/admin/NhanVien/ChiTietNhanVien";
@@ -209,18 +207,7 @@ function App() {
             />
             {/* roter san pham */}
             <Route
-              path="sanphamchitiet"
-              element={
-                <>
-                  <Helmet>
-                    <title>Sản phẩm chi tiết</title>
-                  </Helmet>
-                  <ListProductDetail />
-                </>
-              }
-            />
-            <Route
-              path="themsanphamchitiet"
+              path="themsanphamchitiet/:id"
               element={
                 <>
                   <Helmet>
