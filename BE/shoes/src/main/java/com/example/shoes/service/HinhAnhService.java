@@ -6,6 +6,7 @@ import com.example.shoes.dto.hinhanh.repuest.HinhAnhRequest;
 import com.example.shoes.dto.hinhanh.response.HinhAnhResponse;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface HinhAnhService {
     List<HinhAnhResponse> findAll();

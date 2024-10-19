@@ -6,13 +6,14 @@ import { Bounce, toast, ToastContainer } from "react-toastify";
 
 export default function DetailProduct() {
   const { id } = useParams();
-  const [sanPham, setSanPham] = useState();
 
   const [idLoai] = useState();
 
   const [loaiSelect, setLoaiSelect] = useState([]);
+  const [SPCTbyIdSP, setSPCTbyIdSP] = useState([]);
   const [error, setError] = useState("");
   const [formData, setFormData] = useState({
+    ma: "",
     tenSanPham: "",
     ngayTao: "",
     idLoai: 0,
@@ -24,16 +25,19 @@ export default function DetailProduct() {
 
   let ApiGetAllLoai = `http://localhost:8080/api/loai/getall`;
 
+  let ApiLaySPCTTheoIdSP = `http://localhost:8080/api/sanphamchitiet/getidsanpham/${id}`;
+
   const getById = async () => {
     try {
       const res = await axios.get(ApiGetById);
       const loai = await axios.get(ApiGetAllLoai);
       // console.log(res.data.result.tenSanPham);
-      setSanPham(res.data.result);
+
       setLoaiSelect(loai.data.result);
       // console.log(loai.data.result);
 
       setFormData({
+        ma: res.data.result.ma || "",
         tenSanPham: res.data.result.tenSanPham || "",
         idLoai: res.data.result.idLoai || idLoai,
         ngayTao: res.data.result.ngayTao || "",
@@ -59,6 +63,12 @@ export default function DetailProduct() {
     }
   };
 
+  const getByIdSP = async () => {
+    const data = await axios.get(ApiLaySPCTTheoIdSP);
+    setSPCTbyIdSP(data.data.result);
+    console.log(data.data.result);
+  };
+
   const handleOptionSelect = (selectedOption) => {
     setFormData((prevState) => ({
       ...prevState,
@@ -81,6 +91,7 @@ export default function DetailProduct() {
 
   useEffect(() => {
     getById();
+    getByIdSP();
   }, []);
   return (
     <>
@@ -101,6 +112,21 @@ export default function DetailProduct() {
                   htmlFor="tenSanPham"
                   className="mb-1 block font-semibold"
                 >
+                  Ma San Phẩm:
+                </label>
+                <input
+                  type="text"
+                  className="w-[400px] rounded-md border-2 border-gray-300 p-2 outline-none transition-colors duration-300 hover:border-blue-500 focus:border-blue-500"
+                  value={formData.ma}
+                  name="tenSanPham"
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="tenSanPham"
+                  className="mb-1 block font-semibold"
+                >
                   Tên San Phẩm:
                 </label>
                 <input
@@ -111,16 +137,6 @@ export default function DetailProduct() {
                   onChange={handleChange}
                 />
                 {error && <p className="text-red-500">{error}</p>}
-              </div>
-              <div className="mb-4">
-                <label htmlFor="loai" className="mb-1 block font-semibold">
-                  Loại:
-                </label>
-                <DropdownDetail
-                  options={loaiSelect}
-                  onSelect={handleOptionSelect}
-                  selectedValue={formData.idLoai} // Truyền giá trị đã chọn
-                />
               </div>
             </div>
             <div>
@@ -135,6 +151,29 @@ export default function DetailProduct() {
                   onChange={handleChange}
                   readOnly={true}
                   className="w-[400px] rounded-md border-2 border-gray-300 p-2 outline-none transition-colors duration-300 hover:border-blue-500 focus:border-blue-500"
+                />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="loai" className="mb-1 block font-semibold">
+                  Loại:
+                </label>
+                <DropdownDetail
+                  options={loaiSelect}
+                  onSelect={handleOptionSelect}
+                  selectedValue={formData.idLoai} // Truyền giá trị đã chọn
+                />
+              </div>
+            </div>
+            <div>
+              <div className="mb-4">
+                <label htmlFor="moTa" className="mb-1 block font-semibold">
+                  Mô tả:
+                </label>
+                <textarea
+                  value={formData.moTa}
+                  name="moTa"
+                  className="h-[70px] w-[400px] rounded-md border-2 border-gray-300 p-2 outline-none transition-colors duration-300 hover:border-blue-500 focus:border-blue-500"
+                  onChange={handleChange}
                 />
               </div>
               <div className="mb-4">
@@ -171,23 +210,10 @@ export default function DetailProduct() {
                 </div>
               </div>
             </div>
-            <div>
-              <div className="mb-4">
-                <label htmlFor="moTa" className="mb-1 block font-semibold">
-                  Mô tả:
-                </label>
-                <textarea
-                  value={formData.moTa}
-                  name="moTa"
-                  className="h-[70px] w-[400px] rounded-md border-2 border-gray-300 p-2 outline-none transition-colors duration-300 hover:border-blue-500 focus:border-blue-500"
-                  onChange={handleChange}
-                />
-              </div>
-              <button className="h-[40px] w-[100px] rounded-xl border-2 border-green-500 font-semibold shadow-inner duration-300 hover:bg-green-500">
-                Sua
-              </button>
-            </div>
           </div>
+          <button className="h-[40px] w-[100px] rounded-xl border-2 border-green-500 font-semibold shadow-inner duration-300 hover:bg-green-500">
+            Sua
+          </button>
         </form>
       </div>
       <div className="mx-5 my-5">
@@ -199,19 +225,58 @@ export default function DetailProduct() {
             <table className="min-w-full text-center">
               <thead>
                 <tr className="h-10 rounded-2xl border-b-2 text-base shadow-inner">
-                  <th className="w-10">id</th>
-                  <th className="w-[100px]">anh</th>
-                  <th className="w-[100px]">mau</th>
-                  <th className="w-[100px]">Size</th>
-                  <th className="w-[100px]">chat lieu</th>
-                  <th className="w-[100px]">chat lieu</th>
-                  <th className="w-[100px]">chat lieu</th>
-                  <th className="w-[100px]">chat lieu</th>
-                  <th className="w-[100px]">chat lieu</th>
-                  <th className="w-[100px]">chat lieu</th>
-                  <th className="w-[100px]">Hanh dong</th>
+                  <th className="w-10">STT</th>
+                  <th className="w-[100px]">Ảnh</th>
+                  <th className="w-[100px]">Chất liệu</th>
+                  <th className="w-[100px]">Màu</th>
+                  <th className="w-[100px]">Kích thước</th>
+                  <th className="w-[100px]">Thương Hiệu</th>
+                  <th className="w-[100px]">Đế giày</th>
+                  <th className="w-[100px]">Đơn giá</th>
+                  <th className="w-[100px]">Số lượng</th>
+                  <th className="w-[100px]">Trạng thái</th>
+                  <th className="w-[100px]">Hành động</th>
                 </tr>
               </thead>
+              <tbody>
+                {SPCTbyIdSP.map((item, index) => (
+                  <tr key={item.id}>
+                    <td className="h-[100px] border-b-[1px] border-indigo-500">
+                      {index + 1}
+                    </td>
+                    <td className="h-[100px] border-b-[1px] border-indigo-500">
+                      1
+                    </td>
+                    <td className="h-[100px] border-b-[1px] border-indigo-500">
+                      {item.chatLieu}
+                    </td>
+                    <td className="h-[100px] border-b-[1px] border-indigo-500">
+                      {item.mauSac}
+                    </td>
+                    <td className="h-[100px] border-b-[1px] border-indigo-500">
+                      {item.kichThuoc}
+                    </td>
+                    <td className="h-[100px] border-b-[1px] border-indigo-500">
+                      {item.thuongHieu}
+                    </td>
+                    <td className="h-[100px] border-b-[1px] border-indigo-500">
+                      {item.deGiay}
+                    </td>
+                    <td className="h-[100px] border-b-[1px] border-indigo-500">
+                      {item.donGia}
+                    </td>
+                    <td className="h-[100px] border-b-[1px] border-indigo-500">
+                      {item.soLuong}
+                    </td>
+                    <td className="h-[100px] border-b-[1px] border-indigo-500">
+                      {item.trangThai ? "ban" : "deo ban nua"}
+                    </td>
+                    <td className="h-[100px] border-b-[1px] border-indigo-500">
+                      1
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
             </table>
           </div>
         </div>

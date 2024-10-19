@@ -1,5 +1,6 @@
 package com.example.shoes.repository;
 
+import com.example.shoes.dto.hinhanh.response.HinhAnhResponse;
 import com.example.shoes.entity.HinhAnh;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,4 +15,5 @@ public interface HinhAnhRepo extends JpaRepository<HinhAnh, Integer> {
 
     @Query("SELECT h FROM HinhAnh h WHERE h.idSanPhamChiTiet.id = :idSanPhamChiTiet ")
     List<HinhAnh> findTopByIdSanPhamChiTiet_IdOrderByIdAsc(@Param("idSanPhamChiTiet") Integer idSanPhamChiTiet, Pageable pageable);
+
 }
