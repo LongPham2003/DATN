@@ -69,6 +69,7 @@ public class HinhAnhServiceImpl implements HinhAnhService {
         return convert(updated);
     }
 
+
     @Override
     public void delete(Integer id) {
         if (!hinhAnhRepo.existsById(id)) {
