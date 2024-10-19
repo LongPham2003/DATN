@@ -115,19 +115,27 @@ export function Sidebar() {
                 </ListItem>
               </Link>
               <hr />
+
+              <hr />
               {/* Mục Thuộc tính */}
-              <ListItem onClick={handleAttributeOpen}>
-                <ListItemPrefix>
-                  <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
-                </ListItemPrefix>
-                Thuộc tính
-                <ListItemSuffix className="ml-32">
+              <ListItem
+                onClick={handleAttributeOpen}
+                className="flex items-center justify-between p-2"
+              >
+                <div className="flex items-center">
+                  <ListItemPrefix>
+                    <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
+                  </ListItemPrefix>
+                  <Typography className="font-normal">Thuộc tính</Typography>
+                </div>
+                <ListItemSuffix>
                   <ChevronDownIcon
                     strokeWidth={2.5}
-                    className={`h-3 w-3 transition-transform ${openAttribute ? "rotate-180" : ""}`}
+                    className={`h-5 w-3 transition-transform ${openAttribute ? "rotate-180" : ""}`}
                   />
                 </ListItemSuffix>
               </ListItem>
+
               {/* Submenu của Thuộc tính */}
               {openAttribute && (
                 <>

@@ -6,6 +6,7 @@ import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.service.HinhAnhService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/hinhanh")
@@ -60,6 +62,14 @@ public class HinhAnhController {
         hinhAnhService.delete(id);
         return ApiResponse.<Void>builder()
                 .message("Xóa thành công")
+                .build();
+    }
+    // API lấy ảnh đại diện cho SanPhamChiTiet
+    @GetMapping("/dai-dien/{idSanPhamChiTiet}")
+    public ApiResponse<HinhAnhResponse> getHinhAnhDaiDien(@PathVariable Integer idSanPhamChiTiet) {
+        HinhAnhResponse hinhAnhResponse = hinhAnhService.getFirstBySanPhamChiTietId(idSanPhamChiTiet);
+        return ApiResponse.<HinhAnhResponse>builder()
+                .result(hinhAnhResponse)
                 .build();
     }
 }

@@ -102,12 +102,17 @@ public class DeGiayServiceImpl implements DeGiayService {
     @Override
     public List<DeGiayResponse> getAll() {
         // Lấy tất cả các ChatLieu từ repository
-        List<DeGiay> list =deGiayRepo.findAll();
+        List<DeGiay> list =deGiayRepo.getAllTrangThaiTrue();
 
         // Chuyển đổi từ ChatLieu sang ChatLieuResponse
         return list.stream()
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<String> getAllTenDeGiay() {
+        return deGiayRepo.findAll().stream().map(DeGiay::getTen).collect(Collectors.toList());
     }
 
     // Phương thức chuyển đổi DeGiay thành DeGiayResponse

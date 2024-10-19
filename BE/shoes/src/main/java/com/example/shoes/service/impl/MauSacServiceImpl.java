@@ -112,7 +112,7 @@ public class MauSacServiceImpl implements MauSacService {
     @Override
     public List<MauSacResponse> getAll() {
         // Lấy tất cả các ChatLieu từ repository
-        List<MauSac> list =mauSacRepo.findAll();
+        List<MauSac> list =mauSacRepo.getAllTrangThaiTrue();
 
         // Chuyển đổi từ ChatLieu sang ChatLieuResponse
         return list.stream()

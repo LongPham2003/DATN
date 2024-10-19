@@ -20,4 +20,5 @@ public interface KichThuocService {
     void delete(Integer id);
     List<KichThuocResponse> search(String kichThuoc, Boolean trangThai);
     List<KichThuocResponse> getAll();
+    List<String> getAllTenKichThuoc();
 }

@@ -3,8 +3,6 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
 import { Bounce, toast, ToastContainer } from "react-toastify";
-import UpdateMauSac from "./UpdateMauSac";
-import { useNavigate } from "react-router-dom";
 
 export default function MauSac() {
   const [listMauSac, setListMauSac] = useState([]);
@@ -18,25 +16,23 @@ export default function MauSac() {
   const [error, setError] = useState("");
   const [tenMauSac, setTenMauSac] = useState("");
   const [tenTimKiem, setTenTimKiem] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false); // State để quản lý modal
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(false); //CHe do them moi
   const [currentId, setCurrentId] = useState(null); // State để lưu id của màu sắc đang sửa
 
   // Tính toán số dòng cần hiển thị
   const totalRows = itemsPerPage; // Số dòng cần hiển thị trên mỗi trang
 
-  const navigate = useNavigate();
   const emptyRows = totalRows - listMauSac.length; // Số dòng trống cần thêm
 
   const loadMauSac = async (page) => {
     let url = `http://localhost:8080/api/mausac/list?pageNumber=${page}`;
+    // Kiểm tra và thêm tham số có điều kiện
     if (tenTimKiem) {
       url += `&keyword=${encodeURIComponent(tenTimKiem)}`; // Thêm từ khóa tìm kiếm nếu có sẵn
     }
     // console.log(url);
     try {
       const response = await axios.get(url);
-      // Kiểm tra và thêm tham số có điều kiện
 
       setListMauSac(response.data.result.result);
       setTongSoTrang(response.data.result.totalPages); // Cập nhật tổng số trang
@@ -54,43 +50,32 @@ export default function MauSac() {
       console.log(error);
     }
   };
-
-  useEffect(() => {
-    layTenMauSac();
-    loadMauSac(trangHienTai, tenTimKiem);
-  }, [trangHienTai, tenTimKiem]);
-
   const onInputChange = (e) => {
     const { name, value } = e.target;
-    setMauSacMoi({ ...mauSacMoi, [e.target.name]: e.target.value }); // go den dau luu den day
-    // console.log(e.target.value);
+    setMauSacMoi({ ...mauSacMoi, [name]: value });
 
     if (name === "ten") {
-      if (value.trim() !== "") {
-        setError("");
-      } else if (value.trim() === "") {
+      const input = value.trim();
+
+      // Check trong
+      if (input === "") {
         setError("Tên màu sắc không được để trống");
-      } else {
-        const tenDaTonTai = tenMauSac.includes(value);
-        if (tenDaTonTai) {
-          setError("Tên màu sắc đã tồn tại");
-          return;
-        } else {
-          setError("");
-        }
+        return;
       }
+
+      // Check ton tai
+      const tenDaTonTai = tenMauSac.includes(input);
+      if (tenDaTonTai) {
+        setError("Tên màu sắc đã tồn tại");
+        return;
+      }
+
+      setError("");
     }
   };
 
-  
-  const themMauSac = async (e) => {
-    e.preventDefault();
+  const themMauSac = async () => {
     // Nếu không, gọi hàm thêm mới
-
-    if (mauSacMoi.ten.trim() === "") {
-      setError("Tên không được để trống");
-      return;
-    }
 
     // Xác nhận người dùng có muốn thêm màu sắc mới hay không
     if (!window.confirm("Bạn có chắc chắn muốn thêm sản phẩm này không?")) {
@@ -127,9 +112,9 @@ export default function MauSac() {
       setMauSacMoi({ ten: "", trangThai: true });
 
       // Đặt lại giá trị ô tìm kiếm
-      const searchInput = document.querySelector('input[type="text"]');
-      if (searchInput) {
-        searchInput.value = "";
+      const addInput = document.querySelector('input[type="text"]');
+      if (addInput) {
+        addInput.value = "";
       }
     } catch (error) {
       // Hiển thị thông báo lỗi nếu xảy ra lỗi trong quá trình thêm
@@ -152,6 +137,12 @@ export default function MauSac() {
       setError("Tên không được để trống");
       return; // Ngăn không cho tiếp tục nếu tên trống
     }
+
+    if (tenMauSac.includes(mauSacMoi.ten)) {
+      setError("Ten da ton tai");
+      return;
+    }
+    // onInputChange();
     try {
       await axios.put(
         `http://localhost:8080/api/mausac/update/${currentId}`,
@@ -189,7 +180,10 @@ export default function MauSac() {
 
   const themMoiMauSac = async (e) => {
     e.preventDefault();
-
+    if (mauSacMoi.ten.trim() === "") {
+      setError("Tên không được để trống");
+      return;
+    }
     if (isEditing) {
       // Nếu đang ở chế độ sửa, gọi hàm cập nhật
       await capNhatMauSac(); // Gọi hàm cập nhật màu sắc
@@ -200,11 +194,17 @@ export default function MauSac() {
 
   const capNhatTrangThai = async (id) => {
     try {
-      await axios.put(`http://localhost:8080/api/mausac/updatetrangthai/${id}`);
-      if (!window.confirm("Bạn có chắc chắn muốn thêm sản phẩm này không?")) {
+      if (!window.confirm("Bạn có chắc chắn không?")) {
         return; // Nếu người dùng chọn Cancel, dừng thao tác
       }
-      loadMauSac(trangHienTai); // Tải lại danh sách màu sắc
+
+      // Gửi yêu cầu cập nhật trạng thái trên server
+      await axios.put(`http://localhost:8080/api/mausac/updatetrangthai/${id}`);
+
+      loadMauSac(trangHienTai);
+      setMauSacMoi({ ten: "", trangThai: true }); // Reset the form to initial state
+      setIsEditing(false); // Set editing mode to false
+      setCurrentId(null); // Clear the current ID
       toast.success("Cập nhật trạng thái thành công", {
         position: "top-right",
         autoClose: 1000,
@@ -228,6 +228,7 @@ export default function MauSac() {
       });
     }
   };
+
   const handlePageChange = (newPage) => {
     setTrangHienTai(+newPage.selected + 1);
   };
@@ -242,144 +243,157 @@ export default function MauSac() {
   };
 
   const handleRowClick = (item) => {
-    console.log("Dữ liệu dòng được chọn:", item); // Log dữ liệu dòng được chọn
+    // console.log("Dữ liệu dòng được chọn:", item); // Log dữ liệu dòng được chọn
     setMauSacMoi({ ten: item.ten, trangThai: item.trangThai }); // Lưu dữ liệu vào state mauSacMoi
     setIsEditing(true);
     setCurrentId(item.id);
     setError("");
   };
 
-  const resetForm = () => {
+  const resetForm = (e) => {
+    e.preventDefault();
     setMauSacMoi({ ten: "", trangThai: true }); // Reset the form to initial state
     setIsEditing(false); // Set editing mode to false
     setCurrentId(null); // Clear the current ID
     setError("");
   };
-
+  useEffect(() => {
+    layTenMauSac();
+    loadMauSac(trangHienTai, tenTimKiem);
+  }, [trangHienTai, tenTimKiem]);
   return (
     <>
       <div>
-        <div className="h-screen w-full overflow-auto">
-          <div className="flex gap-3">
-            <div className="mb-4 w-[500px] rounded bg-white p-4 shadow">
-              <h2 className="mb-2 text-xl font-bold">Thêm Màu Sắc Mới</h2>
-              <form onSubmit={themMoiMauSac} className="-mx-2 flex flex-wrap">
-                <div className="mb-4 h-[150px] w-1/2 px-2">
-                  <label htmlFor="tenMauSac" className="mb-1 block">
-                    Tên Màu Sắc:
-                  </label>
-                  <input
-                    onChange={onInputChange}
-                    type="text"
-                    id="tenMauSac"
-                    name="ten"
-                    value={mauSacMoi.ten} // Sử dụng giá trị từ state mauSacMoi
-                    className="w-[450px] rounded border p-2 transition-colors duration-300 hover:border-blue-500 focus:border-blue-500"
-                    placeholder="Nhập tên màu sắc"
-                  />
-                  {error && <p className="text-red-500">{error}</p>}
-                </div>
-                <div className="flex w-full justify-center px-2">
-                  <div className="w-[150px]">
-                    <button
-                      type="submit"
-                      className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
-                      onClick={(e) => {
-                        if (error) {
-                          e.preventDefault(); // Ngăn chặn hành động nếu có lỗi
-                          toast.error("Vui lòng sửa lỗi trước khi thêm mới."); // Hiển thị thông báo lỗi
-                        }
-                      }}
-                    >
-                      {isEditing ? "Sửa" : "Thêm Mới"}
+        <div className="overflow-none h-screen w-auto">
+          <div className="mb-5 shadow drop-shadow-xl">
+            <div className="flex justify-around gap-3 shadow drop-shadow-lg">
+              <div className="mb-8 mt-4 w-[500px] rounded bg-white p-4 shadow">
+                <h2 className="mb-2 text-xl font-bold">Thêm Màu Sắc Mới</h2>
+                <form onSubmit={themMoiMauSac} className="-mx-2 flex flex-wrap">
+                  <div className="mb-4 h-[150px] w-1/2 px-2">
+                    <label htmlFor="tenMauSac" className="mb-1 block">
+                      Tên Màu Sắc:
+                    </label>
+                    <input
+                      onChange={onInputChange}
+                      type="text"
+                      id="tenMauSacMoi"
+                      name="ten"
+                      value={mauSacMoi.ten} // Sử dụng giá trị từ state mauSacMoi
+                      className="w-[450px] rounded border p-2 transition-colors duration-300 hover:border-blue-500 focus:border-blue-500"
+                      placeholder="Nhập tên màu sắc"
+                    />
+                    {error && <p className="text-red-500">{error}</p>}
+                  </div>
+                  <div className="flex w-full justify-center px-2">
+                    <div className="w-[150px]">
+                      <button
+                        type="submit"
+                        className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+                        onClick={(e) => {
+                          if (error) {
+                            e.preventDefault(); // Ngăn chặn hành động nếu có lỗi
+                            toast.error("Vui lòng sửa lỗi trước khi thêm mới."); // Hiển thị thông báo lỗi
+                          }
+                        }}
+                      >
+                        {isEditing ? "Sửa" : "Thêm Mới"}
 
-                      {/* Thay đổi nội dung nút */}
-                    </button>
+                        {/* Thay đổi nội dung nút */}
+                      </button>
+                    </div>
+                    <div>
+                      <button
+                        className="ml-7 rounded bg-yellow-400 px-4 py-2 text-white hover:bg-yellow-600"
+                        onClick={resetForm}
+                      >
+                        Làm Mới
+                      </button>
+                    </div>
                   </div>
-                  <div>
-                    <button
-                      className="ml-7 rounded bg-yellow-400 px-4 py-2 text-white hover:bg-yellow-600"
-                      onClick={resetForm}
-                    >
-                      Làm Mới
-                    </button>
-                  </div>
-                </div>
-              </form>
-            </div>
-            <div className="mb-4 w-[500px] rounded bg-white p-4 shadow">
-              <span className="mb-2 text-xl font-bold">Tìm kiếm</span>
-              <div className="flex">
-                <div className="mb-4 h-[150px] px-2">
-                  <label htmlFor="tenMauSac" className="mb-1 block">
-                    Tên Màu Sắc:
-                  </label>
-                  <input
-                    type="text"
-                    id="tenMauSac"
-                    name="tenTimKiem"
-                    className="w-[450px] rounded border p-2 hover:border-blue-500"
-                    placeholder="Nhập tên màu sắc"
-                  />
-                </div>
+                </form>
               </div>
-              <div className="flex justify-center">
-                <button
-                  className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
-                  onClick={handleSetTenTimKiem}
-                >
-                  Tìm kiếm
-                </button>
+              <div className="mb-8 mt-4 w-[500px] rounded bg-white p-4 shadow">
+                <span className="mb-2 text-xl font-bold">Tìm kiếm</span>
+                <div className="flex">
+                  <div className="mb-4 h-[150px] px-2">
+                    <label htmlFor="tenMauSac" className="mb-1 block">
+                      Tên Màu Sắc:
+                    </label>
+                    <input
+                      type="text"
+                      id="tenMauSac"
+                      name="tenTimKiem"
+                      className="w-[450px] rounded border p-2 hover:border-blue-500"
+                      placeholder="Nhập tên màu sắc"
+                    />
+                  </div>
+                </div>
+                <div className="flex justify-center">
+                  <button
+                    className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+                    onClick={handleSetTenTimKiem}
+                  >
+                    Tìm kiếm
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="bg-gray-200">
-                <th className="w-10 border border-gray-300 p-2">STT</th>
-                <th className="w-1/3 border border-gray-300 p-2">Tên</th>
-                <th className="w-1/3 border border-gray-300 p-2">Trạng thái</th>
-                <th className="w-1/3 border border-gray-300 p-2">Hành động</th>
-                {/* Add more headers as needed */}
-              </tr>
-            </thead>
-            <tbody>
-              {listMauSac.map((item, index) => (
-                <tr key={item.id} onClick={() => handleRowClick(item)}>
-                  {" "}
-                  {/* Thêm sự kiện nhấp chuột */}
-                  <td className="border border-gray-300 p-2 text-center">
-                    {index + 1 + (trangHienTai - 1) * itemsPerPage}
-                  </td>
-                  <td className="border border-gray-300 p-2 text-center">
-                    {item.ten}
-                  </td>
-                  <td className="border border-gray-300 p-2 text-center">
-                    {item.trangThai ? "Kinh doanh" : "Ngừng kinh doanh"}
-                  </td>
-                  <td className="border border-gray-300 p-2 text-center">
-                    <button
-                      className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
-                      onClick={() => capNhatTrangThai(item.id)} // Gọi hàm cập nhật trạng thái
-                    >
-                      {item.trangThai ? "Ngừng kinh doanh" : "Kinh doanh"}
-                    </button>
-                  </td>
+          <div className="mx-3">
+            <table className="w-full border-collapse">
+              <thead className="h-[50px] text-lg">
+                <tr className="rounded-t-lg border bg-gray-200">
+                  <th className="w-10 border border-b-gray-300 p-2">STT</th>
+                  <th className="w-1/3 border border-b-gray-300 p-2">Tên</th>
+                  <th className="w-1/3 border border-b-gray-300 p-2">
+                    Trạng thái
+                  </th>
+                  <th className="w-1/3 border border-gray-300 p-2">
+                    Hành động
+                  </th>
+                  {/* Add more headers as needed */}
                 </tr>
-              ))}
-              {emptyRows > 0 &&
-                Array.from({ length: emptyRows }).map((_, index) => (
-                  <tr key={`empty-${index}`} style={{ height: "57px" }}>
-                    {/* Đặt ộ cao hàng là 57px */}
-                    <td className="border border-gray-300 p-2"></td>
-                    <td className="border border-gray-300 p-2"></td>
-                    <td className="border border-gray-300 p-2"></td>
-                    <td className="border border-gray-300 p-2"></td>
+              </thead>
+              <tbody>
+                {listMauSac.map((item, index) => (
+                  <tr
+                    key={item.id}
+                    onClick={() => handleRowClick(item)}
+                    className="border border-b-gray-300 hover:bg-slate-100"
+                  >
+                    {/* Thêm sự kiện nhấp chuột */}
+                    <td className="p-2 text-center">
+                      {index + 1 + (trangHienTai - 1) * itemsPerPage}
+                    </td>
+                    <td className="p-2 text-center">{item.ten}</td>
+                    <td className="p-2 text-center">
+                      {item.trangThai ? "Kinh doanh" : "Ngừng kinh doanh"}
+                    </td>
+                    <td className="p-2 text-center">
+                      <button
+                        className="rounded bg-yellow-500 px-4 py-2 text-white hover:bg-green-600"
+                        onClick={() => capNhatTrangThai(item.id)} // Gọi hàm cập nhật trạng thái
+                      >
+                        {item.trangThai ? "Ngừng kinh doanh" : "Kinh doanh"}
+                      </button>
+                    </td>
                   </tr>
                 ))}
-              {/* Add more rows as needed */}
-            </tbody>
-          </table>
+                {emptyRows > 0 &&
+                  Array.from({ length: emptyRows }).map((_, index) => (
+                    <tr key={`empty-${index}`} style={{ height: "57px" }}>
+                      {/* Đặt ộ cao hàng là 57px */}
+                      <td className=""></td>
+                      <td className=""></td>
+                      <td className=""></td>
+                      <td className=""></td>
+                    </tr>
+                  ))}
+                {/* Add more rows as needed */}
+              </tbody>
+            </table>
+          </div>
           <div className="mr-14 mt-4 flex justify-end">
             <ReactPaginate
               previousLabel={"< Previous"}

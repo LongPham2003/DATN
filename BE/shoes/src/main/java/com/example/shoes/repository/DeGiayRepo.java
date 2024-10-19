@@ -1,4 +1,5 @@
 package com.example.shoes.repository;
+import com.example.shoes.entity.ChatLieu;
 import com.example.shoes.entity.DeGiay;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
@@ -24,4 +25,7 @@ public interface DeGiayRepo extends JpaRepository<DeGiay, Integer> {
     Page<DeGiay> getDeGiay(Pageable pageable, String keyword);
     // Phương thức kiểm tra xem  có tồn tại theo tên không
     boolean existsByTen(String ten);
+    // lấy tat ca danh sach sp co trang thai true
+    @Query("SELECT dg FROM DeGiay  dg WHERE dg.trangThai = true")
+    List<DeGiay> getAllTrangThaiTrue();
 }

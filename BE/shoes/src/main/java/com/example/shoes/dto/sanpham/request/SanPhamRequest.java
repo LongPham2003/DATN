@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Setter
 @Getter
 public class SanPhamRequest {
-    private Integer idLoai; // ID của Loại sản phẩm để ánh xạ khi tạo mới hoặc cập nhật
+    private Integer idLoai;
     private String tenSanPham;
     private LocalDate ngayTao;
     private String moTa;
