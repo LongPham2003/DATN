@@ -37,11 +37,7 @@ public class ThuongHieuController {
                 .result(thuongHieuResponse)
                 .build();
     }
-    @GetMapping("/ten")
-    public ResponseEntity<List<String>> getAllTen(){
-        List<String> listTen = thuongHieuService.getAllTenThuongHieu();
-        return ResponseEntity.ok(listTen);
-    }
+
     @GetMapping("/{id}")
     public ApiResponse<ThuongHieuResponse> getById(@PathVariable Integer id) {
         ThuongHieuResponse thuongHieuResponses = thuongHieuService.getById(id);
@@ -92,6 +88,12 @@ public class ThuongHieuController {
         return ApiResponse.<List<ThuongHieuResponse>>builder()
                 .result(list)
                 .build();
+    }
+
+    @GetMapping("/ten")
+    public ResponseEntity<List<String>> getAllTen(){
+        List<String> listTen = thuongHieuService.getAllTenThuongHieu();
+        return ResponseEntity.ok(listTen);
     }
 
 }

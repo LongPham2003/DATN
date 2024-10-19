@@ -28,4 +28,6 @@ public class PhieuGiamGiaResponse {
     private LocalDate ngayKetThuc;
 
     private Boolean trangThai;
+
+    private String hinhThucGiam;
 }

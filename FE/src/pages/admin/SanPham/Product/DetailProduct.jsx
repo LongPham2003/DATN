@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import DropdownDetail from "../../../DropdownDetail";
 import { Bounce, toast, ToastContainer } from "react-toastify";
+import LayAnhTheoIdSP from "./LayANhTheoIDSP";
 
 export default function DetailProduct() {
   const { id } = useParams();
@@ -26,6 +27,8 @@ export default function DetailProduct() {
   let ApiGetAllLoai = `http://localhost:8080/api/loai/getall`;
 
   let ApiLaySPCTTheoIdSP = `http://localhost:8080/api/sanphamchitiet/getidsanpham/${id}`;
+
+  // const [anh, setAnh] = useState([]);
 
   const getById = async () => {
     try {
@@ -65,7 +68,8 @@ export default function DetailProduct() {
 
   const getByIdSP = async () => {
     const data = await axios.get(ApiLaySPCTTheoIdSP);
-    setSPCTbyIdSP(data.data.result.result);
+    setSPCTbyIdSP(data.data.result);
+    console.log(data.data.result);
   };
 
   const handleOptionSelect = (selectedOption) => {
@@ -90,6 +94,8 @@ export default function DetailProduct() {
 
   useEffect(() => {
     getById();
+    getByIdSP();
+    // layAnh();
   }, []);
   return (
     <>
@@ -223,19 +229,61 @@ export default function DetailProduct() {
             <table className="min-w-full text-center">
               <thead>
                 <tr className="h-10 rounded-2xl border-b-2 text-base shadow-inner">
-                  <th className="w-10">id</th>
-                  <th className="w-[100px]">anh</th>
-                  <th className="w-[100px]">mau</th>
-                  <th className="w-[100px]">Size</th>
-                  <th className="w-[100px]">chat lieu</th>
-                  <th className="w-[100px]">chat lieu</th>
-                  <th className="w-[100px]">chat lieu</th>
-                  <th className="w-[100px]">chat lieu</th>
-                  <th className="w-[100px]">chat lieu</th>
-                  <th className="w-[100px]">chat lieu</th>
-                  <th className="w-[100px]">Hanh dong</th>
+                  <th className="w-10">STT</th>
+                  <th className="w-[100px]">Ảnh</th>
+                  <th className="w-[100px]">Chất liệu</th>
+                  <th className="w-[100px]">Màu</th>
+                  <th className="w-[100px]">Kích thước</th>
+                  <th className="w-[100px]">Thương Hiệu</th>
+                  <th className="w-[100px]">Đế giày</th>
+                  <th className="w-[100px]">Đơn giá</th>
+                  <th className="w-[100px]">Số lượng</th>
+                  <th className="w-[100px]">Trạng thái</th>
+                  <th className="w-[100px]">Hành động</th>
                 </tr>
               </thead>
+              <tbody>
+                {SPCTbyIdSP.map((item, index) => (
+                  <tr key={item.id}>
+                    <td className="h-[100px] border-b-[1px] border-indigo-500">
+                      {index + 1}
+                    </td>
+                    <td className="h-[100px] border-b-[1px] border-indigo-500">
+                      <LayAnhTheoIdSP
+                        id={item.id}
+                        className="h-[90px] w-[90px]"
+                      />
+                    </td>
+                    <td className="h-[100px] border-b-[1px] border-indigo-500">
+                      {item.chatLieu}
+                    </td>
+                    <td className="h-[100px] border-b-[1px] border-indigo-500">
+                      {item.mauSac}
+                    </td>
+                    <td className="h-[100px] border-b-[1px] border-indigo-500">
+                      {item.kichThuoc}
+                    </td>
+                    <td className="h-[100px] border-b-[1px] border-indigo-500">
+                      {item.thuongHieu}
+                    </td>
+                    <td className="h-[100px] border-b-[1px] border-indigo-500">
+                      {item.deGiay}
+                    </td>
+                    <td className="h-[100px] border-b-[1px] border-indigo-500">
+                      {item.donGia}
+                    </td>
+                    <td className="h-[100px] border-b-[1px] border-indigo-500">
+                      {item.soLuong}
+                    </td>
+                    <td className="h-[100px] border-b-[1px] border-indigo-500">
+                      {item.trangThai ? "ban" : "deo ban nua"}
+                    </td>
+                    <td className="h-[100px] border-b-[1px] border-indigo-500">
+                      1
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
             </table>
           </div>
         </div>

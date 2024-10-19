@@ -22,7 +22,7 @@ public class HinhAnh {
     private String tenAnh;
 
     @Column(name = "du_lieu_anh", columnDefinition = "LONGBLOB")
-    private byte[] duLieuAnh;
+    private String duLieuAnh;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_san_pham_chi_tiet")
     private SanPhamChiTiet idSanPhamChiTiet;
@@ -30,5 +30,6 @@ public class HinhAnh {
     @NotNull
     @Column(name = "trang_thai")
     private Boolean trangThai ;
+
 
 }

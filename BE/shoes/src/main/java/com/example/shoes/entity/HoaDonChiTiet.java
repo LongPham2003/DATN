@@ -26,9 +26,13 @@ public class HoaDonChiTiet {
     private SanPhamChiTiet idSpct; // Liên kết với bảng SanPhamChiTiet
 
     @NotNull
+    @Column(name = "so_luong")
     private Integer soLuong; // Số lượng sản phẩm được mua
 
     @NotNull
+    @Column(name = "don_gia")
     private BigDecimal donGia; // Đơn giá sản phẩm
 
+    @Column(name = "trang_thai")
+    private Boolean trangThai;
 }

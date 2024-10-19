@@ -14,4 +14,6 @@ public interface HinhAnhService {
     HinhAnhResponse create(HinhAnhRequest request);
     HinhAnhResponse update(Integer id, HinhAnhRequest request);
     void delete(Integer id);
+    HinhAnhResponse getFirstBySanPhamChiTietId(Integer idSanPhamChiTiet);
+
 }
