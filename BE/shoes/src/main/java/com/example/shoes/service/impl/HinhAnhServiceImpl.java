@@ -3,9 +3,11 @@ package com.example.shoes.service.impl;
 import com.example.shoes.dto.hinhanh.repuest.HinhAnhRequest;
 import com.example.shoes.dto.hinhanh.response.HinhAnhResponse;
 import com.example.shoes.entity.HinhAnh;
+import com.example.shoes.entity.SanPhamChiTiet;
 import com.example.shoes.exception.AppException;
 import com.example.shoes.exception.ErrorCode;
 import com.example.shoes.repository.HinhAnhRepo;
+import com.example.shoes.repository.SanPhamChiTietRepo;
 import com.example.shoes.service.HinhAnhService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +24,8 @@ import java.util.stream.Collectors;
 public class HinhAnhServiceImpl implements HinhAnhService {
     @Autowired
     private HinhAnhRepo hinhAnhRepo;
+    @Autowired
+    private SanPhamChiTietRepo sanPhamChiTietRepo;
 
     @Override
     public List<HinhAnhResponse> findAll() {
@@ -46,7 +50,9 @@ public class HinhAnhServiceImpl implements HinhAnhService {
         // Thêm tiền tố vào chuỗi Base64
         String base64WithPrefix = "data:image/png;base64," + request.getDuLieuAnhBase64();
         hinhAnh.setDuLieuAnh(base64WithPrefix);  // Lưu chuỗi Base64 với tiền tố
-
+        SanPhamChiTiet sanPhamChiTiet=sanPhamChiTietRepo.findById(request.getIdSanPhamChiTiet())
+                .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_DETAIL_NOT_FOUND));
+       hinhAnh.setIdSanPhamChiTiet(sanPhamChiTiet);
         hinhAnh.setTrangThai(request.getTrangThai());
         HinhAnh savedHinhAnh = hinhAnhRepo.save(hinhAnh);
 
@@ -62,8 +68,9 @@ public class HinhAnhServiceImpl implements HinhAnhService {
         // Thêm tiền tố vào chuỗi Base64
         String base64WithPrefix = "data:image/png;base64," + request.getDuLieuAnhBase64();
         hinhAnh.setDuLieuAnh(base64WithPrefix);  // Lưu chuỗi Base64 với tiền tố
-
-        hinhAnh.setIdSanPhamChiTiet(hinhAnh.getIdSanPhamChiTiet());
+        SanPhamChiTiet sanPhamChiTiet=sanPhamChiTietRepo.findById(request.getIdSanPhamChiTiet())
+                .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_DETAIL_NOT_FOUND));
+        hinhAnh.setIdSanPhamChiTiet(sanPhamChiTiet);
         hinhAnh.setTrangThai(request.getTrangThai());
 
         HinhAnh updated = hinhAnhRepo.save(hinhAnh);
