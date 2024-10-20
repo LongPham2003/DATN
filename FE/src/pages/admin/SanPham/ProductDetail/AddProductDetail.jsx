@@ -1,13 +1,15 @@
 import {
   PlusCircleOutlined,
   SettingOutlined,
+  UploadOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import { TrashIcon } from "@heroicons/react/16/solid";
-import { Button, Input, InputNumber, Select } from "antd";
+import { Button, Input, InputNumber, Popconfirm, Select, Upload } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { Bounce, toast, ToastContainer } from "react-toastify";
 
 export default function AddProductDetail() {
   let { id } = useParams();
@@ -127,9 +129,33 @@ export default function AddProductDetail() {
     });
     try {
       await Promise.all(request);
-      console.log("them thanh cong:", request);
+      // console.log("them thanh cong:", request);
+      toast.success("Thêm sản phẩm mới thành công", {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        newestOnTop: false,
+        closeOnClick: true,
+        rtl: false,
+        pauseOnFocusLoss: true,
+        draggable: true,
+        pauseOnHover: true,
+        theme: "light",
+        transition: Bounce,
+      });
     } catch (error) {
       console.log(error);
+      toast.error(error.message || "Thêm mới thất bại", {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
     }
   };
 
@@ -142,6 +168,31 @@ export default function AddProductDetail() {
     layMauSac();
     layThuongHieu();
   }, []);
+  const [fileList, setFileList] = useState([]);
+  const [base64String, setBase64String] = useState("");
+
+  // Hàm chuyển đổi file thành Base64
+  const convertFileToBase64 = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file); // Đọc file dưới dạng URL (Base64)
+    reader.onload = () => {
+      setBase64String(reader.result); // Lưu chuỗi Base64 vào state
+      console.log("Base64 String: ", reader.result); // Xem kết quả trong console
+    };
+    reader.onerror = (error) => {
+      console.log("Error converting file: ", error);
+    };
+  };
+
+  // Xử lý khi có thay đổi file
+  const handleChange = ({ fileList }) => {
+    setFileList(fileList);
+
+    if (fileList.length > 0) {
+      const file = fileList[0].originFileObj; // Lấy file từ danh sách
+      convertFileToBase64(file); // Chuyển đổi thành Base64
+    }
+  };
 
   return (
     <>
@@ -269,14 +320,20 @@ export default function AddProductDetail() {
             {listSPCT.length > 0 ? (
               <>
                 <div className="mb-4 mr-10 flex justify-end gap-5">
-                  <Button
-                    size="large"
-                    variant="solid"
-                    color="primary"
-                    onClick={AddSPCT}
+                  <Popconfirm
+                    title="Thêm sản phẩm"
+                    description="Bạn có chắc chắn muốn thêm sản phẩm này không?"
+                    okText="Thêm"
+                    cancelText="Không"
+                    onConfirm={AddSPCT}
                   >
-                    <PlusCircleOutlined /> Lưu
-                  </Button>
+                    <Button
+                      className="h-[40px] w-[100px] text-xl"
+                      type="primary"
+                    >
+                      Thêm
+                    </Button>
+                  </Popconfirm>
                   <Button size="large" variant="outlined" color="primary">
                     <SettingOutlined /> Sửa chung
                   </Button>
@@ -289,7 +346,7 @@ export default function AddProductDetail() {
                       <th className="w-[280px] px-4 py-2">Tên Sản Phẩm</th>
                       <th className="w-[150px] px-4 py-2">Số Lượng</th>
                       <th className="w-[150px] px-4 py-2">Giá Bán</th>
-                      <th className="px-4 py-2">Hành động</th>
+                      <th className="w-[250px] px-4 py-2">Hành động</th>
                       <th className="px-4 py-2">Ảnh Sản Phẩm</th>
                     </tr>
                   </thead>
@@ -330,10 +387,32 @@ export default function AddProductDetail() {
                         </td>
 
                         <td className="px-4 py-2">
-                          <TrashIcon
-                            className="mx-auto w-[30px] text-red-600"
-                            onClick={() => handleRemoveRenderSPCT(index)}
-                          />
+                          <div className="flex items-center justify-center">
+                            <Popconfirm
+                              title="Xóa sản phẩm"
+                              description="Bạn có chắc chắn muốn xóa sản phẩm này không?"
+                              okText="Xóa"
+                              cancelText="Không"
+                              onConfirm={() => handleRemoveRenderSPCT(index)}
+                            >
+                              <TrashIcon className="h-[20px] text-red-500" />
+                            </Popconfirm>
+                          </div>
+                        </td>
+                        <td>
+                          <Upload
+                            action={
+                              (`http://localhost:8080/api/hinhanh/add`,
+                              base64String)
+                            }
+                            listType="picture-card"
+                            fileList={fileList}
+                            onChange={handleChange} // Xử lý khi có thay đổi file
+                            maxCount={5} // Giới hạn 1 file
+                            accept=".JPG,.PNG" // Chỉ chấp nhận file ảnh
+                          >
+                            {fileList.length < 5 && "+ Upload"}
+                          </Upload>
                         </td>
                       </tr>
                     ))}
@@ -348,6 +427,7 @@ export default function AddProductDetail() {
           </div>
         </div>
       </div>
+      <ToastContainer />
     </>
   );
 }
