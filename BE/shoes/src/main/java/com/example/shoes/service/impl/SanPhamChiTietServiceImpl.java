@@ -193,6 +193,15 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<SanPhamChiTietResponse> getAlLByIdSanPham(Integer idSanPham, Integer idMauSac, Integer idkichThuoc, Integer idChatLieu, Integer idThuongHieu, Integer idDeGiay, Boolean trangThai, BigDecimal minDonGia, BigDecimal maxDonGia) {
+        List<SanPhamChiTietResponse> sanPhamChiTietResponses = sanPhamChiTietRepo.getAlLByIdSanPham(idSanPham,idMauSac,idkichThuoc,idChatLieu,idThuongHieu,idDeGiay,trangThai,minDonGia,maxDonGia)
+                .stream().map(this::converToResponse)
+                .collect(Collectors.toList());
+
+        return sanPhamChiTietResponses;
+    }
+
 
     private SanPhamChiTietResponse converToResponse(SanPhamChiTiet sanPhamChiTiet) {
         SanPhamChiTietResponse response = new SanPhamChiTietResponse();
