@@ -55,27 +55,7 @@ public interface SanPhamChiTietRepo extends JpaRepository<SanPhamChiTiet, Intege
     List<SanPhamChiTiet> getAllTrangThaiTrue();
 
 
-    @Query("SELECT s FROM SanPhamChiTiet s " +
-            "WHERE (:idSanPham IS NULL OR s.idSanPham.id = :idSanPham) " +
-            "AND (:idMauSac IS NULL OR s.idMauSac.id = :idMauSac) " +
-            "AND (:idkichThuoc IS NULL OR s.idKichThuoc.id = :idkichThuoc) " +
-            "AND (:idChatLieu IS NULL OR s.idChatLieu.id = :idChatLieu) " +
-            "AND (:idThuongHieu IS NULL OR s.idThuongHieu.id = :idThuongHieu) " +
-            "AND (:idDeGiay IS NULL OR s.idDeGiay.id = :idDeGiay) " +
-            "AND (:trangThai IS NULL OR s.trangThai = :trangThai) " +
-            "AND (:minDonGia IS NULL OR s.donGia >= :minDonGia) " +
-            "AND (:maxDonGia IS NULL OR s.donGia <= :maxDonGia) " +
-            "AND (:trangThai IS NULL OR s.trangThai = :trangThai)" +
-            "ORDER BY s.id DESC")
-    List<SanPhamChiTiet> getAlLByIdSanPham(@Param("idSanPham") Integer idSanPham,
-                                           @Param("idMauSac") Integer idMauSac,
-                                           @Param("idkichThuoc") Integer idkichThuoc,
-                                           @Param("idChatLieu") Integer idChatLieu,
-                                           @Param("idThuongHieu") Integer idThuongHieu,
-                                           @Param("idDeGiay") Integer idDeGiay,
-                                           @Param("trangThai") Boolean trangThai,
-                                           @Param("minDonGia") BigDecimal minDonGia,
-                                           @Param("maxDonGia") BigDecimal maxDonGia);
+
 
 }
 
