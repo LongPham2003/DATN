@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import DropdownDetail from "../../../DropdownDetail";
 import { Bounce, toast, ToastContainer } from "react-toastify";
+import LayAnhTheoIdSP from "./LayANhTheoIDSP";
 
 export default function DetailProduct() {
   const { id } = useParams();
@@ -26,6 +27,8 @@ export default function DetailProduct() {
   let ApiGetAllLoai = `http://localhost:8080/api/loai/getall`;
 
   let ApiLaySPCTTheoIdSP = `http://localhost:8080/api/sanphamchitiet/getidsanpham/${id}`;
+
+  // const [anh, setAnh] = useState([]);
 
   const getById = async () => {
     try {
@@ -92,6 +95,7 @@ export default function DetailProduct() {
   useEffect(() => {
     getById();
     getByIdSP();
+    // layAnh();
   }, []);
   return (
     <>
@@ -245,7 +249,10 @@ export default function DetailProduct() {
                       {index + 1}
                     </td>
                     <td className="h-[100px] border-b-[1px] border-indigo-500">
-                      1
+                      <LayAnhTheoIdSP
+                        id={item.id}
+                        className="h-[90px] w-[90px]"
+                      />
                     </td>
                     <td className="h-[100px] border-b-[1px] border-indigo-500">
                       {item.chatLieu}

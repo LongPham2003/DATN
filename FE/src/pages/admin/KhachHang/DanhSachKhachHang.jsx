@@ -132,6 +132,7 @@ export default function DanhSachNhanVien() {
             <thead>
               <tr className="bg-gray-100">
                 <th className="border-b px-4 py-2">STT</th>
+                <th className="border-b px-4 py-2">Mã</th>
                 <th className="border-b px-4 py-2">Họ tên</th>
                 <th className="border-b px-4 py-2">Email</th>
                 <th className="border-b px-4 py-2">SDT</th>

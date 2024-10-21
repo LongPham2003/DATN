@@ -4,6 +4,8 @@ package com.example.shoes.service.impl;
 import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.loai.request.LoaiRequest;
 import com.example.shoes.dto.loai.response.LoaiResponse;
+import com.example.shoes.entity.ChatLieu;
+import com.example.shoes.entity.DeGiay;
 import com.example.shoes.entity.Loai;
 import com.example.shoes.exception.AppException;
 import com.example.shoes.exception.ErrorCode;
@@ -101,6 +103,10 @@ public class LoaiServiceImpl implements LoaiService {
     }
 
     @Override
+    public List<String> getAllTenLoai() {
+        return loaiRepository.findAll().stream().map(Loai::getTen).collect(Collectors.toList());
+    }
+
     public List<LoaiResponse> getAll() {
         // Lấy tất cả các ChatLieu từ repository
         List<Loai> list =loaiRepository.getAllTrangThaiTrue();
@@ -111,10 +117,6 @@ public class LoaiServiceImpl implements LoaiService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public List<String> getAllTenLoai() {
-        return loaiRepository.findAll().stream().map(Loai::getTen).collect(Collectors.toList());
-    }
 
     // Phương thức chuyển đổi Loai thành LoaiResponse
     private LoaiResponse convertToResponse(Loai loai) {

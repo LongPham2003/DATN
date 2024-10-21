@@ -1,25 +1,26 @@
-import { Modal } from "antd";
-import axios from "axios";
+import axios from "../../../api/axiosConfig";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 
-const ChiTietNhanVien = () => {
-  const { id } = useParams();
+import { Modal } from "antd";
 
+const ChiTietPhieuGiamGia = () => {
   const navigate = useNavigate();
+  const { id } = useParams();
   const [error, setError] = useState("");
-  const [nhanVien, setNhanVien] = useState();
+  // eslint-disable-next-line no-unused-vars
+  const [phieuGiamGia, setPhieuGiamGia] = useState();
   const [formData, setFormData] = useState({
-    hoTen: "",
-    email: "",
-    sdt: "",
-    ngaySinh: "",
-    gioiTinh: "",
-    diaChi: "",
-    trangThai: null,
-    chucVu: "",
-    ma: "",
+    tenVoucher: "",
+    dieuKienGiamGia: "",
+    hinhThucGiam: "",
+    mucGiam: "",
+    giamToiDa: "",
+    soLuong: "",
+    ngayBatDau: "",
+    ngayKetThuc: "",
+    trangThai: "",
   });
 
   const handleChange = (e) => {
@@ -30,7 +31,7 @@ const ChiTietNhanVien = () => {
     }));
   };
 
-  // Hàm xử lý khi gửi form
+  // update phiếu giảm giá
   const handleSubmit = (e) => {
     e.preventDefault(); // Ngăn chặn hành động mặc định của form
 
@@ -38,23 +39,24 @@ const ChiTietNhanVien = () => {
       title: "Xác nhận cập nhật",
       content: "Bạn có chắc chắn muốn cập nhật voucher này không?",
       onOk() {
+        // Nếu người dùng xác nhận, gửi yêu cầu cập nhật
         axios
-          .post(`http://localhost:8080/nhanvien/update/${id}`, {
-            hoTen: formData.hoTen,
-            ma: formData.ma,
-            email: formData.email,
-            sdt: formData.sdt,
-            ngaySinh: formData.ngaySinh,
-            gioiTinh: formData.gioiTinh,
-            diaChi: formData.diaChi,
+          .post(`http://localhost:8080/api/phieugiamgia/update/${id}`, {
+            tenVoucher: formData.tenVoucher,
+            dieuKienGiamGia: formData.dieuKienGiamGia,
+            hinhThucGiam: formData.hinhThucGiam,
+            mucGiam: formData.mucGiam,
+            giamToiDa: formData.giamToiDa,
+            soLuong: formData.soLuong,
+            ngayBatDau: formData.ngayBatDau,
+            ngayKetThuc: formData.ngayKetThuc,
             trangThai: formData.trangThai,
-            chucVu: formData.roles,
           })
           .then((response) => {
             console.log("Cập nhật thành công:", response.data);
             setError("");
-            toast.success("Thành công");
-            navigate("/admin/nhanvien");
+            toast.success("Cập nhật thành công");
+            navigate("/admin/phieugiamgia");
           })
           .catch((error) => {
             console.error("Lỗi khi cập nhật:", error);
@@ -67,146 +69,129 @@ const ChiTietNhanVien = () => {
     });
   };
 
+  // chi tiết nhân viên
+
   useEffect(() => {
     axios
-      .get(`http://localhost:8080/nhanvien/${id}`)
+      .get(`http://localhost:8080/api/phieugiamgia/${id}`)
       .then((response) => {
-        const nhanVienData = response.data.result;
+        const resData = response.data.result;
 
-        setNhanVien(nhanVienData);
+        setPhieuGiamGia(resData);
         setFormData({
-          hoTen: nhanVienData.hoTen,
-          ma: nhanVienData.ma,
-          email: nhanVienData.email,
-          sdt: nhanVienData.sdt,
-          ngaySinh: nhanVienData.ngaySinh,
-          gioiTinh: nhanVienData.gioiTinh,
-          diaChi: nhanVienData.diaChi,
-          trangThai: nhanVienData.trangThai,
-          chucVu: nhanVienData.taiKhoan.roles,
-          ngayTao: nhanVienData.createdAt,
-          ngayCapNhat: nhanVienData.updatedAt,
-          nguoiTao: nhanVienData.createdBy,
-          nguoiCapNhat: nhanVienData.updatedBy,
+          tenVoucher: resData.tenVoucher,
+          dieuKienGiamGia: resData.dieuKienGiamGia,
+          hinhThucGiam: resData.hinhThucGiam,
+          mucGiam: resData.mucGiam,
+          giamToiDa: resData.giamToiDa,
+          soLuong: resData.soLuong,
+          ngayBatDau: resData.ngayBatDau,
+          ngayKetThuc: resData.ngayKetThuc,
+          trangThai: resData.trangThai,
+          ngayTao: resData.ngayTao,
+          ngayCapNhat: resData.ngayCapNhat,
+          nguoiTao: resData.nguoiTao,
+          nguoiCapNhat: resData.nguoiCapNhat,
         });
       })
       .catch((error) => {
         console.error("Lỗi: " + error);
-        setError("Không thể tải thông tin nhân viên.");
+        setError("Không thể tải thông tin.");
       });
   }, [id]);
 
-  console.log({ nhanVien });
-
   return (
-    <div className="flex h-auto items-center justify-center bg-gray-100">
-      <div className="h-full w-full max-w-4xl rounded-lg bg-white px-8 py-2 shadow-md">
+    <div className="mt-2 flex h-auto items-center justify-center bg-gray-100">
+      <div className="w-full rounded-lg bg-white p-8 shadow-md">
         <h1 className="mb-3 text-center text-2xl font-bold">
           Chi Tiết Nhân Viên
         </h1>
-        <form onSubmit={handleSubmit} className="mt-5 space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div className="flex flex-wrap">
             <div className="w-full p-2 sm:w-1/2">
-              <label htmlFor="ma" className="mb-1 block">
-                Họ Tên:
-              </label>
+              <label className="block">Tên khuyến mãi:</label>
               <input
+                name="tenVoucher"
+                value={formData.tenVoucher}
+                onChange={handleChange}
+                className="block w-full rounded-md border border-slate-300 bg-white py-2 pl-2 shadow-sm"
+                placeholder="Tên voucher..."
                 type="text"
-                id="ma"
-                name="ma"
-                value={formData.ma}
-                onChange={handleChange}
-                className="w-full rounded border p-2"
-                required
-                disabled
               />
             </div>
             <div className="w-full p-2 sm:w-1/2">
-              <label htmlFor="hoTen" className="mb-1 block">
-                Họ Tên:
-              </label>
+              <label className="block">Điều kiện giảm:</label>
               <input
+                name="dieuKienGiamGia"
+                value={formData.dieuKienGiamGia}
+                onChange={handleChange}
+                className="block w-full rounded-md border border-slate-300 bg-white py-2 pl-2 shadow-sm"
+                placeholder="Điều kiện giảm..."
                 type="text"
-                id="hoTen"
-                name="hoTen"
-                value={formData.hoTen}
-                onChange={handleChange}
-                className="w-full rounded border p-2"
-                required
               />
             </div>
             <div className="w-full p-2 sm:w-1/2">
-              <label htmlFor="email" className="mb-1 block">
-                Email:
-              </label>
+              <label className="block">Hình thức giảm:</label>
               <input
-                type="email"
-                disabled
-                id="email"
-                name="email"
-                value={formData.email}
+                name="hinhThucGiam"
+                value={formData.hinhThucGiam}
                 onChange={handleChange}
-                className="w-full rounded border p-2"
-                required
+                className="block w-full rounded-md border border-slate-300 bg-white py-2 pl-2 shadow-sm"
+                placeholder="Hình thức giảm..."
+                type="text"
               />
             </div>
             <div className="w-full p-2 sm:w-1/2">
-              <label htmlFor="sdt" className="mb-1 block">
-                Số Điện Thoại:
-              </label>
+              <label className="block">Mức giảm:</label>
               <input
-                type="tel"
-                id="sdt"
-                name="sdt"
-                value={formData.sdt}
+                name="mucGiam"
+                value={formData.mucGiam}
                 onChange={handleChange}
-                className="w-full rounded border p-2"
-                required
+                className="block w-full rounded-md border border-slate-300 bg-white py-2 pl-2 shadow-sm"
+                placeholder="Mức giảm..."
+                type="text"
               />
             </div>
             <div className="w-full p-2 sm:w-1/2">
-              <label htmlFor="ngaySinh" className="mb-1 block">
-                Ngày Sinh:
-              </label>
+              <label className="block">Giảm tối đa:</label>
               <input
+                name="giamToiDa"
+                value={formData.giamToiDa}
+                onChange={handleChange}
+                className="block w-full rounded-md border border-slate-300 bg-white py-2 pl-2 shadow-sm"
+                placeholder="Giảm tối đa..."
+                type="text"
+              />
+            </div>
+            <div className="w-full p-2 sm:w-1/2">
+              <label className="block">Số lượng:</label>
+              <input
+                name="soLuong"
+                value={formData.soLuong}
+                onChange={handleChange}
+                className="block w-full rounded-md border border-slate-300 bg-white py-2 pl-2 shadow-sm"
+                placeholder="Số lượng..."
+                type="number"
+              />
+            </div>
+            <div className="w-full p-2 sm:w-1/2">
+              <label className="block">Ngày bắt đầu:</label>
+              <input
+                name="ngayBatDau"
+                value={formData.ngayBatDau}
+                onChange={handleChange}
+                className="block w-full rounded-md border border-slate-300 bg-white py-2 pl-2 shadow-sm"
                 type="date"
-                id="ngaySinh"
-                name="ngaySinh"
-                value={formData.ngaySinh}
-                onChange={handleChange}
-                className="w-full rounded border p-2"
-                required
               />
             </div>
             <div className="w-full p-2 sm:w-1/2">
-              <label htmlFor="gioiTinh" className="mb-1 block">
-                Giới Tính:
-              </label>
-              <select
-                id="gioiTinh"
-                name="gioiTinh"
-                value={formData.gioiTinh}
-                onChange={handleChange}
-                className="w-full rounded border p-2"
-                required
-              >
-                <option value="">Chọn giới tính</option>
-                <option value="Nam">Nam</option>
-                <option value="Nữ">Nữ</option>
-              </select>
-            </div>
-            <div className="w-full p-2 sm:w-1/2">
-              <label htmlFor="diaChi" className="mb-1 block">
-                Địa Chỉ:
-              </label>
+              <label className="block">Ngày kết thúc:</label>
               <input
-                type="text"
-                id="diaChi"
-                name="diaChi"
-                value={formData.diaChi}
+                name="ngayKetThuc"
+                value={formData.ngayKetThuc}
                 onChange={handleChange}
-                className="w-full rounded border p-2"
-                required
+                className="block w-full rounded-md border border-slate-300 bg-white py-2 pl-2 shadow-sm"
+                type="date"
               />
             </div>
             <div className="w-full p-2 sm:w-1/2">
@@ -220,25 +205,10 @@ const ChiTietNhanVien = () => {
                 required
               >
                 <option value="">Chọn trạng thái</option>
-                <option value="true">Hoạt Động</option>
-                <option value="false">Nghỉ</option>
+                <option value="true">Còn</option>
+                <option value="false">Hết</option>
               </select>
             </div>
-
-            <div className="w-full p-2 sm:w-1/2">
-              <label className="mb-1 block">Chức Vụ:</label>
-              <select
-                id="chucVu"
-                name="chucVu"
-                value={formData.chucVu}
-                className="w-full rounded border p-2"
-                required
-              >
-                <option value="ROLE_NHANVIEN">Nhân Viên</option>
-                <option value="ROLE_ADMIN">ADMIN</option>
-              </select>
-            </div>
-
             <div className="w-full p-2 sm:w-1/2">
               <label htmlFor="ngayTao" className="mb-1 block">
                 Ngày Tạo:
@@ -299,15 +269,16 @@ const ChiTietNhanVien = () => {
                 required
               />
             </div>
+            {error && <p className="mb-4 text-sm text-red-500">{error}</p>}
+            <div className="w-full p-2">
+              <button
+                type="submit"
+                className="mx-auto flex rounded-md border border-transparent bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+              >
+                Cập nhật phiếu giảm giá
+              </button>
+            </div>
           </div>
-
-          {error && <p className="mb-4 text-sm text-red-500">{error}</p>}
-          <button
-            type="submit"
-            className="w-full rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
-          >
-            Cập Nhật Nhân Viên
-          </button>
         </form>
       </div>
       <ToastContainer
@@ -326,5 +297,4 @@ const ChiTietNhanVien = () => {
     </div>
   );
 };
-
-export default ChiTietNhanVien;
+export default ChiTietPhieuGiamGia;
