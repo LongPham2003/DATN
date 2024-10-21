@@ -4,6 +4,7 @@ import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.degiay.request.DeGiayRequet;
 import com.example.shoes.dto.degiay.response.DeGiayResponse;
 import com.example.shoes.entity.DeGiay;
+import com.example.shoes.entity.MauSac;
 import com.example.shoes.exception.AppException;
 import com.example.shoes.exception.ErrorCode;
 import com.example.shoes.repository.DeGiayRepo;
@@ -100,6 +101,10 @@ public class DeGiayServiceImpl implements DeGiayService {
     }
 
     @Override
+    public List<String> getAllTenDeGiay() {
+        return deGiayRepo.findAll().stream().map(DeGiay::getTen).collect(Collectors.toList());
+    }
+
     public List<DeGiayResponse> getAll() {
         // Lấy tất cả các ChatLieu từ repository
         List<DeGiay> list =deGiayRepo.getAllTrangThaiTrue();
@@ -110,10 +115,6 @@ public class DeGiayServiceImpl implements DeGiayService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public List<String> getAllTenDeGiay() {
-        return deGiayRepo.findAll().stream().map(DeGiay::getTen).collect(Collectors.toList());
-    }
 
     // Phương thức chuyển đổi DeGiay thành DeGiayResponse
     private DeGiayResponse convertToResponse(DeGiay deGiay) {

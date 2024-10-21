@@ -46,12 +46,10 @@ const CustomDropdown = ({ options, selectedValue, onSelect }) => {
         <div className="absolute z-10 mt-2 max-h-48 w-full overflow-auto rounded-md bg-white shadow-lg">
           <ul className="py-1 text-gray-700 hover:border-blue-400">
             <li
-              onClick={() =>
-                handleOptionClick({ ten: "Select option", id: "" })
-              }
+              onClick={() => handleOptionClick({ ten: "Tất cả", id: "" })}
               className="block cursor-pointer px-4 py-2 hover:bg-blue-500 hover:text-white"
             >
-              tất cả SP
+              Tất cả
             </li>
             {options.map((option, index) => (
               <li

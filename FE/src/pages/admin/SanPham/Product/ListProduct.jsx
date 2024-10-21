@@ -144,7 +144,7 @@ export default function ListProduct() {
               selectedValue={
                 idLoai
                   ? loaiSelect.find((loai) => loai.id === idLoai)
-                  : { ten: "Select option", id: "" }
+                  : { ten: "Mời bạn chọn loại", id: "" }
               }
               onSelect={(e) => setidLoai(e.id)}
             />
@@ -228,14 +228,26 @@ export default function ListProduct() {
                           {/* <button>Chi tiet</button> */}
                           {/* Xem detail */}
                           <div className="flex gap-4">
-                            <Link to={`/admin/chitietsanpham/${sp.id}`}>
-                              <div className="flex gap-2 transition-transform duration-500 hover:scale-125">
-                                <span>Chi tiết</span>
-                              </div>
-                            </Link>
-                            <Link to={`/admin/themsanphamchitiet/${sp.id}`}>
-                              <span>Thêm SPCT</span>
-                            </Link>
+                            <button className="rounded bg-blue-500 px-2 py-1 text-white">
+                              <Link to={`/admin/sanpham/${sp.id}`}>
+                                <div className="flex gap-2 transition-transform duration-500 hover:scale-125">
+                                  <span>Sửa</span>
+                                </div>
+                              </Link>
+                            </button>
+
+                            <button className="rounded bg-blue-500 px-2 py-1 text-white">
+                              <Link to={`/admin/chitietsanpham/${sp.id}`}>
+                                <div className="flex gap-2 transition-transform duration-500 hover:scale-125">
+                                  <span>SPCT</span>
+                                </div>
+                              </Link>
+                            </button>
+                            <button className="rounded bg-blue-500 px-2 py-1 text-white">
+                              <Link to={`/admin/themsanphamchitiet/${sp.id}`}>
+                                <span>ADD_SPCT</span>
+                              </Link>
+                            </button>
                           </div>
                         </td>
                       </tr>

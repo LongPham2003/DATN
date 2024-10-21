@@ -19,6 +19,7 @@ public interface KichThuocService {
     KichThuocResponse update(Integer id, KichThuocRequest request);
     void delete(Integer id);
     List<KichThuocResponse> search(String kichThuoc, Boolean trangThai);
-    List<KichThuocResponse> getAll();
     List<String> getAllTenKichThuoc();
+
+    List<KichThuocResponse> getAll();
 }

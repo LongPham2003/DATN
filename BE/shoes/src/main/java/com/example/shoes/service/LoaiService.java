@@ -18,6 +18,7 @@ public interface LoaiService {
     LoaiResponse update(Integer id, LoaiRequest request);
     void delete(Integer id);
     List<LoaiResponse> search(String ten, Boolean trangThai);
-    List<LoaiResponse> getAll();
     List<String> getAllTenLoai();
+
+    List<LoaiResponse> getAll();
 }

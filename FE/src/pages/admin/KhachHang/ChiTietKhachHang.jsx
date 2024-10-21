@@ -1,4 +1,5 @@
-import axios from "axios";
+import { Modal } from "antd";
+import axios from "../../../api/axiosConfig";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Bounce, toast, ToastContainer } from "react-toastify";
@@ -114,6 +115,63 @@ export default function ChiTietKhachHang() {
     }));
   };
 
+  useEffect(() => {
+    if (
+      formData.soNhaDuongThonXom &&
+      formData.ward &&
+      formData.district &&
+      formData.province
+    ) {
+      const fullAddr = `${formData.soNhaDuongThonXom} - ${formData.ward} - ${formData.district} - ${formData.province}`;
+      setFullAddress(fullAddr);
+    } else {
+      setFullAddress("");
+    }
+  }, [
+    formData.soNhaDuongThonXom,
+    formData.ward,
+    formData.district,
+    formData.province,
+  ]);
+
+  const handleUpdate = (e) => {
+    e.preventDefault();
+    Modal.confirm({
+      title: "Xác nhận cập nhật",
+      content: "Bạn có chắc chắn muốn cập nhật khách hàng này không?",
+      onOk() {
+        axios
+          .post(`http://localhost:8080/khachhang/update/${id}`, {
+            hoTen: formData.hoTen,
+            email: formData.email,
+            sdt: formData.sdt,
+            ngaySinh: formData.ngaySinh,
+            gioiTinh: formData.gioiTinh,
+            ma: formData.ma,
+            trangThai: formData.trangThai,
+            soNhaDuongThonXom: formData.soNhaDuongThonXom,
+            diaChiChiTiet: fullAddress, // Gửi địa chỉ đầy đủ
+            tinhThanhPho: formData.province,
+            huyenQuan: formData.district,
+            xaPhuong: formData.ward,
+          })
+          // eslint-disable-next-line no-unused-vars
+          .then((res) => {
+            toast.success("Cập nhật thông tin thành công!");
+            navigate("/admin/khachhang");
+          })
+
+          .catch((error) => {
+            toast.error("Cập nhật thông tin không thành công.");
+            console.error("Error updating customer data", error);
+          });
+      },
+      onCancel() {
+        // Nếu người dùng hủy, có thể không cần làm gì cả
+      },
+    });
+  };
+
   // Lấy thông tin khách hàng
   useEffect(() => {
     const fetchCustomerData = async () => {
@@ -168,50 +226,6 @@ export default function ChiTietKhachHang() {
       fetchCustomerData();
     }
   }, [id, diaChiData]);
-
-  useEffect(() => {
-    if (
-      formData.soNhaDuongThonXom &&
-      formData.ward &&
-      formData.district &&
-      formData.province
-    ) {
-      const fullAddr = `${formData.soNhaDuongThonXom} - ${formData.ward} - ${formData.district} - ${formData.province}`;
-      setFullAddress(fullAddr);
-    } else {
-      setFullAddress("");
-    }
-  }, [
-    formData.soNhaDuongThonXom,
-    formData.ward,
-    formData.district,
-    formData.province,
-  ]);
-
-  const handleUpdate = async (e) => {
-    e.preventDefault();
-    try {
-      await axios.post(`http://localhost:8080/khachhang/update/${id}`, {
-        hoTen: formData.hoTen,
-        email: formData.email,
-        sdt: formData.sdt,
-        ngaySinh: formData.ngaySinh,
-        gioiTinh: formData.gioiTinh,
-        ma: formData.ma,
-        trangThai: formData.trangThai,
-        soNhaDuongThonXom: formData.soNhaDuongThonXom,
-        diaChiChiTiet: fullAddress, // Gửi địa chỉ đầy đủ
-        tinhThanhPho: formData.province,
-        huyenQuan: formData.district,
-        xaPhuong: formData.ward,
-      });
-      toast.success("Cập nhật thông tin thành công!");
-      navigate("/admin/khachhang");
-    } catch (error) {
-      toast.error("Cập nhật thông tin không thành công.");
-      console.error("Error updating customer data", error);
-    }
-  };
 
   return (
     <div className="flex h-auto items-center justify-center bg-gray-100">

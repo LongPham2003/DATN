@@ -44,6 +44,7 @@ export function Sidebar() {
   const handleLogout = () => {
     // Xóa quyền khỏi localStorage
     localStorage.removeItem("userRole");
+    localStorage.removeItem("email");
 
     // Điều hướng về trang đăng nhập
     navigate("/login");
@@ -195,7 +196,7 @@ export function Sidebar() {
 
         {/* Phần Voucher */}
         <hr className="border-blue-gray-50 my-2" />
-        <Link to="/admin/voucher">
+        <Link to="/admin/phieugiamgia">
           <ListItem>
             <ListItemPrefix>
               <PercentBadgeIcon className="h-5 w-5" />
@@ -235,7 +236,9 @@ export function Sidebar() {
             alt="avatar"
           />
           <div>
-            <Typography variant="h6">Tania Andrew</Typography>
+            <Typography className="font-bold" variant="small">
+              {localStorage.getItem("email")}
+            </Typography>
             <Typography variant="small" color="gray" className="font-normal">
               Web Developer
             </Typography>
