@@ -3,29 +3,31 @@ package com.example.shoes.service.impl;
 import com.example.shoes.dto.hinhanh.repuest.HinhAnhRequest;
 import com.example.shoes.dto.hinhanh.response.HinhAnhResponse;
 import com.example.shoes.entity.HinhAnh;
+import com.example.shoes.entity.SanPhamChiTiet;
 import com.example.shoes.exception.AppException;
 import com.example.shoes.exception.ErrorCode;
 import com.example.shoes.repository.HinhAnhRepo;
+import com.example.shoes.repository.SanPhamChiTietRepo;
 import com.example.shoes.service.HinhAnhService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class HinhAnhServiceImpl implements HinhAnhService {
     @Autowired
     private HinhAnhRepo hinhAnhRepo;
+    @Autowired
+    private SanPhamChiTietRepo sanPhamChiTietRepo;
 
     @Override
     public List<HinhAnhResponse> findAll() {
         List<HinhAnh> list = hinhAnhRepo.findAll(Sort.by(Sort.Direction.DESC, "id"));
+        
         return list.stream()
                 .map(this::convert)
                 .collect(Collectors.toList());
@@ -45,8 +47,16 @@ public class HinhAnhServiceImpl implements HinhAnhService {
 
         // Thêm tiền tố vào chuỗi Base64
         String base64WithPrefix = "data:image/png;base64," + request.getDuLieuAnhBase64();
-        hinhAnh.setDuLieuAnh(base64WithPrefix);  // Lưu chuỗi Base64 với tiền tố
-
+//
+//        for (String item : ) {
+//
+////            System.out.println(item);
+//        }
+        hinhAnh.setDuLieuAnh(request.getDuLieuAnhBase64());
+          // Lưu chuỗi Base64 với tiền tố
+        SanPhamChiTiet sanPhamChiTiet=sanPhamChiTietRepo.findById(request.getIdSanPhamChiTiet())
+                .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_DETAIL_NOT_FOUND));
+       hinhAnh.setIdSanPhamChiTiet(sanPhamChiTiet);
         hinhAnh.setTrangThai(request.getTrangThai());
         HinhAnh savedHinhAnh = hinhAnhRepo.save(hinhAnh);
 
@@ -60,10 +70,11 @@ public class HinhAnhServiceImpl implements HinhAnhService {
         hinhAnh.setTenAnh(request.getTenAnh());
 
         // Thêm tiền tố vào chuỗi Base64
-        String base64WithPrefix = "data:image/png;base64," + request.getDuLieuAnhBase64();
-        hinhAnh.setDuLieuAnh(base64WithPrefix);  // Lưu chuỗi Base64 với tiền tố
-
-        hinhAnh.setIdSanPhamChiTiet(hinhAnh.getIdSanPhamChiTiet());
+//        String base64WithPrefix = "data:image/png;base64," + request.getDuLieuAnhBase64();
+        hinhAnh.setDuLieuAnh( request.getDuLieuAnhBase64());  // Lưu chuỗi Base64 với tiền tố
+        SanPhamChiTiet sanPhamChiTiet=sanPhamChiTietRepo.findById(request.getIdSanPhamChiTiet())
+                .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_DETAIL_NOT_FOUND));
+        hinhAnh.setIdSanPhamChiTiet(sanPhamChiTiet);
         hinhAnh.setTrangThai(request.getTrangThai());
 
         HinhAnh updated = hinhAnhRepo.save(hinhAnh);

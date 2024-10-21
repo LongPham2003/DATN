@@ -22,6 +22,9 @@ import ResetPass from "./pages/client/auth/QuenMatKhau";
 import DiaChi from "./pages/admin/KhachHang/DiaChi";
 import DetailProduct from "./pages/admin/SanPham/Product/DetailProduct";
 import AddProductDetail from "./pages/admin/SanPham/ProductDetail/AddProductDetail";
+import ListPhieuGiamGia from "./pages/admin/Voucher/ListPhieuGiamGia";
+import ChiTietPhieuGiamGia from "./pages/admin/Voucher/ChiTietPhieuGiamGia";
+import SanPhamChiTiet from "./pages/admin/SanPham/Product/SanPhamChiTiet";
 function App() {
   return (
     <>
@@ -75,6 +78,28 @@ function App() {
           {/* roter dashboard */}
 
           <Route path="/admin" element={<Dashboard />}>
+            <Route
+              path="phieugiamgia"
+              element={
+                <>
+                  <Helmet>
+                    <title>Thống kê</title>
+                  </Helmet>
+                  <ListPhieuGiamGia />
+                </>
+              }
+            />
+            <Route
+              path="phieugiamgia/:id"
+              element={
+                <>
+                  <Helmet>
+                    <title>Thống kê</title>
+                  </Helmet>
+                  <ChiTietPhieuGiamGia />
+                </>
+              }
+            />
             <Route
               path="diachi"
               element={
@@ -191,6 +216,17 @@ function App() {
                     <title>Sản phẩm</title>
                   </Helmet>
                   <ListProduct />
+                </>
+              }
+            />
+            <Route
+              path="sanpham/:id"
+              element={
+                <>
+                  <Helmet>
+                    <title>Sản phẩm</title>
+                  </Helmet>
+                  <SanPhamChiTiet />
                 </>
               }
             />

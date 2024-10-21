@@ -23,16 +23,27 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    const { email, password } = formData;
     try {
-      const response = await axios.post("http://localhost:8080/auth/login", {
-        email: formData.email,
-        password: formData.password,
-      });
+      const response = await axios.post(
+        "http://localhost:8080/auth/login",
+        {
+          email: formData.email,
+          password: formData.password,
+        },
+        {
+          headers: {
+            Authorization: `Basic ${btoa(email + ":" + password)}`,
+          },
+        },
+      );
 
       if (response.data.result) {
         // Lưu quyền vào localStorage
+        const authToken = `Basic ${btoa(email + ":" + password)}`;
+        localStorage.setItem("authToken", authToken);
         localStorage.setItem("userRole", response.data.result.roles);
+        localStorage.setItem("email", response.data.result.email);
 
         setError("");
         toast.success("Đăng nhập thành công");
