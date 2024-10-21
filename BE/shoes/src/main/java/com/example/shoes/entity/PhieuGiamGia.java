@@ -44,5 +44,4 @@ public class PhieuGiamGia {
     @NotNull
     @Column(name = "trang_thai")
     private Boolean trangThai;
-
 }

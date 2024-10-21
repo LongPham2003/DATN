@@ -1,11 +1,8 @@
 package com.example.shoes.dto.hoadon.request;
 
-import com.example.shoes.dto.hoadonchitiet.request.HoaDonChiTietRequest;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.math.BigDecimal;
-import java.util.List;
 
 @Setter
 @Getter

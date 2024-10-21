@@ -1,5 +1,6 @@
 package com.example.shoes.entity;
 
+import com.example.shoes.entity.base.CrudByAt;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -13,7 +14,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "hoa_don")
-public class HoaDon {
+public class HoaDon extends CrudByAt {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
