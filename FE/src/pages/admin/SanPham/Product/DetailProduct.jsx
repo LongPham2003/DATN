@@ -28,8 +28,7 @@ export default function DetailProduct() {
 
   const [trangHienTai, setTrangHienTai] = useState(1);
   const [tongSoTrang, setTongSoTrang] = useState(0);
-
-  const pageSize = 5;
+  const [pageSize, setPageSize] = useState(5);
 
   // let ApiLaySPCTTheoIdSP = `http://localhost:8080/api/sanphamchitiet/getidsanpham/${id}`;
 
@@ -49,6 +48,7 @@ export default function DetailProduct() {
     axios
       .get(`http://localhost:8080/api/sanphamchitiet/list/${id}`, {
         params: {
+          pageSize: pageSize,
           pageNumber: trangHienTai,
           idMauSac: selectedIdMauSac,
           idkichThuoc: selectedIdKichThuoc,
@@ -79,6 +79,7 @@ export default function DetailProduct() {
     trangHienTai,
     maxDonGia,
     minDonGia,
+    pageSize,
   ]);
 
   const handlePageChange = (selectedPage) => {
@@ -220,7 +221,7 @@ export default function DetailProduct() {
             <select
               name="trangThai"
               id="trangThai"
-              value={trangThai}
+              value={trangThai === null ? "" : trangThai} // Nếu null, đặt lại giá trị rỗng
               className="h-[38px] w-[250px] rounded border border-gray-300 p-2"
               onChange={(e) => {
                 const value =
@@ -252,7 +253,7 @@ export default function DetailProduct() {
             />
           </div>
         </div>
-        <div className="flex justify-center gap-8 py-3">
+        <div className="flex justify-center gap-8 pb-3">
           <button
             className="rounded bg-blue-500 px-2 py-1 text-white"
             onClick={handleResetSelectedChange}
@@ -261,15 +262,21 @@ export default function DetailProduct() {
           </button>
         </div>
       </div>
-      <div className="mx-5 my-5">
+      <div className="mx-5 my-3">
         <span className="mb-5 text-xl font-bold">
-          Danh sách sản phẩm chi tiết của sản phẩm
+          Danh sách sản phẩm chi tiết của sản phẩm:
         </span>
+        <select name="" id="" onChange={(e) => setPageSize(e.target.value)}>
+          <option value="">chọn số phần tử</option>
+          <option value="">5</option>
+          <option value="30">30</option>
+          <option value="50">50</option>
+        </select>
         <div className="flex justify-center">
           <div className="min-w-full">
             {/* Thêm max-height và overflow-y-auto để tạo thành cuộn */}
-            <div className="max-h-[500px] overflow-y-auto">
-              <table className="min-w-full border border-gray-300 bg-white">
+            <div className="max-h-[400px] overflow-y-auto">
+              <table className="mb-[60px] min-w-full border border-gray-300 bg-white">
                 <thead>
                   <tr className="h-10 rounded-2xl border-b-2 text-base shadow-inner">
                     <th className="w-10">STT</th>
@@ -327,40 +334,39 @@ export default function DetailProduct() {
                 </tbody>
               </table>
             </div>
-            <div className="mr-14 mt-4 flex justify-center">
-              <ReactPaginate
-                previousLabel={"< Previous"}
-                nextLabel={"Next >"}
-                breakLabel={"..."}
-                pageCount={tongSoTrang}
-                marginPagesDisplayed={2}
-                pageRangeDisplayed={2}
-                onPageChange={handlePageChange}
-                containerClassName={"flex"}
-                previousClassName={"mx-1"}
-                previousLinkClassName={
-                  "px-3 py-1 border border-gray-300 rounded-full hover:bg-gray-200 transition duration-200"
-                }
-                nextClassName={"mx-1"}
-                nextLinkClassName={
-                  "px-3 py-1 border border-gray-300 rounded-full hover:bg-gray-200 transition duration-200"
-                }
-                breakClassName={"mx-1"}
-                breakLinkClassName={
-                  "px-3 py-1 border border-gray-300 rounded-full hover:bg-gray-200 transition duration-200"
-                }
-                pageClassName={"mx-1"}
-                pageLinkClassName={
-                  "px-3 py-1 border-b border-green-300 rounded-full hover:bg-green-500 transition duration-200"
-                }
-                activeClassName={"bg-green-500 rounded-full text-white"}
-                activeLinkClassName={
-                  "px-4 py-2 bg-green-500 text-white rounded-full"
-                }
-              />
-            </div>
           </div>
         </div>
+      </div>
+
+      <div className="mb-4 mr-14 mt-4 flex justify-center pb-4">
+        <ReactPaginate
+          previousLabel={"< Previous"}
+          nextLabel={"Next >"}
+          breakLabel={"..."}
+          pageCount={tongSoTrang}
+          marginPagesDisplayed={2}
+          pageRangeDisplayed={2}
+          onPageChange={handlePageChange}
+          containerClassName={"flex"}
+          previousClassName={"mx-1"}
+          previousLinkClassName={
+            "px-3 py-1 border border-gray-300 rounded-full hover:bg-gray-200 transition duration-200"
+          }
+          nextClassName={"mx-1"}
+          nextLinkClassName={
+            "px-3 py-1 border border-gray-300 rounded-full hover:bg-gray-200 transition duration-200"
+          }
+          breakClassName={"mx-1"}
+          breakLinkClassName={
+            "px-3 py-1 border border-gray-300 rounded-full hover:bg-gray-200 transition duration-200"
+          }
+          pageClassName={"mx-1"}
+          pageLinkClassName={
+            "px-3 py-1 border-b border-green-300 rounded-full hover:bg-green-500 transition duration-200"
+          }
+          activeClassName={"bg-green-500 rounded-full text-white"}
+          activeLinkClassName={"px-4 py-2 bg-green-500 text-white rounded-full"}
+        />
       </div>
 
       <ToastContainer
