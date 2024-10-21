@@ -92,4 +92,24 @@ public class SanPhamChiTietController {
                 .result(responses)
                 .build();
     }
+
+    @GetMapping("/getidsanphamloc/{idsanpham}")
+    public ApiResponse<List<SanPhamChiTietResponse>> findByIdSanPham(
+            @PathVariable("idsanpham") Integer idSanPham,
+            @RequestParam(required = false) Integer idMauSac,
+            @RequestParam(required = false) Integer idkichThuoc,
+            @RequestParam(required = false) Integer idChatLieu,
+            @RequestParam(required = false) Integer idThuongHieu,
+            @RequestParam(required = false) Integer idDeGiay,
+            @RequestParam(required = false) Boolean trangThai,
+            @RequestParam(required = false) BigDecimal minDonGia,
+            @RequestParam(required = false) BigDecimal maxDonGia) {
+        List<SanPhamChiTietResponse> responses = sanPhamChiTietService.getAlLByIdSanPham(
+                idSanPham,
+                idMauSac, idkichThuoc, idChatLieu, idThuongHieu, idDeGiay, trangThai, minDonGia, maxDonGia);
+        // Trả về API response
+        return ApiResponse.<List<SanPhamChiTietResponse>>builder()
+                .result(responses)
+                .build();
+    }
 }

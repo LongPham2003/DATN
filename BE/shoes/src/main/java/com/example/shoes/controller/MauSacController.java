@@ -46,6 +46,7 @@ public class MauSacController {
         List<String> listTen = mausacService.getAllTenMauSac();
         return ResponseEntity.ok(listTen);
     }
+
     @GetMapping("/{id}")
     public ApiResponse<MauSacResponse> getById(@PathVariable Integer id) {
         MauSacResponse mauSacResponses = mausacService.getById(id);

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
-import axios from "axios";
+import axios from "../../../api/axiosConfig";
 import { Link, useNavigate } from "react-router-dom";
 import ThemMoiKhachHang from "../KhachHang/ThemMoiKhachHang";
 
@@ -132,6 +132,7 @@ export default function DanhSachNhanVien() {
             <thead>
               <tr className="bg-gray-100">
                 <th className="border-b px-4 py-2">STT</th>
+                <th className="border-b px-4 py-2">Mã</th>
                 <th className="border-b px-4 py-2">Họ tên</th>
                 <th className="border-b px-4 py-2">Email</th>
                 <th className="border-b px-4 py-2">SDT</th>

@@ -32,8 +32,8 @@ public class NhanVienUpdateRequest {
     @Temporal(TemporalType.DATE)
     private Date ngaySinh;
 
-    @Enumerated(EnumType.STRING)
-    private Roles roles;
+
+    private String chucVu;
 
     private  String matKhau;
 

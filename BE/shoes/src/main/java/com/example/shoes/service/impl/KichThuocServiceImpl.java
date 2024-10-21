@@ -99,7 +99,7 @@ public class KichThuocServiceImpl implements KichThuocService {
         } else {
             kichThuocList = kichThuocRepo.findAll();
         }
-     // Chuyển đổi danh sách  thành danh sách KichThuocResponse
+        // Chuyển đổi danh sách  thành danh sách KichThuocResponse
         return kichThuocList.stream()
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());

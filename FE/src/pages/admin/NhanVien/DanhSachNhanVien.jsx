@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import TheMoiNhanVien from "./TheMoiNhanVien";
 import ReactPaginate from "react-paginate";
-import axios from "axios";
+import axios from "../../../api/axiosConfig";
 import { Link } from "react-router-dom";
 
 export default function DanhSachNhanVien() {

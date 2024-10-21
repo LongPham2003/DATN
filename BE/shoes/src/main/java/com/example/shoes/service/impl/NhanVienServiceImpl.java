@@ -118,14 +118,10 @@ public class NhanVienServiceImpl implements NhanVienService {
         nhanVien.setTrangThai(request.getTrangThai());
 
 
-//        TaiKhoan taiKhoan = nhanVienOptional.get().getTaiKhoan();
-//        String pass = generatePass();
-//        taiKhoan.setEmail(request.getEmail());
-//        taiKhoan.setPassword(passwordEncoder.encode(pass));
-//        taiKhoan.setTrangThai(request.getTrangThai());
-//        taiKhoan.setRoles(Roles.ROLE_NHANVIEN.name());
-//        taiKhoanRepo.save(taiKhoan);
-//        nhanVien.setTaiKhoan(taiKhoan);
+        TaiKhoan taiKhoan = nhanVienOptional.get().getTaiKhoan();
+        taiKhoan.setRoles(request.getChucVu());
+        taiKhoanRepo.save(taiKhoan);
+        nhanVien.setTaiKhoan(taiKhoan);
 
         return nhanVienRepo.save(nhanVien);
 

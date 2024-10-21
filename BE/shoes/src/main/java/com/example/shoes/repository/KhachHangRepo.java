@@ -13,7 +13,7 @@ import java.util.List;
 public interface KhachHangRepo extends JpaRepository<KhachHang, Integer> {
     @Query(value = "select kh  from KhachHang kh where" +
             " (kh.hoTen like %:keyword% or kh.sdt like %:keyword or kh.email like %:keyword%)" +
-            " and (:trangThai is null or kh.trangThai=:trangThai)")
+            " and (:trangThai is null or kh.trangThai=:trangThai) order by kh.id desc")
     Page<KhachHang> getKhachHang(Pageable pageable, String keyword,Boolean trangThai);
     boolean existsByEmail(String email);
     boolean existsBySdt(String sdt);

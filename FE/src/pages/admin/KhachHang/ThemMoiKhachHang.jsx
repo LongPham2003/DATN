@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
-import axios from "axios";
+import { Modal } from "antd";
+import axios from "../../../api/axiosConfig";
 import { useEffect, useState } from "react";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 
@@ -154,51 +155,61 @@ export default function ThemMoiKhachHang({ button, onAdd }) {
       diaChiChiTiet: fullAddress, // Cập nhật địa chỉ đầy đủ vào formData
     }));
 
-    setFullAddress(fullAddress);
+    Modal.confirm({
+      title: "Xác nhận thêm khách hàng",
+      content: "Bạn có chắc chắn muốn thêm khách hàng này không?",
+      onOk: async () => {
+        try {
+          const response = await axios.post(
+            "http://localhost:8080/khachhang/add",
+            {
+              hoTen: formData.hoTen,
+              email: formData.email,
+              sdt: formData.sdt,
+              ngaySinh: formData.ngaySinh,
+              soNhaDuongThonXom: formData.soNhaDuongThonXom,
+              gioiTinh: formData.gioiTinh,
+              diaChiChiTiet: fullAddress, // Gửi địa chỉ đầy đủ
+              tinhThanhPho: formData.province,
+              huyenQuan: formData.district,
+              xaPhuong: formData.ward,
+            },
+          );
 
-    try {
-      const response = await axios.post("http://localhost:8080/khachhang/add", {
-        hoTen: formData.hoTen,
-        email: formData.email,
-        sdt: formData.sdt,
-        ngaySinh: formData.ngaySinh,
-        soNhaDuongThonXom: formData.soNhaDuongThonXom,
-        gioiTinh: formData.gioiTinh,
-        diaChiChiTiet: fullAddress, // Gửi địa chỉ đầy đủ
-        tinhThanhPho: formData.province,
-        huyenQuan: formData.district,
-        xaPhuong: formData.ward,
-      });
+          console.log(formData);
+          if (response.status === 200) {
+            // Nếu thành công, có thể xử lý thông báo hoặc reset form
+            toast.success("Thành công");
 
-      console.log(formData);
-      if (response.status === 200) {
-        // Nếu thành công, có thể xử lý thông báo hoặc reset form
-        toast.success("Thành công");
-
-        // Reset form về trạng thái ban đầu
-        setFormData({
-          hoTen: "",
-          email: "",
-          sdt: "",
-          ngaySinh: "",
-          gioiTinh: "",
-          diaChi: "",
-          province: "",
-          district: "",
-          ward: "",
-          soNhaDuongThonXom: "",
-        });
-        setDetailAddress("");
-        setSelectedProvince("");
-        setSelectedDistrict("");
-        setSelectedCommune("");
-      }
-      button();
-      onAdd();
-    } catch (error) {
-      // Xử lý lỗi nếu có
-      setError(error.response?.data?.message || error.message);
-    }
+            // Reset form về trạng thái ban đầu
+            setFormData({
+              hoTen: "",
+              email: "",
+              sdt: "",
+              ngaySinh: "",
+              gioiTinh: "",
+              diaChi: "",
+              province: "",
+              district: "",
+              ward: "",
+              soNhaDuongThonXom: "",
+            });
+            setDetailAddress("");
+            setSelectedProvince("");
+            setSelectedDistrict("");
+            setSelectedCommune("");
+          }
+          button();
+          onAdd();
+        } catch (error) {
+          // Xử lý lỗi nếu có
+          setError(error.response?.data?.message || error.message);
+        }
+      },
+      onCancel() {
+        // Nếu người dùng hủy, có thể không cần làm gì cả
+      },
+    });
   };
 
   return (
