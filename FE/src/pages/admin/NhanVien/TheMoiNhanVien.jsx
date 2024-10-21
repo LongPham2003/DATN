@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import axios from "axios";
+import axios from "../../../api/axiosConfig";
 import { useState } from "react";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import { Modal } from "antd";
@@ -30,7 +30,7 @@ export default function TheMoiNhanVien({ button, onAdd }) {
 
     // Xử lý logic gửi dữ liệu form ở đây
     confirm({
-      title: "Bạn có chắc chắn muốn thêm phiếu giảm giá này?",
+      title: "Bạn có chắc chắn muốn thêm nhân viên này?",
       content: "Vui lòng xác nhận trước khi tiếp tục.",
       onOk: async () => {
         try {
