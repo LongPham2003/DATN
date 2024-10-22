@@ -30,7 +30,6 @@ public class HinhAnhServiceImpl implements HinhAnhService {
     @Override
     public List<HinhAnhResponse> findAll() {
         List<HinhAnh> list = hinhAnhRepo.findAll(Sort.by(Sort.Direction.DESC, "id"));
-
         return list.stream()
                 .map(this::convert)
                 .collect(Collectors.toList());
