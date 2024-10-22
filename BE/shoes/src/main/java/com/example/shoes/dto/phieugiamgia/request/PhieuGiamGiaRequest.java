@@ -42,7 +42,7 @@ public class PhieuGiamGiaRequest {
 
     private Boolean trangThai;
 
-    @NotNull(message = "Ngày kết thúc không được để trống")
+    @NotNull(message = "Hình thức giảm không được để trống")
     private String hinhThucGiam;
 
 }

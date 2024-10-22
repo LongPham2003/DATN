@@ -34,6 +34,9 @@ public enum ErrorCode {
     BILL_DETAIL_NOT_FOUND(1005,"khong tim thay hoa don chi tiet",HttpStatus.NOT_FOUND),
     INVALID_QUANTITY(1002,"Số lượng yêu cầu không hợp lệ.",HttpStatus.BAD_REQUEST),
     INVALID_QUANTITY_LONHONO(1002,"Số lượng sản phẩm phải lớn hơn 0.",HttpStatus.BAD_REQUEST),
+    VOUCHER_IN_BILL(1002,"hóa đơn  đa có phiếu giảm giá",HttpStatus.BAD_REQUEST),
+    INVALID_VOUCHER(1002,"Đơn hàng không đủ điều kiện áp dụng mã giảm giá..",HttpStatus.BAD_REQUEST),
+    INSUFFICIENT_STOCK(1002,"số lượng có đủ để thêm vào hóa đơn",HttpStatus.BAD_REQUEST),
     ;
     private int code;
     private String message;

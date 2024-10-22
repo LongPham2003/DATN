@@ -74,8 +74,8 @@ public class BanHangTaiQuayController {
 
     // Xóa hóa đơn
     @DeleteMapping ("/hoadon/delete/{id}")
-    public ApiResponse<String> deleteHoaDon(@PathVariable("id") Integer id) {
-        hoaDonService.deleteHoaDon(id);
+    public ApiResponse<String> deleteHoaDon(@PathVariable("id") Integer idHoaDon) {
+        hoaDonService.deleteHoaDon(idHoaDon);
         return ApiResponse.<String>builder()
                 .message("Xóa hóa đơn thành công")
                 .build();
@@ -89,4 +89,15 @@ public class BanHangTaiQuayController {
                 .result(hoaDonResponses)
                 .build();
     }
+    @PostMapping("/hoadon/{id}/voucher/{idPhieuGiamGia}")
+    public ApiResponse<String> apPhieuGiamGia(
+            @PathVariable Integer id,
+            @PathVariable Integer idPhieuGiamGia) {
+
+            hoaDonService.apPhieuGiamGiaHoaDon(id, idPhieuGiamGia);
+            return ApiResponse.<String>builder()
+                    .message("Áp dụng phiếu giảm giá thành công")
+                    .build();
+    }
+
 }

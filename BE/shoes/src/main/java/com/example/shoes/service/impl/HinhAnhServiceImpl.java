@@ -99,6 +99,24 @@ public class HinhAnhServiceImpl implements HinhAnhService {
         return convert(hinhAnh); // Chuyển đổi sang HinhAnhResponse
     }
 
+    @Override
+    public HinhAnhResponse getAllHinhAnhTheoIDSPCT(Integer idSanPhamChiTiet) {
+        // Lấy danh sách hình ảnh theo ID sản phẩm chi tiết
+        List<HinhAnh> hinhAnhList = hinhAnhRepo.findAllHinhAnhTheoIDSPCT(idSanPhamChiTiet)
+                .orElseThrow(() -> new AppException(ErrorCode.IMAGE_NOT_FOUND));
+
+        // Chuyển đổi danh sách hình ảnh sang danh sách HinhAnhResponse
+        List<HinhAnhResponse> hinhAnhResponseList = hinhAnhList.stream()
+                .map(this::convert) // Sử dụng hàm convert hiện tại
+                .collect(Collectors.toList());
+
+        // Tạo HinhAnhResponse để trả về
+        HinhAnhResponse response = new HinhAnhResponse();
+        response.setHinhAnhList(hinhAnhResponseList); // Giả định rằng HinhAnhResponse có một danh sách hình ảnh
+
+        return response;
+    }
+
     private HinhAnhResponse convert(HinhAnh hinhAnh) {
         HinhAnhResponse hinhAnhResponse = new HinhAnhResponse();
         hinhAnhResponse.setId(hinhAnh.getId());

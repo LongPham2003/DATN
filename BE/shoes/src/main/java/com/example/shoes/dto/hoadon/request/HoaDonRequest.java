@@ -11,7 +11,7 @@ public class HoaDonRequest {
     private Integer idNhanVien;
     private Integer idKhachHang;
     private Integer idPhieuGiamGia;
-    private String soDienThoai;
+    private String sdt;
     private String diaChiGiaoHang;
     private String phuongThucThanhToan;
     private String phuongThucGiaoHang;

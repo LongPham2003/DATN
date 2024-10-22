@@ -10,4 +10,5 @@ public class HinhAnhRequest {
     private String duLieuAnhBase64;
     private Integer idSanPhamChiTiet;
     private Boolean trangThai;
+
 }

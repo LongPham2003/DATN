@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Base64;
+import java.util.List;
 
 @Setter
 @Getter
@@ -24,4 +25,5 @@ public class HinhAnhResponse {
             this.duLieuAnhBase64 = Base64.getEncoder().encodeToString(duLieuAnh);
         }
     }
+    private List<HinhAnhResponse> hinhAnhList; // Danh sách hình ảnh
 }
