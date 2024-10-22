@@ -17,9 +17,9 @@ public class SanPhamChiTietController {
     @Autowired
     private SanPhamChiTietService sanPhamChiTietService;
 
-    @GetMapping("/list")
+    @GetMapping("/list/{id}")
     public ApiResponse<PhanTrangResponse<SanPhamChiTietResponse>> getAllChatLieu(
-            @RequestParam(required = false) Integer idSanPham,
+            @PathVariable("id") Integer idSanPham,
             @RequestParam(required = false) Integer idMauSac,
             @RequestParam(required = false) Integer idkichThuoc,
             @RequestParam(required = false) Integer idChatLieu,
@@ -87,26 +87,6 @@ public class SanPhamChiTietController {
     public ApiResponse<List<SanPhamChiTietResponse>> findByIdSanPhamAndTrangThaiTrue(
             @PathVariable("idsanpham") Integer idSanPham) {
         List<SanPhamChiTietResponse> responses = sanPhamChiTietService.findByIdSanPhamAndTrangThaiTrue(idSanPham);
-        // Trả về API response
-        return ApiResponse.<List<SanPhamChiTietResponse>>builder()
-                .result(responses)
-                .build();
-    }
-
-    @GetMapping("/getidsanphamloc/{idsanpham}")
-    public ApiResponse<List<SanPhamChiTietResponse>> findByIdSanPham(
-            @PathVariable("idsanpham") Integer idSanPham,
-            @RequestParam(required = false) Integer idMauSac,
-            @RequestParam(required = false) Integer idkichThuoc,
-            @RequestParam(required = false) Integer idChatLieu,
-            @RequestParam(required = false) Integer idThuongHieu,
-            @RequestParam(required = false) Integer idDeGiay,
-            @RequestParam(required = false) Boolean trangThai,
-            @RequestParam(required = false) BigDecimal minDonGia,
-            @RequestParam(required = false) BigDecimal maxDonGia) {
-        List<SanPhamChiTietResponse> responses = sanPhamChiTietService.getAlLByIdSanPham(
-                idSanPham,
-                idMauSac, idkichThuoc, idChatLieu, idThuongHieu, idDeGiay, trangThai, minDonGia, maxDonGia);
         // Trả về API response
         return ApiResponse.<List<SanPhamChiTietResponse>>builder()
                 .result(responses)

@@ -15,6 +15,4 @@ public interface SanPhamChiTietService {
     void updateTheoTrangThai(Integer id);
     List<SanPhamChiTietResponse> findByIdSanPhamAndTrangThaiTrue( Integer idSanPham);
 
-    List<SanPhamChiTietResponse> getAlLByIdSanPham(Integer idSanPham, Integer idMauSac, Integer idkichThuoc, Integer idChatLieu, Integer idThuongHieu, Integer idDeGiay,
-                                                   Boolean trangThai, BigDecimal minDonGia, BigDecimal maxDonGia);
 }
