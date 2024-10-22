@@ -1,5 +1,6 @@
 package com.example.shoes.repository;
 
+import com.example.shoes.dto.sanphamchitiet.response.SanPhamChiTietDetailResponse;
 import com.example.shoes.entity.KichThuoc;
 import com.example.shoes.entity.SanPham;
 import com.example.shoes.entity.SanPhamChiTiet;
@@ -54,8 +55,8 @@ public interface SanPhamChiTietRepo extends JpaRepository<SanPhamChiTiet, Intege
     @Query("SELECT spct FROM SanPhamChiTiet  spct WHERE spct.trangThai = true")
     List<SanPhamChiTiet> getAllTrangThaiTrue();
 
-
-
+    @Query("select  spct FROM SanPhamChiTiet spct where spct.id = :idSPCT")
+    SanPhamChiTiet getSPCTDetail(@Param("idSPCT") Integer idSPCT);
 
 }
 

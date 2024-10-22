@@ -1,6 +1,7 @@
 package com.example.shoes.service;
 import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.sanphamchitiet.request.SanPhamChiTietRequest;
+import com.example.shoes.dto.sanphamchitiet.response.SanPhamChiTietDetailResponse;
 import com.example.shoes.dto.sanphamchitiet.response.SanPhamChiTietResponse;
 import java.math.BigDecimal;
 import java.util.List;
@@ -14,5 +15,7 @@ public interface SanPhamChiTietService {
     List<SanPhamChiTietResponse> getAll();
     void updateTheoTrangThai(Integer id);
     List<SanPhamChiTietResponse> findByIdSanPhamAndTrangThaiTrue( Integer idSanPham);
+
+    SanPhamChiTietDetailResponse getSPCTDetail(Integer idSPCT);
 
 }

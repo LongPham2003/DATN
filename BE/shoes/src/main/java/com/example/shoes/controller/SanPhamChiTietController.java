@@ -92,4 +92,10 @@ public class SanPhamChiTietController {
                 .result(responses)
                 .build();
     }
+
+
+    @GetMapping("/getSPCTDetail/{idSPCT}")
+    public ApiResponse<Object> getSPCTDetail(@PathVariable Integer idSPCT) {
+        return ApiResponse.builder().result(sanPhamChiTietService.getSPCTDetail(idSPCT)).build();
+    }
 }

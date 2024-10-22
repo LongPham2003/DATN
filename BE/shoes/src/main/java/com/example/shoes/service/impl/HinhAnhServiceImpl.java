@@ -49,7 +49,7 @@ public class HinhAnhServiceImpl implements HinhAnhService {
 
 //        // Thêm tiền tố vào chuỗi Base64
 //        String base64WithPrefix = "data:image/png;base64," + request.getDuLieuAnhBase64();
-//        hinhAnh.setDuLieuAnh(base64WithPrefix);  // Lưu chuỗi Base64 với tiền tố
+        hinhAnh.setDuLieuAnh(request.getDuLieuAnhBase64());  // Lưu chuỗi Base64 với tiền tố
         SanPhamChiTiet sanPhamChiTiet=sanPhamChiTietRepo.findById(request.getIdSanPhamChiTiet())
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_DETAIL_NOT_FOUND));
        hinhAnh.setIdSanPhamChiTiet(sanPhamChiTiet);
@@ -68,6 +68,7 @@ public class HinhAnhServiceImpl implements HinhAnhService {
 //        // Thêm tiền tố vào chuỗi Base64
 //        String base64WithPrefix = "data:image/png;base64," + request.getDuLieuAnhBase64();
 //        hinhAnh.setDuLieuAnh(base64WithPrefix);  // Lưu chuỗi Base64 với tiền tố
+        hinhAnh.setDuLieuAnh(request.getDuLieuAnhBase64());
         SanPhamChiTiet sanPhamChiTiet=sanPhamChiTietRepo.findById(request.getIdSanPhamChiTiet())
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_DETAIL_NOT_FOUND));
         hinhAnh.setIdSanPhamChiTiet(sanPhamChiTiet);
@@ -110,6 +111,8 @@ public class HinhAnhServiceImpl implements HinhAnhService {
                 .map(this::convert) // Sử dụng hàm convert hiện tại
                 .collect(Collectors.toList());
     }
+
+
 
     private HinhAnhResponse convert(HinhAnh hinhAnh) {
         HinhAnhResponse hinhAnhResponse = new HinhAnhResponse();
