@@ -66,4 +66,11 @@ public class HinhAnhController {
                 .result(hinhAnhResponse)
                 .build();
     }
+    @GetMapping("/tatcathinhanh/{idSanPhamChiTiet}")
+    public ApiResponse<HinhAnhResponse> getAllHinhAnh(@PathVariable Integer idSanPhamChiTiet) {
+        HinhAnhResponse hinhAnhResponse = hinhAnhService.getAllHinhAnhTheoIDSPCT(idSanPhamChiTiet);
+        return ApiResponse.<HinhAnhResponse>builder()
+                .result(hinhAnhResponse)
+                .build();
+    }
 }

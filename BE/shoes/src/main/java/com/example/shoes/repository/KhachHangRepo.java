@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface KhachHangRepo extends JpaRepository<KhachHang, Integer> {
@@ -20,4 +21,6 @@ public interface KhachHangRepo extends JpaRepository<KhachHang, Integer> {
 
     @Query("SELECT kh.ma FROM KhachHang kh ORDER BY kh.ma DESC")
     List<String> findTopMaNhanVien();
+//    khi tao hoa don se tim khach hang theo sdt de lay thong tin nhu ho ten dai chi
+Optional<KhachHang> findKhachHangBySdt(String sdt);
 }

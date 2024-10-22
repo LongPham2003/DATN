@@ -45,15 +45,10 @@ public class HinhAnhServiceImpl implements HinhAnhService {
         HinhAnh hinhAnh = new HinhAnh();
         hinhAnh.setTenAnh(request.getTenAnh());
 
-        // Thêm tiền tố vào chuỗi Base64
-        String base64WithPrefix = "data:image/png;base64," + request.getDuLieuAnhBase64();
-//
-//        for (String item : ) {
-//
-////            System.out.println(item);
-//        }
+
+
         hinhAnh.setDuLieuAnh(request.getDuLieuAnhBase64());
-          // Lưu chuỗi Base64 với tiền tố
+
         SanPhamChiTiet sanPhamChiTiet=sanPhamChiTietRepo.findById(request.getIdSanPhamChiTiet())
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_DETAIL_NOT_FOUND));
        hinhAnh.setIdSanPhamChiTiet(sanPhamChiTiet);
@@ -69,9 +64,8 @@ public class HinhAnhServiceImpl implements HinhAnhService {
                 .orElseThrow(() -> new AppException(ErrorCode.IMAGE_NOT_FOUND));
         hinhAnh.setTenAnh(request.getTenAnh());
 
-        // Thêm tiền tố vào chuỗi Base64
-//        String base64WithPrefix = "data:image/png;base64," + request.getDuLieuAnhBase64();
         hinhAnh.setDuLieuAnh( request.getDuLieuAnhBase64());  // Lưu chuỗi Base64 với tiền tố
+
         SanPhamChiTiet sanPhamChiTiet=sanPhamChiTietRepo.findById(request.getIdSanPhamChiTiet())
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_DETAIL_NOT_FOUND));
         hinhAnh.setIdSanPhamChiTiet(sanPhamChiTiet);
@@ -101,6 +95,24 @@ public class HinhAnhServiceImpl implements HinhAnhService {
 
         HinhAnh hinhAnh = hinhAnhList.get(0); // Lấy ảnh đầu tiên trong danh sách
         return convert(hinhAnh); // Chuyển đổi sang HinhAnhResponse
+    }
+
+    @Override
+    public HinhAnhResponse getAllHinhAnhTheoIDSPCT(Integer idSanPhamChiTiet) {
+        // Lấy danh sách hình ảnh theo ID sản phẩm chi tiết
+        List<HinhAnh> hinhAnhList = hinhAnhRepo.findAllHinhAnhTheoIDSPCT(idSanPhamChiTiet)
+                .orElseThrow(() -> new AppException(ErrorCode.IMAGE_NOT_FOUND));
+
+        // Chuyển đổi danh sách hình ảnh sang danh sách HinhAnhResponse
+        List<HinhAnhResponse> hinhAnhResponseList = hinhAnhList.stream()
+                .map(this::convert) // Sử dụng hàm convert hiện tại
+                .collect(Collectors.toList());
+
+        // Tạo HinhAnhResponse để trả về
+        HinhAnhResponse response = new HinhAnhResponse();
+        response.setHinhAnhList(hinhAnhResponseList); // Giả định rằng HinhAnhResponse có một danh sách hình ảnh
+
+        return response;
     }
 
     private HinhAnhResponse convert(HinhAnh hinhAnh) {

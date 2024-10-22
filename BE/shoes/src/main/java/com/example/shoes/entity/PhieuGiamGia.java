@@ -63,5 +63,4 @@ public class PhieuGiamGia extends CrudByAt {
 
     @Column(name = "trang_thai")
     private Boolean trangThai;
-
 }
