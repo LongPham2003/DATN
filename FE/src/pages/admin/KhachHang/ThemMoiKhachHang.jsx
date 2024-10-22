@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { Modal } from "antd";
-import axios from "axios";
+import axios from "../../../api/axiosConfig";
 import { useEffect, useState } from "react";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 

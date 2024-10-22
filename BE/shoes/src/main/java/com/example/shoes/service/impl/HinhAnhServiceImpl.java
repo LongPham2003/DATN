@@ -14,10 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,6 +27,7 @@ public class HinhAnhServiceImpl implements HinhAnhService {
     @Override
     public List<HinhAnhResponse> findAll() {
         List<HinhAnh> list = hinhAnhRepo.findAll(Sort.by(Sort.Direction.DESC, "id"));
+        
         return list.stream()
                 .map(this::convert)
                 .collect(Collectors.toList());
@@ -47,9 +45,10 @@ public class HinhAnhServiceImpl implements HinhAnhService {
         HinhAnh hinhAnh = new HinhAnh();
         hinhAnh.setTenAnh(request.getTenAnh());
 
-        // Thêm tiền tố vào chuỗi Base64
-        String base64WithPrefix = "data:image/png;base64," + request.getDuLieuAnhBase64();
-        hinhAnh.setDuLieuAnh(base64WithPrefix);  // Lưu chuỗi Base64 với tiền tố
+
+
+        hinhAnh.setDuLieuAnh(request.getDuLieuAnhBase64());
+
         SanPhamChiTiet sanPhamChiTiet=sanPhamChiTietRepo.findById(request.getIdSanPhamChiTiet())
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_DETAIL_NOT_FOUND));
        hinhAnh.setIdSanPhamChiTiet(sanPhamChiTiet);
@@ -65,9 +64,8 @@ public class HinhAnhServiceImpl implements HinhAnhService {
                 .orElseThrow(() -> new AppException(ErrorCode.IMAGE_NOT_FOUND));
         hinhAnh.setTenAnh(request.getTenAnh());
 
-        // Thêm tiền tố vào chuỗi Base64
-        String base64WithPrefix = "data:image/png;base64," + request.getDuLieuAnhBase64();
-        hinhAnh.setDuLieuAnh(base64WithPrefix);  // Lưu chuỗi Base64 với tiền tố
+        hinhAnh.setDuLieuAnh( request.getDuLieuAnhBase64());  // Lưu chuỗi Base64 với tiền tố
+
         SanPhamChiTiet sanPhamChiTiet=sanPhamChiTietRepo.findById(request.getIdSanPhamChiTiet())
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_DETAIL_NOT_FOUND));
         hinhAnh.setIdSanPhamChiTiet(sanPhamChiTiet);

@@ -14,4 +14,5 @@ public interface SanPhamChiTietService {
     List<SanPhamChiTietResponse> getAll();
     void updateTheoTrangThai(Integer id);
     List<SanPhamChiTietResponse> findByIdSanPhamAndTrangThaiTrue( Integer idSanPham);
+
 }

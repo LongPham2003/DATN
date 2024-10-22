@@ -17,9 +17,9 @@ public class SanPhamChiTietController {
     @Autowired
     private SanPhamChiTietService sanPhamChiTietService;
 
-    @GetMapping("/list")
+    @GetMapping("/list/{id}")
     public ApiResponse<PhanTrangResponse<SanPhamChiTietResponse>> getAllChatLieu(
-            @RequestParam(required = false) Integer idSanPham,
+            @PathVariable("id") Integer idSanPham,
             @RequestParam(required = false) Integer idMauSac,
             @RequestParam(required = false) Integer idkichThuoc,
             @RequestParam(required = false) Integer idChatLieu,

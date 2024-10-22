@@ -84,7 +84,7 @@ export default function AddProduct() {
           theme: "light",
           transition: Bounce,
         });
-        console.log(newProduct);
+        // console.log(newProduct);
         setTimeout(() => {
           window.location.reload(); // Load lại trang sau 1 giây
         }, 1700);
@@ -118,7 +118,7 @@ export default function AddProduct() {
   };
 
   return (
-    <div className="mx-auto mt-10 w-72">
+    <div className="mx-auto mt-10 w-auto">
       <h1 className="mb-5 text-2xl font-bold">Thêm sản phẩm</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>

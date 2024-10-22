@@ -20,10 +20,11 @@ public class HinhAnhResponse {
     private Integer idSanPhamChiTiet;
     private Boolean trangThai;
 
+
     public void setDuLieuAnh(byte[] duLieuAnh) {
         if (duLieuAnh != null) {
             this.duLieuAnhBase64 = Base64.getEncoder().encodeToString(duLieuAnh);
         }
     }
-    private List<HinhAnhResponse> hinhAnhList; // Danh sách hình ảnh
+
 }
