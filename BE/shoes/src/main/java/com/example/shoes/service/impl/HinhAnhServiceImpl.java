@@ -14,7 +14,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,7 +30,6 @@ public class HinhAnhServiceImpl implements HinhAnhService {
     @Override
     public List<HinhAnhResponse> findAll() {
         List<HinhAnh> list = hinhAnhRepo.findAll(Sort.by(Sort.Direction.DESC, "id"));
-        
         return list.stream()
                 .map(this::convert)
                 .collect(Collectors.toList());
@@ -45,10 +47,9 @@ public class HinhAnhServiceImpl implements HinhAnhService {
         HinhAnh hinhAnh = new HinhAnh();
         hinhAnh.setTenAnh(request.getTenAnh());
 
-
-
-        hinhAnh.setDuLieuAnh(request.getDuLieuAnhBase64());
-
+//        // Thêm tiền tố vào chuỗi Base64
+//        String base64WithPrefix = "data:image/png;base64," + request.getDuLieuAnhBase64();
+//        hinhAnh.setDuLieuAnh(base64WithPrefix);  // Lưu chuỗi Base64 với tiền tố
         SanPhamChiTiet sanPhamChiTiet=sanPhamChiTietRepo.findById(request.getIdSanPhamChiTiet())
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_DETAIL_NOT_FOUND));
        hinhAnh.setIdSanPhamChiTiet(sanPhamChiTiet);
@@ -64,8 +65,9 @@ public class HinhAnhServiceImpl implements HinhAnhService {
                 .orElseThrow(() -> new AppException(ErrorCode.IMAGE_NOT_FOUND));
         hinhAnh.setTenAnh(request.getTenAnh());
 
-        hinhAnh.setDuLieuAnh( request.getDuLieuAnhBase64());  // Lưu chuỗi Base64 với tiền tố
-
+//        // Thêm tiền tố vào chuỗi Base64
+//        String base64WithPrefix = "data:image/png;base64," + request.getDuLieuAnhBase64();
+//        hinhAnh.setDuLieuAnh(base64WithPrefix);  // Lưu chuỗi Base64 với tiền tố
         SanPhamChiTiet sanPhamChiTiet=sanPhamChiTietRepo.findById(request.getIdSanPhamChiTiet())
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_DETAIL_NOT_FOUND));
         hinhAnh.setIdSanPhamChiTiet(sanPhamChiTiet);
@@ -98,21 +100,15 @@ public class HinhAnhServiceImpl implements HinhAnhService {
     }
 
     @Override
-    public HinhAnhResponse getAllHinhAnhTheoIDSPCT(Integer idSanPhamChiTiet) {
+    public List<HinhAnhResponse> getAllHinhAnhTheoIDSPCT(Integer idSanPhamChiTiet) {
         // Lấy danh sách hình ảnh theo ID sản phẩm chi tiết
         List<HinhAnh> hinhAnhList = hinhAnhRepo.findAllHinhAnhTheoIDSPCT(idSanPhamChiTiet)
                 .orElseThrow(() -> new AppException(ErrorCode.IMAGE_NOT_FOUND));
 
         // Chuyển đổi danh sách hình ảnh sang danh sách HinhAnhResponse
-        List<HinhAnhResponse> hinhAnhResponseList = hinhAnhList.stream()
+        return hinhAnhList.stream()
                 .map(this::convert) // Sử dụng hàm convert hiện tại
                 .collect(Collectors.toList());
-
-        // Tạo HinhAnhResponse để trả về
-        HinhAnhResponse response = new HinhAnhResponse();
-        response.setHinhAnhList(hinhAnhResponseList); // Giả định rằng HinhAnhResponse có một danh sách hình ảnh
-
-        return response;
     }
 
     private HinhAnhResponse convert(HinhAnh hinhAnh) {
