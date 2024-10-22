@@ -35,8 +35,6 @@ export default function AddProductDetail() {
   const [getIdMauSac, setGetIdMauSac] = useState([]);
   const [getIdKichThuoc, setGetIdKichThuoc] = useState([]);
   const [listSPCT, setListSPCT] = useState([]);
-  const [donGia, setDonGia] = useState(1000);
-  const [soLuong, setSoLuong] = useState(1);
   const [selectedRows, setSelectedRows] = useState([]); // Lưu trữ các sản phẩm được chọn
   const [open, setOpen] = useState(false);
 

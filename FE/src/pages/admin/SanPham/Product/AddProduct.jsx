@@ -84,7 +84,7 @@ export default function AddProduct() {
           theme: "light",
           transition: Bounce,
         });
-        console.log(newProduct);
+        // console.log(newProduct);
         setTimeout(() => {
           window.location.reload(); // Load lại trang sau 1 giây
         }, 1700);

@@ -25,6 +25,7 @@ import AddProductDetail from "./pages/admin/SanPham/ProductDetail/AddProductDeta
 import ListPhieuGiamGia from "./pages/admin/Voucher/ListPhieuGiamGia";
 import ChiTietPhieuGiamGia from "./pages/admin/Voucher/ChiTietPhieuGiamGia";
 import SanPhamChiTiet from "./pages/admin/SanPham/Product/SanPhamChiTiet";
+import UpdateProductDetail from "./pages/admin/SanPham/ProductDetail/UpdateProductDetail";
 function App() {
   return (
     <>
@@ -241,7 +242,7 @@ function App() {
                 </>
               }
             />
-            {/* roter san pham */}
+            {/* roter add san pham chi tiet  */}
             <Route
               path="themsanphamchitiet/:id"
               element={
@@ -250,6 +251,18 @@ function App() {
                     <title>Thêm sản phẩm chi tiết</title>
                   </Helmet>
                   <AddProductDetail />
+                </>
+              }
+            />
+            {/* roter update san pham chi tiet*/}
+            <Route
+              path="Update-DetailProduct/:id"
+              element={
+                <>
+                  <Helmet>
+                    <title>Thêm sản phẩm chi tiết</title>
+                  </Helmet>
+                  <UpdateProductDetail />
                 </>
               }
             />
