@@ -1,5 +1,5 @@
 import { Modal } from "antd";
-import axios from "axios";
+import axios from "../../../api/axiosConfig";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Bounce, toast, ToastContainer } from "react-toastify";
@@ -36,7 +36,7 @@ const ChiTietNhanVien = () => {
 
     Modal.confirm({
       title: "Xác nhận cập nhật",
-      content: "Bạn có chắc chắn muốn cập nhật voucher này không?",
+      content: "Bạn có chắc chắn muốn cập nhật nhân viên này không?",
       onOk() {
         axios
           .post(`http://localhost:8080/nhanvien/update/${id}`, {
@@ -48,7 +48,7 @@ const ChiTietNhanVien = () => {
             gioiTinh: formData.gioiTinh,
             diaChi: formData.diaChi,
             trangThai: formData.trangThai,
-            chucVu: formData.roles,
+            chucVu: formData.chucVu,
           })
           .then((response) => {
             console.log("Cập nhật thành công:", response.data);
@@ -57,6 +57,7 @@ const ChiTietNhanVien = () => {
             navigate("/admin/nhanvien");
           })
           .catch((error) => {
+            console.log(formData);
             console.error("Lỗi khi cập nhật:", error);
             setError("Cập nhật thất bại. Vui lòng thử lại.");
           });
@@ -231,9 +232,11 @@ const ChiTietNhanVien = () => {
                 id="chucVu"
                 name="chucVu"
                 value={formData.chucVu}
+                onChange={handleChange}
                 className="w-full rounded border p-2"
                 required
               >
+                <option value="">Chọn Chức Vụ</option>
                 <option value="ROLE_NHANVIEN">Nhân Viên</option>
                 <option value="ROLE_ADMIN">ADMIN</option>
               </select>

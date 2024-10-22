@@ -25,4 +25,5 @@ public class HinhAnhResponse {
             this.duLieuAnhBase64 = Base64.getEncoder().encodeToString(duLieuAnh);
         }
     }
+    private List<HinhAnhResponse> hinhAnhList; // Danh sách hình ảnh
 }

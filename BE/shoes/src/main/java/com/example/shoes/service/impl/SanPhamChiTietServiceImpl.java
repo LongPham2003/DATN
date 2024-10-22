@@ -194,6 +194,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     }
 
 
+
     private SanPhamChiTietResponse converToResponse(SanPhamChiTiet sanPhamChiTiet) {
         SanPhamChiTietResponse response = new SanPhamChiTietResponse();
         response.setId(sanPhamChiTiet.getId());

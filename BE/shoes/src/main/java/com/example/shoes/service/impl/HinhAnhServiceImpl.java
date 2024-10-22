@@ -30,6 +30,7 @@ public class HinhAnhServiceImpl implements HinhAnhService {
     @Override
     public List<HinhAnhResponse> findAll() {
         List<HinhAnh> list = hinhAnhRepo.findAll(Sort.by(Sort.Direction.DESC, "id"));
+
         return list.stream()
                 .map(this::convert)
                 .collect(Collectors.toList());
@@ -48,8 +49,8 @@ public class HinhAnhServiceImpl implements HinhAnhService {
         hinhAnh.setTenAnh(request.getTenAnh());
 
         // Thêm tiền tố vào chuỗi Base64
-//        String base64WithPrefix = "data:image/png;base64," + request.getDuLieuAnhBase64();
-//        hinhAnh.setDuLieuAnh(base64WithPrefix);  // Lưu chuỗi Base64 với tiền tố
+        String base64WithPrefix = "data:image/png;base64," + request.getDuLieuAnhBase64();
+        hinhAnh.setDuLieuAnh(base64WithPrefix);  // Lưu chuỗi Base64 với tiền tố
         SanPhamChiTiet sanPhamChiTiet=sanPhamChiTietRepo.findById(request.getIdSanPhamChiTiet())
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_DETAIL_NOT_FOUND));
        hinhAnh.setIdSanPhamChiTiet(sanPhamChiTiet);
@@ -66,8 +67,8 @@ public class HinhAnhServiceImpl implements HinhAnhService {
         hinhAnh.setTenAnh(request.getTenAnh());
 
         // Thêm tiền tố vào chuỗi Base64
-//        String base64WithPrefix = "data:image/png;base64," + request.getDuLieuAnhBase64();
-//        hinhAnh.setDuLieuAnh(base64WithPrefix);  // Lưu chuỗi Base64 với tiền tố
+        String base64WithPrefix = "data:image/png;base64," + request.getDuLieuAnhBase64();
+        hinhAnh.setDuLieuAnh(base64WithPrefix);  // Lưu chuỗi Base64 với tiền tố
         SanPhamChiTiet sanPhamChiTiet=sanPhamChiTietRepo.findById(request.getIdSanPhamChiTiet())
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_DETAIL_NOT_FOUND));
         hinhAnh.setIdSanPhamChiTiet(sanPhamChiTiet);
