@@ -26,6 +26,8 @@ import ListPhieuGiamGia from "./pages/admin/Voucher/ListPhieuGiamGia";
 import ChiTietPhieuGiamGia from "./pages/admin/Voucher/ChiTietPhieuGiamGia";
 import SanPhamChiTiet from "./pages/admin/SanPham/Product/SanPhamChiTiet";
 import UpdateProductDetail from "./pages/admin/SanPham/ProductDetail/UpdateProductDetail";
+import BanHangTaiQuay from "./pages/admin/BanHangTaiQuay/BanHangTaiQUay";
+// import BanHangTaiQuay from "./pages/admin/BanHangTaiQuay/BanHangTaiQuay";
 function App() {
   return (
     <>
@@ -79,39 +81,6 @@ function App() {
           {/* roter dashboard */}
 
           <Route path="/admin" element={<Dashboard />}>
-            <Route
-              path="phieugiamgia"
-              element={
-                <>
-                  <Helmet>
-                    <title>Thống kê</title>
-                  </Helmet>
-                  <ListPhieuGiamGia />
-                </>
-              }
-            />
-            <Route
-              path="phieugiamgia/:id"
-              element={
-                <>
-                  <Helmet>
-                    <title>Thống kê</title>
-                  </Helmet>
-                  <ChiTietPhieuGiamGia />
-                </>
-              }
-            />
-            <Route
-              path="diachi"
-              element={
-                <>
-                  <Helmet>
-                    <title>Thống kê</title>
-                  </Helmet>
-                  <DiaChi />
-                </>
-              }
-            />
             {/* roter thong ke */}
             <Route
               path="thongke"
@@ -121,6 +90,18 @@ function App() {
                     <title>Thống kê</title>
                   </Helmet>
                   <ThongKe />
+                </>
+              }
+            />
+            {/* roter thong ke */}
+            <Route
+              path="banhangoff"
+              element={
+                <>
+                  <Helmet>
+                    <title>Bán hàng tại quầy</title>
+                  </Helmet>
+                  <BanHangTaiQuay />
                 </>
               }
             />
@@ -193,6 +174,39 @@ function App() {
                     <title>Thương hiệu</title>
                   </Helmet>
                   <ThuongHieu />
+                </>
+              }
+            />
+            <Route
+              path="phieugiamgia"
+              element={
+                <>
+                  <Helmet>
+                    <title>Phiếu giảm giá</title>
+                  </Helmet>
+                  <ListPhieuGiamGia />
+                </>
+              }
+            />
+            <Route
+              path="phieugiamgia/:id"
+              element={
+                <>
+                  <Helmet>
+                    <title>Phiếu giảm giá</title>
+                  </Helmet>
+                  <ChiTietPhieuGiamGia />
+                </>
+              }
+            />
+            <Route
+              path="diachi"
+              element={
+                <>
+                  <Helmet>
+                    <title>Địa chỉ</title>
+                  </Helmet>
+                  <DiaChi />
                 </>
               }
             />
