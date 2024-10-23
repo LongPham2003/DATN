@@ -14,4 +14,7 @@ public interface DiaChiService {
     DiaChiResponse updateDiaChi(UpdateDiaChiRequest diaChi);
     DiaChiResponse delete(Integer id);
     DiaChiResponse getById(Integer id);
+    List<DiaChi> getALlByKhachHang(Integer idKhachHang);
+    DiaChi updateDiaChiAllFasle(Integer idDiaChi,Integer idKhachHang);
+    DiaChi addDiaChiByIdKhachHang(Integer idKhachHang,CreateDiaChiRequest diaChiRequest);
 }
