@@ -6,11 +6,14 @@ import com.example.shoes.dto.nhanvien.request.NhanvienAddRequest;
 import com.example.shoes.entity.NhanVien;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.service.NhanVienService;
+import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -39,7 +42,10 @@ public class NhanVienController {
     }
 
     @PostMapping("/add")
-    public ApiResponse<NhanVien> add(@RequestBody NhanvienAddRequest nhanvienAddRequest) {
+    public ApiResponse<NhanVien> add(@Valid @RequestBody NhanvienAddRequest nhanvienAddRequest,BindingResult bindingResult  ) {
+        if(bindingResult.hasErrors()) {
+            throw new ValidationException(bindingResult.getFieldError().getDefaultMessage());
+        }
         return ApiResponse.<NhanVien>builder()
                 .result(nhanVienService.addNhanVien(nhanvienAddRequest)).build();
     }
@@ -51,7 +57,10 @@ public class NhanVienController {
     }
 
     @PostMapping("/update/{id}")
-    public ApiResponse<NhanVien> update(@PathVariable("id") Integer id, @RequestBody NhanVienUpdateRequest request) {
+    public ApiResponse<NhanVien> update(@Valid  @PathVariable("id") Integer id, @RequestBody NhanVienUpdateRequest request , BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+           throw new ValidationException(bindingResult.getFieldError().getDefaultMessage());
+       }
         return ApiResponse.<NhanVien>builder()
                 .result(nhanVienService.updateNhanVien(id, request)).build();
     }
