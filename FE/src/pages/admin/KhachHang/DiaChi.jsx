@@ -173,3 +173,126 @@ export default function DiaChi() {
     </div>
   );
 }
+{
+  /* <div className="flex">
+              <div className="w-full p-2 sm:w-1/2">
+                <label className="mb-1 block">Tỉnh/Thành Phố:</label>
+                <select
+                  name="province"
+                  value={selectedValues[index]?.province || ""}
+                  onChange={(event) => handleProvinceChange(event, index)}
+                  className="w-full rounded border p-2"
+                  required
+                >
+                  <option value="">Chọn tỉnh/thành phố</option>
+                  {diaChiData.province.map((province) => (
+                    <option
+                      key={province.idProvince}
+                      value={province.idProvince}
+                    >
+                      {province.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="w-full p-2 sm:w-1/2">
+                <label className="mb-1 block">Quận/Huyện:</label>
+                <select
+                  name="district"
+                  value={selectedValues[index]?.district || ""}
+                  onChange={(event) => handleDistrictChange(event, index)}
+                  className="w-full rounded border p-2"
+                  required
+                >
+                  <option value="">Chọn quận/huyện</option>
+                  {selectedValues[index]?.province &&
+                    diaChiData.district
+                      .filter(
+                        (district) =>
+                          district.idProvince ===
+                          selectedValues[index]?.province,
+                      )
+                      .map((district) => (
+                        <option
+                          key={district.idDistrict}
+                          value={district.idDistrict}
+                        >
+                          {district.name}
+                        </option>
+                      ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="flex">
+              <div className="w-full p-2 sm:w-1/2">
+                <label className="mb-1 block">Xã/Phường:</label>
+                <select
+                  name="commune"
+                  value={selectedValues[index]?.commune || ""}
+                  onChange={(event) => handleCommuneChange(event, index)}
+                  className="w-full rounded border p-2"
+                  required
+                >
+                  <option value="">Chọn xã/phường</option>
+                  {selectedValues[index]?.district &&
+                    diaChiData.commune
+                      .filter(
+                        (commune) =>
+                          commune.idDistrict ===
+                          selectedValues[index]?.district,
+                      )
+                      .map((commune) => (
+                        <option
+                          key={commune.idCommune}
+                          value={commune.idCommune}
+                        >
+                          {commune.name}
+                        </option>
+                      ))}
+                </select>
+              </div>
+
+              <div className="w-full p-2 sm:w-1/2">
+                <label className="mb-1 block">Số nhà, đường, thôn/xóm:</label>
+                <input
+                  type="text"
+                  name="soNhaDuongThonXom"
+                  value={selectedValues[index]?.soNhaDuongThonXom || ""}
+                  className="w-full rounded border p-2"
+                  readOnly
+                />
+              </div>
+            </div> */
+  // const handleProvinceChange = (event, index) => {
+  //   const selectedProvinceId = event.target.value;
+  //   const updatedValues = [...selectedValues];
+  //   updatedValues[index] = {
+  //     ...updatedValues[index],
+  //     province: selectedProvinceId,
+  //     district: "",
+  //     commune: "",
+  //   };
+  //   setSelectedValues(updatedValues);
+  // };
+  // const handleDistrictChange = (event, index) => {
+  //   const selectedDistrictId = event.target.value;
+  //   const updatedValues = [...selectedValues];
+  //   updatedValues[index] = {
+  //     ...updatedValues[index],
+  //     district: selectedDistrictId,
+  //     commune: "",
+  //   };
+  //   setSelectedValues(updatedValues);
+  // };
+  // const handleCommuneChange = (event, index) => {
+  //   const selectedCommuneId = event.target.value;
+  //   const updatedValues = [...selectedValues];
+  //   updatedValues[index] = {
+  //     ...updatedValues[index],
+  //     commune: selectedCommuneId,
+  //   };
+  //   setSelectedValues(updatedValues);
+  // };
+}
