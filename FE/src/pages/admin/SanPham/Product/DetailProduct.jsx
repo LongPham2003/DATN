@@ -1,9 +1,9 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Bounce, ToastContainer } from "react-toastify";
 import LayAnhTheoIdSP from "./LayANhTheoIDSP";
-import { Button, Select } from "antd";
+import { Select } from "antd";
 import ReactPaginate from "react-paginate";
 
 export default function DetailProduct() {
@@ -25,23 +25,23 @@ export default function DetailProduct() {
   const [selectedIdDeGiay, setSelectedIdDeGiay] = useState(null);
   const [minDonGia, setMinDonGia] = useState(0);
   const [maxDonGia, setMaxDonGia] = useState(10000000000);
-  const [SP, setSP] = useState([]);
+
   const [trangHienTai, setTrangHienTai] = useState(1);
   const [tongSoTrang, setTongSoTrang] = useState(0);
   const [pageSize, setPageSize] = useState(5);
 
-  let ApiLaySP = `http://localhost:8080/api/sanpham/${id}`;
+  // let ApiLaySPCTTheoIdSP = `http://localhost:8080/api/sanphamchitiet/getidsanpham/${id}`;
 
-  const getByIdSP = async () => {
-    const data = await axios.get(ApiLaySP);
-    setSP(data.data.result);
-    console.log(data.data.result);
-  };
+  // const getByIdSP = async () => {
+  //   const data = await axios.get(ApiLaySPCTTheoIdSP);
+  //   setSPCTbyIdSP(data.data.result);
+  //   console.log(data.data.result);
+  // };
 
-  useEffect(() => {
-    getByIdSP();
-    // layAnh();
-  }, []);
+  // useEffect(() => {
+  //   getByIdSP();
+  //   // layAnh();
+  // }, []);
 
   // lấy toàn bộ spct theo id sản phẩm
   useEffect(() => {
@@ -142,7 +142,7 @@ export default function DetailProduct() {
 
   return (
     <>
-      <div className="bg-slate-300 font-mono">
+      <div className="bg-slate-300">
         <div className="flex justify-center gap-5">
           <div>
             <p className="font-bold">Hãng</p>
@@ -262,31 +262,30 @@ export default function DetailProduct() {
           </button>
         </div>
       </div>
-      <div className="mx-5 my-3 font-mono">
-        <div className="my-5 flex">
-          <span className="text-xl font-bold">
-            Danh sách sản phẩm chi tiết của sản phẩm:
-          </span>
-          <div className="ml-[850px]">
-            <select name="" id="" onChange={(e) => setPageSize(e.target.value)}>
-              <option value="">chọn số phần tử</option>
-              <option value="">5</option>
-              <option value="30">30</option>
-              <option value="50">50</option>
-            </select>
-          </div>
-        </div>
+      <div className="mx-5 my-3">
+        <span className="mb-5 text-xl font-bold">
+          Danh sách sản phẩm chi tiết của sản phẩm:
+        </span>
+        <select name="" id="" onChange={(e) => setPageSize(e.target.value)}>
+          <option value="">chọn số phần tử</option>
+          <option value="">5</option>
+          <option value="30">30</option>
+          <option value="50">50</option>
+        </select>
         <div className="flex justify-center">
           <div className="min-w-full">
             {/* Thêm max-height và overflow-y-auto để tạo thành cuộn */}
-            <div className="max-h-[500px] overflow-y-auto">
-              <table className="mb-[60px] min-w-full bg-white text-[20px]">
+            <div className="max-h-[400px] overflow-y-auto">
+              <table className="mb-[60px] min-w-full border border-gray-300 bg-white">
                 <thead>
-                  <tr className="h-10 border-b-2 border-indigo-500 text-base">
+                  <tr className="h-10 rounded-2xl border-b-2 text-base shadow-inner">
                     <th className="w-10">STT</th>
-                    <th className="w-[250px]">Sản phẩm</th>
                     <th className="w-[100px] border-b">Ảnh</th>
-
+                    <th className="w-[100px] border-b">Chất liệu</th>
+                    <th className="w-[100px] border-b">Màu</th>
+                    <th className="w-[100px] border-b">Kích thước</th>
+                    <th className="w-[100px] border-b">Thương Hiệu</th>
+                    <th className="w-[100px] border-b">Đế giày</th>
                     <th className="w-[100px] border-b">Đơn giá</th>
                     <th className="w-[100px] border-b">Số lượng</th>
                     <th className="w-[100px] border-b">Trạng thái</th>
@@ -295,22 +294,31 @@ export default function DetailProduct() {
                 </thead>
                 <tbody className="text-center">
                   {SPCTbyIdSP.map((item, index) => (
-                    <tr key={item.id} className="hover:bg-gray-100">
-                      <td className="border-b-[1px] border-indigo-500 px-4 py-2">
+                    <tr key={item.id}>
+                      <td className="border-b px-4 py-2">
                         {index + 1 + (trangHienTai - 1) * pageSize}
                       </td>
-                      <td className="border-b-[1px] border-indigo-500 px-4 py-2">
-                        {SP.tenSanPham} [ {item.kichThuoc}-{item.mauSac}]
+                      <td className="border-b-[1px] border-indigo-500">
+                        <LayAnhTheoIdSP
+                          id={item.id}
+                          className="h-[50px] w-[50px]"
+                        />
                       </td>
                       <td className="border-b-[1px] border-indigo-500">
-                        <div className="flex justify-center">
-                          <LayAnhTheoIdSP
-                            id={item.id}
-                            className="h-[70px] w-[70px]"
-                          />
-                        </div>
+                        {item.chatLieu}
                       </td>
-
+                      <td className="border-b-[1px] border-indigo-500">
+                        {item.mauSac}
+                      </td>
+                      <td className="border-b-[1px] border-indigo-500">
+                        {item.kichThuoc}
+                      </td>
+                      <td className="border-b-[1px] border-indigo-500">
+                        {item.thuongHieu}
+                      </td>
+                      <td className="border-b-[1px] border-indigo-500">
+                        {item.deGiay}
+                      </td>
                       <td className="border-b-[1px] border-indigo-500">
                         {item.donGia}
                       </td>
@@ -318,19 +326,9 @@ export default function DetailProduct() {
                         {item.soLuong}
                       </td>
                       <td className="border-b-[1px] border-indigo-500">
-                        {item.trangThai ? (
-                          <span className="text-green-600">đang bán</span>
-                        ) : (
-                          <span className="text-red-600">deo ban nua</span>
-                        )}
+                        {item.trangThai ? "ban" : "deo ban nua"}
                       </td>
-                      <td className="border-b-[1px] border-indigo-500">
-                        <Link to={`/admin/Update-DetailProduct/${item.id}`}>
-                          <Button color="primary" variant="link">
-                            Sửa
-                          </Button>
-                        </Link>
-                      </td>
+                      <td className="border-b-[1px] border-indigo-500">1</td>
                     </tr>
                   ))}
                 </tbody>
