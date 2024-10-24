@@ -52,8 +52,21 @@ public interface SanPhamChiTietRepo extends JpaRepository<SanPhamChiTiet, Intege
     List<SanPhamChiTiet> findByIdSanPhamAndTrangThaiTrue(@Param("idSanPham") Integer idSanPham);
 
     // lấy tat ca danh sach sp co trang thai true
-    @Query("SELECT spct FROM SanPhamChiTiet  spct WHERE spct.idSanPham.trangThai=true and spct.trangThai = true")
-    List<SanPhamChiTiet> getAllTrangThaiTrue();
+    @Query("SELECT spct FROM SanPhamChiTiet spct " +
+            "WHERE (:maSanPham IS NULL OR spct.idSanPham.ma like %:maSanPham%) " +
+            "AND (:idMauSac IS NULL OR spct.idMauSac.id = :idMauSac) " +
+            "AND (:idkichThuoc IS NULL OR spct.idKichThuoc.id = :idkichThuoc) " +
+            "AND (:idChatLieu IS NULL OR spct.idChatLieu.id = :idChatLieu) " +
+            "AND (:idThuongHieu IS NULL OR spct.idThuongHieu.id = :idThuongHieu) " +
+            "AND (:idDeGiay IS NULL OR spct.idDeGiay.id = :idDeGiay) " +
+            "AND (spct.idSanPham.trangThai=true)" +
+            "AND (spct.trangThai =true)")
+    List<SanPhamChiTiet> getAllTrangThaiTrue(@Param("maSanPham") String maSanPham,
+                                             @Param("idMauSac") Integer idMauSac,
+                                             @Param("idkichThuoc") Integer idkichThuoc,
+                                             @Param("idChatLieu") Integer idChatLieu,
+                                             @Param("idThuongHieu") Integer idThuongHieu,
+                                             @Param("idDeGiay") Integer idDeGiay);
 
     @Query("select  spct FROM SanPhamChiTiet spct where spct.id = :idSPCT")
     SanPhamChiTiet getSPCTDetail(@Param("idSPCT") Integer idSPCT);

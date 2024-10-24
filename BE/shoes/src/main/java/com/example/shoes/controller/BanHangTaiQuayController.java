@@ -19,15 +19,15 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/taiquay")
+@RequestMapping("/banhangtaiquay")
 public class BanHangTaiQuayController {
     @Autowired
     private HoaDonService hoaDonService;
 
     // tạo hóa đon moi
     @PostMapping("/taodon")
-    public ApiResponse<HoaDonResponse> createHoaDon(@RequestBody HoaDonRequest hoaDonRequest) {
-        HoaDonResponse hoaDonResponse = hoaDonService.createHoaDon(hoaDonRequest);
+    public ApiResponse<HoaDonResponse> createHoaDon() {
+        HoaDonResponse hoaDonResponse = hoaDonService.createHoaDon();
         return ApiResponse.<HoaDonResponse>builder()
                 .result(hoaDonResponse)
                 .build();
@@ -43,7 +43,7 @@ public class BanHangTaiQuayController {
                 .build();
     }
 
-    @PostMapping("/hoadon/{id}/add-spct")
+    @PostMapping("/hoadon/addspct/{id}")
     public ApiResponse<HoaDonResponse> addSanPhamChiTietToHoaDon(
             @PathVariable Integer id,
             @RequestBody HoaDonChiTietRequest chiTietRequest) {

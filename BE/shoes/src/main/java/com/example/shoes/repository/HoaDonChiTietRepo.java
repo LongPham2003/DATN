@@ -16,4 +16,7 @@ public interface HoaDonChiTietRepo extends JpaRepository<HoaDonChiTiet, Integer>
 //     lấy ra danh sach hóa đơn chi tiết theo id hóa đơn
     @Query("SELECT h FROM HoaDonChiTiet h WHERE h.idHoaDon.id = :idHoaDon")
     List<HoaDonChiTiet> findByIdHoaDon(@Param("idHoaDon") Integer idHoaDon);
+
+    @Query("select hdct.id, hdct.idHoaDon.id, hdct.idSpct.idSanPham.tenSanPham,hdct.idSpct.idSanPham.ma,hdct.idSpct.idChatLieu.ten,hdct.idSpct.idMauSac.ten,hdct.idSpct.idKichThuoc.kichThuoc,hdct.idSpct.idThuongHieu.ten,hdct.idSpct.idDeGiay.ten,hdct.donGia,hdct.soLuong from HoaDonChiTiet  hdct where hdct.idHoaDon.id = :idHoaDon")
+    List<HoaDonChiTiet> getSPCTByIdHoaDon(@Param("idHoaDon") Integer idHoaDon);
 }
