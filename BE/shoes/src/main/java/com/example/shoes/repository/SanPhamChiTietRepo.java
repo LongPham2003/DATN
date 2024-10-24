@@ -52,7 +52,7 @@ public interface SanPhamChiTietRepo extends JpaRepository<SanPhamChiTiet, Intege
     List<SanPhamChiTiet> findByIdSanPhamAndTrangThaiTrue(@Param("idSanPham") Integer idSanPham);
 
     // lấy tat ca danh sach sp co trang thai true
-    @Query("SELECT spct FROM SanPhamChiTiet  spct WHERE spct.trangThai = true")
+    @Query("SELECT spct FROM SanPhamChiTiet  spct WHERE spct.idSanPham.trangThai=true and spct.trangThai = true")
     List<SanPhamChiTiet> getAllTrangThaiTrue();
 
     @Query("select  spct FROM SanPhamChiTiet spct where spct.id = :idSPCT")
