@@ -48,8 +48,8 @@ const Login = () => {
         setError("");
         toast.success("Đăng nhập thành công");
         const role = localStorage.getItem("userRole");
-        if (role === "ROLE_NHANVIEN") {
-          navigate("/admin");
+        if (role === "ROLE_NHANVIEN" || role === "ROLE_ADMIN") {
+          navigate("/admin/thongke");
           return;
         } else {
           navigate("/home");
