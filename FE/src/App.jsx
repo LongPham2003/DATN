@@ -26,6 +26,7 @@ import ListPhieuGiamGia from "./pages/admin/Voucher/ListPhieuGiamGia";
 import ChiTietPhieuGiamGia from "./pages/admin/Voucher/ChiTietPhieuGiamGia";
 import SanPhamChiTiet from "./pages/admin/SanPham/Product/SanPhamChiTiet";
 import UpdateProductDetail from "./pages/admin/SanPham/ProductDetail/UpdateProductDetail";
+
 function App() {
   return (
     <>

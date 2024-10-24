@@ -112,7 +112,64 @@ export default function ListProduct() {
   return (
     <>
       <div>
-        <span className="text-xl font-medium">Tìm kiếm sản phẩm</span>
+        <span className="text-3xl font-bold text-gray-900 mb-6 block uppercase ">Tìm kiếm sản phẩm</span>
+        <div className="flex justify-between items-center mt-6">
+          <div className="flex-1 mr-4">
+            <label className="block text-lg font-medium text-gray-700 mb-2">Tên Sản Phẩm:</label>
+            <input
+              type="text"
+              placeholder="Nhập tên Sản Phẩm"
+              // className="w-full rounded-lg border-2 border-gray-300 p-3 text-gray-700 shadow-sm transition-colors duration-300 hover:border-blue-400 focus:border-blue-600 outline-none"
+              className="w-[450px] rounded border p-2 transition-colors duration-300 hover:border-blue-500 focus:border-blue-500"
+              onChange={(e) => setTenTimKiem(e.target.value)}
+            />
+          </div>
+
+          <div className="flex-1 mr-4">
+            <label className="block text-lg font-medium text-gray-700 mb-2">Loại:</label>
+            <CustomDropdown
+              options={loaiSelect}
+              selectedValue={
+                idLoai
+                  ? loaiSelect.find((loai) => loai.id === idLoai)
+                  : { ten: "Mời bạn chọn loại", id: "" }
+              }
+              onSelect={(e) => setidLoai(e.id)}
+              className="w-full rounded-lg border-2 border-gray-300 p-3 text-gray-700 shadow-sm transition-colors duration-300 hover:border-blue-400 focus:border-blue-600"
+            />
+          </div>
+
+          <div className="flex-1">
+            <label className="block text-lg font-medium text-gray-700 mb-2">Trạng thái:</label>
+            <div className="flex items-center mt-2">
+              <label className="mr-4 text-gray-700">Đang kinh doanh</label>
+              <Radio
+                name="status"
+                className="mr-6"
+                value={true}
+                onChange={(e) => setTrangThaiTimKiem(true)}
+              />
+              <label className="mr-4 text-gray-700">Ngừng kinh doanh</label>
+              <Radio
+                name="status"
+                value={false}
+                onChange={(e) => setTrangThaiTimKiem(false)}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="flex justify-center mt-10">
+          <button
+            type="button"
+            className="h-12 w-36 rounded-lg bg-red-500 text-lg font-bold text-white shadow-lg transition duration-300 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-50"
+            onClick={handleReset}
+          >
+            Reset
+          </button>
+        </div>
+
+        {/* <span className="text-xl font-medium">Tìm kiếm sản phẩm</span>
         <div className="ml-96">
           <div className="w-auto">
             <label className="mr-2">Tên Sản Phẩm:</label>
@@ -125,16 +182,6 @@ export default function ListProduct() {
           </div>
         </div>
         <div className="mt-7 flex">
-          {/* <div className="items-center justify-start">
-            <label htmlFor="">Danh mục:</label>
-            <select className="ml-9 h-[44px] w-[500px] rounded-md border-2 border-gray-300 p-2 outline-none transition-colors duration-300 hover:border-blue-500 focus:border-yellow-500">
-              {loaiSelect.map((loai) => (
-                <option value={loai.id} key={loai.id}>
-                  {loai.ten}
-                </option>
-              ))}
-            </select>
-          </div> */}
           <div className="ml-20 justify-center">
             <label htmlFor="Loai" className="mr-3 text-xl">
               Loại:
@@ -176,7 +223,7 @@ export default function ListProduct() {
               Reset
             </button>
           </div>
-        </div>
+        </div> */}
       </div>
       <hr className="my-5" />
       <div>
@@ -201,12 +248,12 @@ export default function ListProduct() {
                     <tr>
                       <th className="w-10 px-6 py-4">STT</th>
                       <th className="w-14 px-6 py-4">Mã</th>
-                      <th className="w-52 px-6 py-4">Ten</th>
-                      <th className="w-52 px-6 py-4">Loai</th>
-                      <th className="w-52 px-6 py-4">Ngay Tao</th>
-                      <th className="w-52 px-6 py-4">SO luong ton</th>
-                      <th className="w-52 px-6 py-4">Trang Thai</th>
-                      <th className="px-6 py-4">Hanh DOng</th>
+                      <th className="w-52 px-6 py-4">Tên</th>
+                      <th className="w-52 px-6 py-4">Loại</th>
+                      <th className="w-52 px-6 py-4">Ngày tạo</th>
+                      <th className="w-52 px-6 py-4">Số lượng tồn</th>
+                      <th className="w-52 px-6 py-4">Trạng thái</th>
+                      <th className="px-6 py-4">Hành động</th>
                     </tr>
                   </thead>
                   <tbody>

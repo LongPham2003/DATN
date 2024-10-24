@@ -44,13 +44,11 @@ public class PhieuGiamGia extends CrudByAt {
     @DecimalMin(value = "0.0", inclusive = false, message = "Giảm tối đa phải lớn hơn 0")
     @Column(name = "giam_toi_da")
     private BigDecimal giamToiDa;
-
-
+    
     @NotNull(message = "Số lượng không được để trống")
     @PositiveOrZero(message = "Số lượng phải là số không âm")
     @Column(name = "so_luong")
     private Integer soLuong;
-
 
     @NotNull(message = "Ngày bắt đầu không được để trống")
     @Column(name = "ngay_bat_dau")
@@ -59,7 +57,6 @@ public class PhieuGiamGia extends CrudByAt {
     @NotNull(message = "Ngày kết thúc không được để trống")
     @Column(name = "ngay_ket_thuc")
     private LocalDate ngayKetThuc;
-
 
     @Column(name = "trang_thai")
     private Boolean trangThai;
