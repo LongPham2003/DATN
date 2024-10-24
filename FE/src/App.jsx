@@ -26,11 +26,30 @@ import ListPhieuGiamGia from "./pages/admin/Voucher/ListPhieuGiamGia";
 import ChiTietPhieuGiamGia from "./pages/admin/Voucher/ChiTietPhieuGiamGia";
 import SanPhamChiTiet from "./pages/admin/SanPham/Product/SanPhamChiTiet";
 import UpdateProductDetail from "./pages/admin/SanPham/ProductDetail/UpdateProductDetail";
+import Forbidden403 from "./pages/Forbidden403";
+import NotFound404 from "./pages/NotFound404";
+import ProtectedRoute from "./pages/ProtectedRoute";
 function App() {
   return (
     <>
       <BrowserRouter>
         <Routes>
+          <Route
+            path="/403"
+            element={
+              <>
+                <Forbidden403 />
+              </>
+            }
+          />
+          <Route
+            path="*" // tất cả đường dẫn không hợp lệ
+            element={
+              <>
+                <NotFound404 />
+              </>
+            }
+          />
           {/* router login */}
           <Route
             path="/login"
@@ -116,12 +135,14 @@ function App() {
             <Route
               path="thongke"
               element={
-                <>
-                  <Helmet>
-                    <title>Thống kê</title>
-                  </Helmet>
-                  <ThongKe />
-                </>
+                <ProtectedRoute requiredRoles="ROLE_ADMIN">
+                  <>
+                    <Helmet>
+                      <title>Thống kê</title>
+                    </Helmet>
+                    <ThongKe />
+                  </>
+                </ProtectedRoute>
               }
             />
             {/* roter chat lieu */}
@@ -271,12 +292,14 @@ function App() {
             <Route
               path="nhanvien"
               element={
-                <>
-                  <Helmet>
-                    <title>Danh sách nhân viên</title>
-                  </Helmet>
-                  <DanhSachNhanVien />
-                </>
+                <ProtectedRoute requiredRoles="ROLE_ADMIN">
+                  <>
+                    <Helmet>
+                      <title>Danh sách nhân viên</title>
+                    </Helmet>
+                    <DanhSachNhanVien />
+                  </>
+                </ProtectedRoute>
               }
             />
             <Route
@@ -294,12 +317,14 @@ function App() {
             <Route
               path="khachhang"
               element={
-                <>
-                  <Helmet>
-                    <title>Danh sách khách hàng</title>
-                  </Helmet>
-                  <DanhSachKhachHang />
-                </>
+                <ProtectedRoute requiredRoles={["ROLE_NHANVIEN", "ROLE_ADMIN"]}>
+                  <>
+                    <Helmet>
+                      <title>Danh sách khách hàng</title>
+                    </Helmet>
+                    <DanhSachKhachHang />
+                  </>
+                </ProtectedRoute>
               }
             />
             <Route
