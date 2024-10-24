@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../../../../api/axiosConfig";
 import { useEffect, useState } from "react";
 
 export default function LayAnhTheoIdSP({ id, className }) {

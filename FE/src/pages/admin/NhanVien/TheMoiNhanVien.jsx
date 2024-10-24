@@ -35,7 +35,7 @@ export default function TheMoiNhanVien({ button, onAdd }) {
       onOk: async () => {
         try {
           const response = await axios.post(
-            "http://localhost:8080/nhanvien/add",
+            "http://localhost:8080/api/nhanvien/add",
             {
               hoTen: formData.hoTen,
               email: formData.email,

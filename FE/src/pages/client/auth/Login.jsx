@@ -49,7 +49,7 @@ const Login = () => {
         toast.success("Đăng nhập thành công");
         const role = localStorage.getItem("userRole");
         if (role === "ROLE_NHANVIEN" || role === "ROLE_ADMIN") {
-          navigate("/admin/thongke");
+          navigate("/admin");
           return;
         } else {
           navigate("/home");

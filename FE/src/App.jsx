@@ -26,13 +26,31 @@ import ListPhieuGiamGia from "./pages/admin/Voucher/ListPhieuGiamGia";
 import ChiTietPhieuGiamGia from "./pages/admin/Voucher/ChiTietPhieuGiamGia";
 import SanPhamChiTiet from "./pages/admin/SanPham/Product/SanPhamChiTiet";
 import UpdateProductDetail from "./pages/admin/SanPham/ProductDetail/UpdateProductDetail";
-import BanHangTaiQuay from "./pages/admin/BanHangTaiQuay/BanHangTaiQUay";
-// import BanHangTaiQuay from "./pages/admin/BanHangTaiQuay/BanHangTaiQuay";
+import Forbidden403 from "./pages/Forbidden403";
+import NotFound404 from "./pages/NotFound404";
+import ProtectedRoute from "./pages/ProtectedRoute";
+import BanHangTaiQuay from "./pages/admin/BanHangTaiQuay/BanHangTaiQuay";
 function App() {
   return (
     <>
       <BrowserRouter>
         <Routes>
+          <Route
+            path="/403"
+            element={
+              <>
+                <Forbidden403 />
+              </>
+            }
+          />
+          <Route
+            path="*" // tất cả đường dẫn không hợp lệ
+            element={
+              <>
+                <NotFound404 />
+              </>
+            }
+          />
           {/* router login */}
           <Route
             path="/login"
@@ -81,19 +99,54 @@ function App() {
           {/* roter dashboard */}
 
           <Route path="/admin" element={<Dashboard />}>
-            {/* roter thong ke */}
             <Route
-              path="thongke"
+              path="phieugiamgia"
               element={
                 <>
                   <Helmet>
                     <title>Thống kê</title>
                   </Helmet>
-                  <ThongKe />
+                  <ListPhieuGiamGia />
+                </>
+              }
+            />
+            <Route
+              path="phieugiamgia/:id"
+              element={
+                <>
+                  <Helmet>
+                    <title>Thống kê</title>
+                  </Helmet>
+                  <ChiTietPhieuGiamGia />
+                </>
+              }
+            />
+            <Route
+              path="diachi"
+              element={
+                <>
+                  <Helmet>
+                    <title>Thống kê</title>
+                  </Helmet>
+                  <DiaChi />
                 </>
               }
             />
             {/* roter thong ke */}
+            <Route
+              path="thongke"
+              element={
+                <ProtectedRoute requiredRoles="ROLE_ADMIN">
+                  <>
+                    <Helmet>
+                      <title>Thống kê</title>
+                    </Helmet>
+                    <ThongKe />
+                  </>
+                </ProtectedRoute>
+              }
+            />
+            {/* bán hàng */}
             <Route
               path="banhangoff"
               element={
@@ -177,39 +230,6 @@ function App() {
                 </>
               }
             />
-            <Route
-              path="phieugiamgia"
-              element={
-                <>
-                  <Helmet>
-                    <title>Phiếu giảm giá</title>
-                  </Helmet>
-                  <ListPhieuGiamGia />
-                </>
-              }
-            />
-            <Route
-              path="phieugiamgia/:id"
-              element={
-                <>
-                  <Helmet>
-                    <title>Phiếu giảm giá</title>
-                  </Helmet>
-                  <ChiTietPhieuGiamGia />
-                </>
-              }
-            />
-            <Route
-              path="diachi"
-              element={
-                <>
-                  <Helmet>
-                    <title>Địa chỉ</title>
-                  </Helmet>
-                  <DiaChi />
-                </>
-              }
-            />
             {/* roter voucher */}
             <Route
               path="voucher"
@@ -285,12 +305,14 @@ function App() {
             <Route
               path="nhanvien"
               element={
-                <>
-                  <Helmet>
-                    <title>Danh sách nhân viên</title>
-                  </Helmet>
-                  <DanhSachNhanVien />
-                </>
+                <ProtectedRoute requiredRoles="ROLE_ADMIN">
+                  <>
+                    <Helmet>
+                      <title>Danh sách nhân viên</title>
+                    </Helmet>
+                    <DanhSachNhanVien />
+                  </>
+                </ProtectedRoute>
               }
             />
             <Route
@@ -308,12 +330,14 @@ function App() {
             <Route
               path="khachhang"
               element={
-                <>
-                  <Helmet>
-                    <title>Danh sách khách hàng</title>
-                  </Helmet>
-                  <DanhSachKhachHang />
-                </>
+                <ProtectedRoute requiredRoles={["ROLE_NHANVIEN", "ROLE_ADMIN"]}>
+                  <>
+                    <Helmet>
+                      <title>Danh sách khách hàng</title>
+                    </Helmet>
+                    <DanhSachKhachHang />
+                  </>
+                </ProtectedRoute>
               }
             />
             <Route
