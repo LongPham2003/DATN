@@ -66,8 +66,8 @@ public class SanPhamChiTietController {
     }
 
     @GetMapping("/getallSPCTBH")
-    public ApiResponse<List<SPCTBanHangResponse>> getAllSPCTBH() {
-        List<SPCTBanHangResponse> listSPCT = sanPhamChiTietService.getAllTrangThaitrue();
+    public ApiResponse<List<SPCTBanHangResponse>> getAllSPCTBH(String maSanPham,Integer idMauSac,Integer idkichThuoc,Integer idChatLieu,Integer idThuongHieu,Integer idDeGiay) {
+        List<SPCTBanHangResponse> listSPCT = sanPhamChiTietService.getAllTrangThaitrue(maSanPham,idMauSac,idkichThuoc,idChatLieu,idThuongHieu,idDeGiay);
         return ApiResponse.<List<SPCTBanHangResponse>>builder().result(listSPCT).build();
     }
 
