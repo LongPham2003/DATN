@@ -232,10 +232,10 @@ export function Sidebar() {
         <hr className="border-blue-gray-50 my-2" />
         {/* Tên người dùng */}
         <div className="mb-2 flex items-center gap-4">
-          <Avatar
+          {/* <Avatar
             src="https://docs.material-tailwind.com/img/face-2.jpg"
             alt="avatar"
-          />
+          /> */}
           <div>
             <Typography className="font-bold" variant="small">
               {localStorage.getItem("email")}

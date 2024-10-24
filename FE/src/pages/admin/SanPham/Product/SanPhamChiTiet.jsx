@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../../../../api/axiosConfig";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import DropdownDetail from "../../../DropdownDetail";

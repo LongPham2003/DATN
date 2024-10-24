@@ -29,6 +29,7 @@ import UpdateProductDetail from "./pages/admin/SanPham/ProductDetail/UpdateProdu
 import Forbidden403 from "./pages/Forbidden403";
 import NotFound404 from "./pages/NotFound404";
 import ProtectedRoute from "./pages/ProtectedRoute";
+import BanHangTaiQuay from "./pages/admin/BanHangTaiQuay/BanHangTaiQuay";
 function App() {
   return (
     <>
@@ -143,6 +144,18 @@ function App() {
                     <ThongKe />
                   </>
                 </ProtectedRoute>
+              }
+            />
+            {/* bán hàng */}
+            <Route
+              path="banhangoff"
+              element={
+                <>
+                  <Helmet>
+                    <title>Bán hàng tại quầy</title>
+                  </Helmet>
+                  <BanHangTaiQuay />
+                </>
               }
             />
             {/* roter chat lieu */}
