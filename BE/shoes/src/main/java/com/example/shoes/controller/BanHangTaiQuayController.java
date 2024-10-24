@@ -4,9 +4,18 @@ import com.example.shoes.dto.hoadon.request.HoaDonRequest;
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
 import com.example.shoes.dto.hoadonchitiet.request.HoaDonChiTietRequest;
 import com.example.shoes.dto.phuongthucthanhtoan.request.PhuongThucThanhToanRequest;
+import com.example.shoes.entity.HoaDon;
+import com.example.shoes.entity.HoaDonChiTiet;
+import com.example.shoes.entity.LichSuHoaDon;
+import com.example.shoes.entity.NhanVien;
 import com.example.shoes.exception.ApiResponse;
+import com.example.shoes.repository.HoaDonRepo;
 import com.example.shoes.service.HoaDonService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,15 +24,24 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
+import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/banhangtaiquay")
 public class BanHangTaiQuayController {
     @Autowired
     private HoaDonService hoaDonService;
-
+@Autowired
+private HoaDonRepo hoaDonRepo;
     // tạo hóa đon moi
     @PostMapping("/taodon")
     public ApiResponse<HoaDonResponse> createHoaDon() {
