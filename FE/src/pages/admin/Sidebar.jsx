@@ -6,20 +6,18 @@ import {
   ListItem,
   ListItemPrefix,
   ListItemSuffix,
-  Chip,
   Accordion,
   AccordionHeader,
   AccordionBody,
-  Avatar,
 } from "@material-tailwind/react";
 import {
   PresentationChartBarIcon,
   ShoppingBagIcon,
   UserCircleIcon,
   Cog6ToothIcon,
-  InboxIcon,
   PowerIcon,
   PercentBadgeIcon,
+  BuildingStorefrontIcon,
 } from "@heroicons/react/24/solid";
 import { ChevronRightIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
 import { Link, useNavigate } from "react-router-dom";
@@ -45,6 +43,7 @@ export function Sidebar() {
     // Xóa quyền khỏi localStorage
     localStorage.removeItem("userRole");
     localStorage.removeItem("email");
+    localStorage.removeItem("authToken");
 
     // Điều hướng về trang đăng nhập
     navigate("/login");
@@ -59,27 +58,27 @@ export function Sidebar() {
       </div>
       <List>
         {/* Phần Thống kê */}
-        <Accordion
-          open={open === 1}
-          icon={
-            <ChevronDownIcon
-              strokeWidth={2.5}
-              className={`mx-auto h-4 w-4 transition-transform ${open === 1 ? "rotate-180" : ""}`}
-            />
-          }
-        >
-          <Link to="/admin/thongke">
-            <ListItem className="ml-3 h-[50px] p-0">
-              <ListItemPrefix>
-                <PresentationChartBarIcon className="h-5 w-5" />
-              </ListItemPrefix>
-              <Typography color="blue-gray" className="mr-auto font-normal">
-                Thống kê
-              </Typography>
-            </ListItem>
-          </Link>
-          {/* <AccordionBody className="py-1"></AccordionBody> */}
-        </Accordion>
+
+        <Link to="/admin/thongke">
+          <ListItem className="ml-3 h-[50px] p-0">
+            <ListItemPrefix>
+              <PresentationChartBarIcon className="h-5 w-5" />
+            </ListItemPrefix>
+            <Typography color="blue-gray" className="mr-auto font-normal">
+              Thống kê
+            </Typography>
+          </ListItem>
+        </Link>
+        <Link to="/admin/banhangoff">
+          <ListItem className="ml-3 h-[50px] p-0">
+            <ListItemPrefix>
+              <BuildingStorefrontIcon className="h-5 w-5" />
+            </ListItemPrefix>
+            <Typography color="blue-gray" className="mr-auto font-normal">
+              Bán hàng tại quầy
+            </Typography>
+          </ListItem>
+        </Link>
 
         {/* Phần Sản phẩm */}
         <Accordion
@@ -231,10 +230,10 @@ export function Sidebar() {
         <hr className="border-blue-gray-50 my-2" />
         {/* Tên người dùng */}
         <div className="mb-2 flex items-center gap-4">
-          <Avatar
+          {/* <Avatar
             src="https://docs.material-tailwind.com/img/face-2.jpg"
             alt="avatar"
-          />
+          /> */}
           <div>
             <Typography className="font-bold" variant="small">
               {localStorage.getItem("email")}

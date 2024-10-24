@@ -26,13 +26,13 @@ export default function DanhSachNhanVien() {
   };
 
   useEffect(() => {
-    const role = localStorage.getItem("userRole");
-    if (role !== "ROLE_NHANVIEN") {
-      navigate("/home");
-      return;
-    }
+    // const role = localStorage.getItem("userRole");
+    // if (role !== "ROLE_NHANVIEN") {
+    //   navigate("/home");
+    //   return;
+    // }
     axios
-      .get("http://localhost:8080/khachhang/search", {
+      .get("http://localhost:8080/api/khachhang/search", {
         params: {
           pageNumber: trangHienTai,
           keyword: keyword,

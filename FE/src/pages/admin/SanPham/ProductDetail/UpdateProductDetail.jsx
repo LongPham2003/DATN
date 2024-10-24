@@ -5,6 +5,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
+import ImageUpload from "./UploadAnh";
+import GetImage from "./GetImage";
 
 export default function UpdateProductDetail() {
   const { id } = useParams();
@@ -19,10 +21,12 @@ export default function UpdateProductDetail() {
   const [kichThuocs, setKichThuocs] = useState([]);
   const [deGiays, setDeGiays] = useState([]);
 
-  const [trangThai, setTrangThai] = useState(null);
+  const [hinhAnh, setHinhAnh] = useState([]);
+  const [anhMoi, setAnhMoi] = useState([]);
 
   const getSPCTById = `http://localhost:8080/api/sanphamchitiet/getSPCTDetail/${id}`;
   const getSPById = `http://localhost:8080/api/sanpham`;
+  const getHinhAnh = `http://localhost:8080/api/hinhanh/tatcathinhanh`;
 
   const getData = async () => {
     try {
@@ -56,13 +60,22 @@ export default function UpdateProductDetail() {
       // Sau khi lấy thông tin sản phẩm chi tiết, lấy thêm thông tin sản phẩm
       const spRes = await axios.get(`${getSPById}/${spctData.idSanPham}`);
       setSP(spRes.data.result);
+      const haRes = await axios.get(`${getHinhAnh}/${id}`);
+      const imageList = haRes.data.result.map((image) => ({
+        id: image.id,
+        name: image.tenAnh,
+        url: image.duLieuAnhBase64,
+      }));
+      setHinhAnh(imageList);
+      // console.log(haRes.data.result);
     } catch (error) {
       console.error("Lỗi khi tải dữ liệu:", error);
     }
   };
-
   const UpdateProductDetail = async (e) => {
     e.preventDefault();
+
+    // Đối tượng chi tiết sản phẩm mới cần cập nhật
     const newProductDetail = {
       idSanPham: SPCT.idSanPham,
       idChatLieu: SPCT.idChatLieu,
@@ -74,23 +87,53 @@ export default function UpdateProductDetail() {
       donGia: SPCT.donGia,
       trangThai: SPCT.trangThai,
     };
+
     try {
       await axios.put(
         `http://localhost:8080/api/sanphamchitiet/update/${id}`,
         newProductDetail,
       );
-      toast.success("Sửa thành công", { autoClose: 1000 });
+
+      // Xử lý ảnh: cả ảnh cũ và ảnh mới đều được gửi lại
+      await Promise.all(
+        hinhAnh.map(async (anh) => {
+          const newAnh = {
+            id: anh.id,
+            tenAnh: SP.tenSanPham,
+            idSanPhamChiTiet: id,
+            duLieuAnhBase64: anh.url || anh.duLieuAnhBase64,
+            trangThai: true,
+          };
+
+          // Kiểm tra nếu ảnh đã có ID, tức là ảnh cũ => cập nhật
+          if (anh.id) {
+            console.log("Cập nhật ảnh cũ:", newAnh);
+            return axios.put(
+              `http://localhost:8080/api/hinhanh/update/${anh.id}`,
+              newAnh,
+            );
+          }
+          // Nếu không có ID, tức là ảnh mới => tạo mới
+          else {
+            console.log("Tạo ảnh mới:", newAnh);
+            return axios.post(`http://localhost:8080/api/hinhanh/add`, newAnh);
+          }
+        }),
+      );
+
+      toast.success("Cập nhật thành công", { autoClose: 1000 });
       setTimeout(() => {
-        navigate(`/admin/chitietsanpham/${SPCT.idSanPham}`); // Load lại trang sau 1 giây
+        navigate(`/admin/chitietsanpham/${SPCT.idSanPham}`);
       }, 1700);
     } catch (error) {
-      toast.error("Sửa thất bại", { autoClose: 1000 });
-      console.log(error);
+      toast.error("Cập nhật thất bại", { autoClose: 1000 });
+      console.error(error);
     }
   };
 
   useEffect(() => {
-    getData(); // lay dữ liệu
+    getData(); // lay dữ liệu\
+    console.log(hinhAnh);
   }, []);
 
   return (
@@ -290,12 +333,17 @@ export default function UpdateProductDetail() {
             </div>
           </div>
         </div>
-        <div className="h-[300px] bg-slate-100">
-          <div className="my-5 flex justify-center">
-            <span className="text-3xl font-bold">Anh San Pham</span>
+        <div className="h-[200px]">
+          <div className="my-5 flex justify-start gap-5">
+            <div>
+              <span className="text-3xl font-bold">Anh San Pham:</span>
+            </div>
+            <div>
+              <GetImage fileList={hinhAnh} setFileList={setHinhAnh} />
+            </div>
           </div>
         </div>
-        <div className="mt-5 flex justify-end gap-6">
+        <div className="mr-10 mt-5 flex justify-end gap-6">
           <Popconfirm
             title="Sửa sản phẩm"
             description="Bạn có chắc chắn muốn sửa sản phẩm này không?"

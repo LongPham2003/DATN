@@ -1,18 +1,16 @@
 package com.example.shoes.dto.sanphamchitiet.response;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Setter
 @Getter
-public class SanPhamChiTietResponse {
+public class SPCTBanHangResponse {
     private Integer id;
     private String tenSanPham;
+    private String maSanPham;
     private String chatLieu;
     private String mauSac;
     private String kichThuoc;
@@ -21,9 +19,4 @@ public class SanPhamChiTietResponse {
     private BigDecimal donGia;
     private Integer soLuong;
     private Boolean trangThai;
-
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate ngayTao;
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate ngayCapNhat;
 }

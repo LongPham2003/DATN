@@ -48,7 +48,7 @@ const Login = () => {
         setError("");
         toast.success("Đăng nhập thành công");
         const role = localStorage.getItem("userRole");
-        if (role === "ROLE_NHANVIEN") {
+        if (role === "ROLE_NHANVIEN" || role === "ROLE_ADMIN") {
           navigate("/admin");
           return;
         } else {

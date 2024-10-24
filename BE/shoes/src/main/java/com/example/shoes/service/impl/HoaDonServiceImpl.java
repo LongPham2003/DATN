@@ -80,6 +80,14 @@ public class HoaDonServiceImpl implements HoaDonService {
         // Lấy mã hoa don lớn nhất từ database
         String maxMaHoaDon = hoaDonRepo.findMaxMaHoaDon();
 
+<<<<<<< HEAD
+=======
+    // Hàm để sinh mã hoa don tự động
+    public String generateMaHoaDon() {
+        // Lấy mã hoa don lớn nhất từ database
+        String maxMaHoaDon = hoaDonRepo.findMaxMaHoaDon();
+
+>>>>>>> bd7a636b62ded312868c21701a87c623a8c11d53
         // Tách số thứ tự từ mã hoa don
         if (maxMaHoaDon != null) {
             int soThuTu = Integer.parseInt(maxMaHoaDon.substring(2)); // Bỏ phần "SP"
@@ -602,7 +610,6 @@ public class HoaDonServiceImpl implements HoaDonService {
                 .map(this::converToHoaDonResponse)
                 .collect(Collectors.toList());
     }
-
 
     private HoaDonResponse converToHoaDonResponse(HoaDon hoaDon) {
         HoaDonResponse hoaDonResponse = new HoaDonResponse();

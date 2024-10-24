@@ -41,30 +41,40 @@ import java.util.Arrays;
 public class SecurityConfiguration {
 
     @Autowired
-    private  JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     @Autowired
     private CustomAccessDeniedHandler customAccessDeniedHandler;
 
-    private final String[] PUBLIC_ENDPOINTS = {"/taikhoan/getall", "/auth/signup", "/auth/login",
-            "/auth/resetpass", "/auth/doimatkhau","/nhanvien/search","/api/chatlieu/**",
-            "/api/sanpham/**","/api/sanphamchitiet/**","/api/kichthuoc/**","/api/mausac/**",
-            "/api/thuonghieu/**","/api/degiay/**","/api/hinhanh/**"};
+    private final String[] PUBLIC_ENDPOINTS = {"/auth/signup", "/auth/login",
+            "/auth/resetpass", "/auth/doimatkhau"};
 
-//    private final String[] PUBLIC_ENDPOINTS = {};
+    private final String[] NHANVIEN_ENDPOINTS = {
+            "/api/chatlieu/**",
+            "/api/sanpham/**", "/api/sanphamchitiet/**", "/api/kichthuoc/**", "/api/mausac/**",
+            "/api/thuonghieu/**", "/api/degiay/**", "/api/hinhanh/**", "/api/khachhang/**",
+            "/api/loai/**", "/api/phieugiamgia/**"
+    };
+
+//    private final String[] ADMIN_ENDPOINTS = {
+//            "/api/**",
+//    };
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .cors()
                 .and()
-                .csrf(AbstractHttpConfigurer::disable)
+                .csrf().disable()
                 .authorizeHttpRequests(authorize -> authorize
-                       // .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
-                        .requestMatchers("/nhanvien/search").hasRole("NHANVIEN")
-                        .anyRequest().permitAll())
+                        .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
+                        .requestMatchers(NHANVIEN_ENDPOINTS).hasAnyRole("NHANVIEN","ADMIN")
+                        .requestMatchers("/api/nhanvien/**").hasRole("ADMIN")
+                        .anyRequest().authenticated()
+                )
                 .exceptionHandling(ex -> ex.accessDeniedHandler(customAccessDeniedHandler)
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .httpBasic();
+
         return http.build();
     }
 
@@ -96,7 +106,6 @@ public class SecurityConfiguration {
 
         return new CorsFilter(source); // Trả về một CorsFilter với cấu hình đã định
     }
-
 
 
 }

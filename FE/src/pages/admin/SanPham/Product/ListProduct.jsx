@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Button, ButtonGroup, Radio } from "@material-tailwind/react";
 import AddProduct from "../Product/AddProduct";
 import ReactPaginate from "react-paginate";
-import axios from "axios";
+import axios from "../../../../api/axiosConfig";
 import { ToastContainer } from "react-toastify";
 import CustomDropdown from "../../../CustomDropdown";
 import DetailProduct from "../Product/DetailProduct"; // Import the DetailProduct component

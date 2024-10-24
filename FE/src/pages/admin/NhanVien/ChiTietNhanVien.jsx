@@ -39,7 +39,7 @@ const ChiTietNhanVien = () => {
       content: "Bạn có chắc chắn muốn cập nhật nhân viên này không?",
       onOk() {
         axios
-          .post(`http://localhost:8080/nhanvien/update/${id}`, {
+          .post(`http://localhost:8080/api/nhanvien/update/${id}`, {
             hoTen: formData.hoTen,
             ma: formData.ma,
             email: formData.email,
@@ -70,7 +70,7 @@ const ChiTietNhanVien = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8080/nhanvien/${id}`)
+      .get(`http://localhost:8080/api/nhanvien/${id}`)
       .then((response) => {
         const nhanVienData = response.data.result;
 

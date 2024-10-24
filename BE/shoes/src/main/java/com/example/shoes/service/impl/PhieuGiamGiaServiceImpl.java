@@ -12,9 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
@@ -113,4 +115,23 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
         phieuGiamGiaResponse.setNguoiCapNhat(phieuGiamGia.getUpdatedBy());
         return phieuGiamGiaResponse;
     }
+
+    @Scheduled(cron = "0 0 0 * * ?") // Chạy hàng ngày lúc 12:00 AM
+    public void checkAndUpdateVoucherStatus() {
+        // Lấy tất cả các voucher còn active
+        List<PhieuGiamGia> phieuGiamGias = phieuGiamGiaRepo.findByTrangThai(true);
+
+        LocalDate today = LocalDate.now();
+
+        for (PhieuGiamGia pgg : phieuGiamGias ) {
+            // Kiểm tra nếu ngày kết thúc của voucher đã qua
+            if (pgg.getNgayKetThuc().isBefore(today)) {
+                // Cập nhật trạng thái voucher thành hết hạn
+                pgg.setTrangThai(false);
+                phieuGiamGiaRepo.save(pgg);
+
+            }
+        }
+    }
+
 }
