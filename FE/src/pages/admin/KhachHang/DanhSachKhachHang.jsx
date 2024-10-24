@@ -28,7 +28,7 @@ export default function DanhSachNhanVien() {
   useEffect(() => {
     // const role = localStorage.getItem("userRole");
     // if (role !== "ROLE_NHANVIEN") {
-    //   navigate("/403");
+    //   navigate("/home");
     //   return;
     // }
     axios

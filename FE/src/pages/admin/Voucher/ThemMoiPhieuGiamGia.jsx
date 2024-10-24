@@ -84,7 +84,7 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
     <div className="flex h-auto items-center justify-center bg-gray-100">
       <div className="w-full rounded-lg bg-white p-8 shadow-md">
         <h1 className="mb-3 text-center text-2xl font-bold">
-          Thêm Mới Nhân Viên
+          Thêm Mới Phiếu giảm giá
         </h1>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="flex flex-wrap">
