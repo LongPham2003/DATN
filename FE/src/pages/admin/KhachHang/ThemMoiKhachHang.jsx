@@ -161,7 +161,7 @@ export default function ThemMoiKhachHang({ button, onAdd }) {
       onOk: async () => {
         try {
           const response = await axios.post(
-            "http://localhost:8080/khachhang/add",
+            "http://localhost:8080/api/khachhang/add",
             {
               hoTen: formData.hoTen,
               email: formData.email,
