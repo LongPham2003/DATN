@@ -142,7 +142,7 @@ export default function ChiTietKhachHang() {
       content: "Bạn có chắc chắn muốn cập nhật khách hàng này không?",
       onOk() {
         axios
-          .post(`http://localhost:8080/api/khachhang/update/${id}`, {
+          .post(`http://localhost:8080/khachhang/update/${id}`, {
             hoTen: formData.hoTen,
             email: formData.email,
             sdt: formData.sdt,
@@ -178,7 +178,7 @@ export default function ChiTietKhachHang() {
     const fetchCustomerData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/api/khachhang/${id}`,
+          `http://localhost:8080/khachhang/${id}`,
         );
         const customerData = response.data.result;
 

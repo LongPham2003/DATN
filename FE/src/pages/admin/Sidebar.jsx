@@ -43,6 +43,7 @@ export function Sidebar() {
     // Xóa quyền khỏi localStorage
     localStorage.removeItem("userRole");
     localStorage.removeItem("email");
+    localStorage.removeItem("authToken");
 
     // Điều hướng về trang đăng nhập
     navigate("/login");

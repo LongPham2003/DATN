@@ -51,29 +51,30 @@ public class SecurityConfiguration {
     private final String[] NHANVIEN_ENDPOINTS = {
             "/api/chatlieu/**",
             "/api/sanpham/**", "/api/sanphamchitiet/**", "/api/kichthuoc/**", "/api/mausac/**",
-            "/api/thuonghieu/**", "/api/degiay/**", "/api/hinhanh/**","/api/khachhang/**","/api/nhanvien/**",
-            "/api/loai/**"
+            "/api/thuonghieu/**", "/api/degiay/**", "/api/hinhanh/**", "/api/khachhang/**",
+            "/api/loai/**", "/api/phieugiamgia/**"
     };
 
-    private final String[] ADMIN_ENDPOINTS = {
-            "/**"
-    };
+//    private final String[] ADMIN_ENDPOINTS = {
+//            "/api/**",
+//    };
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .cors()
                 .and()
-                .csrf(AbstractHttpConfigurer::disable)
+                .csrf().disable()
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
-                        .requestMatchers(NHANVIEN_ENDPOINTS).hasRole("NHANVIEN")
-                        .requestMatchers(NHANVIEN_ENDPOINTS).hasRole("ADMIN")
-                        .requestMatchers(ADMIN_ENDPOINTS).hasRole("ADMIN")
-                        .anyRequest().authenticated())
+                        .requestMatchers(NHANVIEN_ENDPOINTS).hasAnyRole("NHANVIEN","ADMIN")
+                        .requestMatchers("/api/nhanvien/**").hasRole("ADMIN")
+                        .anyRequest().authenticated()
+                )
                 .exceptionHandling(ex -> ex.accessDeniedHandler(customAccessDeniedHandler)
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .httpBasic();
+
         return http.build();
     }
 
