@@ -2,12 +2,12 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Bounce, ToastContainer } from "react-toastify";
-import LayAnhTheoIdSP from "./LayANhTheoIDSP";
+import LayAnhTheoIdSP from "../SanPham/Product/LayANhTheoIDSP";
 import { Button, Select } from "antd";
 import ReactPaginate from "react-paginate";
 
-export default function DetailProduct() {
-  const { id } = useParams();
+export default function SanPhamBanTaiQuay() {
+  const { id } = 3;
 
   const [SPCTbyIdSP, setSPCTbyIdSP] = useState([]);
   const [hangs, setHangs] = useState([]);
@@ -30,115 +30,115 @@ export default function DetailProduct() {
   const [tongSoTrang, setTongSoTrang] = useState(0);
   const [pageSize, setPageSize] = useState(5);
 
-  let ApiLaySP = `http://localhost:8080/api/sanpham/${id}`;
+  // let ApiLaySP = `http://localhost:8080/api/sanpham/${id}`;
 
-  const getByIdSP = async () => {
-    const data = await axios.get(ApiLaySP);
-    setSP(data.data.result);
-    console.log(data.data.result);
-  };
+  // const getByIdSP = async () => {
+  //   const data = await axios.get(ApiLaySP);
+  //   setSP(data.data.result);
+  //   console.log(data.data.result);
+  // };
 
-  useEffect(() => {
-    getByIdSP();
-    // layAnh();
-  }, []);
+  // useEffect(() => {
+  //   getByIdSP();
+  //   // layAnh();
+  // }, []);
 
-  // lấy toàn bộ spct theo id sản phẩm
-  useEffect(() => {
-    axios
-      .get(`http://localhost:8080/api/sanphamchitiet/list/${id}`, {
-        params: {
-          pageSize: pageSize,
-          pageNumber: trangHienTai,
-          idMauSac: selectedIdMauSac,
-          idkichThuoc: selectedIdKichThuoc,
-          idChatLieu: selectedIdChatLieu,
-          idThuongHieu: selectedIdHang,
-          idDeGiay: selectedIdDeGiay,
-          minDonGia: minDonGia,
-          maxDonGia: maxDonGia,
-          trangThai: trangThai !== null ? trangThai : undefined, // Nếu trangThai là null, không gửi tham số
-        },
-      })
-      .then(async (res) => {
-        const data = res.data;
-        setSPCTbyIdSP(data.result.result);
-        setTongSoTrang(data.result.totalPages);
-      })
-      .catch((error) => {
-        console.error("Lỗi" + error);
-      });
-  }, [
-    id,
-    selectedIdHang,
-    trangThai,
-    selectedIdMauSac,
-    selectedIdChatLieu,
-    selectedIdDeGiay,
-    selectedIdKichThuoc,
-    trangHienTai,
-    maxDonGia,
-    minDonGia,
-    pageSize,
-  ]);
+  // // lấy toàn bộ spct theo id sản phẩm
+  // useEffect(() => {
+  //   axios
+  //     .get(`http://localhost:8080/api/sanphamchitiet/list/${id}`, {
+  //       params: {
+  //         pageSize: pageSize,
+  //         pageNumber: trangHienTai,
+  //         idMauSac: selectedIdMauSac,
+  //         idkichThuoc: selectedIdKichThuoc,
+  //         idChatLieu: selectedIdChatLieu,
+  //         idThuongHieu: selectedIdHang,
+  //         idDeGiay: selectedIdDeGiay,
+  //         minDonGia: minDonGia,
+  //         maxDonGia: maxDonGia,
+  //         trangThai: trangThai !== null ? trangThai : undefined, // Nếu trangThai là null, không gửi tham số
+  //       },
+  //     })
+  //     .then(async (res) => {
+  //       const data = res.data;
+  //       setSPCTbyIdSP(data.result.result);
+  //       setTongSoTrang(data.result.totalPages);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Lỗi" + error);
+  //     });
+  // }, [
+  //   id,
+  //   selectedIdHang,
+  //   trangThai,
+  //   selectedIdMauSac,
+  //   selectedIdChatLieu,
+  //   selectedIdDeGiay,
+  //   selectedIdKichThuoc,
+  //   trangHienTai,
+  //   maxDonGia,
+  //   minDonGia,
+  //   pageSize,
+  // ]);
 
-  const handlePageChange = (selectedPage) => {
-    setTrangHienTai(selectedPage.selected + 1);
-  };
+  // const handlePageChange = (selectedPage) => {
+  //   setTrangHienTai(selectedPage.selected + 1);
+  // };
 
-  //lấy toàn bộ dữ liệu các thuộc tính
-  useEffect(() => {
-    axios
-      .get("http://localhost:8080/api/thuonghieu/getall")
-      .then(async (response) => {
-        setHangs(response.data.result);
-      })
-      .catch((error) => {
-        console.error("Lỗi khi lấy danh sách hãng:", error);
-      });
+  // //lấy toàn bộ dữ liệu các thuộc tính
+  // useEffect(() => {
+  //   axios
+  //     .get("http://localhost:8080/api/thuonghieu/getall")
+  //     .then(async (response) => {
+  //       setHangs(response.data.result);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Lỗi khi lấy danh sách hãng:", error);
+  //     });
 
-    axios
-      .get("http://localhost:8080/api/mausac/getall")
-      .then((response) => {
-        setMauSacs(response.data.result);
-      })
-      .catch((error) => {
-        console.error("Lỗi khi lấy danh sách màu sắc:", error);
-      });
-    axios
-      .get("http://localhost:8080/api/chatlieu/getall")
-      .then((response) => {
-        setChatLieus(response.data.result);
-      })
-      .catch((error) => {
-        console.error("Lỗi khi lấy danh sách chất liệu:", error);
-      });
-    axios
-      .get("http://localhost:8080/api/kichthuoc/getall")
-      .then((response) => {
-        setKichThuocs(response.data.result);
-      })
-      .catch((error) => {
-        console.error("Lỗi khi lấy danh sách kích thước:", error);
-      });
-    axios
-      .get("http://localhost:8080/api/degiay/getall")
-      .then((response) => {
-        setDeGiays(response.data.result);
-      })
-      .catch((error) => {
-        console.error("Lỗi khi lấy danh sách đế giày:", error);
-      });
-  }, []);
+  //   axios
+  //     .get("http://localhost:8080/api/mausac/getall")
+  //     .then((response) => {
+  //       setMauSacs(response.data.result);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Lỗi khi lấy danh sách màu sắc:", error);
+  //     });
+  //   axios
+  //     .get("http://localhost:8080/api/chatlieu/getall")
+  //     .then((response) => {
+  //       setChatLieus(response.data.result);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Lỗi khi lấy danh sách chất liệu:", error);
+  //     });
+  //   axios
+  //     .get("http://localhost:8080/api/kichthuoc/getall")
+  //     .then((response) => {
+  //       setKichThuocs(response.data.result);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Lỗi khi lấy danh sách kích thước:", error);
+  //     });
+  //   axios
+  //     .get("http://localhost:8080/api/degiay/getall")
+  //     .then((response) => {
+  //       setDeGiays(response.data.result);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Lỗi khi lấy danh sách đế giày:", error);
+  //     });
+  // }, []);
 
-  const handleResetSelectedChange = () => {
-    setSelectedIdChatLieu(null);
-    setSelectedIdDeGiay(null);
-    setSelectedIdHang(null);
-    setSelectedIdKichThuoc(null);
-    setSelectedIdMauSac(null);
-    setTrangThai(null);
-  };
+  // const handleResetSelectedChange = () => {
+  //   setSelectedIdChatLieu(null);
+  //   setSelectedIdDeGiay(null);
+  //   setSelectedIdHang(null);
+  //   setSelectedIdKichThuoc(null);
+  //   setSelectedIdMauSac(null);
+  //   setTrangThai(null);
+  // };
 
   return (
     <>
@@ -150,12 +150,12 @@ export default function DetailProduct() {
               className="h-[38px] w-[250px]"
               placeholder="Chọn thương hiệu ..."
               size="large"
-              value={selectedIdHang} // Liên kết giá trị với state
-              options={hangs.map((item) => ({
-                label: item.ten,
-                value: item.id,
-              }))}
-              onChange={(value) => setSelectedIdHang(value)} // Gọi hàm khi có thay đổi
+              // value={selectedIdHang} // Liên kết giá trị với state
+              // options={hangs.map((item) => ({
+              //   label: item.ten,
+              //   value: item.id,
+              // }))}
+              // onChange={(value) => setSelectedIdHang(value)} // Gọi hàm khi có thay đổi
             />
           </div>
           <div>
@@ -164,12 +164,12 @@ export default function DetailProduct() {
               className="h-[38px] w-[250px]"
               placeholder="Chọn màu sắc ..."
               size="large"
-              value={selectedIdMauSac} // Liên kết giá trị với state
-              options={mauSacs.map((item) => ({
-                label: item.ten,
-                value: item.id,
-              }))}
-              onChange={(value) => setSelectedIdMauSac(value)}
+              // value={selectedIdMauSac} // Liên kết giá trị với state
+              // options={mauSacs.map((item) => ({
+              //   label: item.ten,
+              //   value: item.id,
+              // }))}
+              // onChange={(value) => setSelectedIdMauSac(value)}
             />
           </div>
           <div>
@@ -178,12 +178,12 @@ export default function DetailProduct() {
               className="h-[38px] w-[250px]"
               placeholder="Chọn chất liệu ..."
               size="large"
-              value={selectedIdChatLieu}
-              options={chatLieus.map((item) => ({
-                label: item.ten,
-                value: item.id,
-              }))}
-              onChange={(value) => setSelectedIdChatLieu(value)}
+              // value={selectedIdChatLieu}
+              // options={chatLieus.map((item) => ({
+              //   label: item.ten,
+              //   value: item.id,
+              // }))}
+              // onChange={(value) => setSelectedIdChatLieu(value)}
             />
           </div>
           <div>
@@ -192,12 +192,12 @@ export default function DetailProduct() {
               className="h-[38px] w-[250px]"
               placeholder="Chọn kích thước ..."
               size="large"
-              value={selectedIdKichThuoc}
-              options={kichThuocs.map((item) => ({
-                label: item.kichThuoc,
-                value: item.id,
-              }))}
-              onChange={(value) => setSelectedIdKichThuoc(value)}
+              // value={selectedIdKichThuoc}
+              // options={kichThuocs.map((item) => ({
+              //   label: item.kichThuoc,
+              //   value: item.id,
+              // }))}
+              // onChange={(value) => setSelectedIdKichThuoc(value)}
             />
           </div>
         </div>
@@ -208,16 +208,16 @@ export default function DetailProduct() {
               className="h-[38px] w-[250px]"
               placeholder="Chọn đế giày ..."
               size="large"
-              value={selectedIdDeGiay}
-              options={deGiays.map((item) => ({
-                label: item.ten,
-                value: item.id,
-              }))}
-              onChange={(value) => setSelectedIdDeGiay(value)}
+              // value={selectedIdDeGiay}
+              // options={deGiays.map((item) => ({
+              //   label: item.ten,
+              //   value: item.id,
+              // }))}
+              // onChange={(value) => setSelectedIdDeGiay(value)}
             />
           </div>
           <div>
-            <p className="font-bold">Trạng thái</p>
+            {/* <p className="font-bold">Trạng thái</p>
             <select
               name="trangThai"
               id="trangThai"
@@ -232,7 +232,7 @@ export default function DetailProduct() {
               <option value="">Tất cả</option>
               <option value="true">Hoạt động</option>
               <option value="false">Không hoạt động</option>
-            </select>
+            </select> */}
           </div>
           <div>
             <p className="font-bold">Giá min</p>
@@ -240,7 +240,7 @@ export default function DetailProduct() {
               className="h-[38px] w-[250px] rounded border border-gray-300 p-2"
               type="text"
               placeholder="Mời nhập giá thấp nhất...."
-              onChange={(e) => setMinDonGia(e.target.value)}
+              // onChange={(e) => setMinDonGia(e.target.value)}
             />
           </div>
           <div>
@@ -249,14 +249,14 @@ export default function DetailProduct() {
               className="h-[38px] w-[250px] rounded border border-gray-300 p-2"
               placeholder="Mời nhập giá cao nhất...."
               type="text"
-              onChange={(e) => setMaxDonGia(e.target.value)}
+              // onChange={(e) => setMaxDonGia(e.target.value)}
             />
           </div>
         </div>
         <div className="flex justify-center gap-8 pb-3">
           <button
             className="rounded bg-blue-500 px-2 py-1 text-white"
-            onClick={handleResetSelectedChange}
+            // onClick={handleResetSelectedChange}
           >
             Reset tất cả
           </button>
@@ -267,14 +267,14 @@ export default function DetailProduct() {
           <span className="text-xl font-bold">
             Danh sách sản phẩm chi tiết của sản phẩm:
           </span>
-          <div className="ml-[850px]">
+          {/* <div className="ml-[850px]">
             <select name="" id="" onChange={(e) => setPageSize(e.target.value)}>
               <option value="">chọn số phần tử</option>
               <option value="">5</option>
               <option value="30">30</option>
               <option value="50">50</option>
             </select>
-          </div>
+          </div> */}
         </div>
         <div className="flex justify-center">
           <div className="min-w-full">
@@ -293,7 +293,7 @@ export default function DetailProduct() {
                     <th className="w-[100px] border-b">Hành động</th>
                   </tr>
                 </thead>
-                <tbody className="text-center">
+                {/* <tbody className="text-center">
                   {SPCTbyIdSP.map((item, index) => (
                     <tr key={item.id} className="hover:bg-gray-100">
                       <td className="border-b-[1px] border-indigo-500 px-4 py-2">
@@ -305,7 +305,7 @@ export default function DetailProduct() {
                       <td className="border-b-[1px] border-indigo-500">
                         <div className="flex justify-center">
                           <LayAnhTheoIdSP
-                            id={item.id}
+                            // id={item.id}
                             className="h-[70px] w-[70px]"
                           />
                         </div>
@@ -333,15 +333,15 @@ export default function DetailProduct() {
                       </td>
                     </tr>
                   ))}
-                </tbody>
+                </tbody> */}
               </table>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="mb-4 mr-14 mt-4 flex justify-center pb-4">
-        <ReactPaginate
+      {/* <div className="mb-4 mr-14 mt-4 flex justify-center pb-4"> */}
+      {/* <ReactPaginate
           previousLabel={"< Previous"}
           nextLabel={"Next >"}
           breakLabel={"..."}
@@ -383,7 +383,7 @@ export default function DetailProduct() {
         pauseOnHover
         theme="light"
         transition={Bounce}
-      />
+      /> */}
     </>
   );
 }

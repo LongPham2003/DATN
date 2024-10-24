@@ -1,5 +1,5 @@
 import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
-import { Modal, Upload, Popconfirm } from "antd";
+import { Modal, Upload, message } from "antd";
 import { useState } from "react";
 import axios from "axios";
 
@@ -16,6 +16,7 @@ const GetImage = ({ fileList, setFileList }) => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
+
   const handleCancel = () => setPreviewOpen(false);
 
   const handlePreview = async (file) => {
@@ -29,31 +30,27 @@ const GetImage = ({ fileList, setFileList }) => {
     );
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (file) => {
     try {
-      // Gửi yêu cầu DELETE đến API để xóa ảnh khỏi cơ sở dữ liệu
-      await axios.delete(`http://localhost:8080/api/hinhanh/delete/${id}`);
-      // Xóa ảnh khỏi danh sách file
-      const updatedFileList = fileList.filter((file) => file.id !== id);
+      await axios.delete(`http://localhost:8080/api/hinhanh/delete/${file.id}`);
+      const updatedFileList = fileList.filter((item) => item.uid !== file.uid);
       setFileList(updatedFileList);
+      message.success("Xóa ảnh thành công!");
     } catch (error) {
       console.error("Lỗi khi xóa ảnh:", error);
+      message.error("Lỗi khi xóa ảnh.");
     }
   };
 
   const handleChange = async ({ fileList: newFileList }) => {
-    // Duyệt qua từng file và nếu nó không có base64, thì chuyển đổi nó
     const updatedFileList = await Promise.all(
       newFileList.map(async (file) => {
         if (!file.duLieuAnhBase64 && file.originFileObj) {
-          // Nếu ảnh chưa có base64, chuyển đổi nó
           file.duLieuAnhBase64 = await getBase64(file.originFileObj);
         }
         return file;
       }),
     );
-
-    // Cập nhật danh sách file sau khi chuyển đổi base64
     setFileList(updatedFileList);
   };
 
@@ -71,34 +68,29 @@ const GetImage = ({ fileList, setFileList }) => {
         fileList={fileList}
         onPreview={handlePreview}
         onChange={handleChange}
-        beforeUpload={() => false} // Không tải ảnh lên server ngay lập tức
+        beforeUpload={() => false}
         multiple
-        itemRender={(originNode, file) => (
-          <div style={{ position: "relative" }}>
-            {originNode}
-            <Popconfirm
-              title="Xóa ảnh"
-              description="Bạn có chắc chắn muốn xóa ảnh này?"
-              okText="Xóa"
-              cancelText="Hủy"
-              onConfirm={() => handleDelete(file.id)} // Gọi hàm xóa ảnh
-            >
-              <DeleteOutlined
-                style={{
-                  position: "absolute",
-                  top: "5px",
-                  right: "5px",
-                  fontSize: "18px",
-                  color: "red",
-                  cursor: "pointer",
-                }}
-              />
-            </Popconfirm>
-          </div>
+        onRemove={(file) =>
+          new Promise((resolve, reject) => {
+            Modal.confirm({
+              title: "Bạn có chắc chắn muốn xóa ảnh này?",
+              onOk: () => {
+                handleDelete(file);
+                resolve(true);
+              },
+              onCancel: () => resolve(false),
+              okText: "Xóa",
+              cancelText: "Hủy",
+            });
+          })
+        }
+        itemRender={(originNode) => (
+          <div style={{ cursor: "pointer" }}>{originNode}</div>
         )}
       >
         {fileList.length >= 5 ? null : uploadButton}
       </Upload>
+
       <Modal
         open={previewOpen}
         title={previewTitle}

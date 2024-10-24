@@ -2,11 +2,13 @@ package com.example.shoes.controller;
 
 import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.sanphamchitiet.request.SanPhamChiTietRequest;
+import com.example.shoes.dto.sanphamchitiet.response.SPCTBanHangResponse;
 import com.example.shoes.dto.sanphamchitiet.response.SanPhamChiTietResponse;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.service.SanPhamChiTietService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.function.EntityResponse;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -63,17 +65,16 @@ public class SanPhamChiTietController {
                 .build();
     }
 
-
-    @GetMapping("/getall")
-    public ApiResponse<List<SanPhamChiTietResponse>> getAll() {
-        // Gọi hàm getAllChatLieu() để lấy danh sách các ChatLieuResponse
-        List<SanPhamChiTietResponse> list = sanPhamChiTietService.getAll();
-
-        // Tạo đối tượng ApiResponse để trả về danh sách ChatLieuResponse
-        return ApiResponse.<List<SanPhamChiTietResponse>>builder()
-                .result(list)
-                .build();
+    @GetMapping("/getallSPCTBH")
+    public ApiResponse<List<SPCTBanHangResponse>> getAllSPCTBH() {
+        List<SPCTBanHangResponse> listSPCT = sanPhamChiTietService.getAllTrangThaitrue();
+        return ApiResponse.<List<SPCTBanHangResponse>>builder().result(listSPCT).build();
     }
+
+
+
+
+
 
     @PutMapping("/updatetrangthai/{id}")
     public ApiResponse<Void> updateTrangThai(@PathVariable Integer id) {
