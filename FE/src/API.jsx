@@ -1,4 +1,5 @@
 import axios from "axios";
+
 export const get = async (url) => {
   try {
     const response = await axios.get(url);
@@ -37,4 +38,4 @@ export const del = async (url) => {
     console.error(error);
     throw error;
   }
-};  
+};

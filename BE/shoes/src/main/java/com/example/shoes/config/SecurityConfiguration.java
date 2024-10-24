@@ -56,7 +56,7 @@ public class SecurityConfiguration {
     };
 
     private final String[] ADMIN_ENDPOINTS = {
-            "/**"
+            "/api/**"
     };
 
     @Bean
@@ -67,8 +67,8 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
-                        .requestMatchers(NHANVIEN_ENDPOINTS).hasRole("NHANVIEN")
-                        .requestMatchers(NHANVIEN_ENDPOINTS).hasRole("ADMIN")
+                        .requestMatchers(NHANVIEN_ENDPOINTS).hasAnyRole("NHANVIEN","ADMIN")
+//                        .requestMatchers(NHANVIEN_ENDPOINTS).hasRole("ADMIN")
                         .requestMatchers(ADMIN_ENDPOINTS).hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .exceptionHandling(ex -> ex.accessDeniedHandler(customAccessDeniedHandler)

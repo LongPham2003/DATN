@@ -1,10 +1,12 @@
 package com.example.shoes.controller;
 
+import com.example.shoes.dto.hoadonchitiet.response.HoaDonChiTietBHRespose;
 import com.example.shoes.dto.hoadonchitiet.response.HoaDonChiTietResponse;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.service.HoaDonChiTietService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,5 +25,12 @@ public class HoaDonChiTietController {
         return ApiResponse.<List<HoaDonChiTietResponse>>builder()
                 .result(hoaDonChiTietResponses)
                 .build();
+    }
+
+    @GetMapping("/SPCTbyidHD/{idHoaDon}")
+    public ApiResponse<List<HoaDonChiTietBHRespose>> getSPCTbyidHD(@PathVariable("idHoaDon") Integer idHoaDon) {
+        List<HoaDonChiTietBHRespose> hdbh = hoaDonChiTietService.getSPCTByIdHoaDon(idHoaDon);
+
+        return ApiResponse.<List<HoaDonChiTietBHRespose>>builder().result(hdbh).build();
     }
 }

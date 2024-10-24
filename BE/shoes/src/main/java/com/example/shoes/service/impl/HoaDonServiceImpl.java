@@ -64,6 +64,22 @@ public class HoaDonServiceImpl implements HoaDonService {
                 .orElseThrow(() -> new AppException(ErrorCode.STAFF)); // Xử lý nếu không tìm thấy nhân viên
     }
 
+    // Hàm để sinh mã hoa don tự động
+    public String generateMaHoaDon() {
+        // Lấy mã hoa don lớn nhất từ database
+        String maxMaHoaDon = hoaDonRepo.findMaxMaHoaDon();
+
+        // Tách số thứ tự từ mã hoa don
+        if (maxMaHoaDon != null) {
+            int soThuTu = Integer.parseInt(maxMaHoaDon.substring(2)); // Bỏ phần "SP"
+            soThuTu++;
+            // Trả về mã hoa don mới dạng "HD" + số thứ tự (đảm bảo số thứ tự có ít nhất 2 chữ số)
+            return String.format("HD%02d", soThuTu);
+        } else {
+            // Trường hợp chưa có hoa don nào, trả về mã hoa don đầu tiên là "HD01"
+            return "HD01";
+        }
+    }
     @Override
     public HoaDonResponse createHoaDon() {
         // Lấy nhân viên hiện tại đang đăng nhập
@@ -71,7 +87,8 @@ public class HoaDonServiceImpl implements HoaDonService {
 
         // Tạo hóa đơn mới
         HoaDon hoaDon = new HoaDon();
-
+        String maHoaDon=generateMaHoaDon();
+        hoaDon.setMa(maHoaDon);
         hoaDon.setIdNhanVien(nhanVien);
         hoaDon.setPhuongThucGiaoHang("tại quầy ");
         hoaDon.setNgayTao(LocalDate.now());
@@ -486,10 +503,10 @@ public class HoaDonServiceImpl implements HoaDonService {
                 .collect(Collectors.toList());
     }
 
-
     private HoaDonResponse converToHoaDonResponse(HoaDon hoaDon) {
         HoaDonResponse hoaDonResponse = new HoaDonResponse();
         hoaDonResponse.setId(hoaDon.getId());
+        hoaDonResponse.setMa(hoaDon.getMa());
         hoaDonResponse.setTenNhanVien(hoaDon.getIdNhanVien() != null ? hoaDon.getIdNhanVien().getHoTen() : null);
         hoaDonResponse.setTenKhachHang(hoaDon.getIdKhachHang() != null ? hoaDon.getIdKhachHang().getHoTen() : null);
         hoaDonResponse.setSoDienThoai(hoaDon.getSoDienThoai());

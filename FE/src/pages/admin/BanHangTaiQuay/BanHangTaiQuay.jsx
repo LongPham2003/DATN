@@ -1,17 +1,36 @@
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { Button, Select, Switch, Tabs, Modal } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SanPhamBanTaiQuay from "./SanPhamBanHang";
+import axios from "../../../api/axiosConfig";
+import { Bounce, toast, ToastContainer } from "react-toastify";
 
 export default function BanHangTaiQuay() {
-  const [items, setItems] = useState([
-    {
-      key: "1",
-      label: "Tab 1",
-      children: "Content of Tab Pane 1",
-    },
-  ]);
+  const [hoaDonFalse, setHoaDonFalse] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
+
+  let ApiTaoHoaDon = `http://localhost:8080/banhangtaiquay/taodon`;
+  let ApiLayHoaDonFalse = `http://localhost:8080/api/hoadon/getall-false`;
+
+  const LayHoaDonFalse = async () => {
+    try {
+      const response = await axios.get(ApiLayHoaDonFalse);
+      setHoaDonFalse(response.data.result);
+    } catch (error) {
+      console.log("Lay Hoa Don loi:", error);
+    }
+  };
+
+  const taoHoaDon = async () => {
+    try {
+      await axios.post(ApiTaoHoaDon);
+      toast.success("Đã tạo hóa đơn mới");
+      LayHoaDonFalse();
+    } catch (error) {
+      console.log("Co loi xay ra:", error);
+      toast.error(" Tạo hóa đơn mới thất bại");
+    }
+  };
 
   const openModal = () => {
     setModalVisible(true);
@@ -21,24 +40,35 @@ export default function BanHangTaiQuay() {
     setModalVisible(false);
   };
 
+  useEffect(() => {
+    LayHoaDonFalse();
+  }, []);
   return (
     <>
       <div className="max-h-screen overflow-y-auto font-mono">
         <span className="text-2xl">Ban hang tai quay</span>
         <div className="h-auto bg-slate-200">
-          <div className="flex w-full items-center justify-between">
+          <div className="flex h-[94px] w-full items-center justify-between">
             <span className="text-xl">Danh sach hoa don</span>
             <div className="ml-auto mr-[20px] mt-3">
-              <Button type="primary" size="large">
-                <PlusCircleOutlined /> Tạo hóa đơn
-              </Button>
+              {hoaDonFalse.length < 7 ? (
+                <Button
+                  type="primary"
+                  size="large"
+                  onClick={() => {
+                    taoHoaDon();
+                  }}
+                >
+                  <PlusCircleOutlined /> Tạo hóa đơn
+                </Button>
+              ) : (
+                ""
+              )}
             </div>
           </div>
           <Tabs>
-            {items.map((tab) => (
-              <Tabs.TabPane tab={tab.label} key={tab.key}>
-                {tab.children}
-              </Tabs.TabPane>
+            {hoaDonFalse.map((tab) => (
+              <Tabs.TabPane tab={tab.ma} key={tab.ids}></Tabs.TabPane>
             ))}
           </Tabs>
         </div>
@@ -146,14 +176,27 @@ export default function BanHangTaiQuay() {
       {/* Modal cho SanPhamBanTaiQuay */}
       <Modal
         title="Chọn sản phẩm"
-        visible={modalVisible}
+        open={modalVisible}
         onCancel={closeModal}
         footer={null}
         width={1200} // Điều chỉnh chiều rộng modal
-        bodyStyle={{ height: "80vh" }} // Điều chỉnh chiều cao
+        // Điều chỉnh chiều cao
       >
         <SanPhamBanTaiQuay />
       </Modal>
+      <ToastContainer
+        position="top-right"
+        autoClose={1500}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
     </>
   );
 }
