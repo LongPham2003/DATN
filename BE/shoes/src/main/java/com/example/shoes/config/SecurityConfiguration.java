@@ -51,7 +51,12 @@ public class SecurityConfiguration {
     private final String[] NHANVIEN_ENDPOINTS = {
             "/api/chatlieu/**",
             "/api/sanpham/**", "/api/sanphamchitiet/**", "/api/kichthuoc/**", "/api/mausac/**",
-            "/api/thuonghieu/**", "/api/degiay/**", "/api/hinhanh/**"
+            "/api/thuonghieu/**", "/api/degiay/**", "/api/hinhanh/**","/api/khachhang/**","/api/nhanvien/**",
+            "/api/loai/**"
+    };
+
+    private final String[] ADMIN_ENDPOINTS = {
+            "/**"
     };
 
     @Bean
@@ -63,7 +68,8 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(NHANVIEN_ENDPOINTS).hasRole("NHANVIEN")
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers(NHANVIEN_ENDPOINTS).hasRole("ADMIN")
+                        .requestMatchers(ADMIN_ENDPOINTS).hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .exceptionHandling(ex -> ex.accessDeniedHandler(customAccessDeniedHandler)
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint))

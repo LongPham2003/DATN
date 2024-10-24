@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/nhanvien")
+@RequestMapping("/api/nhanvien")
 @RequiredArgsConstructor
 public class NhanVienController {
     private static final Logger log = LoggerFactory.getLogger(NhanVienController.class);
