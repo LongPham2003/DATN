@@ -71,5 +71,7 @@ public interface SanPhamChiTietRepo extends JpaRepository<SanPhamChiTiet, Intege
     @Query("select  spct FROM SanPhamChiTiet spct where spct.id = :idSPCT")
     SanPhamChiTiet getSPCTDetail(@Param("idSPCT") Integer idSPCT);
 
+    @Query("SELECT s.ma FROM SanPhamChiTiet s ORDER BY s.ma DESC LIMIT 1")
+    String findMaxMaSanPhamChiTiet();
 }
 

@@ -1,10 +1,9 @@
 package com.example.shoes.controller;
-
-import com.example.shoes.dto.hoadon.request.HoaDonRequest;
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
 import com.example.shoes.dto.hoadonchitiet.request.HoaDonChiTietRequest;
 import com.example.shoes.dto.phuongthucthanhtoan.request.PhuongThucThanhToanRequest;
 import com.example.shoes.exception.ApiResponse;
+import com.example.shoes.repository.HoaDonRepo;
 import com.example.shoes.service.HoaDonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,15 +14,14 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.List;
-
 @RestController
 @RequestMapping("/banhangtaiquay")
 public class BanHangTaiQuayController {
     @Autowired
     private HoaDonService hoaDonService;
-
+@Autowired
+private HoaDonRepo hoaDonRepo;
     // tạo hóa đon moi
     @PostMapping("/taodon")
     public ApiResponse<HoaDonResponse> createHoaDon() {

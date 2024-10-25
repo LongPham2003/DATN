@@ -9,6 +9,7 @@ import lombok.Setter;
 
 public class HoaDonRequest {
     private Integer idNhanVien;
+    private String ma;
     private Integer idKhachHang;
     private Integer idPhieuGiamGia;
     private String sdt;
