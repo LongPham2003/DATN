@@ -18,9 +18,9 @@ public class HoaDonResponse {
     private String tenKhachHang;
     private String soDienThoai;
     private String diaChiGiaoHang;
-    private BigDecimal tongTien;
-    private BigDecimal tienDuocGiam;
-    private BigDecimal tienPhaiThanhToan;
+    private String tongTien;
+    private String tienDuocGiam;
+    private String tienPhaiThanhToan;
     private String phuongThucThanhToan;
     private String phuongThucGiaoHang;
     private LocalDate ngayTao;

@@ -12,6 +12,5 @@ public class HoaDonChiTietResponse {
     private Integer idSpct;
     private BigDecimal donGia;
     private Integer soLuong;
-    private Boolean trangThai;
-
+    private String trangThai;
 }

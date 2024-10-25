@@ -66,7 +66,7 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
         hoaDonChiTietResponse.setIdSpct(hoaDonChiTiet.getIdSpct().getId());
         hoaDonChiTietResponse.setSoLuong(hoaDonChiTiet.getSoLuong());
         hoaDonChiTietResponse.setDonGia(hoaDonChiTiet.getDonGia());
-        hoaDonChiTietResponse.setTrangThai(hoaDonChiTiet.getTrangThai());
+        hoaDonChiTietResponse.setTrangThai(hoaDonChiTiet.getTrangThai().getMoTa());
         return hoaDonChiTietResponse;
     }
 }

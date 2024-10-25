@@ -1,6 +1,7 @@
 package com.example.shoes.entity;
 
 import com.example.shoes.entity.base.CrudByAt;
+import com.example.shoes.enums.TrangThai;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -60,7 +61,8 @@ public class HoaDon extends CrudByAt {
     private LocalDate ngaySua;
 
     @Column(name = "trang_thai")
-    private String trangThai;
+    @Enumerated(EnumType.STRING)
+    private TrangThai trangThai;
     // Thiết lập quan hệ OneToMany với HoaDonChiTiet
     @OneToMany(mappedBy = "idHoaDon", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<HoaDonChiTiet> hoaDonChiTiets; // Phương thức getHoaDonChiTiets() sẽ lấy danh sách chi tiết hóa đơn
