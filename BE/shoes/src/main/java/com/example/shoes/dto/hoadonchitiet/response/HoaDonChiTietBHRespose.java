@@ -1,12 +1,15 @@
 package com.example.shoes.dto.hoadonchitiet.response;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
 
 @Setter
 @Getter
+@NoArgsConstructor
 public class HoaDonChiTietBHRespose {
     private Integer id;
     private Integer idHoaDon;
@@ -20,4 +23,21 @@ public class HoaDonChiTietBHRespose {
     private String deGiay;
     private BigDecimal donGia; //don gia giay
     private Integer soLuong; //so luong
+    public HoaDonChiTietBHRespose(Integer id, Integer idHoaDon, Integer idSpct, String tenSanPham,
+                                  String maSanPham, String chatLieu, String mauSac, String kichThuoc,
+                                  String thuongHieu, String deGiay, BigDecimal donGia, Integer soLuong) {
+        this.id = id;
+        this.idHoaDon = idHoaDon;
+        this.idSpct = idSpct;
+        this.tenSanPham = tenSanPham;
+        this.maSanPham = maSanPham;
+        this.chatLieu = chatLieu;
+        this.mauSac = mauSac;
+        this.kichThuoc = kichThuoc;
+        this.thuongHieu = thuongHieu;
+        this.deGiay = deGiay;
+        this.donGia = donGia;
+        this.soLuong = soLuong;
+    }
+
 }

@@ -32,17 +32,14 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
 
     @Override
     public List<HoaDonChiTietBHRespose> getSPCTByIdHoaDon(Integer IdhoaDon) {
-        List<HoaDonChiTiet> hdbh= hoaDonChiTietRepo.getSPCTByIdHoaDon(IdhoaDon);
+        List<HoaDonChiTietBHRespose> hdbh= hoaDonChiTietRepo.getSPCTByIdHoaDon(IdhoaDon);
 
-        List<HoaDonChiTietBHRespose> hoaDonChiTietBanHangResponse = hdbh.stream()
-                .map(this::convertToHDCTBanHangResponse)
-                .toList();
 
-        return hoaDonChiTietBanHangResponse;
+        return hdbh;
     }
 
     private HoaDonChiTietBHRespose convertToHDCTBanHangResponse(HoaDonChiTiet hoaDonChiTiet) {
-        HoaDonChiTietBHRespose hdbh =new HoaDonChiTietBHRespose();
+        HoaDonChiTietBHRespose hdbh = new HoaDonChiTietBHRespose();
         hdbh.setId(hoaDonChiTiet.getId());
         hdbh.setIdHoaDon(hoaDonChiTiet.getIdHoaDon().getId());
         hdbh.setIdSpct(hoaDonChiTiet.getIdSpct().getId());
