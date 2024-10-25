@@ -255,7 +255,7 @@ export const DiaChiKhachHang = ({ idKhachHang }) => {
               name="province"
               value={selectedProvince}
               onChange={handleProvinceChange}
-              className="w-full rounded border p-2"
+              className="w-full rounded border p-2 "
               required
             >
               <option value="">Chọn tỉnh/thành phố</option>

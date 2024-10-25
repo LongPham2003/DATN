@@ -39,10 +39,12 @@ public class PhieuGiamGiaResponse {
     private Integer soLuong;
 
     @NotNull(message = "Ngày bắt đầu không được để trống")
-    private LocalDate ngayBatDau;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm[:ss]")
+    private LocalDateTime ngayBatDau;
 
     @NotNull(message = "Ngày bắt đầu không được để trống")
-    private LocalDate ngayKetThuc;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm[:ss]")
+    private LocalDateTime ngayKetThuc;
 
     private Boolean trangThai;
 

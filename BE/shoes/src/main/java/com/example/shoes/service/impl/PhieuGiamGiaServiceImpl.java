@@ -16,6 +16,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -74,13 +75,13 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
     }
 
     @Override
-    public PhanTrangResponse<PhieuGiamGia> getPhieuGiamGia(int pageNumber, int pageSize, String keyword,String tenVoucher, Boolean trangThai, LocalDate ngayBatDau, LocalDate ngayKetThuc) {
+    public PhanTrangResponse<PhieuGiamGia> getPhieuGiamGia(int pageNumber, int pageSize, String keyword,String tenVoucher, Boolean trangThai, LocalDateTime ngayBatDau, LocalDateTime ngayKetThuc) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
         Page<PhieuGiamGia> page = phieuGiamGiaRepo.searchPhieuGiamGia(pageable, tenVoucher, trangThai, ngayBatDau, ngayKetThuc);
 
         // Kiểm tra nếu phiếu đã hết hạn và cập nhật trạng thái nếu cần
         page.getContent().forEach(phieuGiamGia -> {
-            if (phieuGiamGia.getNgayKetThuc() != null && phieuGiamGia.getNgayKetThuc().isBefore(LocalDate.now()) && phieuGiamGia.getTrangThai()) {
+            if (phieuGiamGia.getNgayKetThuc() != null && phieuGiamGia.getNgayKetThuc().isBefore(LocalDateTime.now()) && phieuGiamGia.getTrangThai()) {
                 phieuGiamGia.setTrangThai(false); // Cập nhật trạng thái về false nếu ngayKetThuc đã qua
                 phieuGiamGiaRepo.save(phieuGiamGia); // Lưu lại thay đổi
             }
@@ -121,7 +122,7 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
         // Lấy tất cả các voucher còn active
         List<PhieuGiamGia> phieuGiamGias = phieuGiamGiaRepo.findByTrangThai(true);
 
-        LocalDate today = LocalDate.now();
+        LocalDateTime today = LocalDateTime.now();
 
         for (PhieuGiamGia pgg : phieuGiamGias ) {
             // Kiểm tra nếu ngày kết thúc của voucher đã qua

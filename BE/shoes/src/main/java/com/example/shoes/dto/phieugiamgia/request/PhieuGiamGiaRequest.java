@@ -1,15 +1,14 @@
 package com.example.shoes.dto.phieugiamgia.request;
 
 
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -35,10 +34,14 @@ public class PhieuGiamGiaRequest {
     private Integer soLuong;
 
     @NotNull(message = "Ngày bắt đầu không được để trống")
-    private LocalDate ngayBatDau;
+    @FutureOrPresent(message = "Ngày bắt đầu không được là quá khứ")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm[:ss]")
+    private LocalDateTime ngayBatDau;
 
-    @NotNull(message = "Ngày bắt đầu không được để trống")
-    private LocalDate ngayKetThuc;
+    @NotNull(message = "Ngày kết thúc không được để trống")
+    @FutureOrPresent(message = "Ngày bắt đầu không được là quá khứ")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm[:ss]")
+    private LocalDateTime ngayKetThuc;
 
     private Boolean trangThai;
 

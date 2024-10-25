@@ -14,6 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,8 +29,8 @@ public class PhieuGiamGiaController {
             @RequestParam(value = "tenVoucher", defaultValue = "") String tenVoucher,
             @RequestParam(value = "keyword", defaultValue = "") String keyword,
             @RequestParam(value = "trangThai", required = false) Boolean trangThai,
-            @RequestParam(value = "ngayBatDau", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate ngayBatDau,
-            @RequestParam(value = "ngayKetThuc", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate ngayKetThuc,
+            @RequestParam(value = "ngayBatDau", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDateTime ngayBatDau,
+            @RequestParam(value = "ngayKetThuc", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDateTime ngayKetThuc,
             @RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber,
             @RequestParam(value = "pageSize", defaultValue = "5") int pageSize
     ) {

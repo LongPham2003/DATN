@@ -69,7 +69,7 @@ public class SecurityConfiguration {
                         .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(NHANVIEN_ENDPOINTS).hasAnyRole("NHANVIEN","ADMIN")
                         .requestMatchers("/api/nhanvien/**").hasRole("ADMIN")
-//                        .anyRequest().authenticated()
+                        .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex.accessDeniedHandler(customAccessDeniedHandler)
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint))
