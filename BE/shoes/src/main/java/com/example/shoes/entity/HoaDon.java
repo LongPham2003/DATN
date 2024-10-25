@@ -60,7 +60,7 @@ public class HoaDon extends CrudByAt {
     private LocalDate ngaySua;
 
     @Column(name = "trang_thai")
-    private Boolean trangThai;
+    private String trangThai;
     // Thiết lập quan hệ OneToMany với HoaDonChiTiet
     @OneToMany(mappedBy = "idHoaDon", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<HoaDonChiTiet> hoaDonChiTiets; // Phương thức getHoaDonChiTiets() sẽ lấy danh sách chi tiết hóa đơn

@@ -15,19 +15,19 @@ import java.util.List;
 public class HoaDonController {
     @Autowired
     private HoaDonService hoaDonService;
-    @GetMapping("/getall-true")
-    public ApiResponse<List<HoaDonResponse>> getAllTrue() {
+    @GetMapping("/getall-dathanhtoan")
+    public ApiResponse<List<HoaDonResponse>> getAllDaThanhToan() {
         // Gọi hàm getAllChatLieu() để lấy danh sách các ChatLieuResponse
-        List<HoaDonResponse> hoaDonResponses = hoaDonService.getAllTrangThaiTrue();
+        List<HoaDonResponse> hoaDonResponses = hoaDonService.getAllTrangThaiDaThanhToan();
         // Tạo đối tượng ApiResponse để trả về danh sách ChatLieuResponse
         return ApiResponse.<List<HoaDonResponse>>builder()
                 .result(hoaDonResponses)
                 .build();
     }
-    @GetMapping("/getall-false")
-    public ApiResponse<List<HoaDonResponse>> getAllFalse() {
+    @GetMapping("/getall-chuathanhtoan")
+    public ApiResponse<List<HoaDonResponse>> getAllChuaThanhToan() {
         // Gọi hàm getAllChatLieu() để lấy danh sách các ChatLieuResponse
-        List<HoaDonResponse> hoaDonResponses = hoaDonService.getAllTrangThaiFalse();
+        List<HoaDonResponse> hoaDonResponses = hoaDonService.getAllTrangThaiChuaThanhToan();
         // Tạo đối tượng ApiResponse để trả về danh sách ChatLieuResponse
         return ApiResponse.<List<HoaDonResponse>>builder()
                 .result(hoaDonResponses)

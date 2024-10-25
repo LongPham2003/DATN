@@ -40,10 +40,13 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -75,30 +78,40 @@ public class HoaDonServiceImpl implements HoaDonService {
         return nhanVienRepo.findByEmail(username)
                 .orElseThrow(() -> new AppException(ErrorCode.STAFF)); // Xử lý nếu không tìm thấy nhân viên
     }
-    // Hàm để sinh mã hoa don tự động
+
     public String generateMaHoaDon() {
-        // Lấy mã hoa don lớn nhất từ database
+        // Lấy mã sản phẩm chi tiết lớn nhất từ database
         String maxMaHoaDon = hoaDonRepo.findMaxMaHoaDon();
 
-<<<<<<< HEAD
-=======
-    // Hàm để sinh mã hoa don tự động
-    public String generateMaHoaDon() {
-        // Lấy mã hoa don lớn nhất từ database
-        String maxMaHoaDon = hoaDonRepo.findMaxMaHoaDon();
-
->>>>>>> bd7a636b62ded312868c21701a87c623a8c11d53
-        // Tách số thứ tự từ mã hoa don
+        // Tách số thứ tự từ mã sản phẩm chi tiết
+        int soThuTu = 0;
         if (maxMaHoaDon != null) {
-            int soThuTu = Integer.parseInt(maxMaHoaDon.substring(2)); // Bỏ phần "SP"
+            soThuTu = Integer.parseInt(maxMaHoaDon.substring(2, 5)); // Bỏ phần "HD" và lấy 3 số tiếp theo
             soThuTu++;
-            // Trả về mã hoa don mới dạng "HD" + số thứ tự (đảm bảo số thứ tự có ít nhất 2 chữ số)
-            return String.format("HD%02d", soThuTu);
         } else {
-            // Trường hợp chưa có hoa don nào, trả về mã hoa don đầu tiên là "HD01"
-            return "HD01";
+            soThuTu = 1; // Nếu chưa có mã nào, bắt đầu từ 001
         }
+
+        // Sinh chuỗi 5 ký tự ngẫu nhiên
+        String chuoiNgauNhien = generateRandomString(5);
+
+        // Trả về mã sản phẩm chi tiết mới dạng "HD" + số thứ tự (ít nhất 3 chữ số) + 5 ký tự ngẫu nhiên
+        return String.format("HD%03d%s", soThuTu, chuoiNgauNhien);
     }
+
+    // Hàm sinh chuỗi ký tự ngẫu nhiên gồm 5 chữ cái
+    private String generateRandomString(int length) {
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        Random random = new Random();
+        StringBuilder stringBuilder = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            int index = random.nextInt(characters.length());
+            stringBuilder.append(characters.charAt(index));
+        }
+
+        return stringBuilder.toString();
+    }
+
     @Override
     public HoaDonResponse createHoaDon() {
         // Lấy nhân viên hiện tại đang đăng nhập
@@ -111,7 +124,7 @@ public class HoaDonServiceImpl implements HoaDonService {
         hoaDon.setIdNhanVien(nhanVien);
         hoaDon.setPhuongThucGiaoHang("tại quầy ");
         hoaDon.setNgayTao(LocalDate.now());
-        hoaDon.setTrangThai(false); // Chưa thanh toán
+        hoaDon.setTrangThai("chưa thanh toán"); // Chưa thanh toán
 
         // Khởi tạo tổng tiền, tiền được giảm và tiền phải trả bằng 0
         hoaDon.setTongTien(BigDecimal.ZERO);
@@ -232,7 +245,8 @@ public class HoaDonServiceImpl implements HoaDonService {
                 .orElseThrow(() -> new AppException(ErrorCode.BILL_NOT_FOUND));
 
         // Kiểm tra trạng thái hóa đơn
-        if (hoaDon.getTrangThai()==true) {
+        String trangthai="đã thanh toán";
+        if (hoaDon.getTrangThai().equals(trangthai)) {
             throw new RuntimeException("Hóa đơn đã thanh toán, không thể xóa!");
         }
 
@@ -325,7 +339,7 @@ public class HoaDonServiceImpl implements HoaDonService {
         hoaDonChiTietRepo.saveAll(chiTietList);
 
         // Cập nhật trạng thái thanh toán của hóa đơn
-        hoaDon.setTrangThai(true);
+        hoaDon.setTrangThai("đã thanh toán");
         hoaDonRepo.save(hoaDon);
 
         // Lưu lịch sử hóa đơn
@@ -592,9 +606,9 @@ public class HoaDonServiceImpl implements HoaDonService {
     }
 
     @Override
-    public List<HoaDonResponse> getAllTrangThaiTrue() {
+    public List<HoaDonResponse> getAllTrangThaiDaThanhToan() {
         // Lấy tất cả các ChatLieu từ repository
-        List<HoaDon> hoaDonList = hoaDonRepo.getAllTrangThaiTrue();
+        List<HoaDon> hoaDonList = hoaDonRepo.getAllTrangThaiDaThanhToan();
         // Chuyển đổi từ ChatLieu sang ChatLieuResponse
         return hoaDonList.stream()
                 .map(this::converToHoaDonResponse)
@@ -602,13 +616,20 @@ public class HoaDonServiceImpl implements HoaDonService {
     }
 
     @Override
-    public List<HoaDonResponse> getAllTrangThaiFalse() {
+    public List<HoaDonResponse> getAllTrangThaiChuaThanhToan() {
         // Lấy tất cả các ChatLieu từ repository
-        List<HoaDon> hoaDonList = hoaDonRepo.getAllTrangThaiFalse();
+        List<HoaDon> hoaDonList = hoaDonRepo.getAllTrangThaiChuaThanhToan();
         // Chuyển đổi từ ChatLieu sang ChatLieuResponse
         return hoaDonList.stream()
                 .map(this::converToHoaDonResponse)
                 .collect(Collectors.toList());
+    }
+
+    // Phương thức chuyển đổi BigDecimal sang định dạng tiền tệ Việt Nam
+    private String formatCurrency(BigDecimal amount) {
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        String formatted = currencyFormat.format(amount);
+        return formatted.replace("₫", "").trim() + " VNĐ"; // Loại bỏ ký hiệu ₫ và thêm VNĐ
     }
 
     private HoaDonResponse converToHoaDonResponse(HoaDon hoaDon) {
