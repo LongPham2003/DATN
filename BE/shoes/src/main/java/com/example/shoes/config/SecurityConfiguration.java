@@ -46,7 +46,7 @@ public class SecurityConfiguration {
     private CustomAccessDeniedHandler customAccessDeniedHandler;
 
     private final String[] PUBLIC_ENDPOINTS = {"/auth/signup", "/auth/login",
-            "/auth/resetpass", "/auth/doimatkhau"};
+            "/auth/resetpass", "/auth/doimatkhau","/api/paymentvnpay/**","/api/paymentvnpay/payment-infor"};
 
     private final String[] NHANVIEN_ENDPOINTS = {
             "/api/chatlieu/**",
@@ -69,7 +69,7 @@ public class SecurityConfiguration {
                         .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(NHANVIEN_ENDPOINTS).hasAnyRole("NHANVIEN","ADMIN")
                         .requestMatchers("/api/nhanvien/**").hasRole("ADMIN")
-                        .anyRequest().authenticated()
+//                        .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex.accessDeniedHandler(customAccessDeniedHandler)
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint))

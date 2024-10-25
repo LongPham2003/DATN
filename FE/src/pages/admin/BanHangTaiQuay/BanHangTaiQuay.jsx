@@ -68,7 +68,7 @@ export default function BanHangTaiQuay() {
           </div>
           <Tabs>
             {hoaDonFalse.map((tab) => (
-              <Tabs.TabPane tab={tab.ma} key={tab.ids}></Tabs.TabPane>
+              <Tabs.TabPane tab={tab.ma} key={tab.id}></Tabs.TabPane>
             ))}
           </Tabs>
         </div>

@@ -1,6 +1,7 @@
 package com.example.shoes.config;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.context.annotation.Configuration;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -15,13 +16,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+@Configuration
 public class VNPAYConfig {
-    public static String vnp_PayUrl = "  http://sandbox.vnpayment.vn/tryitnow/Home/CreateOrder";
-    public static String vnp_ReturnUrl = "http://localhost:8080/vnpay_jsp/vnpay_return.jsp";
+    public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
+    public static String vnp_ReturnUrl = "http://localhost:8080/api/paymentvnpay/payment-infor";
     public static String vnp_Version = "2.1.0";
     public static String vnp_Command = "pay";
-    public static String vnp_TmnCode = "93V5QFEC";
-    public static String secretKey = "T7SGY6IBRNII0ZC7LBR8Y3W7TR0UE5CE";
+    public static String vnp_TmnCode = "W4S3TLV0";
+    public static String secretKey = "5PK7D7W3O5FBU8C07O5WQF4LZ1OEUVCI";
     public static String vnp_ApiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
 
     public static String md5(String message) {
