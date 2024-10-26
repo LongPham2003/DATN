@@ -52,7 +52,7 @@ public class SecurityConfiguration {
             "/api/chatlieu/**",
             "/api/sanpham/**", "/api/sanphamchitiet/**", "/api/kichthuoc/**", "/api/mausac/**",
             "/api/thuonghieu/**", "/api/degiay/**", "/api/hinhanh/**", "/api/khachhang/**",
-            "/api/loai/**", "/api/phieugiamgia/**"
+            "/api/loai/**", "/api/phieugiamgia/**","/banhangtaiquay/**"
     };
 
 //    private final String[] ADMIN_ENDPOINTS = {

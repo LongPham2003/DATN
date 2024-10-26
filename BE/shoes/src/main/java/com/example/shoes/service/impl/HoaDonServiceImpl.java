@@ -329,29 +329,6 @@ public class HoaDonServiceImpl implements HoaDonService {
         }
     }
 
-
-
-    private void capNhatTrangThaiHoaDon(HoaDon hoaDon) {
-        // Lấy danh sách chi tiết hóa đơn
-        List<HoaDonChiTiet> chiTietList = hoaDonChiTietRepo.findByIdHoaDon(hoaDon.getId());
-        for (HoaDonChiTiet chiTiet : chiTietList) {
-            chiTiet.setTrangThai(TrangThai.DA_THANH_TOAN);  // Cập nhật trạng thái thành true
-        }
-        hoaDonChiTietRepo.saveAll(chiTietList);
-
-        // Cập nhật trạng thái thanh toán của hóa đơn
-        hoaDon.setTrangThai(TrangThai.DA_THANH_TOAN);
-        hoaDonRepo.save(hoaDon);
-
-        // Lưu lịch sử hóa đơn
-        NhanVien nhanVien = getCurrentNhanVien();
-        LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
-        lichSuHoaDon.setIdHoaDon(hoaDon);
-        lichSuHoaDon.setMoTa("Thanh toán thành công "+ "id hóa đon:"+ hoaDon.getId() + "so tien :" +hoaDon.getTienPhaiThanhToan());
-        lichSuHoaDon.setThoiGian(LocalDate.now());
-        lichSuHoaDon.setNguoiThucHien(nhanVien.getHoTen());
-        lichSuHoaDonRepo.save(lichSuHoaDon);
-    }
     private String generateZaloPayQR(HoaDon hoaDon) {
         try {
             String appId = "554";
@@ -399,7 +376,38 @@ public class HoaDonServiceImpl implements HoaDonService {
             return null;
         }
     }
+    private boolean kiemTraTrangThaiThanhToanVNPAY(String phuongThuc, Integer idHoaDon) {
 
+        return true;
+    }
+    private boolean kiemTraTrangThaiThanhToanMoMo(String phuongThuc, Integer idHoaDon) {
+
+        return true;
+    }
+
+
+
+    private void capNhatTrangThaiHoaDon(HoaDon hoaDon) {
+        // Lấy danh sách chi tiết hóa đơn
+        List<HoaDonChiTiet> chiTietList = hoaDonChiTietRepo.findByIdHoaDon(hoaDon.getId());
+        for (HoaDonChiTiet chiTiet : chiTietList) {
+            chiTiet.setTrangThai(TrangThai.DA_THANH_TOAN);  // Cập nhật trạng thái thành true
+        }
+        hoaDonChiTietRepo.saveAll(chiTietList);
+
+        // Cập nhật trạng thái thanh toán của hóa đơn
+        hoaDon.setTrangThai(TrangThai.DA_THANH_TOAN);
+        hoaDonRepo.save(hoaDon);
+
+        // Lưu lịch sử hóa đơn
+        NhanVien nhanVien = getCurrentNhanVien();
+        LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
+        lichSuHoaDon.setIdHoaDon(hoaDon);
+        lichSuHoaDon.setMoTa("Thanh toán thành công "+ "id hóa đon:"+ hoaDon.getId() + "so tien :" +hoaDon.getTienPhaiThanhToan());
+        lichSuHoaDon.setThoiGian(LocalDate.now());
+        lichSuHoaDon.setNguoiThucHien(nhanVien.getHoTen());
+        lichSuHoaDonRepo.save(lichSuHoaDon);
+    }
     @Override
     public void thanhToan(Integer idHoaDon, PhuongThucThanhToanRequest phuongThucThanhToanRequest) {
         // Tìm hóa đơn
@@ -423,31 +431,21 @@ public class HoaDonServiceImpl implements HoaDonService {
 
             // Nếu khách hàng đã thanh toán, cập nhật trạng thái hóa đơn
             capNhatTrangThaiHoaDon(hoaDon);
-        } else if (tenPhuongThuc.equalsIgnoreCase("Chuyển khoản ngân hàng ")) {
-            // Tạo mã QR cho chuyển khoản ngân hàng với id hóa đơn và tổng tiền
-            String qrCodeData = "BankTransfer - ID:" + hoaDon.getId() + " - Amount: " + hoaDon.getTienPhaiThanhToan();
-            System.out.println("QR Code Chuyen Khoan: " + qrCodeData);
-            // Logic tạo mã QR cho khách hàng thanh toán
-            // Sau đó, kiểm tra thanh toán
-            // Kiểm tra trạng thái thanh toán từ ngân hàng
-//            sau chuyển doi de tam de ko bi loi
-            boolean daThanhToan = kiemTraTrangThaiThanhToanZaloPay("ChuyenKhoan", hoaDon.getId());
-
-            if (daThanhToan==true) {
-                // Nếu khách hàng đã thanh toán, cập nhật trạng thái hóa đơn
-                capNhatTrangThaiHoaDon(hoaDon);
-            } else {
-                System.out.println("Chưa nhận được thanh toán từ ngân hàng.");
-            }
-        } else if (tenPhuongThuc.equalsIgnoreCase("VNPAY")) {
+        }  else if (tenPhuongThuc.equalsIgnoreCase("VNPAY")) {
             // Tạo mã QR cho VNPAY với id hóa đơn và tổng tiền
             String qrCodeData = "VNPAY - ID:" + hoaDon.getId() + " - Amount: " + hoaDon.getTienPhaiThanhToan();
             System.out.println("QR Code VNPAY: " + qrCodeData);
             // Logic tạo mã QR cho khách hàng thanh toán
             // Kiểm tra trạng thái thanh toán từ VNPAY
-            boolean daThanhToan = kiemTraTrangThaiThanhToanZaloPay("VNPAY", hoaDon.getId());
+            boolean daThanhToan = kiemTraTrangThaiThanhToanVNPAY("VNPAY", hoaDon.getId());
 
             if (daThanhToan==true) {
+                // Lưu phương thức thanh toán
+                PhuongThucThanhToan phuongThucThanhToan = new PhuongThucThanhToan();
+                phuongThucThanhToan.setIdHoaDon(hoaDon);
+                phuongThucThanhToan.setTenPhuongThuc(phuongThucThanhToanRequest.getTenPhuongThuc());
+                phuongThucThanhToan.setGhiChu("VNPAY" +hoaDon.getId() +"sotien" +hoaDon.getTienPhaiThanhToan());
+                phuongThucThanhToanRepo.save(phuongThucThanhToan);
                 // Nếu khách hàng đã thanh toán, cập nhật trạng thái hóa đơn
                 capNhatTrangThaiHoaDon(hoaDon);
             } else {
@@ -459,9 +457,15 @@ public class HoaDonServiceImpl implements HoaDonService {
             System.out.println("QR Code MoMo: " + qrCodeData);
             // Logic tạo mã QR cho khách hàng thanh toán bằng MoMo
             // Kiểm tra trạng thái thanh toán từ MoMo
-            boolean daThanhToan = kiemTraTrangThaiThanhToanZaloPay("MoMo", hoaDon.getId());
+            boolean daThanhToan = kiemTraTrangThaiThanhToanMoMo("MoMo", hoaDon.getId());
 
             if (daThanhToan==true) {
+                // Lưu phương thức thanh toán
+                PhuongThucThanhToan phuongThucThanhToan = new PhuongThucThanhToan();
+                phuongThucThanhToan.setIdHoaDon(hoaDon);
+                phuongThucThanhToan.setTenPhuongThuc(phuongThucThanhToanRequest.getTenPhuongThuc());
+                phuongThucThanhToan.setGhiChu("MoMo" +hoaDon.getId() +"sotien" +hoaDon.getTienPhaiThanhToan());
+                phuongThucThanhToanRepo.save(phuongThucThanhToan);
                 // Nếu khách hàng đã thanh toán, cập nhật trạng thái hóa đơn
                 capNhatTrangThaiHoaDon(hoaDon);
             } else {
@@ -476,6 +480,13 @@ public class HoaDonServiceImpl implements HoaDonService {
             boolean daThanhToan = kiemTraTrangThaiThanhToanZaloPay("ZaloPay", hoaDon.getId());
 
             if (daThanhToan==true) {
+                // Lưu phương thức thanh toán
+                PhuongThucThanhToan phuongThucThanhToan = new PhuongThucThanhToan();
+                phuongThucThanhToan.setIdHoaDon(hoaDon);
+                phuongThucThanhToan.setTenPhuongThuc(phuongThucThanhToanRequest.getTenPhuongThuc());
+                phuongThucThanhToan.setGhiChu("ZaloPay" +hoaDon.getId() +"sotien" +hoaDon.getTienPhaiThanhToan());
+                phuongThucThanhToanRepo.save(phuongThucThanhToan);
+                // Nếu khách hàng đã thanh toán, cập nhật trạng thái hóa đơn
                 capNhatTrangThaiHoaDon(hoaDon);
             } else {
                 System.out.println("Chưa nhận được thanh toán từ ZaloPay.");
