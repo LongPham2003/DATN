@@ -1,9 +1,11 @@
 package com.example.shoes.service.impl;
 
+import com.example.shoes.config.VNPAYConfig;
 import com.example.shoes.dto.hoadon.request.HoaDonRequest;
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
 import com.example.shoes.dto.hoadonchitiet.request.HoaDonChiTietRequest;
 import com.example.shoes.dto.phuongthucthanhtoan.request.PhuongThucThanhToanRequest;
+import com.example.shoes.dto.vnpay.response.TransactionStatus;
 import com.example.shoes.entity.ChatLieu;
 import com.example.shoes.entity.HoaDon;
 import com.example.shoes.entity.HoaDonChiTiet;
@@ -25,6 +27,7 @@ import com.example.shoes.repository.PhieuGiamGiaRepo;
 import com.example.shoes.repository.PhuongThucThanhToanRepo;
 import com.example.shoes.repository.SanPhamChiTietRepo;
 import com.example.shoes.service.HoaDonService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -35,19 +38,27 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 @Service
@@ -376,10 +387,6 @@ public class HoaDonServiceImpl implements HoaDonService {
             return null;
         }
     }
-    private boolean kiemTraTrangThaiThanhToanVNPAY(String phuongThuc, Integer idHoaDon) {
-
-        return true;
-    }
     private boolean kiemTraTrangThaiThanhToanMoMo(String phuongThuc, Integer idHoaDon) {
 
         return true;
@@ -408,6 +415,39 @@ public class HoaDonServiceImpl implements HoaDonService {
         lichSuHoaDon.setNguoiThucHien(nhanVien.getHoTen());
         lichSuHoaDonRepo.save(lichSuHoaDon);
     }
+
+    private boolean kiemTraTrangThaiThanhToanVNPAY(String phuongThuc, Integer idHoaDon) {
+        HoaDon hoaDon = hoaDonRepo.findById(idHoaDon).orElse(null);
+        if (hoaDon == null) return false;
+
+        // Tạo URL endpoint "/payment-infor"
+        String paymentInfoUrl = "http://localhost:8080/api/paymentvnpay/payment-infor";
+
+        // Tạo các tham số yêu cầu
+        Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("vnp_Amount", hoaDon.getTienPhaiThanhToan().multiply(BigDecimal.valueOf(100)).toBigInteger().toString());
+        queryParams.put("vnp_BankCode", "NCB"); // Giá trị giả lập hoặc lấy từ thông tin thực tế
+        queryParams.put("vnp_OrderInfo", String.valueOf(idHoaDon));
+        queryParams.put("vnp_ResponseCode", "00"); // Mã này cần lấy từ phản hồi VNPAY thực tế nếu có
+
+        // Tạo URL với các tham số
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(paymentInfoUrl);
+        queryParams.forEach((key, value) -> builder.queryParam(key, value));
+        String urlWithParams = builder.toUriString(); // Chuyển URL thành chuỗi
+        // Sử dụng RestTemplate để gọi API
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<TransactionStatus> response = restTemplate.getForEntity(builder.toUriString(), TransactionStatus.class);
+
+        // Kiểm tra phản hồi để xác định thanh toán có thành công không
+        if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+            TransactionStatus transactionStatus = response.getBody();
+            return "OK".equals(transactionStatus.getStatus());
+        }
+
+        return false;
+    }
+
+
     @Override
     public void thanhToan(Integer idHoaDon, PhuongThucThanhToanRequest phuongThucThanhToanRequest) {
         // Tìm hóa đơn
@@ -432,25 +472,23 @@ public class HoaDonServiceImpl implements HoaDonService {
             // Nếu khách hàng đã thanh toán, cập nhật trạng thái hóa đơn
             capNhatTrangThaiHoaDon(hoaDon);
         }  else if (tenPhuongThuc.equalsIgnoreCase("VNPAY")) {
-            // Tạo mã QR cho VNPAY với id hóa đơn và tổng tiền
-            String qrCodeData = "VNPAY - ID:" + hoaDon.getId() + " - Amount: " + hoaDon.getTienPhaiThanhToan();
-            System.out.println("QR Code VNPAY: " + qrCodeData);
-            // Logic tạo mã QR cho khách hàng thanh toán
-            // Kiểm tra trạng thái thanh toán từ VNPAY
-            boolean daThanhToan = kiemTraTrangThaiThanhToanVNPAY("VNPAY", hoaDon.getId());
 
-            if (daThanhToan==true) {
-                // Lưu phương thức thanh toán
-                PhuongThucThanhToan phuongThucThanhToan = new PhuongThucThanhToan();
-                phuongThucThanhToan.setIdHoaDon(hoaDon);
-                phuongThucThanhToan.setTenPhuongThuc(phuongThucThanhToanRequest.getTenPhuongThuc());
-                phuongThucThanhToan.setGhiChu("VNPAY" +hoaDon.getId() +"sotien" +hoaDon.getTienPhaiThanhToan());
-                phuongThucThanhToanRepo.save(phuongThucThanhToan);
-                // Nếu khách hàng đã thanh toán, cập nhật trạng thái hóa đơn
-                capNhatTrangThaiHoaDon(hoaDon);
-            } else {
-                System.out.println("Chưa nhận được thanh toán từ VNPAY.");
-            }
+                // Lấy trạng thái thanh toán
+                boolean daThanhToan = kiemTraTrangThaiThanhToanVNPAY("VNPAY", hoaDon.getId());
+
+                if (daThanhToan) {
+                    // Lưu phương thức thanh toán
+                    PhuongThucThanhToan phuongThucThanhToan = new PhuongThucThanhToan();
+                    phuongThucThanhToan.setIdHoaDon(hoaDon);
+                    phuongThucThanhToan.setTenPhuongThuc(phuongThucThanhToanRequest.getTenPhuongThuc());
+                    phuongThucThanhToan.setGhiChu("VNPAY " + hoaDon.getId() + " số tiền: " + hoaDon.getTienPhaiThanhToan());
+                    phuongThucThanhToanRepo.save(phuongThucThanhToan);
+                    // Cập nhật trạng thái hóa đơn
+                    capNhatTrangThaiHoaDon(hoaDon);
+                } else {
+                    System.out.println("Chưa nhận được thanh toán từ VNPAY.");
+                }
+
         } else if (tenPhuongThuc.equalsIgnoreCase("MoMo")) {
             // Tạo mã QR cho MoMo với id hóa đơn và tổng tiền
             String qrCodeData = "MoMo - ID:" + hoaDon.getId() + " - Amount: " + hoaDon.getTienPhaiThanhToan();

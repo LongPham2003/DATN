@@ -52,7 +52,8 @@ public class SecurityConfiguration {
             "/api/chatlieu/**",
             "/api/sanpham/**", "/api/sanphamchitiet/**", "/api/kichthuoc/**", "/api/mausac/**",
             "/api/thuonghieu/**", "/api/degiay/**", "/api/hinhanh/**", "/api/khachhang/**",
-            "/api/loai/**", "/api/phieugiamgia/**","/banhangtaiquay/**"
+            "/api/loai/**", "/api/phieugiamgia/**","/banhangtaiquay/**","/api/hoadonchitiet/**","/api/paymentvnpay/**",
+            "/api/paymentvnpay/payment-infor"
     };
 
 //    private final String[] ADMIN_ENDPOINTS = {
@@ -69,7 +70,7 @@ public class SecurityConfiguration {
                         .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(NHANVIEN_ENDPOINTS).hasAnyRole("NHANVIEN","ADMIN")
                         .requestMatchers("/api/nhanvien/**").hasRole("ADMIN")
-//                        .anyRequest().authenticated()
+                        .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex.accessDeniedHandler(customAccessDeniedHandler)
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint))
