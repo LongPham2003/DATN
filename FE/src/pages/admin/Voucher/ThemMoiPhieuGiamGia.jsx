@@ -161,7 +161,7 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
                 value={formData.ngayBatDau}
                 onChange={handleChange}
                 className="block w-full rounded-md border border-slate-300 bg-white py-2 pl-2 shadow-sm"
-                type="date"
+                type="datetime-local"
               />
             </div>
             <div className="w-full p-2 sm:w-1/2">
@@ -171,7 +171,7 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
                 value={formData.ngayKetThuc}
                 onChange={handleChange}
                 className="block w-full rounded-md border border-slate-300 bg-white py-2 pl-2 shadow-sm"
-                type="date"
+                type="datetime-local"
               />
             </div>
             {error && <p className="mb-4 text-sm text-red-500">{error}</p>}
