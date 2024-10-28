@@ -28,8 +28,12 @@ const ImageUpload = ({ fileList, setFileList }) => {
       file.name || file.url.substring(file.url.lastIndexOf("/") + 1),
     );
   };
-
-  const handleChange = ({ fileList: newFileList }) => setFileList(newFileList);
+  const handleChange = ({ fileList: newFileList }) => {
+    // setFileList((prevFileList) => [...prevFileList, ...newFileList]); // Append new files to the existing list
+    // console.log("Updated fileList:", [...fileList, ...newFileList]); // Debugging log
+    setFileList(newFileList);
+    console.log(newFileList);
+  };
 
   const uploadButton = (
     <div>
@@ -46,6 +50,7 @@ const ImageUpload = ({ fileList, setFileList }) => {
         onPreview={handlePreview}
         onChange={handleChange}
         beforeUpload={() => false}
+        multiple
       >
         {fileList.length >= 5 ? null : uploadButton}
       </Upload>
@@ -60,4 +65,5 @@ const ImageUpload = ({ fileList, setFileList }) => {
     </>
   );
 };
+
 export default ImageUpload;
