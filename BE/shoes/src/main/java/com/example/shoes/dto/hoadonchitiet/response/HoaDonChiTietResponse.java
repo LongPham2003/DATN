@@ -8,9 +8,9 @@ import java.math.BigDecimal;
 @Getter
 public class HoaDonChiTietResponse {
     private Integer id;
-    private Integer idHoaDon;
-    private Integer idSpct;
-    private BigDecimal donGia;
+    private String maHoaDon;
+    private String maSPCT;
+    private String donGia;
     private Integer soLuong;
     private String trangThai;
 }

@@ -468,7 +468,8 @@ public class HoaDonServiceImpl implements HoaDonService {
             phuongThucThanhToan.setTenPhuongThuc(phuongThucThanhToanRequest.getTenPhuongThuc());
             phuongThucThanhToan.setGhiChu("Tiền mặt" +hoaDon.getId() +"sotien" +hoaDon.getTienPhaiThanhToan());
             phuongThucThanhToanRepo.save(phuongThucThanhToan);
-
+            hoaDon.setPhuongThucThanhToan(tenPhuongThuc);
+            hoaDonRepo.save(hoaDon);
             // Nếu khách hàng đã thanh toán, cập nhật trạng thái hóa đơn
             capNhatTrangThaiHoaDon(hoaDon);
         }  else if (tenPhuongThuc.equalsIgnoreCase("VNPAY")) {
@@ -483,6 +484,8 @@ public class HoaDonServiceImpl implements HoaDonService {
                     phuongThucThanhToan.setTenPhuongThuc(phuongThucThanhToanRequest.getTenPhuongThuc());
                     phuongThucThanhToan.setGhiChu("VNPAY " + hoaDon.getId() + " số tiền: " + hoaDon.getTienPhaiThanhToan());
                     phuongThucThanhToanRepo.save(phuongThucThanhToan);
+                    hoaDon.setPhuongThucThanhToan(tenPhuongThuc);
+                    hoaDonRepo.save(hoaDon);
                     // Cập nhật trạng thái hóa đơn
                     capNhatTrangThaiHoaDon(hoaDon);
                 } else {
@@ -504,6 +507,8 @@ public class HoaDonServiceImpl implements HoaDonService {
                 phuongThucThanhToan.setTenPhuongThuc(phuongThucThanhToanRequest.getTenPhuongThuc());
                 phuongThucThanhToan.setGhiChu("MoMo" +hoaDon.getId() +"sotien" +hoaDon.getTienPhaiThanhToan());
                 phuongThucThanhToanRepo.save(phuongThucThanhToan);
+                hoaDon.setPhuongThucThanhToan(tenPhuongThuc);
+                hoaDonRepo.save(hoaDon);
                 // Nếu khách hàng đã thanh toán, cập nhật trạng thái hóa đơn
                 capNhatTrangThaiHoaDon(hoaDon);
             } else {
@@ -524,6 +529,8 @@ public class HoaDonServiceImpl implements HoaDonService {
                 phuongThucThanhToan.setTenPhuongThuc(phuongThucThanhToanRequest.getTenPhuongThuc());
                 phuongThucThanhToan.setGhiChu("ZaloPay" +hoaDon.getId() +"sotien" +hoaDon.getTienPhaiThanhToan());
                 phuongThucThanhToanRepo.save(phuongThucThanhToan);
+                hoaDon.setPhuongThucThanhToan(tenPhuongThuc);
+                hoaDonRepo.save(hoaDon);
                 // Nếu khách hàng đã thanh toán, cập nhật trạng thái hóa đơn
                 capNhatTrangThaiHoaDon(hoaDon);
             } else {
@@ -639,6 +646,11 @@ public class HoaDonServiceImpl implements HoaDonService {
             throw new AppException(ErrorCode.VOUCHER_IN_BILL);
         }
 
+        // Kiểm tra số lượng phiếu giảm giá còn khả dụng
+        if (phieuGiamGia.getSoLuong() <= 0) {
+            throw new AppException(ErrorCode.INVALID_QUANTITY_VOUCHER);
+        }
+
         // Tính toán số tiền được giảm
         BigDecimal soTienGiam = apDungVoucher(hoaDon.getTongTien(), phieuGiamGia);
 
@@ -650,8 +662,13 @@ public class HoaDonServiceImpl implements HoaDonService {
 
         // Tính lại tiền phải thanh toán
         hoaDon.setTienPhaiThanhToan(hoaDon.getTongTien().subtract(hoaDon.getTienDuocGiam()));
-        // Lưu thay đổi hóa đơn vào cơ sở dữ liệu
-        hoaDonRepo.save(hoaDon);
+
+        // Giảm số lượng phiếu giảm giá
+        phieuGiamGia.setSoLuong(phieuGiamGia.getSoLuong() - 1);
+
+        // Lưu thay đổi vào cơ sở dữ liệu
+        phieuGiamGiaRepo.save(phieuGiamGia); // Lưu số lượng phiếu giảm giá đã cập nhật
+        hoaDonRepo.save(hoaDon); // Lưu hóa đơn đã cập nhật
     }
 
     @Override
@@ -672,6 +689,38 @@ public class HoaDonServiceImpl implements HoaDonService {
         return hoaDonList.stream()
                 .map(this::converToHoaDonResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void xoaPhieuGiamGiaHoaDon(Integer idHoaDon, Integer idPhieuGiamGia) {
+        // Lấy thông tin hóa đơn từ idHoaDon
+        HoaDon hoaDon = hoaDonRepo.findById(idHoaDon)
+                .orElseThrow(() -> new AppException(ErrorCode.BILL_NOT_FOUND));
+
+        // Kiểm tra xem hóa đơn có phiếu giảm giá hay không
+        if (hoaDon.getIdPhieuGiamGia() == null) {
+            throw new AppException(ErrorCode.VOUCHER_NOT_IN_BILL);
+        }
+
+        // Kiểm tra phiếu giảm giá trong hóa đơn có khớp với idPhieuGiamGia đã truyền vào không
+        if (!hoaDon.getIdPhieuGiamGia().getId().equals(idPhieuGiamGia)) {
+            throw new AppException(ErrorCode.VOUCHER_NOT_IN_BILL); // Báo lỗi nếu phiếu giảm giá không khớp
+        }
+        // Lấy thông tin phiếu giảm giá
+        PhieuGiamGia phieuGiamGia = hoaDon.getIdPhieuGiamGia();
+
+        // Xóa thông tin phiếu giảm giá khỏi hóa đơn
+        hoaDon.setIdPhieuGiamGia(null);
+        hoaDon.setTienDuocGiam(BigDecimal.ZERO);
+        // Tính lại tiền phải thanh toán
+        hoaDon.setTienPhaiThanhToan(hoaDon.getTongTien().subtract(hoaDon.getTienDuocGiam()));
+
+        // Tăng số lượng phiếu giảm giá thêm 1
+        phieuGiamGia.setSoLuong(phieuGiamGia.getSoLuong() + 1);
+
+        // Lưu thay đổi vào cơ sở dữ liệu
+        phieuGiamGiaRepo.save(phieuGiamGia); // Lưu số lượng phiếu giảm giá đã cập nhật
+        hoaDonRepo.save(hoaDon); // Lưu hóa đơn đã cập nhật
     }
 
     // Phương thức chuyển đổi BigDecimal sang định dạng tiền tệ Việt Nam

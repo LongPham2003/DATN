@@ -29,8 +29,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 import java.util.stream.Collectors;
 @Service
@@ -232,7 +234,12 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         SanPhamChiTiet spct = sanPhamChiTietRepo.getSPCTDetail(idSPCT);
         return converToDetailResponse(spct);
     }
-
+    // Phương thức chuyển đổi BigDecimal sang định dạng tiền tệ Việt Nam
+    private String formatCurrency(BigDecimal amount) {
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        String formatted = currencyFormat.format(amount);
+        return formatted.replace("₫", "").trim()+"VNĐ"; // Loại bỏ ký hiệu ₫ và thêm VNĐ
+    }
 //convert SPCTBH
     private SPCTBanHangResponse converToBHResponse(SanPhamChiTiet sanPhamChiTiet) {
         SPCTBanHangResponse response = new SPCTBanHangResponse();
@@ -245,7 +252,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         response.setKichThuoc(sanPhamChiTiet.getIdKichThuoc() != null ? sanPhamChiTiet.getIdKichThuoc().getKichThuoc() : null);
         response.setThuongHieu(sanPhamChiTiet.getIdThuongHieu() != null ? sanPhamChiTiet.getIdThuongHieu().getTen() : null);
         response.setDeGiay(sanPhamChiTiet.getIdDeGiay() != null ? sanPhamChiTiet.getIdDeGiay().getTen() : null);
-        response.setDonGia(sanPhamChiTiet.getDonGia());
+        response.setDonGia(formatCurrency(sanPhamChiTiet.getDonGia()));
         response.setSoLuong(sanPhamChiTiet.getSoLuong());
         response.setTrangThai(sanPhamChiTiet.getTrangThai());
         return response;
@@ -263,7 +270,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         response.setIdKichThuoc( sanPhamChiTiet.getIdKichThuoc().getId() );
         response.setIdThuongHieu( sanPhamChiTiet.getIdThuongHieu().getId());
         response.setIdDeGiay(sanPhamChiTiet.getIdDeGiay().getId());
-        response.setDonGia(sanPhamChiTiet.getDonGia());
+        response.setDonGia(formatCurrency(sanPhamChiTiet.getDonGia()));
         response.setSoLuong(sanPhamChiTiet.getSoLuong());
         response.setTrangThai(sanPhamChiTiet.getTrangThai());
         response.setNgayTao(sanPhamChiTiet.getNgayTao());
@@ -282,7 +289,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         response.setKichThuoc(sanPhamChiTiet.getIdKichThuoc() != null ? sanPhamChiTiet.getIdKichThuoc().getKichThuoc() : null);
         response.setThuongHieu(sanPhamChiTiet.getIdThuongHieu() != null ? sanPhamChiTiet.getIdThuongHieu().getTen() : null);
         response.setDeGiay(sanPhamChiTiet.getIdDeGiay() != null ? sanPhamChiTiet.getIdDeGiay().getTen() : null);
-        response.setDonGia(sanPhamChiTiet.getDonGia());
+        response.setDonGia(formatCurrency(sanPhamChiTiet.getDonGia()));
         response.setSoLuong(sanPhamChiTiet.getSoLuong());
         response.setTrangThai(sanPhamChiTiet.getTrangThai());
         response.setNgayTao(sanPhamChiTiet.getNgayTao());

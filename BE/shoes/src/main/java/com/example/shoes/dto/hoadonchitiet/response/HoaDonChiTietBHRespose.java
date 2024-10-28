@@ -18,6 +18,6 @@ public class HoaDonChiTietBHRespose {
     private String kichThuoc;
     private String thuongHieu;
     private String deGiay;
-    private BigDecimal donGia; //don gia giay
+    private String donGia; //don gia giay
     private Integer soLuong; //so luong
 }
