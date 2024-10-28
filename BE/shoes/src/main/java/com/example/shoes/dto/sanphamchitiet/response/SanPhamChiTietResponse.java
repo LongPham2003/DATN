@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 public class SanPhamChiTietResponse {
     private Integer id;
+    private String ma;
     private String tenSanPham;
     private String chatLieu;
     private String mauSac;

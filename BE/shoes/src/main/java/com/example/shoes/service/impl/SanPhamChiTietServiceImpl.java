@@ -31,6 +31,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 @Service
 public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
@@ -80,7 +81,38 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
         return converToResponse(sanPhamChiTiet);
     }
+    public String generateMaSanPhamChiTiet() {
+        // Lấy mã sản phẩm chi tiết lớn nhất từ database
+        String maxMaSanPhamChiTiet = sanPhamChiTietRepo.findMaxMaSanPhamChiTiet();
 
+        // Tách số thứ tự từ mã sản phẩm chi tiết
+        int soThuTu = 0;
+        if (maxMaSanPhamChiTiet != null) {
+            soThuTu = Integer.parseInt(maxMaSanPhamChiTiet.substring(4, 7)); // Bỏ phần "SPCT" và lấy 3 số tiếp theo
+            soThuTu++;
+        } else {
+            soThuTu = 1; // Nếu chưa có mã nào, bắt đầu từ 001
+        }
+
+        // Sinh chuỗi 4 ký tự ngẫu nhiên
+        String chuoiNgauNhien = generateRandomString(4);
+
+        // Trả về mã sản phẩm chi tiết mới dạng "SPCT" + số thứ tự (ít nhất 3 chữ số) + 4 ký tự ngẫu nhiên
+        return String.format("SPCT%03d%s", soThuTu, chuoiNgauNhien);
+    }
+
+    // Hàm sinh chuỗi ký tự ngẫu nhiên gồm 4 chữ cái
+    private String generateRandomString(int length) {
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        Random random = new Random();
+        StringBuilder stringBuilder = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            int index = random.nextInt(characters.length());
+            stringBuilder.append(characters.charAt(index));
+        }
+
+        return stringBuilder.toString();
+    }
     @Override
     public SanPhamChiTietResponse create(SanPhamChiTietRequest request) {
         // Lấy đối tượng từ repository dựa trên id
@@ -103,6 +135,8 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
                 .orElseThrow(() -> new AppException(ErrorCode.SHOE_SOLE_NOT_FOUND));
 
         SanPhamChiTiet spct = new SanPhamChiTiet();
+        String ma=generateMaSanPhamChiTiet();
+        spct.setMa(ma);
         spct.setIdSanPham(sanPham);
         spct.setIdChatLieu(chatLieu);
         spct.setIdMauSac(mauSac);
@@ -241,6 +275,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         SanPhamChiTietResponse response = new SanPhamChiTietResponse();
         response.setId(sanPhamChiTiet.getId());
 //         convert tat ca cac thuoc tinh theo id de lay ra ten cua tung thuoc tinh
+        response.setMa(sanPhamChiTiet.getMa());
         response.setTenSanPham(sanPhamChiTiet.getIdSanPham() != null ? sanPhamChiTiet.getIdSanPham().getTenSanPham() : null);
         response.setChatLieu(sanPhamChiTiet.getIdChatLieu() != null ? sanPhamChiTiet.getIdChatLieu().getTen() : null);
         response.setMauSac(sanPhamChiTiet.getIdMauSac() != null ? sanPhamChiTiet.getIdMauSac().getTen() : null);

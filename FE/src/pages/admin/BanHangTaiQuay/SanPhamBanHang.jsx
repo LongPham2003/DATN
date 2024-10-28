@@ -1,14 +1,11 @@
-import axios from "axios";
+import axios from "../../../api/axiosConfig.js";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { Bounce, ToastContainer } from "react-toastify";
 import LayAnhTheoIdSP from "../SanPham/Product/LayANhTheoIDSP";
-import { Button, Input, Select } from "antd";
-import ReactPaginate from "react-paginate";
+import { Button, Input, InputNumber, Modal, Select } from "antd";
+import { Bounce, toast, ToastContainer } from "react-toastify";
 
-export default function SanPhamBanTaiQuay() {
-  const { id } = 3;
-
+export default function SanPhamBanTaiQuay({ id,onProductAdded  }) {
+  const [modalVisible, setModalVisible] = useState(false);
   const [SPCTBH, setSPCTBH] = useState([]);
   const [hangs, setHangs] = useState([]);
   const [mauSacs, setMauSacs] = useState([]);
@@ -16,13 +13,18 @@ export default function SanPhamBanTaiQuay() {
   const [kichThuocs, setKichThuocs] = useState([]);
   const [deGiays, setDeGiays] = useState([]);
   const [maSanPham, setMaSanPham] = useState();
+  const [soLuongTon, setSoLuongTon] = useState(0);
   const [selectedIdHang, setSelectedIdHang] = useState(null);
   const [selectedIdMauSac, setSelectedIdMauSac] = useState(null);
   const [selectedIdChatLieu, setSelectedIdChatLieu] = useState(null);
   const [selectedIdKichThuoc, setSelectedIdKichThuoc] = useState(null);
   const [selectedIdDeGiay, setSelectedIdDeGiay] = useState(null);
+  const [idSPCT, setIdSPCT] = useState();
+  const [soLuongMua, setSoLuongMua] = useState(1);
+  const [error, setError] = useState('');
 
   let ApiLaySPCT = `http://localhost:8080/api/sanphamchitiet/getallSPCTBH`;
+  let ApiThemSPvaoHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/addspct/${id}`;
 
   const getallSPCTBH = async () => {
     const data = await axios.get(`${ApiLaySPCT}`, {
@@ -38,22 +40,88 @@ export default function SanPhamBanTaiQuay() {
     setSPCTBH(data.data.result);
   };
 
+  const ThemSP = async () => {
+    try {
+      const newSPCT = {
+        idSpct: idSPCT,
+        soLuong: soLuongMua
+      }
+
+      await  axios.post(ApiThemSPvaoHoaDon, newSPCT);
+      toast.success("Thêm sản phẩm thành công", {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        newestOnTop: false,
+        closeOnClick: true,
+        rtl: false,
+        pauseOnFocusLoss: true,
+        draggable: true,
+        pauseOnHover: true,
+        theme: "light",
+        transition: Bounce,
+      });
+
+      // Gọi hàm onProductAdded để báo cho component cha biết và cập nhật giỏ hàng
+      if (onProductAdded) {
+        onProductAdded();
+      }
+
+      setModalVisible(false);
+    }catch (error) {
+      console.log(error);
+      toast.error(error.message || "Thêm mới thất bại", {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
+    }
+  };
+
+  const openModal = () => {
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+
+  const handleButtonClick = (id) => {
+    // Tìm sản phẩm với ID đã chọn trong danh sách SPCTBH
+    const selectedProduct = SPCTBH.find((item) => item.id === id);
+
+    // Nếu tìm thấy sản phẩm, cập nhật số lượng tồn vào state soLuongTon
+    if (selectedProduct) {
+      setSoLuongTon(selectedProduct.soLuong);
+    }
+
+    // Lưu ID sản phẩm chi tiết và mở Modal
+    setIdSPCT(id);
+    setModalVisible(true);
+  };
+
+  const handleQuantityChange = (value) => {
+    if (value === null || value === undefined) return;
+    if (value > soLuongTon) {
+      setError(`Số lượng mua không thể lớn hơn ${soLuongTon}`);
+    } else {
+      setError('');
+      setSoLuongMua(value);
+    }
+  };
+
   useEffect(() => {
-    getallSPCTBH();
-    // layAnh();
-  }, [
-    maSanPham,
-    selectedIdHang,
-    selectedIdMauSac,
-    selectedIdKichThuoc,
-    selectedIdDeGiay,
-    selectedIdChatLieu,
-  ]);
-
-  // const handlePageChange = (selectedPage) => {
-  //   setTrangHienTai(selectedPage.selected + 1);
-  // };
-
+    if (!modalVisible) {
+      setSoLuongMua(1); // Reset về giá trị mặc định (ví dụ: 1)
+      setError('');     // Reset lại lỗi nếu có
+    }
+  }, [modalVisible]);
   // //lấy toàn bộ dữ liệu các thuộc tính
   useEffect(() => {
     axios
@@ -98,6 +166,18 @@ export default function SanPhamBanTaiQuay() {
         console.error("Lỗi khi lấy danh sách đế giày:", error);
       });
   }, []);
+
+  useEffect(() => {
+    getallSPCTBH();
+
+  }, [
+    maSanPham,
+    selectedIdHang,
+    selectedIdMauSac,
+    selectedIdKichThuoc,
+    selectedIdDeGiay,
+    selectedIdChatLieu,
+  ]);
 
   const handleResetSelectedChange = () => {
     setSelectedIdChatLieu(null);
@@ -230,7 +310,7 @@ export default function SanPhamBanTaiQuay() {
                     {SPCTBH.map((item, index) => (
                       <tr key={item.id} className="hover:bg-gray-100">
                         <td className="border-b-[1px] border-indigo-500 px-4 py-2">
-                          {index + 1}
+                          {item.maSPCT}
                         </td>
                         <td className="border-b-[1px] border-indigo-500 px-4 py-2">
                           {item.tenSanPham} [ {item.kichThuoc}-{item.mauSac}]
@@ -251,7 +331,16 @@ export default function SanPhamBanTaiQuay() {
                           {item.soLuong}
                         </td>
                         <td className="border-b-[1px] border-indigo-500">
-                          <Button>Em là người được chọn</Button>
+                          <Button
+                            onClick={() => {
+                              handleButtonClick(item.id);
+                              openModal();
+                            }}
+                            disabled={item.soLuong === 0} // Disable the button if stock quantity is 0
+                          >
+                            Em là người được chọn
+                          </Button>
+
                         </td>
                       </tr>
                     ))}
@@ -261,21 +350,30 @@ export default function SanPhamBanTaiQuay() {
             </div>
           </div>
         </div>
-
-        {/* <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        transition={Bounce}
-      />  */}
       </div>
+      <Modal
+        title="Nhập số lượng"
+        open={modalVisible}
+        onCancel={closeModal}
+        onOk={ThemSP}
+        cancelText="Hủy" // Replace with your desired text
+        okText="Xác nhận" // Replace with your desired text
+      >
+        <label>Số Lượng tồn :{soLuongTon} </label>
+
+          <div>
+            <InputNumber
+              min={1}
+              max={soLuongTon}
+              value={soLuongMua}
+              className="min-w-full"
+              onChange={handleQuantityChange}
+            />
+            {error && <p className="text-red-500">{error}</p>}
+          </div>
+
+      </Modal>
+      <ToastContainer/>
     </>
   );
 }

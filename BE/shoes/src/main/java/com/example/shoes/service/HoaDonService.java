@@ -14,6 +14,6 @@ public interface HoaDonService {
  void thanhToan(Integer idHoaDon, PhuongThucThanhToanRequest phuongThucThanhToanRequest);
  HoaDonResponse addSanPhamChiTietToHoaDon(Integer idHoaDon, HoaDonChiTietRequest chiTietRequest);
  void apPhieuGiamGiaHoaDon(Integer idHoaDon, Integer idPhieuGiamGia);
- List<HoaDonResponse> getAllTrangThaiTrue();
- List<HoaDonResponse> getAllTrangThaiFalse();
+ List<HoaDonResponse> getAllTrangThaiDaThanhToan();
+ List<HoaDonResponse> getAllTrangThaiChuaThanhToan();
 }

@@ -14,7 +14,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SanPhamChiTietDetailResponse {
-
     private Integer idSanPham;
     private Integer idChatLieu;
     private Integer idMauSac;
