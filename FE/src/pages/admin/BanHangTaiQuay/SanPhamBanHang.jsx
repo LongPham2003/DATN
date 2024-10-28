@@ -295,7 +295,7 @@ export default function SanPhamBanTaiQuay({ id,onProductAdded  }) {
               {/* Thêm max-height và overflow-y-auto để tạo thành cuộn */}
               <div className="max-h-[400px] overflow-y-auto">
                 <table className="mb-[60px] min-w-full bg-white text-[20px]">
-                  <thead>
+                  <thead className="sticky top-0 bg-white z-10">
                     <tr className="h-10 border-b-2 border-indigo-500 text-base">
                       <th className="w-20">Mã sản phẩm</th>
                       <th className="w-[230px]">Sản phẩm</th>
@@ -336,7 +336,7 @@ export default function SanPhamBanTaiQuay({ id,onProductAdded  }) {
                               handleButtonClick(item.id);
                               openModal();
                             }}
-                            disabled={item.soLuong === 0} // Disable the button if stock quantity is 0
+                            disabled={item.soLuong === 0}
                           >
                             Em là người được chọn
                           </Button>
