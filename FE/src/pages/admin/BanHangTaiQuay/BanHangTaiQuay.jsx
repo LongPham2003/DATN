@@ -6,6 +6,8 @@ import axios from "../../../api/axiosConfig";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import LayAnhTheoIdSP from "../SanPham/Product/LayANhTheoIDSP";
 import log from "eslint-plugin-react/lib/util/log.js";
+import { XMarkIcon } from "@heroicons/react/16/solid/index.js";
+import { TrashIcon } from "@heroicons/react/16/solid";
 
 export default function BanHangTaiQuay() {
   const [hoaDonFalse, setHoaDonFalse] = useState([]);
@@ -21,11 +23,13 @@ export default function BanHangTaiQuay() {
   const [diaChiGiaoHang, setdiaChiGiaoHang] = useState("");
   const [thaydoiSoLuongMua, setThayDoiSoLuongMua] = useState(0);
   const [idSPCTDangChon, setIdSPCTDangChon] = useState();
+  const [soLuongTonCuaSPCT, setSoLuongTonCuaSPCT] = useState(0);
 
   let ApiTaoHoaDon = `http://localhost:8080/banhangtaiquay/taodon`;
   let ApiLayHoaDonChuaThanhToan = `http://localhost:8080/api/hoadon/getall-chuathanhtoan`;
   let ApiLaySanPhamOHoaDon = `http://localhost:8080/api/hoadonchitiet/SPCTbyidHD`;
   let ApiUpdateSoLuongSPTrongHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/update`;
+  let ApiLaySoLuongTonCuaSPCT = `http://localhost:8080/api/sanphamchitiet/${idSPCTDangChon}`;
 
   const LayDanhSachHoaDonChuaThanhToan = async () => {
     try {
@@ -51,6 +55,12 @@ export default function BanHangTaiQuay() {
       console.log("Lấy chi tiết sản phẩm lỗi:", error);
     }
   };
+  //
+  const LaySoLuongTonCuaSPCT = async () => {
+    const responseSoLuongTon = await axios.get(ApiLaySoLuongTonCuaSPCT);
+    setSoLuongTonCuaSPCT(responseSoLuongTon.data.result.soLuong);
+    console.log("soLuongTonCuaSPCT", responseSoLuongTon.data.result.soLuong);
+  }
 
   const taoHoaDon = async () => {
     try {
@@ -64,6 +74,7 @@ export default function BanHangTaiQuay() {
   };
 
   const openModal = () => {
+
     setModalVisible(true);
   };
 
@@ -85,7 +96,10 @@ export default function BanHangTaiQuay() {
 
   useEffect(() => {
     LayDanhSachHoaDonChuaThanhToan();
+
   }, []);
+
+
 
   useEffect(() => {
     if (selectedHoaDonId) {
@@ -125,21 +139,62 @@ export default function BanHangTaiQuay() {
         idSpct: idSPCTDangChon,
         soLuong: thaydoiSoLuongMua,
       });
+
+      await Promise.all([LayChiTietSanPham(), LayDanhSachHoaDonChuaThanhToan()]);
       toast.success("Cập nhật thành công");
-      await LayChiTietSanPham(); // Cập nhật giỏ hàng
-      await LayDanhSachHoaDonChuaThanhToan(); // Cập nhật hóa đơn
     } catch (error) {
       console.log(error);
       toast.error("Cập nhật thất bại");
     }
   };
 
-  const increment = () => {
-    console.log("Cong");
+
+
+  // Tăng số lượng mua lên 1
+  const increment = async (idSpct, newQuantity) => {
+    setIdSPCTDangChon(idSpct); // Cập nhật id của sản phẩm đang chọn
+    await LaySoLuongTonCuaSPCT(); // Lấy số lượng tồn của sản phẩm đang chọn
+
+    if (soLuongTonCuaSPCT > 0) {
+      setThayDoiSoLuongMua(newQuantity); // Cập nhật ngay lập tức trên giao diện
+      try {
+        await axios.put(`${ApiUpdateSoLuongSPTrongHoaDon}/${selectedHoaDonId}`, {
+          idSpct: idSpct,
+          soLuong: newQuantity,
+        });
+
+        await Promise.all([LayChiTietSanPham(), LayDanhSachHoaDonChuaThanhToan(), LaySoLuongTonCuaSPCT()]);
+        toast.success("Cập nhật thành công");
+      } catch (error) {
+        console.log(error);
+        toast.error("Cập nhật thất bại");
+      }
+    } else {
+      toast.warning("Sản phẩm đã hết hàng, không thể tăng số lượng");
+    }
   };
-  const decrement = () => {
-    console.log("tru");
-  }
+
+
+  const decrement = async (idSpct, newQuantity) => {
+    if (newQuantity > 0) { // Đảm bảo số lượng không âm
+      setThayDoiSoLuongMua(newQuantity);
+      setIdSPCTDangChon(idSpct); // Cập nhật id của sản phẩm đang chọn
+      await LaySoLuongTonCuaSPCT(); // Gọi hàm lấy số lượng tồn của sản phẩm sau khi cập nhật id
+
+      try {
+        await axios.put(`${ApiUpdateSoLuongSPTrongHoaDon}/${selectedHoaDonId}`, {
+          idSpct: idSpct,
+          soLuong: newQuantity,
+        });
+        toast.success("Cập nhật thành công");
+        await Promise.all([LayChiTietSanPham(), LayDanhSachHoaDonChuaThanhToan(),LaySoLuongTonCuaSPCT()]);
+      } catch (error) {
+        console.log(error);
+        toast.error("Cập nhật thất bại");
+      }
+    }
+  };
+
 
   return (
     <>
@@ -208,7 +263,7 @@ export default function BanHangTaiQuay() {
                     </thead>
                     <tbody>
                       {SPCTChuaThanhToan.map((SPCT, index) => (
-                        <tr key={SPCT.id} className="hover:bg-gray-100">
+                        <tr key={SPCT.id} className="hover:bg-gray-100"  onMouseEnter={() => {setIdSPCTDangChon(SPCT.idSpct);setThayDoiSoLuongMua(SPCT.soLuong);}} onMouseLeave={() => {setIdSPCTDangChon(null);}}>
                           <td>{index + 1}</td>
                           <td>
                             <LayAnhTheoIdSP
@@ -227,32 +282,48 @@ export default function BanHangTaiQuay() {
                             <div className="flex h-full items-center justify-center">
                               <div className="flex items-center space-x-2">
                                 <button
-                                  onClick={decrement}
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    setIdSPCTDangChon(SPCT.idSpct);
+                                    decrement(
+                                      SPCT.idSpct,
+                                      SPCT.soLuong - 1,
+                                    ); // Giảm 1 số lượng
+                                  }}
                                   className="flex h-8 w-8 items-center justify-center rounded bg-gray-200"
                                 >
                                   -
                                 </button>
                                 <input
                                   type="text"
-                                  value={idSPCTDangChon === SPCT.idSpct ? thaydoiSoLuongMua : SPCT.soLuong}
+                                  value={
+                                    idSPCTDangChon === SPCT.idSpct
+                                      ? thaydoiSoLuongMua
+                                      : SPCT.soLuong
+                                  }
                                   className="h-8 w-12 rounded border border-gray-300 text-center"
                                   onClick={() => {
                                     setIdSPCTDangChon(SPCT.idSpct);
-                                    setThayDoiSoLuongMua(SPCT.soLuong); // Đặt số lượng hiện tại
+                                    setThayDoiSoLuongMua(SPCT.soLuong);
                                   }}
                                   onChange={(event) => {
-                                    setThayDoiSoLuongMua(Number(event.target.value)); // Chuyển đổi thành số
+                                    setThayDoiSoLuongMua(
+                                      Number(event.target.value),
+                                    );
                                   }}
-                                  onBlur={() => {
-
-                                      upDateSoLuongMua(); // Chỉ cập nhật khi số lượng thay đổi
-
-                                  }}
+                                  onBlur={() => upDateSoLuongMua()} // Chỉ cập nhật khi số lượng thay đổi
                                 />
-
                                 <button
-                                  onClick={increment}
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    setIdSPCTDangChon(SPCT.idSpct);
+                                    increment(
+                                      SPCT.idSpct,
+                                      SPCT.soLuong + 1,
+                                    ); // Tăng 1 số lượng
+                                  }}
                                   className="flex h-8 w-8 items-center justify-center rounded bg-gray-200"
+                                  // disabled={soLuongTonCuaSPCT === 0}
                                 >
                                   +
                                 </button>
@@ -261,7 +332,11 @@ export default function BanHangTaiQuay() {
                           </td>
 
                           <td>{SPCT.donGia * SPCT.soLuong}</td>
-                          <td>1</td>
+                          <td>  <Button type="primary" danger>
+                            <TrashIcon className="h-5 w-5 text-white"/>
+                            khách k mua thì dã nó
+                          </Button>
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -283,16 +358,23 @@ export default function BanHangTaiQuay() {
               {/* Mã giảm giá */}
               <div className="my-4 flex items-center justify-between">
                 <div>Mã giảm giá</div>
-                <div>
+                <div className="flex items-center">
                   <Select
                     showSearch
-                    style={{ width: 330 }}
+                    style={{ width: 300, height: "35px" }} // Đặt chiều cao cố định
                     placeholder="Search to Select"
                     options={[
                       { value: "1", label: "Not Identified" },
                       { value: "2", label: "Closed" },
                     ]}
                   />
+                  <Button
+                    color="danger"
+                    variant="solid"
+                    className="ml-2 flex h-[35px] items-center justify-center" // Đặt chiều cao cho nút bằng với <Select />
+                  >
+                    <XMarkIcon className="h-5 w-5" />
+                  </Button>
                 </div>
               </div>
 
@@ -375,10 +457,10 @@ export default function BanHangTaiQuay() {
         rtl={false}
         pauseOnFocusLoss
         draggable
-        pauseOnHover
         theme="light"
         transition={Bounce}
       />
+
     </>
   );
 }
