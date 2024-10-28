@@ -38,10 +38,9 @@ public class HoaDonChiTietController {
                 .build();
     }
 
-    @GetMapping("/SPCTbyidHD/{idHoaDon}")
+    @GetMapping("/spctbyidhoadon/{idHoaDon}")
     public ApiResponse<List<HoaDonChiTietBHRespose>> getSPCTbyidHD(@PathVariable("idHoaDon") Integer idHoaDon) {
         List<HoaDonChiTietBHRespose> hdbh = hoaDonChiTietService.getSPCTByIdHoaDon(idHoaDon);
-
         return ApiResponse.<List<HoaDonChiTietBHRespose>>builder().result(hdbh).build();
     }
 }
