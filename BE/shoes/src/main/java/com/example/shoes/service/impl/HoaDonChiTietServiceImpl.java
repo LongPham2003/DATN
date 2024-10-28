@@ -44,14 +44,11 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
     }
 
     @Override
-    public List<HoaDonChiTietBHRespose> getSPCTByIdHoaDon(Integer IdhoaDon) {
-        List<HoaDonChiTiet> hdbh= hoaDonChiTietRepo.getSPCTByIdHoaDon(IdhoaDon);
-
-        List<HoaDonChiTietBHRespose> hoaDonChiTietBanHangResponse = hdbh.stream()
+    public List<HoaDonChiTietBHRespose> getSPCTByIdHoaDon(Integer idHoaDon) {
+        List<HoaDonChiTiet> hoaDonChiTietList = hoaDonChiTietRepo.getSPCTByIdHoaDon(idHoaDon);
+        return hoaDonChiTietList.stream()
                 .map(this::convertToHDCTBanHangResponse)
                 .toList();
-
-        return hoaDonChiTietBanHangResponse;
     }
 
     @Override
@@ -103,7 +100,6 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
         hdbh.setDeGiay(hoaDonChiTiet.getIdSpct().getIdDeGiay().getTen());
         hdbh.setDonGia(formatCurrency(hoaDonChiTiet.getDonGia()));
         hdbh.setSoLuong(hoaDonChiTiet.getSoLuong());
-
         return hdbh;
     }
 

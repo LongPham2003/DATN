@@ -198,9 +198,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
 
     @Override
     public List<SPCTBanHangResponse> getAllTrangThaitrue(String maSanPham,Integer idMauSac,Integer idkichThuoc,Integer idChatLieu,Integer idThuongHieu,Integer idDeGiay) {
-        // Lấy tất cả các ChatLieu từ repository
-        List<SanPhamChiTiet> list =sanPhamChiTietRepo.getAllTrangThaiTrue( maSanPham, idMauSac, idkichThuoc,idChatLieu,idThuongHieu,idDeGiay);
-        // Chuyển đổi từ ChatLieu sang ChatLieuResponse
+        List<SanPhamChiTiet> list = sanPhamChiTietRepo.getAllTrangThaiTrue(maSanPham, idMauSac, idkichThuoc, idChatLieu, idThuongHieu, idDeGiay);
         return list.stream()
                 .map(this::converToBHResponse)
                 .collect(Collectors.toList());

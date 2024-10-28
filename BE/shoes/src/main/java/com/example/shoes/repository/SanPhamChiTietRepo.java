@@ -53,14 +53,14 @@ public interface SanPhamChiTietRepo extends JpaRepository<SanPhamChiTiet, Intege
 
     // lấy tat ca danh sach sp co trang thai true
     @Query("SELECT spct FROM SanPhamChiTiet spct " +
-            "WHERE (:maSanPham IS NULL OR spct.idSanPham.ma like %:maSanPham%) " +
+            "WHERE (:maSanPham IS NULL OR spct.idSanPham.ma LIKE %:maSanPham%) " +
             "AND (:idMauSac IS NULL OR spct.idMauSac.id = :idMauSac) " +
             "AND (:idkichThuoc IS NULL OR spct.idKichThuoc.id = :idkichThuoc) " +
             "AND (:idChatLieu IS NULL OR spct.idChatLieu.id = :idChatLieu) " +
             "AND (:idThuongHieu IS NULL OR spct.idThuongHieu.id = :idThuongHieu) " +
             "AND (:idDeGiay IS NULL OR spct.idDeGiay.id = :idDeGiay) " +
-            "AND (spct.idSanPham.trangThai=true)" +
-            "AND (spct.trangThai =true)")
+            "AND (spct.idSanPham.trangThai = true) " +
+            "AND (spct.trangThai = true)")
     List<SanPhamChiTiet> getAllTrangThaiTrue(@Param("maSanPham") String maSanPham,
                                              @Param("idMauSac") Integer idMauSac,
                                              @Param("idkichThuoc") Integer idkichThuoc,
