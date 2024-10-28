@@ -1,6 +1,7 @@
 package com.example.shoes.entity;
 
 import com.example.shoes.entity.base.CrudByAt;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
@@ -11,6 +12,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -54,11 +56,13 @@ public class PhieuGiamGia extends CrudByAt {
 
     @NotNull(message = "Ngày bắt đầu không được để trống")
     @Column(name = "ngay_bat_dau")
-    private LocalDate ngayBatDau;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm[:ss]")
+    private LocalDateTime ngayBatDau;
 
     @NotNull(message = "Ngày kết thúc không được để trống")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm[:ss]")
     @Column(name = "ngay_ket_thuc")
-    private LocalDate ngayKetThuc;
+    private LocalDateTime ngayKetThuc;
 
 
     @Column(name = "trang_thai")
