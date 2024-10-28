@@ -44,7 +44,7 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
         hdbh.setIdHoaDon(hoaDonChiTiet.getIdHoaDon().getId());
         hdbh.setIdSpct(hoaDonChiTiet.getIdSpct().getId());
         hdbh.setTenSanPham(hoaDonChiTiet.getIdSpct().getIdSanPham().getTenSanPham());
-        hdbh.setMaSanPham(hoaDonChiTiet.getIdSpct().getIdSanPham().getMa());
+        hdbh.setMaSPCT(hoaDonChiTiet.getIdSpct().getMa());
         hdbh.setChatLieu(hoaDonChiTiet.getIdSpct().getIdChatLieu().getTen());
         hdbh.setMauSac(hoaDonChiTiet.getIdSpct().getIdMauSac().getTen());
         hdbh.setKichThuoc(hoaDonChiTiet.getIdSpct().getIdKichThuoc().getKichThuoc());

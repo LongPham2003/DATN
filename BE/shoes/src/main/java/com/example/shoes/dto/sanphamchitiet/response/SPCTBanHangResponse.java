@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 public class SPCTBanHangResponse {
     private Integer id;
     private String tenSanPham;
-    private String maSanPham;
+    private String maSPCT;
     private String chatLieu;
     private String mauSac;
     private String kichThuoc;
