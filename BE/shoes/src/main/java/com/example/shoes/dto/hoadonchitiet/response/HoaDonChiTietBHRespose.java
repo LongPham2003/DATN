@@ -15,7 +15,7 @@ public class HoaDonChiTietBHRespose {
     private Integer idHoaDon;
     private Integer idSpct;
     private String tenSanPham;
-    private String maSanPham;
+    private String maSPCT;
     private String chatLieu;
     private String mauSac;
     private String kichThuoc;
@@ -24,13 +24,13 @@ public class HoaDonChiTietBHRespose {
     private BigDecimal donGia; //don gia giay
     private Integer soLuong; //so luong
     public HoaDonChiTietBHRespose(Integer id, Integer idHoaDon, Integer idSpct, String tenSanPham,
-                                  String maSanPham, String chatLieu, String mauSac, String kichThuoc,
+                                  String maSPCT, String chatLieu, String mauSac, String kichThuoc,
                                   String thuongHieu, String deGiay, BigDecimal donGia, Integer soLuong) {
         this.id = id;
         this.idHoaDon = idHoaDon;
         this.idSpct = idSpct;
         this.tenSanPham = tenSanPham;
-        this.maSanPham = maSanPham;
+        this.maSPCT = maSPCT;
         this.chatLieu = chatLieu;
         this.mauSac = mauSac;
         this.kichThuoc = kichThuoc;
