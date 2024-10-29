@@ -1,6 +1,5 @@
 package com.example.shoes.dto.hoadonchitiet.response;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -39,5 +38,4 @@ public class HoaDonChiTietBHRespose {
         this.donGia = donGia != null ? donGia.toString() : null; // Chuyển đổi thành String
         this.soLuong = soLuong;
     }
-
 }

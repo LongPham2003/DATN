@@ -1,5 +1,6 @@
 package com.example.shoes.controller;
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
+import com.example.shoes.dto.hoadon.response.HoaDonTheoIDResponse;
 import com.example.shoes.dto.hoadonchitiet.request.HoaDonChiTietRequest;
 import com.example.shoes.dto.phuongthucthanhtoan.request.PhuongThucThanhToanRequest;
 import com.example.shoes.exception.ApiResponse;
@@ -109,5 +110,11 @@ private HoaDonRepo hoaDonRepo;
                 .message("Xóa phiếu giảm giá khỏi hóa đơn thành công")
                 .build();
     }
-
+    @GetMapping("/hoadon/gettheoid/{idHoaDon}")
+    public ApiResponse<HoaDonTheoIDResponse> getTheoIdHoaDon(@PathVariable Integer idHoaDon) {
+        HoaDonTheoIDResponse hoaDonResponse = hoaDonService.getTheoIdHoaDon(idHoaDon);
+        return ApiResponse.<HoaDonTheoIDResponse>builder()
+                .result(hoaDonResponse)
+                .build();
+    }
 }
