@@ -12,20 +12,20 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
   const [formData, setFormData] = useState({
     tenVoucher: "",
     dieuKienGiamGia: "",
-    hinhThucGiam: "",
+    hinhThucGiam: "Tiền mặt",
     mucGiam: "",
     giamToiDa: "",
     soLuong: "",
     ngayBatDau: "",
     ngayKetThuc: "",
-    trangThai: ""
+    trangThai: "",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
       ...prevState,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -49,8 +49,8 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
               soLuong: formData.soLuong,
               ngayBatDau: formData.ngayBatDau,
               ngayKetThuc: formData.ngayKetThuc,
-              trangThai: true
-            }
+              trangThai: true,
+            },
           );
 
           if (response.status === 200) {
@@ -60,13 +60,13 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
             setFormData({
               tenVoucher: "",
               dieuKienGiamGia: "",
-              hinhThucGiam: "",
+              hinhThucGiam: "Tiền mặt",
               mucGiam: "",
               giamToiDa: "",
               soLuong: "",
               ngayBatDau: "",
               ngayKetThuc: "",
-              trangThai: ""
+              trangThai: "",
             });
             button();
             onAdd();
@@ -77,7 +77,7 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
       },
       onCancel() {
         console.log("Hủy bỏ thao tác thêm phiếu giảm giá");
-      }
+      },
     });
   };
   return (
@@ -113,10 +113,11 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
             <div className="w-full p-2 sm:w-1/2">
               <label className="block">Hình thức giảm:</label>
 
-              <select className="block w-full rounded-md border border-slate-300 bg-white py-2 pl-2 shadow-sm"
-                      name="hinhThucGiam"
-                      value={formData.hinhThucGiam}
-                      onChange={handleChange}
+              <select
+                className="block w-full rounded-md border border-slate-300 bg-white py-2 pl-2 shadow-sm"
+                name="hinhThucGiam"
+                value={formData.hinhThucGiam}
+                onChange={handleChange}
               >
                 <option value="Tiền mặt">Tiền mặt</option>
                 <option value="%">Phần trăm</option>
