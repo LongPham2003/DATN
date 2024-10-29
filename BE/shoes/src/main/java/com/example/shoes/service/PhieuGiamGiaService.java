@@ -17,5 +17,5 @@ public interface PhieuGiamGiaService {
     PhieuGiamGiaResponse delete(Integer id, PhieuGiamGiaRequest request);
 
 
-    PhanTrangResponse<PhieuGiamGia> getPhieuGiamGia(int pageNumber, int pageSize, String keyword, String tenVoucher, Boolean trangThai, LocalDateTime ngayBatDau, LocalDateTime ngatKetThuc);
+    PhanTrangResponse<PhieuGiamGiaResponse> getPhieuGiamGia(int pageNumber, int pageSize, String keyword, String tenVoucher, Boolean trangThai, LocalDateTime ngayBatDau, LocalDateTime ngatKetThuc);
 }

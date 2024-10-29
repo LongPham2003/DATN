@@ -25,7 +25,7 @@ public class PhieuGiamGiaController {
     private PhieuGiamGiaService phieuGiamGiaService;
 
     @GetMapping("/list")
-    public ApiResponse<PhanTrangResponse<PhieuGiamGia>> getAllPhieuGiamGia(
+    public ApiResponse<PhanTrangResponse<PhieuGiamGiaResponse>> getAllPhieuGiamGia(
             @RequestParam(value = "tenVoucher", defaultValue = "") String tenVoucher,
             @RequestParam(value = "keyword", defaultValue = "") String keyword,
             @RequestParam(value = "trangThai", required = false) Boolean trangThai,
@@ -34,10 +34,9 @@ public class PhieuGiamGiaController {
             @RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber,
             @RequestParam(value = "pageSize", defaultValue = "5") int pageSize
     ) {
-        PhanTrangResponse<PhieuGiamGia> phieuGiamGia = phieuGiamGiaService.getPhieuGiamGia(pageNumber, pageSize, keyword,tenVoucher, trangThai, ngayBatDau, ngayKetThuc);
-        return ApiResponse.<PhanTrangResponse<PhieuGiamGia>>builder()
-                .result(phieuGiamGia)
-                .build();
+        PhanTrangResponse<PhieuGiamGiaResponse> phieuGiamGia = phieuGiamGiaService.getPhieuGiamGia(pageNumber, pageSize, keyword,tenVoucher, trangThai, ngayBatDau, ngayKetThuc);
+        return ApiResponse.<PhanTrangResponse<PhieuGiamGiaResponse>>builder()
+                .result(phieuGiamGia).build();
     }
 
     @GetMapping("/{id}")

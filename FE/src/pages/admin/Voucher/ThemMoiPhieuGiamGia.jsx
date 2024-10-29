@@ -12,7 +12,7 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
   const [formData, setFormData] = useState({
     tenVoucher: "",
     dieuKienGiamGia: "",
-    hinhThucGiam: "",
+    hinhThucGiam: "Tiền mặt",
     mucGiam: "",
     giamToiDa: "",
     soLuong: "",
@@ -23,11 +23,27 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value
-    }));
+
+    setFormData((prevState) => {
+      let newValue = value;
+
+      // Kiểm tra nếu người dùng chọn "%" và "mucGiam" lớn hơn 100
+      if (name === "hinhThucGiam" && value === "%") {
+        if (prevState.mucGiam > 100) {
+          newValue = 100; // Giới hạn mucGiam về 100
+        }
+        return { ...prevState, [name]: value, mucGiam: Math.min(prevState.mucGiam, 100) };
+      }
+
+      // Nếu người dùng thay đổi mucGiam
+      if (name === "mucGiam" && formData.hinhThucGiam === "%") {
+        newValue = Math.min(value, 100); // Giới hạn mucGiam không quá 100
+      }
+
+      return { ...prevState, [name]: newValue };
+    });
   };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -60,7 +76,7 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
             setFormData({
               tenVoucher: "",
               dieuKienGiamGia: "",
-              hinhThucGiam: "",
+              hinhThucGiam: "Tiền mặt",
               mucGiam: "",
               giamToiDa: "",
               soLuong: "",
@@ -140,6 +156,7 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
                 placeholder="Mức giảm..."
                 type="text"
               />
+            
             </div>
             <div className="w-full p-2 sm:w-1/2">
               <label className="block">Giảm tối đa:</label>
