@@ -1,4 +1,5 @@
 package com.example.shoes.repository;
+
 import com.example.shoes.dto.hoadonchitiet.response.HoaDonChiTietBHRespose;
 import com.example.shoes.entity.HoaDon;
 import com.example.shoes.entity.HoaDonChiTiet;
@@ -28,4 +29,5 @@ public interface HoaDonChiTietRepo extends JpaRepository<HoaDonChiTiet, Integer>
     @Transactional
     @Query("DELETE FROM HoaDonChiTiet h WHERE h.idHoaDon.id = :idHoaDon AND h.idSpct.id = :idSpct")
     void deleteByIdHoaDonAndIdSpct(@Param("idHoaDon") Integer idHoaDon, @Param("idSpct") Integer idSpct);
+
 }
