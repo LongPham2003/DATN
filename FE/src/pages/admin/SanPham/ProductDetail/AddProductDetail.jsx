@@ -208,11 +208,13 @@ export default function AddProductDetail() {
   // Hàm xử lý thêm sản phẩm chi tiết (SPCT)
   const AddSPCT = async (e) => {
     e.preventDefault(); // Ngăn chặn hành vi mặc định của sự kiện submit form
-    //kiem tra chon du thuoc tinh chua
+
+    // Kiểm tra điều kiện trước khi thêm sản phẩm, yêu cầu người dùng chọn đầy đủ các thuộc tính
     if (getIdDeGiay === 0 || getIdThuongHieu === 0 || getIdChatLieu === 0) {
+      // Hiển thị thông báo lỗi nếu thiếu thuộc tính
       toast.error("Vui lòng chọn đầy đủ đế giày, thương hiệu, và chất liệu.", {
         position: "top-right",
-        autoClose: 2000, // Toast đóng sau 2 giây
+        autoClose: 2000,
         hideProgressBar: false,
         newestOnTop: false,
         closeOnClick: true,
@@ -222,23 +224,22 @@ export default function AddProductDetail() {
         pauseOnHover: true,
         theme: "light",
       });
-      return; // Ngừng thực thi nếu validate không thành công
+      return; // Dừng hàm nếu thiếu dữ liệu
     }
-    let thumbUrls = []; // Biến lưu trữ danh sách URL của các ảnh thu nhỏ (thumbUrl)
 
-    // Tạo mảng các request từ danh sách sản phẩm chi tiết (listSPCT)
-    let request = listSPCT.map((item) => {
-      // Lấy ra các thumbUrl từ danh sách fileList của sản phẩm
-      thumbUrls = item.fileList
+    // Biến chứa các request POST tương ứng cho từng SPCT trong listSPCT
+    let requests = listSPCT.map((item) => {
+      // Tạo danh sách thumbUrls từ fileList của từng sản phẩm
+      const thumbUrls = item.fileList
         .map((file) => file.thumbUrl) // Lấy thumbUrl từ mỗi file
-        .filter((url) => url); // Chỉ giữ lại những URL không rỗng
+        .filter((url) => url); // Chỉ giữ lại các URL không rỗng
 
-      // Nếu không có ảnh nào được upload, không tạo request cho sản phẩm này
+      // Nếu không có ảnh nào trong fileList, bỏ qua request này
       if (thumbUrls.length === 0) {
         return false;
       }
 
-      // Tạo đối tượng sản phẩm chi tiết mới (newSPCT)
+      // Tạo đối tượng chứa thông tin sản phẩm chi tiết mới
       const newSPCT = {
         idSanPham: id, // ID của sản phẩm chính
         idChatLieu: getIdChatLieu, // ID chất liệu sản phẩm
@@ -248,18 +249,21 @@ export default function AddProductDetail() {
         idDeGiay: getIdDeGiay, // ID đế giày sản phẩm
         donGia: item.donGia, // Đơn giá sản phẩm
         soLuong: item.soLuong, // Số lượng sản phẩm
-        trangThai: true, // Trạng thái của sản phẩm (đang hoạt động)
+        trangThai: true, // Trạng thái sản phẩm là đang hoạt động
       };
 
-      // Gửi request POST để thêm sản phẩm chi tiết
-      return axios.post(`${ApiAddSPCT}`, newSPCT);
+      // Gửi request POST để thêm sản phẩm chi tiết, lưu thumbUrls kèm theo
+      return axios.post(`${ApiAddSPCT}`, newSPCT).then((response) => ({
+        response,
+        thumbUrls, // Lưu lại thumbUrls của sản phẩm này để sử dụng sau
+      }));
     });
 
     try {
-      // Chờ tất cả các request hoàn thành
-      const res = await Promise.all(request);
+      // Chờ tất cả các request trong danh sách hoàn thành
+      const res = await Promise.all(requests);
 
-      // Hiển thị thông báo thành công
+      // Hiển thị thông báo thành công khi tất cả sản phẩm chi tiết đã được thêm
       toast.success("Thêm sản phẩm mới thành công", {
         position: "top-right",
         autoClose: 1000,
@@ -274,27 +278,28 @@ export default function AddProductDetail() {
         transition: Bounce,
       });
 
-      // Duyệt qua kết quả trả về từ các request thêm SPCT
-      res.map((item) => {
-        // Duyệt qua từng thumbUrl và gửi request POST để thêm ảnh vào hệ thống
-        thumbUrls.map((thumb) => {
+      // Duyệt qua từng phản hồi từ request và thêm ảnh cho từng sản phẩm chi tiết
+      res.forEach(({ response, thumbUrls }) => {
+        // Lặp qua từng thumbUrl để tạo và gửi ảnh tương ứng vào hệ thống
+        thumbUrls.forEach((thumb) => {
           const newAnh = {
-            tenAnh: item.data.result.tenSanPham, // Tên ảnh là tên của sản phẩm
-            idSanPhamChiTiet: item.data.result.id, // ID sản phẩm chi tiết
-            duLieuAnhBase64: thumb, // Dữ liệu ảnh (base64)
-            trangThai: true, // Trạng thái ảnh (đang hoạt động)
+            tenAnh: response.data.result.tenSanPham, // Tên ảnh là tên sản phẩm
+            idSanPhamChiTiet: response.data.result.id, // ID sản phẩm chi tiết
+            duLieuAnhBase64: thumb, // Dữ liệu ảnh (dạng base64)
+            trangThai: true, // Ảnh được đặt trạng thái hoạt động
           };
 
-          // Gửi request POST để thêm ảnh
+          // Gửi request POST để lưu ảnh vào hệ thống
           axios.post("http://localhost:8080/api/hinhanh/add", newAnh);
         });
       });
-      // Chuyển hướng về trang quản lý sản phẩm sau khi thành công
+
+      // Chuyển hướng về trang quản lý sản phẩm sau khi hoàn tất
       setTimeout(() => {
-        navigate("/admin/sanpham"); // Chuyển hướng về trang quản lý sản phẩm
-      }, 1500); // Thời gian chờ là 1000ms tương đương với thời gian autoClose của toast
+        navigate("/admin/sanpham");
+      }, 1500); // Chờ thêm một khoảng thời gian trước khi chuyển trang
     } catch (error) {
-      // Xử lý lỗi khi request thất bại
+      // Xử lý lỗi nếu có bất kỳ request nào thất bại
       console.log(error);
       toast.error(error.message || "Thêm mới thất bại", {
         position: "top-right",

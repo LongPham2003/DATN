@@ -50,7 +50,9 @@ private HoaDonRepo hoaDonRepo;
                 .result(hoaDonResponse)
                 .build();
     }
-    // Cập nhật hóa đơn
+
+
+    // Cập nhật số luọng sp trong  hóa đơn chi tiết
     @PutMapping("/hoadon/update/{id}")
     public ApiResponse<HoaDonResponse> updateHoaDon(
             @PathVariable("id") Integer id,

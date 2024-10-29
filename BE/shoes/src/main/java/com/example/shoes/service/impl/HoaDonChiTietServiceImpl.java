@@ -48,6 +48,7 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
         List<HoaDonChiTietBHRespose> hdbh= hoaDonChiTietRepo.getSPCTByIdHoaDon(idHoaDon);
         return hdbh;
     }
+  
 
     @Override
     public void deleteByIdHoaDonAndIdSpct(Integer idHoaDon, Integer idSpct) {
@@ -76,7 +77,14 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
         // Lưu các thay đổi vào cơ sở dữ liệu
         sanPhamChiTietRepo.save(sanPhamChiTiet);
         hoaDonRepo.save(hoaDon);
-    }
+
+//     public List<HoaDonChiTietBHRespose> getSPCTByIdHoaDon(Integer IdhoaDon) {
+//         List<HoaDonChiTietBHRespose> hdbh= hoaDonChiTietRepo.getSPCTByIdHoaDon(IdhoaDon);
+
+
+//         return hdbh;
+
+//     }
 
     // Phương thức chuyển đổi BigDecimal sang định dạng tiền tệ Việt Nam
     private String formatCurrency(BigDecimal amount) {
@@ -85,12 +93,12 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
         return formatted.replace("₫", "").trim()+"VNĐ"; // Loại bỏ ký hiệu ₫ và thêm VNĐ
     }
     private HoaDonChiTietBHRespose convertToHDCTBanHangResponse(HoaDonChiTiet hoaDonChiTiet) {
-        HoaDonChiTietBHRespose hdbh =new HoaDonChiTietBHRespose();
+        HoaDonChiTietBHRespose hdbh = new HoaDonChiTietBHRespose();
         hdbh.setId(hoaDonChiTiet.getId());
         hdbh.setIdHoaDon(hoaDonChiTiet.getIdHoaDon().getId());
         hdbh.setIdSpct(hoaDonChiTiet.getIdSpct().getId());
         hdbh.setTenSanPham(hoaDonChiTiet.getIdSpct().getIdSanPham().getTenSanPham());
-        hdbh.setMaSanPham(hoaDonChiTiet.getIdSpct().getIdSanPham().getMa());
+        hdbh.setMaSPCT(hoaDonChiTiet.getIdSpct().getMa());
         hdbh.setChatLieu(hoaDonChiTiet.getIdSpct().getIdChatLieu().getTen());
         hdbh.setMauSac(hoaDonChiTiet.getIdSpct().getIdMauSac().getTen());
         hdbh.setKichThuoc(hoaDonChiTiet.getIdSpct().getIdKichThuoc().getKichThuoc());

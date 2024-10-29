@@ -244,7 +244,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         response.setId(sanPhamChiTiet.getId());
 //         convert tat ca cac thuoc tinh theo id de lay ra ten cua tung thuoc tinh
         response.setTenSanPham(sanPhamChiTiet.getIdSanPham() != null ? sanPhamChiTiet.getIdSanPham().getTenSanPham() : null);
-        response.setMaSanPham(sanPhamChiTiet.getIdSanPham() != null ? sanPhamChiTiet.getIdSanPham().getMa() : null);
+        response.setMaSPCT(sanPhamChiTiet.getMa());
         response.setChatLieu(sanPhamChiTiet.getIdChatLieu() != null ? sanPhamChiTiet.getIdChatLieu().getTen() : null);
         response.setMauSac(sanPhamChiTiet.getIdMauSac() != null ? sanPhamChiTiet.getIdMauSac().getTen() : null);
         response.setKichThuoc(sanPhamChiTiet.getIdKichThuoc() != null ? sanPhamChiTiet.getIdKichThuoc().getKichThuoc() : null);
