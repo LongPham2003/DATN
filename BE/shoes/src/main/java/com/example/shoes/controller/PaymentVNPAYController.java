@@ -97,9 +97,9 @@ public class PaymentVNPAYController {
         String paymentUrl = VNPAYConfig.vnp_PayUrl + "?" + queryUrl;
 
         VNPAYResponse vnpayResponse = new VNPAYResponse();
-        vnpayResponse.setStatus("OK");
-        vnpayResponse.setMessage("thanh toán thành công");
-        vnpayResponse.setURL(paymentUrl);
+//        vnpayResponse.setStatus("OK");
+//        vnpayResponse.setMessage("thanh toán thành công");
+//        vnpayResponse.setURL(paymentUrl);
         return ResponseEntity.status(HttpStatus.OK).body(vnpayResponse);
 
     }

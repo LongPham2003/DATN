@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
@@ -72,6 +73,12 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
         phieuGiamGia.setTrangThai(false);
         PhieuGiamGia updated = phieuGiamGiaRepo.save(phieuGiamGia);
         return convertToResponse(updated);
+    }
+
+    @Override
+    public List<PhieuGiamGiaResponse> getAllTrangThaiTrue() {
+        List<PhieuGiamGia> listTrangThaiTrue= phieuGiamGiaRepo.getAllByTrangThaiTrue();
+        return  listTrangThaiTrue.stream().map(this::convertToResponse).collect(Collectors.toList());
     }
 
     @Override

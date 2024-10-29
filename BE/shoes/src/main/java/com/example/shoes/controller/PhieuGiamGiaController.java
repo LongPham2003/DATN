@@ -78,5 +78,10 @@ public class PhieuGiamGiaController {
                 .build();
     }
 
+    @GetMapping("/trang-thai-true")
+    public ApiResponse<List<PhieuGiamGiaResponse>> trangThaiTrue() {
+        List<PhieuGiamGiaResponse> listTrangThaiTrue = phieuGiamGiaService.getAllTrangThaiTrue();
+        return  ApiResponse.<List<PhieuGiamGiaResponse>>builder().result(listTrangThaiTrue).build();
+    }
 
 }
