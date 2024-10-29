@@ -156,7 +156,7 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
                 placeholder="Mức giảm..."
                 type="text"
               />
-            
+
             </div>
             <div className="w-full p-2 sm:w-1/2">
               <label className="block">Giảm tối đa:</label>
