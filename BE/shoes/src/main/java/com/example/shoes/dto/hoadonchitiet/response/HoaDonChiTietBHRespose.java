@@ -36,7 +36,7 @@ public class HoaDonChiTietBHRespose {
         this.kichThuoc = kichThuoc;
         this.thuongHieu = thuongHieu;
         this.deGiay = deGiay;
-        this.donGia = donGia;
+        this.donGia = donGia != null ? donGia.toString() : null; // Chuyển đổi thành String
         this.soLuong = soLuong;
     }
 
