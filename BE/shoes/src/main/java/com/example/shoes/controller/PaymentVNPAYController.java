@@ -1,9 +1,11 @@
 package com.example.shoes.controller;
 
 import com.example.shoes.config.VNPAYConfig;
+
 import com.example.shoes.dto.vnpay.response.TransactionStatus;
 import com.example.shoes.dto.vnpay.response.VNPAYResponse;
 import jakarta.servlet.http.HttpServletRequest;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
@@ -27,8 +30,10 @@ import java.util.TimeZone;
 @RestController
 @RequestMapping("/api/paymentvnpay")
 public class PaymentVNPAYController {
+
     @GetMapping("/create-payment")
     public ResponseEntity<?> creatPayment(HttpServletRequest request) throws UnsupportedEncodingException {
+
 
         String orderType = "other";
 //        long amount = Integer.parseInt(request.getParameter("amount"))*100;
@@ -36,7 +41,9 @@ public class PaymentVNPAYController {
         String vnp_TxnRef = VNPAYConfig.getRandomNumber(8);
         String vnp_IpAddr = VNPAYConfig.getIpAddress(request);
 
+
         long amount = 1000000*100;
+
         String vnp_TmnCode = VNPAYConfig.vnp_TmnCode;
 
         Map<String, String> vnp_Params = new HashMap<>();
@@ -47,7 +54,7 @@ public class PaymentVNPAYController {
         vnp_Params.put("vnp_CurrCode", "VND");
         vnp_Params.put("vnp_BankCode", "NCB");
         vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
-        vnp_Params.put("vnp_OrderInfo", "Thanh toan don hang:" + vnp_TxnRef);
+        vnp_Params.put("vnp_OrderInfo", vnp_TxnRef);
         vnp_Params.put("vnp_Locale", "vn");
         vnp_Params.put("vnp_OrderType", orderType);
         vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
@@ -88,11 +95,13 @@ public class PaymentVNPAYController {
         String vnp_SecureHash = VNPAYConfig.hmacSHA512(VNPAYConfig.secretKey, hashData.toString());
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
         String paymentUrl = VNPAYConfig.vnp_PayUrl + "?" + queryUrl;
+
         VNPAYResponse vnpayResponse = new VNPAYResponse();
         vnpayResponse.setStatus("OK");
         vnpayResponse.setMessage("thanh toán thành công");
         vnpayResponse.setURL(paymentUrl);
         return ResponseEntity.status(HttpStatus.OK).body(vnpayResponse);
+
     }
 
     @GetMapping("/payment-infor")
@@ -115,4 +124,5 @@ public class PaymentVNPAYController {
         }
         return ResponseEntity.status(HttpStatus.OK).body(transactionStatus);
     }
+
 }

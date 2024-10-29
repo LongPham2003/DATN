@@ -16,7 +16,7 @@ public class SPCTBanHangResponse {
     private String kichThuoc;
     private String thuongHieu;
     private String deGiay;
-    private BigDecimal donGia;
+    private String donGia;
     private Integer soLuong;
     private Boolean trangThai;
 }

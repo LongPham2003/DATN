@@ -4,7 +4,7 @@ import LayAnhTheoIdSP from "../SanPham/Product/LayANhTheoIDSP";
 import { Button, Input, InputNumber, Modal, Select } from "antd";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 
-export default function SanPhamBanTaiQuay({ id,onProductAdded  }) {
+export default function SanPhamBanTaiQuay({ id, onProductAdded }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [SPCTBH, setSPCTBH] = useState([]);
   const [hangs, setHangs] = useState([]);
@@ -21,7 +21,7 @@ export default function SanPhamBanTaiQuay({ id,onProductAdded  }) {
   const [selectedIdDeGiay, setSelectedIdDeGiay] = useState(null);
   const [idSPCT, setIdSPCT] = useState();
   const [soLuongMua, setSoLuongMua] = useState(1);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   let ApiLaySPCT = `http://localhost:8080/api/sanphamchitiet/getallSPCTBH`;
   let ApiThemSPvaoHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/addspct/${id}`;
@@ -44,10 +44,10 @@ export default function SanPhamBanTaiQuay({ id,onProductAdded  }) {
     try {
       const newSPCT = {
         idSpct: idSPCT,
-        soLuong: soLuongMua
-      }
+        soLuong: soLuongMua,
+      };
 
-      await  axios.post(ApiThemSPvaoHoaDon, newSPCT);
+      await axios.post(ApiThemSPvaoHoaDon, newSPCT);
       toast.success("Thêm sản phẩm thành công", {
         position: "top-right",
         autoClose: 1000,
@@ -66,9 +66,9 @@ export default function SanPhamBanTaiQuay({ id,onProductAdded  }) {
       if (onProductAdded) {
         onProductAdded();
       }
-
+      getallSPCTBH();
       setModalVisible(false);
-    }catch (error) {
+    } catch (error) {
       console.log(error);
       toast.error(error.message || "Thêm mới thất bại", {
         position: "top-right",
@@ -111,7 +111,7 @@ export default function SanPhamBanTaiQuay({ id,onProductAdded  }) {
     if (value > soLuongTon) {
       setError(`Số lượng mua không thể lớn hơn ${soLuongTon}`);
     } else {
-      setError('');
+      setError("");
       setSoLuongMua(value);
     }
   };
@@ -119,7 +119,7 @@ export default function SanPhamBanTaiQuay({ id,onProductAdded  }) {
   useEffect(() => {
     if (!modalVisible) {
       setSoLuongMua(1); // Reset về giá trị mặc định (ví dụ: 1)
-      setError('');     // Reset lại lỗi nếu có
+      setError(""); // Reset lại lỗi nếu có
     }
   }, [modalVisible]);
   // //lấy toàn bộ dữ liệu các thuộc tính
@@ -169,7 +169,6 @@ export default function SanPhamBanTaiQuay({ id,onProductAdded  }) {
 
   useEffect(() => {
     getallSPCTBH();
-
   }, [
     maSanPham,
     selectedIdHang,
@@ -295,7 +294,7 @@ export default function SanPhamBanTaiQuay({ id,onProductAdded  }) {
               {/* Thêm max-height và overflow-y-auto để tạo thành cuộn */}
               <div className="max-h-[400px] overflow-y-auto">
                 <table className="mb-[60px] min-w-full bg-white text-[20px]">
-                  <thead className="sticky top-0 bg-white z-10">
+                  <thead className="sticky top-0 z-10 bg-white">
                     <tr className="h-10 border-b-2 border-indigo-500 text-base">
                       <th className="w-20">Mã sản phẩm</th>
                       <th className="w-[230px]">Sản phẩm</th>
@@ -340,7 +339,6 @@ export default function SanPhamBanTaiQuay({ id,onProductAdded  }) {
                           >
                             Em là người được chọn
                           </Button>
-
                         </td>
                       </tr>
                     ))}
@@ -361,19 +359,18 @@ export default function SanPhamBanTaiQuay({ id,onProductAdded  }) {
       >
         <label>Số Lượng tồn :{soLuongTon} </label>
 
-          <div>
-            <InputNumber
-              min={1}
-              max={soLuongTon}
-              value={soLuongMua}
-              className="min-w-full"
-              onChange={handleQuantityChange}
-            />
-            {error && <p className="text-red-500">{error}</p>}
-          </div>
-
+        <div>
+          <InputNumber
+            min={1}
+            max={soLuongTon}
+            value={soLuongMua}
+            className="min-w-full"
+            onChange={handleQuantityChange}
+          />
+          {error && <p className="text-red-500">{error}</p>}
+        </div>
       </Modal>
-      <ToastContainer/>
+      <ToastContainer />
     </>
   );
 }
