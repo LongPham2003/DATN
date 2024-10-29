@@ -6,6 +6,7 @@ import com.example.shoes.dto.phieugiamgia.response.PhieuGiamGiaResponse;
 import com.example.shoes.entity.PhieuGiamGia;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -16,5 +17,5 @@ public interface PhieuGiamGiaService {
     PhieuGiamGiaResponse delete(Integer id, PhieuGiamGiaRequest request);
 
 
-    PhanTrangResponse<PhieuGiamGia> getPhieuGiamGia(int pageNumber, int pageSize, String keyword,String tenVoucher,  Boolean trangThai, LocalDate ngayBatDau, LocalDate ngatKetThuc);
+    PhanTrangResponse<PhieuGiamGia> getPhieuGiamGia(int pageNumber, int pageSize, String keyword, String tenVoucher, Boolean trangThai, LocalDateTime ngayBatDau, LocalDateTime ngatKetThuc);
 }

@@ -46,13 +46,14 @@ public class SecurityConfiguration {
     private CustomAccessDeniedHandler customAccessDeniedHandler;
 
     private final String[] PUBLIC_ENDPOINTS = {"/auth/signup", "/auth/login",
-            "/auth/resetpass", "/auth/doimatkhau"};
+            "/auth/resetpass", "/auth/doimatkhau","/api/paymentvnpay/**","/api/paymentvnpay/payment-infor"};
 
     private final String[] NHANVIEN_ENDPOINTS = {
             "/api/chatlieu/**",
             "/api/sanpham/**", "/api/sanphamchitiet/**", "/api/kichthuoc/**", "/api/mausac/**",
             "/api/thuonghieu/**", "/api/degiay/**", "/api/hinhanh/**", "/api/khachhang/**",
-            "/api/loai/**", "/api/phieugiamgia/**"
+            "/api/loai/**", "/api/phieugiamgia/**","/banhangtaiquay/**","/api/hoadonchitiet/**","/api/paymentvnpay/**",
+            "/api/paymentvnpay/payment-infor"
     };
 
 //    private final String[] ADMIN_ENDPOINTS = {

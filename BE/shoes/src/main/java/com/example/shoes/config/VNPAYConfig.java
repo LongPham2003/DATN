@@ -1,28 +1,42 @@
 package com.example.shoes.config;
 
+import com.example.shoes.dto.vnpay.response.VNPAYResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.context.annotation.Configuration;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.TimeZone;
 
+@Configuration
 public class VNPAYConfig {
-    public static String vnp_PayUrl = "  http://sandbox.vnpayment.vn/tryitnow/Home/CreateOrder";
-    public static String vnp_ReturnUrl = "http://localhost:8080/vnpay_jsp/vnpay_return.jsp";
-    public static String vnp_Version = "2.1.0";
-    public static String vnp_Command = "pay";
-    public static String vnp_TmnCode = "93V5QFEC";
-    public static String secretKey = "T7SGY6IBRNII0ZC7LBR8Y3W7TR0UE5CE";
-    public static String vnp_ApiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
+    public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"; // URL thanh toán TEST
+    public static String vnp_ReturnUrl = "http://localhost:8080/api/paymentvnpay/payment-infor"; // Giữ nguyên nếu đang phát triển trên localhost
+    public static String vnp_Version = "2.1.0"; // Phiên bản giữ nguyên
+    public static String vnp_Command = "pay"; // Lệnh giữ nguyên
+    public static String vnp_TmnCode = "93V5QFEC"; // Thay đổi mã website thành mã mới
+    public static String secretKey = "3K3Z04W5TPETRZJVWJJUD44XKV1LV8Q0"; // Thay đổi secret key
+    public static String vnp_ApiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction"; // URL API giữ nguyên
 
     public static String md5(String message) {
         String digest = null;

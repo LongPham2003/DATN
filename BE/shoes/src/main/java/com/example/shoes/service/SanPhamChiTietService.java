@@ -16,7 +16,5 @@ public interface SanPhamChiTietService {
     List<SPCTBanHangResponse> getAllTrangThaitrue(String maSanPham,Integer idMauSac,Integer idkichThuoc,Integer idChatLieu,Integer idThuongHieu,Integer idDeGiay);
     void updateTheoTrangThai(Integer id);
     List<SanPhamChiTietResponse> findByIdSanPhamAndTrangThaiTrue( Integer idSanPham);
-
     SanPhamChiTietDetailResponse getSPCTDetail(Integer idSPCT);
-
 }

@@ -3,6 +3,7 @@ package com.example.shoes.controller;
 import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.sanphamchitiet.request.SanPhamChiTietRequest;
 import com.example.shoes.dto.sanphamchitiet.response.SPCTBanHangResponse;
+import com.example.shoes.dto.sanphamchitiet.response.SanPhamChiTietDetailResponse;
 import com.example.shoes.dto.sanphamchitiet.response.SanPhamChiTietResponse;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.service.SanPhamChiTietService;
@@ -65,17 +66,6 @@ public class SanPhamChiTietController {
                 .build();
     }
 
-    @GetMapping("/getallSPCTBH")
-    public ApiResponse<List<SPCTBanHangResponse>> getAllSPCTBH(String maSanPham,Integer idMauSac,Integer idkichThuoc,Integer idChatLieu,Integer idThuongHieu,Integer idDeGiay) {
-        List<SPCTBanHangResponse> listSPCT = sanPhamChiTietService.getAllTrangThaitrue(maSanPham,idMauSac,idkichThuoc,idChatLieu,idThuongHieu,idDeGiay);
-        return ApiResponse.<List<SPCTBanHangResponse>>builder().result(listSPCT).build();
-    }
-
-
-
-
-
-
     @PutMapping("/updatetrangthai/{id}")
     public ApiResponse<Void> updateTrangThai(@PathVariable Integer id) {
         sanPhamChiTietService.updateTheoTrangThai(id);
@@ -94,9 +84,20 @@ public class SanPhamChiTietController {
                 .build();
     }
 
+    @GetMapping("/getallspctbh")
+    public ApiResponse<List<SPCTBanHangResponse>> getAllSPCTBH(@RequestParam(required = false) String maSanPham,
+                                                               @RequestParam(required = false) Integer idMauSac,
+                                                               @RequestParam(required = false) Integer idkichThuoc,
+                                                               @RequestParam(required = false) Integer idChatLieu,
+                                                               @RequestParam(required = false) Integer idThuongHieu,
+                                                               @RequestParam(required = false) Integer idDeGiay) {
+        List<SPCTBanHangResponse> listSPCT = sanPhamChiTietService.getAllTrangThaitrue(maSanPham, idMauSac, idkichThuoc, idChatLieu, idThuongHieu, idDeGiay);
+        return ApiResponse.<List<SPCTBanHangResponse>>builder().result(listSPCT).build();
+    }
 
-    @GetMapping("/getSPCTDetail/{idSPCT}")
-    public ApiResponse<Object> getSPCTDetail(@PathVariable Integer idSPCT) {
-        return ApiResponse.builder().result(sanPhamChiTietService.getSPCTDetail(idSPCT)).build();
+    @GetMapping("/getspctdetail/{idspct}")
+    public ApiResponse<SanPhamChiTietDetailResponse> getSPCTDetail(@PathVariable Integer idspct) {
+        SanPhamChiTietDetailResponse response = sanPhamChiTietService.getSPCTDetail(idspct);
+        return ApiResponse.<SanPhamChiTietDetailResponse>builder().result(response).build();
     }
 }

@@ -104,7 +104,7 @@ const ChiTietPhieuGiamGia = () => {
     <div className="mt-2 flex h-auto items-center justify-center bg-gray-100">
       <div className="w-full rounded-lg bg-white p-8 shadow-md">
         <h1 className="mb-3 text-center text-2xl font-bold">
-          Chi Tiết Nhân Viên
+          Chi Tiết Phiếu Giảm Giá
         </h1>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="flex flex-wrap">
@@ -181,7 +181,7 @@ const ChiTietPhieuGiamGia = () => {
                 value={formData.ngayBatDau}
                 onChange={handleChange}
                 className="block w-full rounded-md border border-slate-300 bg-white py-2 pl-2 shadow-sm"
-                type="date"
+                type="datetime-local"
               />
             </div>
             <div className="w-full p-2 sm:w-1/2">
@@ -191,7 +191,7 @@ const ChiTietPhieuGiamGia = () => {
                 value={formData.ngayKetThuc}
                 onChange={handleChange}
                 className="block w-full rounded-md border border-slate-300 bg-white py-2 pl-2 shadow-sm"
-                type="date"
+                type="datetime-local"
               />
             </div>
             <div className="w-full p-2 sm:w-1/2">

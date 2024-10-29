@@ -1,5 +1,6 @@
 package com.example.shoes.entity;
 
+import com.example.shoes.enums.TrangThai;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -34,5 +35,6 @@ public class HoaDonChiTiet {
     private BigDecimal donGia; // Đơn giá sản phẩm
 
     @Column(name = "trang_thai")
-    private Boolean trangThai;
+    @Enumerated(EnumType.STRING)
+    private TrangThai trangThai;
 }
