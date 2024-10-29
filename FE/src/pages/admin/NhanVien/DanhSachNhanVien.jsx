@@ -151,7 +151,7 @@ export default function DanhSachNhanVien() {
                       item.trangThai ? "border-green-400 text-green-400" : "border-red-600 text-red-600"
                     }`}
                   >
-                    {item.trangThai ? "Hoạt Động" : "Nghỉ"}
+                    {item.trangThai ? "Đang Làm" : "Nghỉ"}
                   </button>
                 </td>
                 <td>

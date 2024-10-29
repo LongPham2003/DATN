@@ -1,11 +1,12 @@
 import axios from "../../../../api/axiosConfig";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import DropdownDetail from "../../../DropdownDetail";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 
-const SanPhamChiTiet = () => {
-  const { id } = useParams();
+const SanPhamChiTiet = ({productId,closeModal}) => {
+
+  const  id  = productId;
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [loaiSelect, setLoaiSelect] = useState([]);
@@ -72,7 +73,9 @@ const SanPhamChiTiet = () => {
       );
       toast.success("Sửa thành công");
       navigate("/admin/sanpham");
+      closeModal();
       console.log("Update response:", res);
+
     } catch (error) {
       console.log("Error during update:", error);
       toast.error("Có lỗi sảy ra");
@@ -84,16 +87,16 @@ const SanPhamChiTiet = () => {
     // layAnh();
   }, []);
   return (
-    <div className="mx-auto mt-5 flex w-[600px] justify-center bg-slate-200">
+    <div className="flex mx-auto mt-3 w-auto">
       <form
         action=""
-        className="mx-5 my-2"
+        className="mx-auto my-2"
         onSubmit={(e) => {
           e.preventDefault();
           update();
         }}
       >
-        <span className="my-5 text-xl font-bold">Chi tiết Sản phẩm</span>
+        <span className="my-3 text-xl font-bold">Chi tiết Sản phẩm</span>
         <div className="gap-9">
           <div>
             <div className="my-4">
