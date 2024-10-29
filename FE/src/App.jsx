@@ -27,11 +27,29 @@ import ChiTietPhieuGiamGia from "./pages/admin/Voucher/ChiTietPhieuGiamGia";
 import SanPhamChiTiet from "./pages/admin/SanPham/Product/SanPhamChiTiet";
 import UpdateProductDetail from "./pages/admin/SanPham/ProductDetail/UpdateProductDetail";
 
+import HomePage from "./pages/client/Home/homePage";
+
+
 function App() {
   return (
     <>
       <BrowserRouter>
         <Routes>
+
+          {/* router home */}
+          <Route
+            path="/home"
+            element={
+              <>
+                <Helmet>
+                  <title>Trang chu</title>
+                </Helmet>
+                <HomePage />
+              </>
+            }
+          />
+
+
           {/* router login */}
           <Route
             path="/login"

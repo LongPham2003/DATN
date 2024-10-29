@@ -44,7 +44,7 @@ public class PhieuGiamGia extends CrudByAt {
     @DecimalMin(value = "0.0", inclusive = false, message = "Giảm tối đa phải lớn hơn 0")
     @Column(name = "giam_toi_da")
     private BigDecimal giamToiDa;
-    
+
     @NotNull(message = "Số lượng không được để trống")
     @PositiveOrZero(message = "Số lượng phải là số không âm")
     @Column(name = "so_luong")
