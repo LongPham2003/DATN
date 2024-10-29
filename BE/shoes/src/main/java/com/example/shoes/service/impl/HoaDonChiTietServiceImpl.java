@@ -45,10 +45,8 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
 
     @Override
     public List<HoaDonChiTietBHRespose> getSPCTByIdHoaDon(Integer idHoaDon) {
-        List<HoaDonChiTiet> hoaDonChiTietList = hoaDonChiTietRepo.getSPCTByIdHoaDon(idHoaDon);
-        return hoaDonChiTietList.stream()
-                .map(this::convertToHDCTBanHangResponse)
-                .toList();
+        List<HoaDonChiTietBHRespose> hdbh= hoaDonChiTietRepo.getSPCTByIdHoaDon(idHoaDon);
+        return hdbh;
     }
 
     @Override

@@ -37,10 +37,10 @@ public class HoaDonChiTietController {
                 .message("Xóa chi tiết hóa đơn thành công")
                 .build();
     }
-
-    @GetMapping("/spctbyidhoadon/{idHoaDon}")
+    @GetMapping("/SPCTbyidHD/{idHoaDon}")
     public ApiResponse<List<HoaDonChiTietBHRespose>> getSPCTbyidHD(@PathVariable("idHoaDon") Integer idHoaDon) {
         List<HoaDonChiTietBHRespose> hdbh = hoaDonChiTietService.getSPCTByIdHoaDon(idHoaDon);
+
         return ApiResponse.<List<HoaDonChiTietBHRespose>>builder().result(hdbh).build();
     }
 }
