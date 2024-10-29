@@ -77,7 +77,7 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
         // Lưu các thay đổi vào cơ sở dữ liệu
         sanPhamChiTietRepo.save(sanPhamChiTiet);
         hoaDonRepo.save(hoaDon);
-
+}
 //     public List<HoaDonChiTietBHRespose> getSPCTByIdHoaDon(Integer IdhoaDon) {
 //         List<HoaDonChiTietBHRespose> hdbh= hoaDonChiTietRepo.getSPCTByIdHoaDon(IdhoaDon);
 
