@@ -37,6 +37,8 @@ public enum ErrorCode {
     VOUCHER_IN_BILL(1002,"hóa đơn  đa có phiếu giảm giá",HttpStatus.BAD_REQUEST),
     INVALID_VOUCHER(1002,"Đơn hàng không đủ điều kiện áp dụng mã giảm giá..",HttpStatus.BAD_REQUEST),
     INSUFFICIENT_STOCK(1002,"số lượng có đủ để thêm vào hóa đơn",HttpStatus.BAD_REQUEST),
+    INVALID_QUANTITY_VOUCHER(1002,"Số lượng không  còn .",HttpStatus.BAD_REQUEST),
+    VOUCHER_NOT_IN_BILL(1002,"voucher chưa có trong hóa đơn .",HttpStatus.BAD_REQUEST),
     VALID_PHIEU_GIAM_GIA(1002,"Ngày kết thúc phải sau ngày bắt đầu.",HttpStatus.BAD_REQUEST),
     ;
     private int code;

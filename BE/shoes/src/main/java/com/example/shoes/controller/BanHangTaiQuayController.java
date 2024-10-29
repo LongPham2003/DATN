@@ -99,5 +99,15 @@ private HoaDonRepo hoaDonRepo;
                     .message("Áp dụng phiếu giảm giá thành công")
                     .build();
     }
+    @DeleteMapping("/hoadon/delete/{id}/voucher/{idPhieuGiamGia}")
+    public ApiResponse<String> xoaPhieuGiamGia(
+            @PathVariable Integer id,
+            @PathVariable Integer idPhieuGiamGia) {
+
+        hoaDonService.xoaPhieuGiamGiaHoaDon(id, idPhieuGiamGia);
+        return ApiResponse.<String>builder()
+                .message("Xóa phiếu giảm giá khỏi hóa đơn thành công")
+                .build();
+    }
 
 }
