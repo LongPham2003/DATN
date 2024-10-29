@@ -40,10 +40,10 @@ public class PhieuGiamGiaController {
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<PhieuGiamGiaResponse> getById(@PathVariable Integer id ) {
-        PhieuGiamGiaResponse phieuGiamGiaResponse = phieuGiamGiaService.getById(id);
-        return ApiResponse.<PhieuGiamGiaResponse>builder()
-                .result(phieuGiamGiaResponse)
+    public ApiResponse<PhieuGiamGia> getById(@PathVariable Integer id ) {
+        PhieuGiamGia phieuGiamGia= phieuGiamGiaService.getById(id);
+        return ApiResponse.<PhieuGiamGia>builder()
+                .result(phieuGiamGia)
                 .build();
     }
 

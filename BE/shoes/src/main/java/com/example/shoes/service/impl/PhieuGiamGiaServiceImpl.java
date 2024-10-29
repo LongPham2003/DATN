@@ -31,10 +31,10 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
     private PhieuGiamGiaRepo phieuGiamGiaRepo;
 
     @Override
-    public PhieuGiamGiaResponse getById(Integer id) {
+    public PhieuGiamGia getById(Integer id) {
         PhieuGiamGia phieuGiamGia = phieuGiamGiaRepo.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.VOUCHER_NOT_FOUND));
-        return convertToResponse(phieuGiamGia);
+        return phieuGiamGia;
     }
 
     @Override

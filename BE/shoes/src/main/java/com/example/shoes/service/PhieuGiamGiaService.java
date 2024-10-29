@@ -11,7 +11,7 @@ import java.util.List;
 
 
 public interface PhieuGiamGiaService {
-    PhieuGiamGiaResponse getById(Integer id);
+    PhieuGiamGia getById(Integer id);
     PhieuGiamGiaResponse create(PhieuGiamGiaRequest request);
     PhieuGiamGiaResponse update(Integer id, PhieuGiamGiaRequest request);
     PhieuGiamGiaResponse delete(Integer id, PhieuGiamGiaRequest request);
