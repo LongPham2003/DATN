@@ -31,16 +31,16 @@ public class CrudByAt {
     public void handleBeforCreate() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
+//        updatedAt = LocalDateTime.now();
         createdBy = authentication.getName();
-        updatedBy = authentication.getName();
+//        updatedBy = authentication.getName();
     }
 
     @PreUpdate
     public void handleBeforUpdate() {
-       Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-       updatedAt = LocalDateTime.now();
-       updatedBy = authentication.getName();
- }
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        updatedAt = LocalDateTime.now();
+        updatedBy = authentication.getName();
+    }
 
 }

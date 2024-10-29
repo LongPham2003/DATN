@@ -1,18 +1,11 @@
 package com.example.shoes.controller;
 
 import com.example.shoes.config.VNPAYConfig;
-import com.example.shoes.dto.hoadon.response.HoaDonResponse;
+
 import com.example.shoes.dto.vnpay.response.TransactionStatus;
 import com.example.shoes.dto.vnpay.response.VNPAYResponse;
-import com.example.shoes.entity.HoaDon;
-import com.example.shoes.enums.TrangThai;
-import com.example.shoes.exception.ApiResponse;
-import com.example.shoes.exception.AppException;
-import com.example.shoes.exception.ErrorCode;
-import com.example.shoes.repository.HoaDonRepo;
-import com.example.shoes.service.HoaDonService;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,27 +30,20 @@ import java.util.TimeZone;
 @RestController
 @RequestMapping("/api/paymentvnpay")
 public class PaymentVNPAYController {
-    @Autowired
-    private HoaDonRepo hoaDonRepo;
 
     @GetMapping("/create-payment")
     public ResponseEntity<?> creatPayment(HttpServletRequest request) throws UnsupportedEncodingException {
-//        // Lấy hóa đơn theo ID
-//        HoaDon hoaDon = hoaDonRepo.findById(idHoaDon)
-//                .orElseThrow(() -> new AppException(ErrorCode.BILL_NOT_FOUND));
-//
-//// Lấy thông tin tiền phải thanh toán từ hóa đơn
-//        BigDecimal tienPhaiThanhToan = hoaDon.getTienPhaiThanhToan(); // Trực tiếp lấy BigDecimal
-//
-//// Thực hiện phép nhân và chuyển đổi về String
-//        String amount = tienPhaiThanhToan.multiply(BigDecimal.valueOf(100)).toBigInteger().toString();
+
+
         String orderType = "other";
 //        long amount = Integer.parseInt(request.getParameter("amount"))*100;
 //        String bankCode = req.getParameter("bankCode");
         String vnp_TxnRef = VNPAYConfig.getRandomNumber(8);
         String vnp_IpAddr = VNPAYConfig.getIpAddress(request);
 
-        long amount = 1000000 * 100;
+
+        long amount = 1000000*100;
+
         String vnp_TmnCode = VNPAYConfig.vnp_TmnCode;
 
         Map<String, String> vnp_Params = new HashMap<>();
@@ -109,11 +95,13 @@ public class PaymentVNPAYController {
         String vnp_SecureHash = VNPAYConfig.hmacSHA512(VNPAYConfig.secretKey, hashData.toString());
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
         String paymentUrl = VNPAYConfig.vnp_PayUrl + "?" + queryUrl;
-        TransactionStatus transactionStatus = new TransactionStatus();
-        transactionStatus.setStatus("OK");
-        transactionStatus.setMessage("Successfully");
-        transactionStatus.setData(paymentUrl);
-        return ResponseEntity.status(HttpStatus.OK).body(transactionStatus);
+
+        VNPAYResponse vnpayResponse = new VNPAYResponse();
+        vnpayResponse.setStatus("OK");
+        vnpayResponse.setMessage("thanh toán thành công");
+        vnpayResponse.setURL(paymentUrl);
+        return ResponseEntity.status(HttpStatus.OK).body(vnpayResponse);
+
     }
 
     @GetMapping("/payment-infor")

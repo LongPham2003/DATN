@@ -20,6 +20,12 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import ImageUpload from "./UploadAnh";
+import AddProduct from "../Product/AddProduct.jsx";
+import ThemThuongHieu from "./ThemThuongHieu.jsx";
+import ThemChatLieu from "./ThemChatLieu.jsx";
+import ThemDeGiay from "./ThemDeGiay.jsx";
+import ThemKichThuoc from "./ThemKichThuoc.jsx";
+import ThemMauSac from "./ThemMauSac.jsx";
 
 export default function AddProductDetail() {
   let { id } = useParams();
@@ -37,6 +43,56 @@ export default function AddProductDetail() {
   const [listSPCT, setListSPCT] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]); // Lưu trữ các sản phẩm được chọn
   const [open, setOpen] = useState(false);
+
+  // model them nhan thuong hieu
+  const [OpenModelAddBrand, setOpenModelAddBrand] = useState(false);
+  const openModalBrand = () => {
+    setOpenModelAddBrand(true);
+  };
+  const closeModalBrand = async () => {
+    setOpenModelAddBrand(false);
+    await layThuongHieu();
+  };
+
+  // model them nhanh chat lieu
+  const [OpenModelAddChatLieu, setOpenModelAddChatLieu] = useState(false);
+  const openModalChatLieu = () => {
+    setOpenModelAddChatLieu(true);
+  };
+  const closeModalChatLieu = async () => {
+    setOpenModelAddChatLieu(false);
+    await layChatLieu();
+  };
+
+  // model them nhanh de giày
+  const [OpenModelAddDeGiay, setOpenModelAddDeGiay] = useState(false);
+  const openModalDeGiay = () => {
+    setOpenModelAddDeGiay(true);
+  };
+  const closeModalDeGiay = async () => {
+    setOpenModelAddDeGiay(false);
+    await layDeGiay();
+  };
+
+  // model them nhanh kich thuoc
+  const [OpenModelAddKichThuoc, setOpenModelAddKichThuoc] = useState(false);
+  const openModalKichThuoc = () => {
+    setOpenModelAddKichThuoc(true);
+  };
+  const closeModalKichThuoc = async () => {
+    setOpenModelAddKichThuoc(false);
+    await layKichThuoc();
+  };
+
+  // model them nhanh mau sac
+  const [OpenModelAddMauSac, setOpenModelAddMauSac] = useState(false);
+  const openModalMauSac = () => {
+    setOpenModelAddMauSac(true);
+  };
+  const closeModalMauSac = async () => {
+    setOpenModelAddMauSac(false);
+    await layMauSac();
+  };
 
   const [selectAll, setSelectAll] = useState(false);
   const navigate = useNavigate();
@@ -364,6 +420,12 @@ export default function AddProductDetail() {
                       }))}
                       onChange={(value) => setGetIdThuongHieu(value)}
                     />
+                    <button
+                      className="bordered h-[38px] w-[38px] rounded-lg border bg-amber-300"
+                      onClick={openModalBrand}
+                    >
+                      +
+                    </button>
                   </div>
                 </div>
                 <div className="mt-10 grid grid-cols-2 gap-6">
@@ -383,6 +445,12 @@ export default function AddProductDetail() {
                       }))}
                       onChange={(value) => setGetIdChatLieu(value)}
                     />
+                    <button
+                      className="bordered h-[38px] w-[38px] rounded-lg border bg-amber-300"
+                      onClick={openModalChatLieu}
+                    >
+                      +
+                    </button>
                   </div>
                   <div>
                     <div>
@@ -400,6 +468,12 @@ export default function AddProductDetail() {
                       }))}
                       onChange={(value) => setGetIdDeGiay(value)}
                     />
+                    <button
+                      className="bordered h-[38px] w-[38px] rounded-lg border bg-amber-300"
+                      onClick={openModalDeGiay}
+                    >
+                      +
+                    </button>
                   </div>
                 </div>
                 <div className="mb-10 mt-10 grid grid-cols-2 gap-6">
@@ -420,6 +494,12 @@ export default function AddProductDetail() {
                         setGetIdKichThuoc(option);
                       }}
                     />
+                    <button
+                      className="bordered h-[38px] w-[38px] rounded-lg border bg-amber-300"
+                      onClick={openModalKichThuoc}
+                    >
+                      +
+                    </button>
                   </div>
                   <div>
                     <div>
@@ -438,6 +518,12 @@ export default function AddProductDetail() {
                       }))}
                       onChange={(value, option) => setGetIdMauSac(option)}
                     />
+                    <button
+                      className="bordered h-[38px] w-[38px] rounded-lg border bg-amber-300"
+                      onClick={openModalMauSac}
+                    >
+                      +
+                    </button>
                   </div>
                 </div>
               </div>
@@ -623,6 +709,86 @@ export default function AddProductDetail() {
           />
         </div>
       </Modal>
+
+      {OpenModelAddBrand && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="h-[100px] w-[400px] rounded-lg bg-white p-8">
+            <div className="flex justify-between">
+              <ThemThuongHieu closeModel={closeModalBrand} />
+              <button
+                onClick={closeModalBrand}
+                className="h-10 rounded bg-red-500 px-4 text-white hover:bg-red-600"
+              >
+                X
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {OpenModelAddChatLieu && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="h-[100px] w-[400px] rounded-lg bg-white p-8">
+            <div className="flex justify-between">
+              <ThemChatLieu closeModel={closeModalChatLieu} />
+              <button
+                onClick={closeModalChatLieu}
+                className="h-10 rounded bg-red-500 px-4 text-white hover:bg-red-600"
+              >
+                X
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {OpenModelAddDeGiay && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="h-[100px] w-[400px] rounded-lg bg-white p-8">
+            <div className="flex justify-between">
+              <ThemDeGiay closeModel={closeModalDeGiay} />
+              <button
+                onClick={closeModalDeGiay}
+                className="h-10 rounded bg-red-500 px-4 text-white hover:bg-red-600"
+              >
+                X
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {OpenModelAddKichThuoc && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="h-[100px] w-[400px] rounded-lg bg-white p-8">
+            <div className="flex justify-between">
+              <ThemKichThuoc closeModel={closeModalKichThuoc} />
+              <button
+                onClick={closeModalKichThuoc}
+                className="h-10 rounded bg-red-500 px-4 text-white hover:bg-red-600"
+              >
+                X
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {OpenModelAddMauSac && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="h-[100px] w-[400px] rounded-lg bg-white p-8">
+            <div className="flex justify-between">
+              <ThemMauSac closeModel={closeModalMauSac} />
+              <button
+                onClick={closeModalMauSac}
+                className="h-10 rounded bg-red-500 px-4 text-white hover:bg-red-600"
+              >
+                X
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <ToastContainer />
     </>
