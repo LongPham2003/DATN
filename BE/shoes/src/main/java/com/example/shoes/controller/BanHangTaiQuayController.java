@@ -110,6 +110,7 @@ private HoaDonRepo hoaDonRepo;
                 .message("Xóa phiếu giảm giá khỏi hóa đơn thành công")
                 .build();
     }
+    // Lay thong tin tien theo idHoaDon
     @GetMapping("/hoadon/gettheoid/{idHoaDon}")
     public ApiResponse<HoaDonTheoIDResponse> getTheoIdHoaDon(@PathVariable Integer idHoaDon) {
         HoaDonTheoIDResponse hoaDonResponse = hoaDonService.getTheoIdHoaDon(idHoaDon);
