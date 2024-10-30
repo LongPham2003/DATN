@@ -1,5 +1,6 @@
 package com.example.shoes.service.impl;
 
+import com.example.shoes.dto.BaoCaoThongKeResponse;
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
 import com.example.shoes.dto.hoadon.response.HoaDonTheoIDResponse;
 import com.example.shoes.dto.hoadonchitiet.request.HoaDonChiTietRequest;
@@ -44,6 +45,7 @@ import java.security.MessageDigest;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -739,11 +741,103 @@ public class HoaDonServiceImpl implements HoaDonService {
         return response;
     }
 
+    @Override
+    public List<BaoCaoThongKeResponse> layBaoCaoTaiChinhTheoNgay(LocalDate startDate, LocalDate endDate) {
+        List<Object[]> results = hoaDonRepo.layBaoCaoTaiChinhTheoNgay(startDate, endDate);
+        return convertToResponse(results);
+    }
+
+    @Override
+    public List<BaoCaoThongKeResponse> layBaoCaoTaiChinhTheoThang(LocalDate startDate, LocalDate endDate) {
+        List<Object[]> results = hoaDonRepo.layBaoCaoTaiChinhTheoThang(startDate, endDate);
+        return convertToResponse(results);
+    }
+
+    @Override
+    public List<BaoCaoThongKeResponse> layBaoCaoTaiChinhTheoNam(LocalDate startDate, LocalDate endDate) {
+        List<Object[]> results = hoaDonRepo.layBaoCaoTaiChinhTheoNam(startDate, endDate);
+        return convertToResponse(results);
+    }
+
+    @Override
+    public BaoCaoThongKeResponse layBaoCaoTaiChinhTongQuat() {
+        List<Object[]> results = hoaDonRepo.layBaoCaoTaiChinhTongQuoc();
+        return convertToSingleResponse(results);
+    }
+
     private HoaDonTheoIDResponse convert(HoaDon hoaDon) {
         HoaDonTheoIDResponse response = new HoaDonTheoIDResponse();
         response.setTongTien(formatCurrency(hoaDon.getTongTien()));
         response.setTienDuocGiam(formatCurrency(hoaDon.getTienDuocGiam()));
         response.setTienPhaiThanhToan(formatCurrency(hoaDon.getTienPhaiThanhToan()));
+        return response;
+    }
+    private List<BaoCaoThongKeResponse> convertToResponse(List<Object[]> results) {
+        List<BaoCaoThongKeResponse> responses = new ArrayList<>();
+        for (Object[] result : results) {
+            BaoCaoThongKeResponse response = new BaoCaoThongKeResponse();
+
+            // Định dạng tiền tệ
+            response.setTongTienPhaiThanhToan(formatCurrency((BigDecimal) result[0]));
+            response.setChiPhi(formatCurrency((BigDecimal) result[1]));
+            response.setLoiNhuan(formatCurrency((BigDecimal) result[2]));
+            response.setSoLuongHoaDon(((Number) result[3]).intValue());
+            response.setTienDuocGiam(formatCurrency((BigDecimal) result[4]));
+            response.setSoLuongKhachHang(((Number) result[5]).intValue());
+
+            // Xử lý ngày tạo
+            if (result.length >= 7) { // Kiểm tra xem có đủ phần tử không
+                if (result.length == 8 && result[6] instanceof Number) {
+                    // Trường hợp theo tháng
+                    int year = ((Number) result[6]).intValue();
+                    int month = ((Number) result[7]).intValue();
+                    response.setNgayTao(LocalDate.of(year, month, 1)); // Ngày đầu tiên của tháng
+                } else if (result.length == 7 && result[6] instanceof Number) {
+                    // Trường hợp theo năm
+                    int year = ((Number) result[6]).intValue();
+                    response.setNgayTao(LocalDate.of(year, 1, 1)); // Ngày đầu tiên của năm
+                } else if (result[6] instanceof LocalDate) {
+                    // Trường hợp theo ngày
+                    LocalDate date = (LocalDate) result[6];
+                    response.setNgayTao(date);
+                } else {
+                    throw new ClassCastException("Unexpected type at index 6: " + result[6].getClass());
+                }
+            }
+
+            responses.add(response);
+        }
+        return responses;
+    }
+
+
+    private BaoCaoThongKeResponse convertToSingleResponse(List<Object[]> results) {
+        if (results.isEmpty()) return new BaoCaoThongKeResponse();
+
+        Object[] result = results.get(0);
+        BaoCaoThongKeResponse response = new BaoCaoThongKeResponse();
+        // Định dạng tiền tệ
+        response.setTongTienPhaiThanhToan(formatCurrency((BigDecimal) result[0]));
+        response.setChiPhi(formatCurrency((BigDecimal) result[1]));
+        response.setLoiNhuan(formatCurrency((BigDecimal) result[2]));
+        response.setSoLuongHoaDon(((Number) result[3]).intValue());
+        response.setTienDuocGiam(formatCurrency((BigDecimal) result[4]));
+        response.setSoLuongKhachHang(((Number) result[5]).intValue());
+
+        // Xử lý ngày tạo
+        if (result.length >= 7) { // Kiểm tra xem có đủ phần tử không
+            if (result[6] instanceof LocalDate) {
+                response.setNgayTao((LocalDate) result[6]);
+            } else if (result[6] instanceof Number) {
+                // Trường hợp theo tháng
+                int year = ((Number) result[6]).intValue();
+                int month = ((Number) result[7]).intValue();
+                response.setNgayTao(LocalDate.of(year, month, 1));
+            } else {
+                throw new ClassCastException("Unexpected type at index 6: " + result[6].getClass());
+            }
+        }
+
         return response;
     }
 
