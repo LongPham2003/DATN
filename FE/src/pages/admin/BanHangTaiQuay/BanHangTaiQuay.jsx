@@ -1,5 +1,5 @@
 import { PlusCircleOutlined } from "@ant-design/icons";
-import { Button, Select, Switch, Tabs, Modal } from "antd";
+import { Button, Select, Switch, Tabs, Modal, Popconfirm } from "antd";
 import { useEffect, useState } from "react";
 import SanPhamBanTaiQuay from "./SanPhamBanHang";
 import axios from "../../../api/axiosConfig";
@@ -8,6 +8,7 @@ import LayAnhTheoIdSP from "../SanPham/Product/LayANhTheoIDSP";
 import log from "eslint-plugin-react/lib/util/log.js";
 import { XMarkIcon } from "@heroicons/react/16/solid/index.js";
 import { TrashIcon } from "@heroicons/react/16/solid";
+import { Label } from "@headlessui/react";
 
 export default function BanHangTaiQuay() {
   const [hoaDonFalse, setHoaDonFalse] = useState([]);
@@ -15,6 +16,7 @@ export default function BanHangTaiQuay() {
   const [SPCTChuaThanhToan, setSPCTChuaThanhToan] = useState([]);
   const [selectedHoaDonId, setSelectedHoaDonId] = useState(null); // State lưu trữ id hóa đơn được chọn
 
+  const [danhSachPhieuGiamGia, setDanhSachPhieuGiamGia] = useState([]);
   const [tongTien, setTongTien] = useState(0);
   const [tienPhaiThanhToan, setTienPhaiThanhToan] = useState(0);
   const [tienDuocGiam, setTienDuocGiam] = useState(0);
@@ -30,7 +32,10 @@ export default function BanHangTaiQuay() {
   let ApiLaySanPhamOHoaDon = `http://localhost:8080/api/hoadonchitiet/SPCTbyidHD`;
   let ApiUpdateSoLuongSPTrongHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/update`;
   let ApiLaySoLuongTonCuaSPCT = `http://localhost:8080/api/sanphamchitiet/${idSPCTDangChon}`;
+  let ApiLayThongTinThanhToanTheoIdHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/gettheoid`;
+  let ApiLayPhieuGiamGia = `http://localhost:8080/api/phieugiamgia/trang-thai-true`;
 
+  //Lấy danh sách hóa đơn
   const LayDanhSachHoaDonChuaThanhToan = async () => {
     try {
       const response = await axios.get(ApiLayHoaDonChuaThanhToan);
@@ -38,14 +43,13 @@ export default function BanHangTaiQuay() {
       setHoaDonFalse(hoaDonList);
       if (hoaDonList.length > 0) {
         setSelectedHoaDonId(hoaDonList[0].id); // Chọn id hóa đơn đầu tiên khi tải dữ liệu lần đầu
-        setTongTien(hoaDonList[0].tongTien);
-        setTienPhaiThanhToan(hoaDonList[0].tienPhaiThanhToan);
       }
     } catch (error) {
       console.log("Lấy hóa đơn lỗi:", error);
     }
   };
 
+  //Lấy danh sách sản phẩm trong giỏ hàng
   const LayChiTietSanPham = async () => {
     try {
       const response = await axios.get(
@@ -57,11 +61,40 @@ export default function BanHangTaiQuay() {
       console.log("Lấy chi tiết sản phẩm lỗi:", error);
     }
   };
-  //
+  // Lấy số lượng tồn của sản phẩm
   const LaySoLuongTonCuaSPCT = async () => {
     const responseSoLuongTon = await axios.get(ApiLaySoLuongTonCuaSPCT);
     setSoLuongTonCuaSPCT(responseSoLuongTon.data.result.soLuong);
     console.log("soLuongTonCuaSPCT", responseSoLuongTon.data.result.soLuong);
+  };
+
+  //Lấy các kiểu tiền của hóa đơn
+  const LayThongTinThanhToanCuaHoaDon = async () => {
+    const ttThanhToan = await axios.get(
+      `${ApiLayThongTinThanhToanTheoIdHoaDon}/${selectedHoaDonId}`,
+    );
+    setTongTien(ttThanhToan.data.result.tongTien);
+    setTienPhaiThanhToan(ttThanhToan.data.result.tienPhaiThanhToan);
+    setTienDuocGiam(ttThanhToan.data.result.tienDuocGiam);
+    // console.log(ttThanhToan.data.result.tongTien);
+  };
+
+  const LayDanhSachPhieuGiamGia = async () => {
+    const pgg = await axios.get(ApiLayPhieuGiamGia);
+    setDanhSachPhieuGiamGia(pgg.data.result);
+  };
+
+  const XoaSPKhoiGioHang = async (idSPCT) => {
+    try {
+      await axios.delete(
+        `http://localhost:8080/api/hoadonchitiet/hoadon/${selectedHoaDonId}/spct/${idSPCT}`,
+      );
+      toast.success("Xóa thành công");
+      await LayChiTietSanPham(); // Cập nhật giỏ hàng sau khi thêm sản phẩm
+      await LayThongTinThanhToanCuaHoaDon(); // Cập nhật thông tin hóa đơn mới, bao gồm tổng tiền
+    } catch (error) {
+      toast.error("Có lỗi xẩy ra");
+    }
   };
 
   const taoHoaDon = async () => {
@@ -86,46 +119,12 @@ export default function BanHangTaiQuay() {
   // Hàm đóng modal và cập nhật giỏ hàng
   const closeModalAndReloadCart = async () => {
     await LayChiTietSanPham(); // Cập nhật giỏ hàng sau khi thêm sản phẩm
-    await LayDanhSachHoaDonChuaThanhToan(); // Cập nhật thông tin hóa đơn mới, bao gồm tổng tiền
+    await LayThongTinThanhToanCuaHoaDon(); // Cập nhật thông tin hóa đơn mới, bao gồm tổng tiền
 
     setTimeout(() => {
       closeModal(); // Đóng modal
-    }, 1600);
+    }, 1000);
   };
-
-  useEffect(() => {
-    LayDanhSachHoaDonChuaThanhToan();
-  }, []);
-
-  useEffect(() => {
-    if (selectedHoaDonId) {
-      LayChiTietSanPham(selectedHoaDonId); // Gọi hàm lấy chi tiết sản phẩm khi id của hóa đơn được chọn thay đổi
-    }
-  }, [selectedHoaDonId]);
-
-  // useEffect sẽ chạy khi `selectedHoaDonId` hoặc `hoaDonFalse` thay đổi
-  useEffect(() => {
-    // Kiểm tra xem `selectedHoaDonId` đã được đặt và `hoaDonFalse` không rỗng
-    if (selectedHoaDonId && hoaDonFalse.length > 0) {
-      // Tìm hóa đơn trong `hoaDonFalse` có `id` khớp với `selectedHoaDonId`
-      const selectedHoaDon = hoaDonFalse.find(
-        (hoaDon) => hoaDon.id === Number(selectedHoaDonId), // Ép kiểu `selectedHoaDonId` thành số để so sánh
-      );
-
-      // Nếu tìm thấy `selectedHoaDon`, cập nhật `tongTien` và `tienPhaiThanhToan`
-      if (selectedHoaDon) {
-        setTongTien(selectedHoaDon.tongTien);
-        setTienPhaiThanhToan(selectedHoaDon.tienPhaiThanhToan);
-      } else {
-        // Nếu không tìm thấy, đặt `tongTien` và `tienPhaiThanhToan` về 0
-        setTongTien(0);
-        setTienPhaiThanhToan(0);
-      }
-    }
-
-    // Mảng phụ thuộc bao gồm `selectedHoaDonId` và `hoaDonFalse`
-    // useEffect sẽ chạy lại mỗi khi một trong hai giá trị này thay đổi
-  }, [selectedHoaDonId, hoaDonFalse]);
 
   const upDateSoLuongMua = async () => {
     try {
@@ -175,7 +174,7 @@ export default function BanHangTaiQuay() {
       toast.warning("Sản phẩm đã hết hàng, không thể tăng số lượng");
     }
   };
-
+  //Giam so luong mua di 1
   const decrement = async (idSpct, newQuantity) => {
     if (newQuantity > 0) {
       // Đảm bảo số lượng không âm
@@ -203,6 +202,43 @@ export default function BanHangTaiQuay() {
       }
     }
   };
+
+  useEffect(() => {
+    LayDanhSachHoaDonChuaThanhToan();
+    LayDanhSachPhieuGiamGia();
+  }, []);
+
+  useEffect(() => {
+    if (selectedHoaDonId) {
+      LayChiTietSanPham(selectedHoaDonId); // Gọi hàm lấy chi tiết sản phẩm khi id của hóa đơn được chọn thay đổi
+    }
+  }, [selectedHoaDonId]);
+
+  // useEffect sẽ chạy khi `selectedHoaDonId` hoặc `hoaDonFalse` thay đổi
+  useEffect(() => {
+    // Kiểm tra xem `selectedHoaDonId` đã được đặt và `hoaDonFalse` không rỗng
+    if (selectedHoaDonId && hoaDonFalse.length > 0) {
+      // Tìm hóa đơn trong `hoaDonFalse` có `id` khớp với `selectedHoaDonId`
+      const selectedHoaDon = hoaDonFalse.find(
+        (hoaDon) => hoaDon.id === Number(selectedHoaDonId), // Ép kiểu `selectedHoaDonId` thành số để so sánh
+      );
+
+      // Nếu tìm thấy `selectedHoaDon`, cập nhật `tongTien` và `tienPhaiThanhToan`
+      if (selectedHoaDon) {
+        setTongTien(selectedHoaDon.tongTien);
+        setTienPhaiThanhToan(selectedHoaDon.tienPhaiThanhToan);
+        setTienDuocGiam(selectedHoaDon.tienDuocGiam);
+      } else {
+        // Nếu không tìm thấy, đặt `tongTien` và `tienPhaiThanhToan` về 0
+        setTongTien(0);
+        setTienPhaiThanhToan(0);
+        setTienDuocGiam(0)
+      }
+    }
+
+    // Mảng phụ thuộc bao gồm `selectedHoaDonId` và `hoaDonFalse`
+    // useEffect sẽ chạy lại mỗi khi một trong hai giá trị này thay đổi
+  }, [selectedHoaDonId, hoaDonFalse]);
 
   return (
     <>
@@ -328,6 +364,7 @@ export default function BanHangTaiQuay() {
                                   }}
                                   onBlur={() => upDateSoLuongMua()} // Chỉ cập nhật khi số lượng thay đổi
                                 />
+
                                 <button
                                   onClick={(e) => {
                                     e.preventDefault();
@@ -345,11 +382,21 @@ export default function BanHangTaiQuay() {
 
                           <td>{SPCT.donGia * SPCT.soLuong}</td>
                           <td>
-                            {" "}
-                            <Button type="primary" danger>
-                              <TrashIcon className="h-5 w-5 text-white" />
-                              khách k mua thì dã nó
-                            </Button>
+                            <Popconfirm
+                              title="Delete the task"
+                              description="Are you sure to delete this task?"
+                              okText="Yes"
+                              cancelText="No"
+                              onConfirm={(e) => {
+                                e.preventDefault();
+                                XoaSPKhoiGioHang(SPCT.idSpct);
+                              }}
+                            >
+                              <Button type="primary" danger>
+                                <TrashIcon className="h-5 w-5 text-white" />
+                                khách k mua thì dã nó
+                              </Button>
+                            </Popconfirm>
                           </td>
                         </tr>
                       ))}
@@ -376,11 +423,22 @@ export default function BanHangTaiQuay() {
                   <Select
                     showSearch
                     style={{ width: 300, height: "35px" }} // Đặt chiều cao cố định
-                    placeholder="Search to Select"
-                    options={[
-                      { value: "1", label: "Not Identified" },
-                      { value: "2", label: "Closed" },
-                    ]}
+                    placeholder="Chọn phiếu giảm giá"
+                    options={danhSachPhieuGiamGia.map((pgg) => ({
+                      label: (
+                        <>
+                          <span>tên: {pgg.tenVoucher}</span> <br />
+                          <span>
+                            Mức giảm: {pgg.mucGiam} {pgg.hinhThucGiam}
+                          </span>{" "}
+                          <br />
+                          <span>Giảm tối đa: {pgg.giamToiDa} VNĐ</span> <br />
+                          <span>Còn: {pgg.soLuong} phiếu</span>
+                          <hr />
+                        </>
+                      ),
+                      value: pgg.id,
+                    }))}
                   />
                   <Button
                     color="danger"
@@ -394,12 +452,12 @@ export default function BanHangTaiQuay() {
 
               <div className="my-4 flex items-center justify-between">
                 <div>Tiền hàng</div>
-                <div>{tongTien} VND</div>
+                <div>{tongTien} </div>
               </div>
 
               <div className="my-4 flex items-center justify-between">
-                <div>Giảm giá</div>
-                <div>0 VND</div>
+                <div>Tiền được giảm</div>
+                <div>{tienDuocGiam}</div>
               </div>
 
               <div className="my-4 flex gap-4">

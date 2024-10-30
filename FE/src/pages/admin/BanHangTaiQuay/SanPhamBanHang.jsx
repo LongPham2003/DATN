@@ -50,7 +50,7 @@ export default function SanPhamBanTaiQuay({ id, onProductAdded }) {
       await axios.post(ApiThemSPvaoHoaDon, newSPCT);
       toast.success("Thêm sản phẩm thành công", {
         position: "top-right",
-        autoClose: 1000,
+        autoClose: 600,
         hideProgressBar: false,
         newestOnTop: false,
         closeOnClick: true,
@@ -72,7 +72,7 @@ export default function SanPhamBanTaiQuay({ id, onProductAdded }) {
       console.log(error);
       toast.error(error.message || "Thêm mới thất bại", {
         position: "top-right",
-        autoClose: 1000,
+        autoClose: 600,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -122,7 +122,7 @@ export default function SanPhamBanTaiQuay({ id, onProductAdded }) {
       setError(""); // Reset lại lỗi nếu có
     }
   }, [modalVisible]);
-  // //lấy toàn bộ dữ liệu các thuộc tính
+  //lấy toàn bộ dữ liệu các thuộc tính
   useEffect(() => {
     axios
       .get("http://localhost:8080/api/thuonghieu/getall")
@@ -277,9 +277,9 @@ export default function SanPhamBanTaiQuay({ id, onProductAdded }) {
           <div className="flex justify-center gap-8 pb-3">
             <button
               className="rounded bg-blue-500 px-2 py-1 text-white"
-              onClick={handleResetSelectedChange}
+              onClick={()=>{handleResetSelectedChange(); getallSPCTBH()}}
             >
-              Reset tất cả
+              Reset bộ lọc & làm mới danh sách
             </button>
           </div>
         </div>
