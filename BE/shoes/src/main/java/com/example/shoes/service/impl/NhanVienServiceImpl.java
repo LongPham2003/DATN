@@ -109,7 +109,6 @@ public class NhanVienServiceImpl implements NhanVienService {
         NhanVien nhanVien = nhanVienOptional.get();
         nhanVien.setHoTen(request.getHoTen());
         nhanVien.setMa(request.getMa());
-        nhanVien.setMa(request.getMa());
         nhanVien.setEmail(request.getEmail());
         nhanVien.setSdt(request.getSdt());
         nhanVien.setGioiTinh(request.getGioiTinh());

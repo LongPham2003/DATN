@@ -1,10 +1,9 @@
 package com.example.shoes.controller;
-
-import com.example.shoes.dto.hoadon.request.HoaDonRequest;
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
 import com.example.shoes.dto.hoadonchitiet.request.HoaDonChiTietRequest;
 import com.example.shoes.dto.phuongthucthanhtoan.request.PhuongThucThanhToanRequest;
 import com.example.shoes.exception.ApiResponse;
+import com.example.shoes.repository.HoaDonRepo;
 import com.example.shoes.service.HoaDonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,19 +14,18 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.List;
-
 @RestController
-@RequestMapping("/taiquay")
+@RequestMapping("/banhangtaiquay")
 public class BanHangTaiQuayController {
     @Autowired
     private HoaDonService hoaDonService;
-
+@Autowired
+private HoaDonRepo hoaDonRepo;
     // tạo hóa đon moi
     @PostMapping("/taodon")
-    public ApiResponse<HoaDonResponse> createHoaDon(@RequestBody HoaDonRequest hoaDonRequest) {
-        HoaDonResponse hoaDonResponse = hoaDonService.createHoaDon(hoaDonRequest);
+    public ApiResponse<HoaDonResponse> createHoaDon() {
+        HoaDonResponse hoaDonResponse = hoaDonService.createHoaDon();
         return ApiResponse.<HoaDonResponse>builder()
                 .result(hoaDonResponse)
                 .build();
@@ -43,7 +41,7 @@ public class BanHangTaiQuayController {
                 .build();
     }
 
-    @PostMapping("/hoadon/{id}/add-spct")
+    @PostMapping("/hoadon/addspct/{id}")
     public ApiResponse<HoaDonResponse> addSanPhamChiTietToHoaDon(
             @PathVariable Integer id,
             @RequestBody HoaDonChiTietRequest chiTietRequest) {
@@ -52,7 +50,9 @@ public class BanHangTaiQuayController {
                 .result(hoaDonResponse)
                 .build();
     }
-    // Cập nhật hóa đơn
+
+
+    // Cập nhật số luọng sp trong  hóa đơn chi tiết
     @PutMapping("/hoadon/update/{id}")
     public ApiResponse<HoaDonResponse> updateHoaDon(
             @PathVariable("id") Integer id,
@@ -74,8 +74,8 @@ public class BanHangTaiQuayController {
 
     // Xóa hóa đơn
     @DeleteMapping ("/hoadon/delete/{id}")
-    public ApiResponse<String> deleteHoaDon(@PathVariable("id") Integer id) {
-        hoaDonService.deleteHoaDon(id);
+    public ApiResponse<String> deleteHoaDon(@PathVariable("id") Integer idHoaDon) {
+        hoaDonService.deleteHoaDon(idHoaDon);
         return ApiResponse.<String>builder()
                 .message("Xóa hóa đơn thành công")
                 .build();
@@ -89,4 +89,25 @@ public class BanHangTaiQuayController {
                 .result(hoaDonResponses)
                 .build();
     }
+    @PostMapping("/hoadon/{id}/voucher/{idPhieuGiamGia}")
+    public ApiResponse<String> apPhieuGiamGia(
+            @PathVariable Integer id,
+            @PathVariable Integer idPhieuGiamGia) {
+
+            hoaDonService.apPhieuGiamGiaHoaDon(id, idPhieuGiamGia);
+            return ApiResponse.<String>builder()
+                    .message("Áp dụng phiếu giảm giá thành công")
+                    .build();
+    }
+    @DeleteMapping("/hoadon/delete/{id}/voucher/{idPhieuGiamGia}")
+    public ApiResponse<String> xoaPhieuGiamGia(
+            @PathVariable Integer id,
+            @PathVariable Integer idPhieuGiamGia) {
+
+        hoaDonService.xoaPhieuGiamGiaHoaDon(id, idPhieuGiamGia);
+        return ApiResponse.<String>builder()
+                .message("Xóa phiếu giảm giá khỏi hóa đơn thành công")
+                .build();
+    }
+
 }

@@ -76,12 +76,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 
         KhachHang khachHang = new KhachHang();
+        khachHang.setMa(generateMaKhachHang());
         khachHang.setEmail(signUpRequest.getEmail());
         khachHang.setHoTen(signUpRequest.getHoTen());
         khachHang.setTaiKhoan(taiKhoan);
         khachHang.setDiaChis(List.of(diaChi));
+        khachHang.setTrangThai(true);
 
         diaChi.setKhachHang(khachHang);
+        diaChi.setDiaChiMacDinh(true);
         
         khachHangRepo.save(khachHang);
 
@@ -157,6 +160,28 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
         
         return password.toString();
+    }
+
+    public String generateMaKhachHang() {
+        // Lấy danh sách mã sản phẩm lớn nhất (SPxx)
+        List<String> maKH = khachHangRepo.findTopMaNhanVien();
+
+        // Kiểm tra nếu không có sản phẩm nào thì bắt đầu từ SP01
+        if (maKH.isEmpty()) {
+            return "KH01";
+        }
+
+        // Lấy mã sản phẩm lớn nhất (ví dụ: SP05)
+        String maxMaSanPham = maKH.get(0);
+
+        // Tách phần số ra khỏi chuỗi, ví dụ: "SP05" -> "05"
+        int maxNumber = Integer.parseInt(maxMaSanPham.substring(2));
+
+        // Tăng giá trị lên 1
+        int newNumber = maxNumber + 1;
+
+        // Trả về mã sản phẩm mới theo định dạng "SPxx" (ví dụ: SP06)
+        return String.format("KH%02d", newNumber);
     }
 
 

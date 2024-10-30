@@ -1,12 +1,11 @@
 import axios from "axios";
 
-// Lấy thông tin xác thực từ localStorage
-const authToken = localStorage.getItem("authToken");
-
 axios.interceptors.request.use(
   (config) => {
+    // Lấy token từ localStorage mỗi lần trước khi gửi request
+    const authToken = localStorage.getItem("authToken");
     if (authToken) {
-      config.headers.Authorization = authToken;
+      config.headers.Authorization = authToken; // Đảm bảo có tiền tố 'Bearer'
     }
     return config;
   },

@@ -10,9 +10,7 @@ import lombok.Setter;
 public class CreateDiaChiRequest {
 
 
-    private String ten;
 
-    private String sdt;
 
     private String tinhThanhPho;
 
@@ -21,6 +19,10 @@ public class CreateDiaChiRequest {
     private String xaPhuong;
 
     private Boolean diaChiMacDinh;
+
+    private String soNhaDuongThonXom;
+
+    private String   diaChiChiTiet;
 
     private KhachHang khachHang;
 }

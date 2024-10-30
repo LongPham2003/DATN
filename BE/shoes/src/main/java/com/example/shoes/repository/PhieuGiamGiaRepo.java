@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -31,6 +32,6 @@ public interface PhieuGiamGiaRepo extends JpaRepository<PhieuGiamGia, Integer> {
             Pageable pageable,
             @Param("tenVoucher") String tenVoucher,
             @Param("trangThai") Boolean trangThai,
-            @Param("ngayBatDau") LocalDate ngayBatDau,
-            @Param("ngayKetThuc") LocalDate ngayKetThuc);
+            @Param("ngayBatDau") LocalDateTime ngayBatDau,
+            @Param("ngayKetThuc") LocalDateTime ngayKetThuc);
 }

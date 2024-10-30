@@ -15,5 +15,6 @@ public interface HinhAnhService {
     HinhAnhResponse update(Integer id, HinhAnhRequest request);
     void delete(Integer id);
     HinhAnhResponse getFirstBySanPhamChiTietId(Integer idSanPhamChiTiet);
+    List<HinhAnhResponse> getAllHinhAnhTheoIDSPCT(Integer idSanPhamChiTiet);
 
 }

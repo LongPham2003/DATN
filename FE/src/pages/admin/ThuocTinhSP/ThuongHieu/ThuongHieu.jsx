@@ -1,5 +1,5 @@
 import { Radio } from "@material-tailwind/react";
-import axios from "axios";
+import axios from "../../../../api/axiosConfig";
 import { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
 import { Bounce, toast, ToastContainer } from "react-toastify";

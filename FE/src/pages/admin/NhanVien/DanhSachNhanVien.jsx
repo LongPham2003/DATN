@@ -24,12 +24,12 @@ export default function DanhSachNhanVien() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/nhanvien/search", {
+      .get("http://localhost:8080/api/nhanvien/search", {
         params: {
           pageNumber: trangHienTai,
           keyword: keyword,
-          trangThai: trangThai !== null ? trangThai : undefined, // Nếu trangThai là null, không gửi tham số
-        },
+          trangThai: trangThai !== null ? trangThai : undefined // Nếu trangThai là null, không gửi tham số
+        }
       })
       .then(async (res) => {
         const data = res.data;
@@ -121,52 +121,48 @@ export default function DanhSachNhanVien() {
         <div className="overflow-x-auto">
           <table className="min-w-full border border-gray-300 bg-white">
             <thead>
-              <tr className="bg-gray-100">
-                <th className="border-b px-4 py-2">STT</th>
-                <th className="border-b px-4 py-2">Mã</th>
-                <th className="border-b px-4 py-2">Họ tên</th>
-                <th className="border-b px-4 py-2">Email</th>
-                <th className="border-b px-4 py-2">SDT</th>
-                <th className="border-b px-4 py-2">Ngày Sinh</th>
-                <th className="border-b px-4 py-2">Giới Tính</th>
-                <th className="border-b px-4 py-2">Trạng Thái</th>
-                <th className="border-b px-4 py-2">Hành Động</th>
-              </tr>
+            <tr className="bg-gray-100">
+              <th className="border-b px-4 py-2">STT</th>
+              <th className="border-b px-4 py-2">Mã</th>
+              <th className="border-b px-4 py-2">Họ tên</th>
+              <th className="border-b px-4 py-2">Email</th>
+              <th className="border-b px-4 py-2">SDT</th>
+              <th className="border-b px-4 py-2">Ngày Sinh</th>
+              <th className="border-b px-4 py-2">Giới Tính</th>
+              <th className="border-b px-4 py-2">Trạng Thái</th>
+              <th className="border-b px-4 py-2">Hành Động</th>
+            </tr>
             </thead>
             <tbody className="text-center">
-              {nhanvien.map((item, index) => (
-                <tr key={index}>
-                  <td className="border-b px-4 py-2">
-                    {index + 1 + (trangHienTai - 1) * pageSize}
-                  </td>
-                  <td className="border-b px-4 py-2">{item.ma}</td>
-                  <td className="border-b px-4 py-2">{item.hoTen}</td>
-                  <td className="border-b px-4 py-2">{item.email}</td>
-                  <td className="border-b px-4 py-2">{item.sdt}</td>
-                  <td className="border-b px-4 py-2">{item.ngaySinh}</td>
-                  <td className="border-b px-4 py-2">{item.gioiTinh}</td>
-                  <td className="mx-auto flex justify-center border-b px-4 py-2 text-center">
-                    <button
-                      className={`relative flex h-6 w-[50px] items-center rounded-full bg-blue-500 transition-all duration-300 ${
-                        item.trangThai ? "justify-end" : "justify-start"
-                      }`}
-                    >
-                      <div
-                        className={`h-6 w-6 transform rounded-full shadow-md ${
-                          item.trangThai
-                            ? "translate-x bg-green-400"
-                            : "translate-x bg-red-600"
-                        } transition-transform duration-300`}
-                      ></div>
-                    </button>
-                  </td>
-                  <td>
-                    <button className="rounded bg-blue-500 px-2 py-1 text-white">
-                      <Link to={`/admin/nhanvien/${item.id}`}>Chi Tiết</Link>
-                    </button>
-                  </td>
-                </tr>
-              ))}
+            {nhanvien.map((item, index) => (
+              <tr key={index}>
+                <td className="border-b px-4 py-2">
+                  {index + 1 + (trangHienTai - 1) * pageSize}
+                </td>
+                <td className="border-b px-4 py-2">{item.ma}</td>
+                <td className="border-b px-4 py-2">{item.hoTen}</td>
+                <td className="border-b px-4 py-2">{item.email}</td>
+                <td className="border-b px-4 py-2">{item.sdt}</td>
+                <td className="border-b px-4 py-2">{item.ngaySinh}</td>
+                <td className="border-b px-4 py-2">{item.gioiTinh}</td>
+                <td className="mx-auto flex justify-center border-b px-4 py-2 text-center">
+                  <button
+                    className={`px-4 py-2 rounded border-2 ${
+                      item.trangThai ? "border-green-400 text-green-400" : "border-red-600 text-red-600"
+                    }`}
+                  >
+
+                    {item.trangThai ? "Đang Làm" : "Nghỉ"}
+
+                  </button>
+                </td>
+                <td>
+                  <button className="rounded bg-blue-500 px-2 py-1 text-white">
+                    <Link to={`/admin/nhanvien/${item.id}`}>Chi Tiết</Link>
+                  </button>
+                </td>
+              </tr>
+            ))}
             </tbody>
           </table>
         </div>

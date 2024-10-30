@@ -1,7 +1,5 @@
-import axios from "axios";
-import { values } from "lodash";
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import axios from "../../../../api/axiosConfig";
+import { useEffect, useState } from "react";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 
 export default function AddProduct() {
@@ -13,7 +11,6 @@ export default function AddProduct() {
   const [errorLoai, setErrorLoai] = useState("");
   const [danhSachTenSP, setDanhSachTenSP] = useState("");
   const [trangThai] = useState(true); // Sử dụng giá trị mặc định true cho trạng thái
-  const navigate = useNavigate(); // Sử dụng useNavigate để điều hướng
 
   let ApiGetAllLoai = `http://localhost:8080/api/loai/getall`;
   let ApiAddSPMoi = `http://localhost:8080/api/sanpham/add`;
@@ -84,7 +81,7 @@ export default function AddProduct() {
           theme: "light",
           transition: Bounce,
         });
-        console.log(newProduct);
+        // console.log(newProduct);
         setTimeout(() => {
           window.location.reload(); // Load lại trang sau 1 giây
         }, 1700);

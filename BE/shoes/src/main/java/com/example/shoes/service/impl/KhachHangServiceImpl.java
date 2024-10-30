@@ -136,7 +136,11 @@ public class KhachHangServiceImpl implements KhachHangService {
 
     @Override
     public KhachHang getById(Integer id) {
-        return khachHangRepo.findById(id).get();
+        if(khachHangRepo.existsById(id)) {
+            return khachHangRepo.findById(id).get();
+        }else{
+            throw new AppException(ErrorCode.USER_EXISTED);
+        }
     }
 
     @Override

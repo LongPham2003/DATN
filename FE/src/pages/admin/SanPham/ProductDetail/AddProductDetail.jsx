@@ -20,6 +20,12 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import ImageUpload from "./UploadAnh";
+import AddProduct from "../Product/AddProduct.jsx";
+import ThemThuongHieu from "./ThemThuongHieu.jsx";
+import ThemChatLieu from "./ThemChatLieu.jsx";
+import ThemDeGiay from "./ThemDeGiay.jsx";
+import ThemKichThuoc from "./ThemKichThuoc.jsx";
+import ThemMauSac from "./ThemMauSac.jsx";
 
 export default function AddProductDetail() {
   let { id } = useParams();
@@ -35,10 +41,58 @@ export default function AddProductDetail() {
   const [getIdMauSac, setGetIdMauSac] = useState([]);
   const [getIdKichThuoc, setGetIdKichThuoc] = useState([]);
   const [listSPCT, setListSPCT] = useState([]);
-  const [donGia, setDonGia] = useState(1000);
-  const [soLuong, setSoLuong] = useState(1);
   const [selectedRows, setSelectedRows] = useState([]); // Lưu trữ các sản phẩm được chọn
   const [open, setOpen] = useState(false);
+
+  // model them nhan thuong hieu
+  const [OpenModelAddBrand, setOpenModelAddBrand] = useState(false);
+  const openModalBrand = () => {
+    setOpenModelAddBrand(true);
+  };
+  const closeModalBrand = async () => {
+    setOpenModelAddBrand(false);
+    await layThuongHieu();
+  };
+
+  // model them nhanh chat lieu
+  const [OpenModelAddChatLieu, setOpenModelAddChatLieu] = useState(false);
+  const openModalChatLieu = () => {
+    setOpenModelAddChatLieu(true);
+  };
+  const closeModalChatLieu = async () => {
+    setOpenModelAddChatLieu(false);
+    await layChatLieu();
+  };
+
+  // model them nhanh de giày
+  const [OpenModelAddDeGiay, setOpenModelAddDeGiay] = useState(false);
+  const openModalDeGiay = () => {
+    setOpenModelAddDeGiay(true);
+  };
+  const closeModalDeGiay = async () => {
+    setOpenModelAddDeGiay(false);
+    await layDeGiay();
+  };
+
+  // model them nhanh kich thuoc
+  const [OpenModelAddKichThuoc, setOpenModelAddKichThuoc] = useState(false);
+  const openModalKichThuoc = () => {
+    setOpenModelAddKichThuoc(true);
+  };
+  const closeModalKichThuoc = async () => {
+    setOpenModelAddKichThuoc(false);
+    await layKichThuoc();
+  };
+
+  // model them nhanh mau sac
+  const [OpenModelAddMauSac, setOpenModelAddMauSac] = useState(false);
+  const openModalMauSac = () => {
+    setOpenModelAddMauSac(true);
+  };
+  const closeModalMauSac = async () => {
+    setOpenModelAddMauSac(false);
+    await layMauSac();
+  };
 
   const [selectAll, setSelectAll] = useState(false);
   const navigate = useNavigate();
@@ -210,11 +264,13 @@ export default function AddProductDetail() {
   // Hàm xử lý thêm sản phẩm chi tiết (SPCT)
   const AddSPCT = async (e) => {
     e.preventDefault(); // Ngăn chặn hành vi mặc định của sự kiện submit form
-    //kiem tra chon du thuoc tinh chua
+
+    // Kiểm tra điều kiện trước khi thêm sản phẩm, yêu cầu người dùng chọn đầy đủ các thuộc tính
     if (getIdDeGiay === 0 || getIdThuongHieu === 0 || getIdChatLieu === 0) {
+      // Hiển thị thông báo lỗi nếu thiếu thuộc tính
       toast.error("Vui lòng chọn đầy đủ đế giày, thương hiệu, và chất liệu.", {
         position: "top-right",
-        autoClose: 2000, // Toast đóng sau 2 giây
+        autoClose: 2000,
         hideProgressBar: false,
         newestOnTop: false,
         closeOnClick: true,
@@ -224,23 +280,22 @@ export default function AddProductDetail() {
         pauseOnHover: true,
         theme: "light",
       });
-      return; // Ngừng thực thi nếu validate không thành công
+      return; // Dừng hàm nếu thiếu dữ liệu
     }
-    let thumbUrls = []; // Biến lưu trữ danh sách URL của các ảnh thu nhỏ (thumbUrl)
 
-    // Tạo mảng các request từ danh sách sản phẩm chi tiết (listSPCT)
-    let request = listSPCT.map((item) => {
-      // Lấy ra các thumbUrl từ danh sách fileList của sản phẩm
-      thumbUrls = item.fileList
+    // Biến chứa các request POST tương ứng cho từng SPCT trong listSPCT
+    let requests = listSPCT.map((item) => {
+      // Tạo danh sách thumbUrls từ fileList của từng sản phẩm
+      const thumbUrls = item.fileList
         .map((file) => file.thumbUrl) // Lấy thumbUrl từ mỗi file
-        .filter((url) => url); // Chỉ giữ lại những URL không rỗng
+        .filter((url) => url); // Chỉ giữ lại các URL không rỗng
 
-      // Nếu không có ảnh nào được upload, không tạo request cho sản phẩm này
+      // Nếu không có ảnh nào trong fileList, bỏ qua request này
       if (thumbUrls.length === 0) {
         return false;
       }
 
-      // Tạo đối tượng sản phẩm chi tiết mới (newSPCT)
+      // Tạo đối tượng chứa thông tin sản phẩm chi tiết mới
       const newSPCT = {
         idSanPham: id, // ID của sản phẩm chính
         idChatLieu: getIdChatLieu, // ID chất liệu sản phẩm
@@ -250,18 +305,21 @@ export default function AddProductDetail() {
         idDeGiay: getIdDeGiay, // ID đế giày sản phẩm
         donGia: item.donGia, // Đơn giá sản phẩm
         soLuong: item.soLuong, // Số lượng sản phẩm
-        trangThai: true, // Trạng thái của sản phẩm (đang hoạt động)
+        trangThai: true, // Trạng thái sản phẩm là đang hoạt động
       };
 
-      // Gửi request POST để thêm sản phẩm chi tiết
-      return axios.post(`${ApiAddSPCT}`, newSPCT);
+      // Gửi request POST để thêm sản phẩm chi tiết, lưu thumbUrls kèm theo
+      return axios.post(`${ApiAddSPCT}`, newSPCT).then((response) => ({
+        response,
+        thumbUrls, // Lưu lại thumbUrls của sản phẩm này để sử dụng sau
+      }));
     });
 
     try {
-      // Chờ tất cả các request hoàn thành
-      const res = await Promise.all(request);
+      // Chờ tất cả các request trong danh sách hoàn thành
+      const res = await Promise.all(requests);
 
-      // Hiển thị thông báo thành công
+      // Hiển thị thông báo thành công khi tất cả sản phẩm chi tiết đã được thêm
       toast.success("Thêm sản phẩm mới thành công", {
         position: "top-right",
         autoClose: 1000,
@@ -276,27 +334,28 @@ export default function AddProductDetail() {
         transition: Bounce,
       });
 
-      // Duyệt qua kết quả trả về từ các request thêm SPCT
-      res.map((item) => {
-        // Duyệt qua từng thumbUrl và gửi request POST để thêm ảnh vào hệ thống
-        thumbUrls.map((thumb) => {
+      // Duyệt qua từng phản hồi từ request và thêm ảnh cho từng sản phẩm chi tiết
+      res.forEach(({ response, thumbUrls }) => {
+        // Lặp qua từng thumbUrl để tạo và gửi ảnh tương ứng vào hệ thống
+        thumbUrls.forEach((thumb) => {
           const newAnh = {
-            tenAnh: item.data.result.tenSanPham, // Tên ảnh là tên của sản phẩm
-            idSanPhamChiTiet: item.data.result.id, // ID sản phẩm chi tiết
-            duLieuAnhBase64: thumb, // Dữ liệu ảnh (base64)
-            trangThai: true, // Trạng thái ảnh (đang hoạt động)
+            tenAnh: response.data.result.tenSanPham, // Tên ảnh là tên sản phẩm
+            idSanPhamChiTiet: response.data.result.id, // ID sản phẩm chi tiết
+            duLieuAnhBase64: thumb, // Dữ liệu ảnh (dạng base64)
+            trangThai: true, // Ảnh được đặt trạng thái hoạt động
           };
 
-          // Gửi request POST để thêm ảnh
+          // Gửi request POST để lưu ảnh vào hệ thống
           axios.post("http://localhost:8080/api/hinhanh/add", newAnh);
         });
       });
-      // Chuyển hướng về trang quản lý sản phẩm sau khi thành công
+
+      // Chuyển hướng về trang quản lý sản phẩm sau khi hoàn tất
       setTimeout(() => {
-        navigate("/admin/sanpham"); // Chuyển hướng về trang quản lý sản phẩm
-      }, 1500); // Thời gian chờ là 1000ms tương đương với thời gian autoClose của toast
+        navigate("/admin/sanpham");
+      }, 1500); // Chờ thêm một khoảng thời gian trước khi chuyển trang
     } catch (error) {
-      // Xử lý lỗi khi request thất bại
+      // Xử lý lỗi nếu có bất kỳ request nào thất bại
       console.log(error);
       toast.error(error.message || "Thêm mới thất bại", {
         position: "top-right",
@@ -361,6 +420,12 @@ export default function AddProductDetail() {
                       }))}
                       onChange={(value) => setGetIdThuongHieu(value)}
                     />
+                    <button
+                      className="bordered h-[38px] w-[38px] rounded-lg border bg-amber-300"
+                      onClick={openModalBrand}
+                    >
+                      +
+                    </button>
                   </div>
                 </div>
                 <div className="mt-10 grid grid-cols-2 gap-6">
@@ -380,6 +445,12 @@ export default function AddProductDetail() {
                       }))}
                       onChange={(value) => setGetIdChatLieu(value)}
                     />
+                    <button
+                      className="bordered h-[38px] w-[38px] rounded-lg border bg-amber-300"
+                      onClick={openModalChatLieu}
+                    >
+                      +
+                    </button>
                   </div>
                   <div>
                     <div>
@@ -397,6 +468,12 @@ export default function AddProductDetail() {
                       }))}
                       onChange={(value) => setGetIdDeGiay(value)}
                     />
+                    <button
+                      className="bordered h-[38px] w-[38px] rounded-lg border bg-amber-300"
+                      onClick={openModalDeGiay}
+                    >
+                      +
+                    </button>
                   </div>
                 </div>
                 <div className="mb-10 mt-10 grid grid-cols-2 gap-6">
@@ -417,6 +494,12 @@ export default function AddProductDetail() {
                         setGetIdKichThuoc(option);
                       }}
                     />
+                    <button
+                      className="bordered h-[38px] w-[38px] rounded-lg border bg-amber-300"
+                      onClick={openModalKichThuoc}
+                    >
+                      +
+                    </button>
                   </div>
                   <div>
                     <div>
@@ -435,6 +518,12 @@ export default function AddProductDetail() {
                       }))}
                       onChange={(value, option) => setGetIdMauSac(option)}
                     />
+                    <button
+                      className="bordered h-[38px] w-[38px] rounded-lg border bg-amber-300"
+                      onClick={openModalMauSac}
+                    >
+                      +
+                    </button>
                   </div>
                 </div>
               </div>
@@ -620,6 +709,86 @@ export default function AddProductDetail() {
           />
         </div>
       </Modal>
+
+      {OpenModelAddBrand && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="h-[100px] w-[400px] rounded-lg bg-white p-8">
+            <div className="flex justify-between">
+              <ThemThuongHieu closeModel={closeModalBrand} />
+              <button
+                onClick={closeModalBrand}
+                className="h-10 rounded bg-red-500 px-4 text-white hover:bg-red-600"
+              >
+                X
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {OpenModelAddChatLieu && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="h-[100px] w-[400px] rounded-lg bg-white p-8">
+            <div className="flex justify-between">
+              <ThemChatLieu closeModel={closeModalChatLieu} />
+              <button
+                onClick={closeModalChatLieu}
+                className="h-10 rounded bg-red-500 px-4 text-white hover:bg-red-600"
+              >
+                X
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {OpenModelAddDeGiay && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="h-[100px] w-[400px] rounded-lg bg-white p-8">
+            <div className="flex justify-between">
+              <ThemDeGiay closeModel={closeModalDeGiay} />
+              <button
+                onClick={closeModalDeGiay}
+                className="h-10 rounded bg-red-500 px-4 text-white hover:bg-red-600"
+              >
+                X
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {OpenModelAddKichThuoc && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="h-[100px] w-[400px] rounded-lg bg-white p-8">
+            <div className="flex justify-between">
+              <ThemKichThuoc closeModel={closeModalKichThuoc} />
+              <button
+                onClick={closeModalKichThuoc}
+                className="h-10 rounded bg-red-500 px-4 text-white hover:bg-red-600"
+              >
+                X
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {OpenModelAddMauSac && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="h-[100px] w-[400px] rounded-lg bg-white p-8">
+            <div className="flex justify-between">
+              <ThemMauSac closeModel={closeModalMauSac} />
+              <button
+                onClick={closeModalMauSac}
+                className="h-10 rounded bg-red-500 px-4 text-white hover:bg-red-600"
+              >
+                X
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <ToastContainer />
     </>

@@ -26,13 +26,13 @@ export default function DanhSachNhanVien() {
   };
 
   useEffect(() => {
-    const role = localStorage.getItem("userRole");
-    if (role !== "ROLE_NHANVIEN") {
-      navigate("/home");
-      return;
-    }
+    // const role = localStorage.getItem("userRole");
+    // if (role !== "ROLE_NHANVIEN") {
+    //   navigate("/home");
+    //   return;
+    // }
     axios
-      .get("http://localhost:8080/khachhang/search", {
+      .get("http://localhost:8080/api/khachhang/search", {
         params: {
           pageNumber: trangHienTai,
           keyword: keyword,
@@ -156,17 +156,11 @@ export default function DanhSachNhanVien() {
                   <td className="border-b px-4 py-2">{item.gioiTinh}</td>
                   <td className="mx-auto flex justify-center border-b px-4 py-2 text-center">
                     <button
-                      className={`relative flex h-6 w-[50px] items-center rounded-full bg-blue-500 transition-all duration-300 ${
-                        item.trangThai ? "justify-end" : "justify-start"
+                      className={`px-4 py-2 rounded border-2 ${
+                        item.trangThai ? "border-green-400 text-green-400" : "border-red-600 text-red-600"
                       }`}
                     >
-                      <div
-                        className={`h-6 w-6 transform rounded-full shadow-md ${
-                          item.trangThai
-                            ? "translate-x bg-green-400"
-                            : "translate-x bg-red-600"
-                        } transition-transform duration-300`}
-                      ></div>
+                      {item.trangThai ? "Hoạt Động" : "Ngừng Hoạt Động"}
                     </button>
                   </td>
                   <td>
