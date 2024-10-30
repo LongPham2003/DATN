@@ -1,16 +1,12 @@
 package com.example.shoes.service.impl;
 
-import com.example.shoes.config.VNPAYConfig;
-import com.example.shoes.dto.hoadon.request.HoaDonRequest;
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
 import com.example.shoes.dto.hoadon.response.HoaDonTheoIDResponse;
 import com.example.shoes.dto.hoadonchitiet.request.HoaDonChiTietRequest;
 import com.example.shoes.dto.phuongthucthanhtoan.request.PhuongThucThanhToanRequest;
 import com.example.shoes.dto.vnpay.response.TransactionStatus;
-import com.example.shoes.entity.ChatLieu;
 import com.example.shoes.entity.HoaDon;
 import com.example.shoes.entity.HoaDonChiTiet;
-import com.example.shoes.entity.KhachHang;
 import com.example.shoes.entity.LichSuHoaDon;
 import com.example.shoes.entity.NhanVien;
 import com.example.shoes.entity.PhieuGiamGia;
@@ -32,7 +28,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -43,8 +38,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -55,6 +48,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -260,7 +254,7 @@ public class HoaDonServiceImpl implements HoaDonService {
         // Kiểm tra trạng thái hóa đơn
 
         if (hoaDon.getTrangThai().equals(TrangThai.DA_THANH_TOAN)) {
-            throw new RuntimeException("Hóa đơn đã thanh toán, không thể xóa!");
+            throw new RuntimeException("Hóa đơn đã thanh toán, không thể hủy!");
         }
 
         // Lấy danh sách chi tiết hóa đơn
@@ -271,13 +265,12 @@ public class HoaDonServiceImpl implements HoaDonService {
             SanPhamChiTiet spct = chiTiet.getIdSpct();
             spct.setSoLuong(spct.getSoLuong() + chiTiet.getSoLuong());
             sanPhamChiTietRepo.save(spct); // Lưu lại số lượng sản phẩm chi tiết đã cập nhật
+            chiTiet.setTrangThai(TrangThai.HUY_DON);
+            hoaDonChiTietRepo.save(chiTiet);
         }
-
-        // Xóa chi tiết hóa đơn
-        hoaDonChiTietRepo.deleteAll(chiTietList);
-
+        hoaDon.setTrangThai(TrangThai.HUY_DON);
         // Xóa hóa đơn
-        hoaDonRepo.delete(hoaDon);
+        hoaDonRepo.save(hoaDon);
         return converToHoaDonResponse(hoaDon);
     }
 
@@ -612,8 +605,8 @@ public class HoaDonServiceImpl implements HoaDonService {
 
         // Tính toán mức giảm giá
         BigDecimal soTienGiam = BigDecimal.ZERO;
-        String phantram = "Phần trăm";
-        String tienmat = "Tiền mặt";
+        String phantram = "%";
+        String tienmat = "VND";
 
         if (phantram.equals(phieuGiamGia.getHinhThucGiam())) {
             // Giảm giá theo phần trăm
@@ -745,13 +738,15 @@ public class HoaDonServiceImpl implements HoaDonService {
         response.setTienPhaiThanhToan(formatCurrency(tienPhaiThanhToan));
         return response;
     }
- private HoaDonTheoIDResponse convert(HoaDon hoaDon){
-     HoaDonTheoIDResponse response = new HoaDonTheoIDResponse();
-     response.setTongTien(formatCurrency(hoaDon.getTongTien()));
-     response.setTienDuocGiam(formatCurrency(hoaDon.getTienDuocGiam()));
-     response.setTienPhaiThanhToan(formatCurrency(hoaDon.getTienPhaiThanhToan()));
-     return response;
- }
+
+    private HoaDonTheoIDResponse convert(HoaDon hoaDon) {
+        HoaDonTheoIDResponse response = new HoaDonTheoIDResponse();
+        response.setTongTien(formatCurrency(hoaDon.getTongTien()));
+        response.setTienDuocGiam(formatCurrency(hoaDon.getTienDuocGiam()));
+        response.setTienPhaiThanhToan(formatCurrency(hoaDon.getTienPhaiThanhToan()));
+        return response;
+    }
+
     // Phương thức chuyển đổi BigDecimal sang định dạng tiền tệ Việt Nam
     private String formatCurrency(BigDecimal amount) {
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));

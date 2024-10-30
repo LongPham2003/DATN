@@ -19,4 +19,5 @@ public interface HoaDonService {
  List<HoaDonResponse> getAllTrangThaiChuaThanhToan();
  void xoaPhieuGiamGiaHoaDon(Integer idHoaDon, Integer idPhieuGiamGia);
  HoaDonTheoIDResponse getTheoIdHoaDon(Integer idHoaDon);
+
 }

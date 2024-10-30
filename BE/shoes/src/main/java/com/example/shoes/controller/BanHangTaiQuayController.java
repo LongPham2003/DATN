@@ -6,7 +6,9 @@ import com.example.shoes.dto.phuongthucthanhtoan.request.PhuongThucThanhToanRequ
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.repository.HoaDonRepo;
 import com.example.shoes.service.HoaDonService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +17,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 @RestController
 @RequestMapping("/banhangtaiquay")
@@ -74,7 +78,7 @@ private HoaDonRepo hoaDonRepo;
     }
 
     // Xóa hóa đơn
-    @DeleteMapping ("/hoadon/delete/{id}")
+    @PutMapping ("/hoadon/delete/{id}")
     public ApiResponse<String> deleteHoaDon(@PathVariable("id") Integer idHoaDon) {
         hoaDonService.deleteHoaDon(idHoaDon);
         return ApiResponse.<String>builder()
