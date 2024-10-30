@@ -610,7 +610,7 @@ public class HoaDonServiceImpl implements HoaDonService {
 
         // Tính toán mức giảm giá
         BigDecimal soTienGiam = BigDecimal.ZERO;
-        String phantram = "Phần trăm";
+        String phantram = "%";
         String tienmat = "Tiền mặt";
 
         if (phantram.equals(phieuGiamGia.getHinhThucGiam())) {

@@ -30,11 +30,20 @@ import Forbidden403 from "./pages/Forbidden403";
 import NotFound404 from "./pages/NotFound404";
 import ProtectedRoute from "./pages/ProtectedRoute";
 import BanHangTaiQuay from "./pages/admin/BanHangTaiQuay/BanHangTaiQuay";
+import HomePage from "./pages/client/Home/homePage.jsx";
 function App() {
   return (
     <>
       <BrowserRouter>
         <Routes>
+          <Route
+            path="/"
+            element={
+              <>
+                <HomePage />
+              </>
+            }
+          />
           <Route
             path="/403"
             element={
