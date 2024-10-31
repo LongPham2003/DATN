@@ -47,12 +47,10 @@ public class PhieuGiamGia extends CrudByAt {
     @Column(name = "giam_toi_da")
     private BigDecimal giamToiDa;
 
-
     @NotNull(message = "Số lượng không được để trống")
     @PositiveOrZero(message = "Số lượng phải là số không âm")
     @Column(name = "so_luong")
     private Integer soLuong;
-
 
     @NotNull(message = "Ngày bắt đầu không được để trống")
     @Column(name = "ngay_bat_dau")
@@ -63,7 +61,6 @@ public class PhieuGiamGia extends CrudByAt {
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm[:ss]")
     @Column(name = "ngay_ket_thuc")
     private LocalDateTime ngayKetThuc;
-
 
     @Column(name = "trang_thai")
     private Boolean trangThai;

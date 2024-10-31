@@ -39,7 +39,7 @@ public class PhieuGiamGiaRequest {
     private LocalDateTime ngayBatDau;
 
     @NotNull(message = "Ngày kết thúc không được để trống")
-    @FutureOrPresent(message = "Ngày bắt đầu không được là quá khứ")
+    @FutureOrPresent(message = "Ngày kết thúc không được là quá khứ")
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm[:ss]")
     private LocalDateTime ngayKetThuc;
 

@@ -39,6 +39,7 @@ public enum ErrorCode {
     INSUFFICIENT_STOCK(1002,"số lượng có đủ để thêm vào hóa đơn",HttpStatus.BAD_REQUEST),
     INVALID_QUANTITY_VOUCHER(1002,"Số lượng không  còn .",HttpStatus.BAD_REQUEST),
     VOUCHER_NOT_IN_BILL(1002,"voucher chưa có trong hóa đơn .",HttpStatus.BAD_REQUEST),
+    VALID_PHIEU_GIAM_GIA(1002,"Ngày kết thúc phải sau ngày bắt đầu.",HttpStatus.BAD_REQUEST),
     ;
     private int code;
     private String message;

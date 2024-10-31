@@ -18,5 +18,5 @@ public interface PhieuGiamGiaService {
 
     List<PhieuGiamGiaResponse> getAllTrangThaiTrue();
 
-    PhanTrangResponse<PhieuGiamGia> getPhieuGiamGia(int pageNumber, int pageSize, String keyword, String tenVoucher, Boolean trangThai, LocalDateTime ngayBatDau, LocalDateTime ngatKetThuc);
+    PhanTrangResponse<PhieuGiamGiaResponse> getPhieuGiamGia(int pageNumber, int pageSize, String keyword, String tenVoucher, Boolean trangThai, LocalDateTime ngayBatDau, LocalDateTime ngatKetThuc);
 }
