@@ -20,12 +20,13 @@ export default function BanHangTaiQuay() {
   const [tongTien, setTongTien] = useState(0);
   const [tienPhaiThanhToan, setTienPhaiThanhToan] = useState(0);
   const [tienDuocGiam, setTienDuocGiam] = useState(0);
-  const [tenKhachHang, setTenKhachHang] = useState("");
+  const [tenKhachHang, setTenKhachHang] = useState("Khách lẻ");
   const [soDienThoai, setsoDienThoai] = useState("");
   const [diaChiGiaoHang, setdiaChiGiaoHang] = useState("");
   const [thaydoiSoLuongMua, setThayDoiSoLuongMua] = useState(0);
   const [idSPCTDangChon, setIdSPCTDangChon] = useState();
   const [soLuongTonCuaSPCT, setSoLuongTonCuaSPCT] = useState(0);
+  const [danhSachKhachHang, setDanhSachKhachHang] = useState([]);
 
   let ApiTaoHoaDon = `http://localhost:8080/banhangtaiquay/taodon`;
   let ApiLayHoaDonChuaThanhToan = `http://localhost:8080/api/hoadon/getall-chuathanhtoan`;
@@ -34,6 +35,8 @@ export default function BanHangTaiQuay() {
   let ApiLaySoLuongTonCuaSPCT = `http://localhost:8080/api/sanphamchitiet/${idSPCTDangChon}`;
   let ApiLayThongTinThanhToanTheoIdHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/gettheoid`;
   let ApiLayPhieuGiamGia = `http://localhost:8080/api/phieugiamgia/trang-thai-true`;
+  let ApiHuyHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/delete/${selectedHoaDonId}`;
+  let ApiLayTatCaKhachHang = `http://localhost:8080/api/khachhang/getall`;
 
   //Lấy danh sách hóa đơn
   const LayDanhSachHoaDonChuaThanhToan = async () => {
@@ -82,6 +85,15 @@ export default function BanHangTaiQuay() {
   const LayDanhSachPhieuGiamGia = async () => {
     const pgg = await axios.get(ApiLayPhieuGiamGia);
     setDanhSachPhieuGiamGia(pgg.data.result);
+  };
+
+  //Lay Danh Sach Khach Hang
+  const LayDanhSachKhacHang = async () => {
+    try {
+      const khachHang = await axios.get(ApiLayTatCaKhachHang);
+      setDanhSachKhachHang(khachHang.data.result);
+      console.log(khachHang.data.result.diaChi[0].diaChiChiTiet);
+    } catch (error) {}
   };
 
   const XoaSPKhoiGioHang = async (idSPCT) => {
@@ -134,8 +146,9 @@ export default function BanHangTaiQuay() {
       });
 
       await Promise.all([
-        LayChiTietSanPham(),
-        LayDanhSachHoaDonChuaThanhToan(),
+        LayChiTietSanPham(), // Cập nhật giỏ hàng sau khi thêm sản phẩm
+        LayThongTinThanhToanCuaHoaDon(), // Cập nhật thông tin hóa đơn mới, bao gồm tổng tiền
+        LaySoLuongTonCuaSPCT(),
       ]);
       toast.success("Cập nhật thành công");
     } catch (error) {
@@ -161,8 +174,8 @@ export default function BanHangTaiQuay() {
         );
 
         await Promise.all([
-          LayChiTietSanPham(),
-          LayDanhSachHoaDonChuaThanhToan(),
+          LayChiTietSanPham(), // Cập nhật giỏ hàng sau khi thêm sản phẩm
+          LayThongTinThanhToanCuaHoaDon(), // Cập nhật thông tin hóa đơn mới, bao gồm tổng tiền
           LaySoLuongTonCuaSPCT(),
         ]);
         toast.success("Cập nhật thành công");
@@ -192,8 +205,8 @@ export default function BanHangTaiQuay() {
         );
         toast.success("Cập nhật thành công");
         await Promise.all([
-          LayChiTietSanPham(),
-          LayDanhSachHoaDonChuaThanhToan(),
+          LayChiTietSanPham(), // Cập nhật giỏ hàng sau khi thêm sản phẩm
+          LayThongTinThanhToanCuaHoaDon(), // Cập nhật thông tin hóa đơn mới, bao gồm tổng tiền
           LaySoLuongTonCuaSPCT(),
         ]);
       } catch (error) {
@@ -203,9 +216,22 @@ export default function BanHangTaiQuay() {
     }
   };
 
+  //Huy Hoa Don
+  const huyHoaDon = async () => {
+    try {
+      await axios.delete(ApiHuyHoaDon);
+      toast.success("Hủy hóa đơn thành công");
+      LayDanhSachHoaDonChuaThanhToan();
+    } catch (error) {
+      console.log(error);
+      toast.error("Không thành công, có lỗi xảy ra");
+    }
+  };
+
   useEffect(() => {
     LayDanhSachHoaDonChuaThanhToan();
     LayDanhSachPhieuGiamGia();
+    LayDanhSachKhacHang();
   }, []);
 
   useEffect(() => {
@@ -232,7 +258,7 @@ export default function BanHangTaiQuay() {
         // Nếu không tìm thấy, đặt `tongTien` và `tienPhaiThanhToan` về 0
         setTongTien(0);
         setTienPhaiThanhToan(0);
-        setTienDuocGiam(0)
+        setTienDuocGiam(0);
       }
     }
 
@@ -422,24 +448,33 @@ export default function BanHangTaiQuay() {
                 <div className="flex items-center">
                   <Select
                     showSearch
-                    style={{ width: 300, height: "35px" }} // Đặt chiều cao cố định
+                    style={{ width: 300, height: "35px" }}
                     placeholder="Chọn phiếu giảm giá"
-                    options={danhSachPhieuGiamGia.map((pgg) => ({
-                      label: (
-                        <>
-                          <span>tên: {pgg.tenVoucher}</span> <br />
-                          <span>
-                            Mức giảm: {pgg.mucGiam} {pgg.hinhThucGiam}
-                          </span>{" "}
-                          <br />
-                          <span>Giảm tối đa: {pgg.giamToiDa} VNĐ</span> <br />
-                          <span>Còn: {pgg.soLuong} phiếu</span>
-                          <hr />
-                        </>
-                      ),
-                      value: pgg.id,
-                    }))}
+                    optionLabelProp="label" // Chỉ hiển thị 'label' sau khi chọn
+                    options={[
+                      { label: "Không chọn phiếu", value: "" }, // Option rỗng
+                      ...danhSachPhieuGiamGia.map((pgg) => ({
+                        label: `${pgg.tenVoucher}`, // Hiển thị tên sau khi chọn
+                        value: pgg.id,
+                        description: (
+                          <>
+                            <span>tên: {pgg.tenVoucher}</span> <br />
+                            <span>
+                              Mức giảm: {pgg.mucGiam} {pgg.hinhThucGiam}
+                            </span>{" "}
+                            <br />
+                            <span>Giảm tối đa: {pgg.giamToiDa} VNĐ</span> <br />
+                            <span className="text-red-600">
+                              Còn: {pgg.soLuong} phiếu
+                            </span>
+                            <hr />
+                          </>
+                        ),
+                      })),
+                    ]}
+                    fieldNames={{ label: "description", value: "value" }} // Hiển thị thông tin chi tiết khi mở dropdown
                   />
+
                   <Button
                     color="danger"
                     variant="solid"
@@ -493,14 +528,39 @@ export default function BanHangTaiQuay() {
                   <Button
                     style={{ height: "50px", width: "450px" }}
                     className="ml-[10px] border-2 border-red-500 text-lg font-medium text-red-500"
+                    onClick={huyHoaDon}
                   >
                     Hủy
                   </Button>
                 </div>
               </div>
             </div>
-            <div>
-              <p>Khach hang</p>
+            <hr />
+            <div className="mx-3 mt-2">
+              <span className="text-xl font-semibold">Khach hang</span>
+              <div>
+                <span className="">Chọn khách hàng:&nbsp;</span>
+                <Select
+                  placeholder="Chọn khách hàng"
+                  className="w-[300px]"
+                  options={danhSachKhachHang.map((kh) => ({
+                    label: (
+                      <>
+                        <span>tên: {kh.hoTen}</span> <br />
+                        <span>SĐT: {kh.sdt}</span>
+                        <br />
+                        <span>Địa chỉ: {kh.diaChi.diaChiChiTiet} </span> <br />
+                        <hr />
+                      </>
+                    ),
+                    value: kh.id,
+                  }))}
+                />
+              </div>
+              <div>
+                <span className="text-lg font-medium">Tên khách hàng: </span>
+                <span>{tenKhachHang}</span>
+              </div>
             </div>
           </div>
         </div>
