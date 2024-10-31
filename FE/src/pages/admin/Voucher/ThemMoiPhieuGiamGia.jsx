@@ -18,32 +18,16 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
     soLuong: "",
     ngayBatDau: "",
     ngayKetThuc: "",
-    trangThai: ""
+    trangThai: "",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    setFormData((prevState) => {
-      let newValue = value;
-
-      // Kiểm tra nếu người dùng chọn "%" và "mucGiam" lớn hơn 100
-      if (name === "hinhThucGiam" && value === "%") {
-        if (prevState.mucGiam > 100) {
-          newValue = 100; // Giới hạn mucGiam về 100
-        }
-        return { ...prevState, [name]: value, mucGiam: Math.min(prevState.mucGiam, 100) };
-      }
-
-      // Nếu người dùng thay đổi mucGiam
-      if (name === "mucGiam" && formData.hinhThucGiam === "%") {
-        newValue = Math.min(value, 100); // Giới hạn mucGiam không quá 100
-      }
-
-      return { ...prevState, [name]: newValue };
-    });
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -65,8 +49,8 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
               soLuong: formData.soLuong,
               ngayBatDau: formData.ngayBatDau,
               ngayKetThuc: formData.ngayKetThuc,
-              trangThai: true
-            }
+              trangThai: true,
+            },
           );
 
           if (response.status === 200) {
@@ -82,7 +66,7 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
               soLuong: "",
               ngayBatDau: "",
               ngayKetThuc: "",
-              trangThai: ""
+              trangThai: "",
             });
             button();
             onAdd();
@@ -93,7 +77,7 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
       },
       onCancel() {
         console.log("Hủy bỏ thao tác thêm phiếu giảm giá");
-      }
+      },
     });
   };
   return (
@@ -129,10 +113,11 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
             <div className="w-full p-2 sm:w-1/2">
               <label className="block">Hình thức giảm:</label>
 
-              <select className="block w-full rounded-md border border-slate-300 bg-white py-2 pl-2 shadow-sm"
-                      name="hinhThucGiam"
-                      value={formData.hinhThucGiam}
-                      onChange={handleChange}
+              <select
+                className="block w-full rounded-md border border-slate-300 bg-white py-2 pl-2 shadow-sm"
+                name="hinhThucGiam"
+                value={formData.hinhThucGiam}
+                onChange={handleChange}
               >
                 <option value="Tiền mặt">Tiền mặt</option>
                 <option value="%">Phần trăm</option>
@@ -156,7 +141,6 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
                 placeholder="Mức giảm..."
                 type="text"
               />
-
             </div>
             <div className="w-full p-2 sm:w-1/2">
               <label className="block">Giảm tối đa:</label>
