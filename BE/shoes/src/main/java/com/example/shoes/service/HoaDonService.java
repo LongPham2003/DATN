@@ -26,4 +26,5 @@ public interface HoaDonService {
  List<BaoCaoThongKeResponse> layBaoCaoTaiChinhTheoThang(LocalDate startDate, LocalDate endDate);
  List<BaoCaoThongKeResponse> layBaoCaoTaiChinhTheoNam(LocalDate startDate, LocalDate endDate);
  BaoCaoThongKeResponse layBaoCaoTaiChinhTongQuat();
+ String xuatHoaDon(Integer idHoaDon);
 }

@@ -155,11 +155,16 @@ private HoaDonRepo hoaDonRepo;
                 .build();
     }
 
-    @GetMapping("/tong-quoc")
+    @GetMapping("/tong-quat")
     public ApiResponse<BaoCaoThongKeResponse> layBaoCaoTaiChinhTongQuuat() {
         BaoCaoThongKeResponse response = hoaDonService.layBaoCaoTaiChinhTongQuat();
         return ApiResponse.<BaoCaoThongKeResponse>builder()
                 .result(response)
                 .build();
+    }
+    // API để xuất hóa đơn theo ID
+    @GetMapping("/xuathoadon/{id}")
+    public String xuatHoaDon(@PathVariable Integer id) {
+        return hoaDonService.xuatHoaDon(id);
     }
 }

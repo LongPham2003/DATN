@@ -26,6 +26,7 @@ import com.example.shoes.repository.PhuongThucThanhToanRepo;
 import com.example.shoes.repository.SanPhamChiTietRepo;
 import com.example.shoes.service.HoaDonService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -840,7 +841,37 @@ public class HoaDonServiceImpl implements HoaDonService {
 
         return response;
     }
+//    xuat hoa don
+    @Transactional
+    public String xuatHoaDon(Integer idHoaDon) {
+        HoaDon hoaDon = hoaDonRepo.findById(idHoaDon)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy hóa đơn với ID: " + idHoaDon));
 
+        StringBuilder builder = new StringBuilder();
+        builder.append("HÓA ĐƠN\n");
+        builder.append("Mã hóa đơn: ").append(hoaDon.getMa()).append("\n");
+        builder.append("Ngày tạo: ").append(hoaDon.getNgayTao()).append("\n");
+//        builder.append("Khách hàng: ").append(hoaDon.getIdKhachHang().getHoTen()).append("\n");
+//        builder.append("Số điện thoại: ").append(hoaDon.getSoDienThoai()).append("\n");
+//        builder.append("Địa chỉ giao hàng: ").append(hoaDon.getDiaChiGiaoHang()).append("\n");
+//        builder.append("Phương thức thanh toán: ").append(hoaDon.getPhuongThucThanhToan()).append("\n");
+        builder.append("\nChi tiết sản phẩm:\n");
+        BigDecimal tongTien = BigDecimal.ZERO;
+        for (HoaDonChiTiet chiTiet : hoaDon.getHoaDonChiTiets()) {
+            builder.append("- Sản phẩm: ").append(chiTiet.getIdSpct().getIdSanPham().getTenSanPham()).append("\n");
+            builder.append("  Số lượng: ").append(chiTiet.getSoLuong()).append(" x Đơn giá: ")
+                    .append(chiTiet.getDonGia()).append(" = ")
+                    .append(chiTiet.getDonGia().multiply(BigDecimal.valueOf(chiTiet.getSoLuong()))).append("\n");
+            tongTien = tongTien.add(chiTiet.getDonGia().multiply(BigDecimal.valueOf(chiTiet.getSoLuong())));
+        }
+
+        builder.append("\nTổng tiền trước giảm giá: ").append(tongTien).append("\n");
+        builder.append("Tiền được giảm: ").append(hoaDon.getTienDuocGiam()).append("\n");
+        builder.append("Tổng tiền phải thanh toán: ").append(hoaDon.getTienPhaiThanhToan()).append("\n");
+        builder.append("Trạng thái: ").append(hoaDon.getTrangThai()).append("\n");
+
+        return builder.toString();
+    }
     // Phương thức chuyển đổi BigDecimal sang định dạng tiền tệ Việt Nam
     private String formatCurrency(BigDecimal amount) {
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
