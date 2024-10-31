@@ -20,15 +20,20 @@ const ChiTietPhieuGiamGia = () => {
     soLuong: "",
     ngayBatDau: "",
     ngayKetThuc: "",
-    trangThai: "",
+    trangThai: ""
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
       ...prevState,
-      [name]: value,
+      [name]: value
     }));
+  };
+
+  // hàm format lại định dạng khi gửi về be
+  const formatCurrencyToNumber = (value) => {
+    return parseInt(value.replace(/[^\d]/g, ""));
   };
 
   // update phiếu giảm giá
@@ -43,14 +48,14 @@ const ChiTietPhieuGiamGia = () => {
         axios
           .post(`http://localhost:8080/api/phieugiamgia/update/${id}`, {
             tenVoucher: formData.tenVoucher,
-            dieuKienGiamGia: formData.dieuKienGiamGia,
+            dieuKienGiamGia: formatCurrencyToNumber(formData.dieuKienGiamGia),
             hinhThucGiam: formData.hinhThucGiam,
-            mucGiam: formData.mucGiam,
-            giamToiDa: formData.giamToiDa,
+            mucGiam: formatCurrencyToNumber(formData.mucGiam),
+            giamToiDa: formatCurrencyToNumber(formData.giamToiDa),
             soLuong: formData.soLuong,
             ngayBatDau: formData.ngayBatDau,
             ngayKetThuc: formData.ngayKetThuc,
-            trangThai: formData.trangThai,
+            trangThai: formData.trangThai
           })
           .then((response) => {
             console.log("Cập nhật thành công:", response.data);
@@ -65,7 +70,7 @@ const ChiTietPhieuGiamGia = () => {
       },
       onCancel() {
         // Nếu người dùng hủy, có thể không cần làm gì cả
-      },
+      }
     });
   };
 
@@ -91,7 +96,7 @@ const ChiTietPhieuGiamGia = () => {
           ngayTao: resData.ngayTao,
           ngayCapNhat: resData.ngayCapNhat,
           nguoiTao: resData.nguoiTao,
-          nguoiCapNhat: resData.nguoiCapNhat,
+          nguoiCapNhat: resData.nguoiCapNhat
         });
       })
       .catch((error) => {
@@ -132,14 +137,15 @@ const ChiTietPhieuGiamGia = () => {
             </div>
             <div className="w-full p-2 sm:w-1/2">
               <label className="block">Hình thức giảm:</label>
-              <input
-                name="hinhThucGiam"
-                value={formData.hinhThucGiam}
-                onChange={handleChange}
-                className="block w-full rounded-md border border-slate-300 bg-white py-2 pl-2 shadow-sm"
-                placeholder="Hình thức giảm..."
-                type="text"
-              />
+
+              <select className="block w-full rounded-md border border-slate-300 bg-white py-2 pl-2 shadow-sm"
+                      name="hinhThucGiam"
+                      value={formData.hinhThucGiam}
+                      onChange={handleChange}
+              >
+                <option value="Tiền mặt">Tiền mặt</option>
+                <option value="%">Phần trăm</option>
+              </select>
             </div>
             <div className="w-full p-2 sm:w-1/2">
               <label className="block">Mức giảm:</label>
