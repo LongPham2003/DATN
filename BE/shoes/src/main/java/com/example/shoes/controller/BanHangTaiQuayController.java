@@ -1,5 +1,8 @@
 package com.example.shoes.controller;
 import com.example.shoes.dto.BaoCaoThongKeResponse;
+
+import com.example.shoes.dto.hoadon.request.HoaDonRequest;
+
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
 import com.example.shoes.dto.hoadon.response.HoaDonTheoIDResponse;
 import com.example.shoes.dto.hoadonchitiet.request.HoaDonChiTietRequest;
@@ -42,8 +45,8 @@ private HoaDonRepo hoaDonRepo;
     @PostMapping("/thanhtoan/{idhoadon}")
     public ApiResponse<String> thanhToan(
             @PathVariable("idhoadon") Integer idhoadon,
-            @RequestBody PhuongThucThanhToanRequest phuongThucThanhToanRequest) {
-        hoaDonService.thanhToan(idhoadon, phuongThucThanhToanRequest);
+            @RequestBody HoaDonRequest hoaDonRequest) {
+        hoaDonService.thanhToan(idhoadon, hoaDonRequest);
         return ApiResponse.<String>builder()
                 .message("thanh toan thanh cong")
                 .build();
@@ -81,7 +84,7 @@ private HoaDonRepo hoaDonRepo;
     }
 
     // Xóa hóa đơn
-    @DeleteMapping ("/hoadon/delete/{id}")
+    @PutMapping ("/hoadon/delete/{id}")
     public ApiResponse<String> deleteHoaDon(@PathVariable("id") Integer idHoaDon) {
         hoaDonService.deleteHoaDon(idHoaDon);
         return ApiResponse.<String>builder()
@@ -117,7 +120,13 @@ private HoaDonRepo hoaDonRepo;
                 .message("Xóa phiếu giảm giá khỏi hóa đơn thành công")
                 .build();
     }
+
+
 //    get tong tiền ,tien duoc giam,tien phai thanh toan theo idhoadon
+
+    // Lay thong tin tien theo idHoaDon
+
+
     @GetMapping("/hoadon/gettheoid/{idHoaDon}")
     public ApiResponse<HoaDonTheoIDResponse> getTheoIdHoaDon(@PathVariable Integer idHoaDon) {
         HoaDonTheoIDResponse hoaDonResponse = hoaDonService.getTheoIdHoaDon(idHoaDon);
@@ -125,11 +134,14 @@ private HoaDonRepo hoaDonRepo;
                 .result(hoaDonResponse)
                 .build();
     }
+
+
     @GetMapping("/theo-ngay")
     public ApiResponse<List<BaoCaoThongKeResponse>> layBaoCaoTaiChinhTheoNgay(
-            @RequestParam LocalDate startDate,
-            @RequestParam LocalDate endDate) {
-        List<BaoCaoThongKeResponse> responses = hoaDonService.layBaoCaoTaiChinhTheoNgay(startDate, endDate);
+            @RequestParam LocalDate ngayBatDau,
+            @RequestParam LocalDate ngayKetThuc) {
+        List<BaoCaoThongKeResponse> responses = hoaDonService.layBaoCaoTaiChinhTheoNgay(ngayBatDau, ngayKetThuc);
+
         return ApiResponse.<List<BaoCaoThongKeResponse>>builder()
                 .result(responses)
                 .build();
@@ -137,9 +149,11 @@ private HoaDonRepo hoaDonRepo;
 
     @GetMapping("/theo-thang")
     public ApiResponse<List<BaoCaoThongKeResponse>> layBaoCaoTaiChinhTheoThang(
-            @RequestParam LocalDate startDate,
-            @RequestParam LocalDate endDate) {
-        List<BaoCaoThongKeResponse> responses =hoaDonService.layBaoCaoTaiChinhTheoThang(startDate, endDate);
+
+            @RequestParam LocalDate ngayBatDau,
+            @RequestParam LocalDate ngayKetThuc) {
+        List<BaoCaoThongKeResponse> responses =hoaDonService.layBaoCaoTaiChinhTheoThang(ngayBatDau, ngayKetThuc);
+
         return ApiResponse.<List<BaoCaoThongKeResponse>>builder()
                 .result(responses)
                 .build();
@@ -147,19 +161,29 @@ private HoaDonRepo hoaDonRepo;
 
     @GetMapping("/theo-nam")
     public ApiResponse<List<BaoCaoThongKeResponse>> layBaoCaoTaiChinhTheoNam(
-            @RequestParam LocalDate startDate,
-            @RequestParam LocalDate endDate) {
-        List<BaoCaoThongKeResponse> responses = hoaDonService.layBaoCaoTaiChinhTheoNam(startDate, endDate);
+
+            @RequestParam LocalDate ngayBatDau,
+            @RequestParam LocalDate ngayKetThuc) {
+        List<BaoCaoThongKeResponse> responses = hoaDonService.layBaoCaoTaiChinhTheoNam(ngayBatDau, ngayKetThuc);
+
         return ApiResponse.<List<BaoCaoThongKeResponse>>builder()
                 .result(responses)
                 .build();
     }
 
-    @GetMapping("/tong-quoc")
+
+    @GetMapping("/tong-quat")
     public ApiResponse<BaoCaoThongKeResponse> layBaoCaoTaiChinhTongQuuat() {
         BaoCaoThongKeResponse response = hoaDonService.layBaoCaoTaiChinhTongQuat();
         return ApiResponse.<BaoCaoThongKeResponse>builder()
                 .result(response)
                 .build();
     }
+
+    // API để xuất hóa đơn theo ID
+    @GetMapping("/xuathoadon/{id}")
+    public String xuatHoaDon(@PathVariable Integer id) {
+        return hoaDonService.xuatHoaDon(id);
+    }
+
 }

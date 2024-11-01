@@ -48,11 +48,18 @@ public class HoaDon extends CrudByAt {
     @Column(name = "tien_phai_thanh_toan")
     private BigDecimal tienPhaiThanhToan;
 
+    @Column(name = "tien_khach_dua")
+    private BigDecimal tienKhachDua;
+
+    @Column(name = "tien_thua")
+    private BigDecimal tienThua;
+
     @Column(name = "phuong_thuc_thanh_toan")
     private String phuongThucThanhToan;
 
     @Column(name = "phuong_thuc_giao_hang")
     private String phuongThucGiaoHang;
+
 
     @Column(name = "ngay_tao")
     private LocalDate ngayTao;

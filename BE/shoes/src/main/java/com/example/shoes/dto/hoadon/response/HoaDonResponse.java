@@ -21,6 +21,8 @@ public class HoaDonResponse {
     private String tongTien;
     private String tienDuocGiam;
     private String tienPhaiThanhToan;
+    private String tienKhachDua;
+    private String tienThua;
     private String phuongThucThanhToan;
     private String phuongThucGiaoHang;
     private LocalDate ngayTao;
