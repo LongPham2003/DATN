@@ -16,8 +16,7 @@ import LayAnhTheoIdSP from "../SanPham/Product/LayANhTheoIDSP";
 import { XMarkIcon } from "@heroicons/react/16/solid/index.js";
 import { TrashIcon } from "@heroicons/react/16/solid";
 import DiaCHiMacDinhKhachHang from "./DiaChiMacDinhKhachHang";
-import { tabPanel } from "@material-tailwind/react";
-import { values } from "lodash";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function BanHangTaiQuay() {
   const [hoaDonFalse, setHoaDonFalse] = useState([]);
@@ -31,7 +30,7 @@ export default function BanHangTaiQuay() {
   const [tienPhaiThanhToan, setTienPhaiThanhToan] = useState(0);
   const [tienDuocGiam, setTienDuocGiam] = useState(0);
   const [tenKhachHang, setTenKhachHang] = useState("Khách lẻ");
-  const [idKhachHang, setIdKhachHang] = useState();
+  const [idKhachHang, setIdKhachHangDangChon] = useState();
   const [soDienThoai, setsoDienThoai] = useState("");
   const [diaChiGiaoHang, setdiaChiGiaoHang] = useState("");
   const [thaydoiSoLuongMua, setThayDoiSoLuongMua] = useState(0);
@@ -43,6 +42,7 @@ export default function BanHangTaiQuay() {
   const [tienThuaTraKhach, setTienThuaTraKhach] = useState();
   const [error, setError] = useState("");
 
+  const [disableSelctKhachHang, setDisableSelectKhachHang] = useState(false);
   const [isSelectDisabled, setIsSelectDisabled] = useState(false); // State để quản lý disable
 
   let ApiTaoHoaDon = `http://localhost:8080/banhangtaiquay/taodon`; // Tao Hoa DOn
@@ -57,7 +57,8 @@ export default function BanHangTaiQuay() {
   let ApiAddPhieuGiamGiaVaoHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/${selectedHoaDonId}/voucher`; // thêm phiếu giam giá vào hóa đơn
   let ApiXoaPhieuGiamGiaKhoiHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/delete/${selectedHoaDonId}/voucher`; // Xóa phiếu giam giá
   let ApiThanhToanHoaDon = `http://localhost:8080/banhangtaiquay/thanhtoan/${selectedHoaDonId}`; // thanh toán tiền mặt
-
+  let ApiXoaKhachHangKhoiHoaDon = `http://localhost:8080/api/hoadon/${selectedHoaDonId}/deletekhachhang`; // Xoa khach hanng khoi hoa don
+  let ApiThemKhachHangVaoHoaDon = `http://localhost:8080/api/hoadon/${selectedHoaDonId}/addkhachhang`; // Them khach hang vao hoa don
   //Lấy danh sách hóa đơn
   const LayDanhSachHoaDonChuaThanhToan = async () => {
     try {
@@ -82,8 +83,7 @@ export default function BanHangTaiQuay() {
       setTienPhaiThanhToan(ttThanhToan.data.result.tienPhaiThanhToan);
       setTienDuocGiam(ttThanhToan.data.result.tienDuocGiam);
       setIdPhieuGiamGiaDangChon(ttThanhToan.data.result.idVoucher);
-      setIdKhachHang(ttThanhToan.data.result.idKhachHang);
-      console.log("ID phiếu giảm giá:", ttThanhToan.data.result.idVoucher); // Log ID phiếu giảm giá nếu có
+      setIdKhachHangDangChon(ttThanhToan.data.result.idKhachHang);
     } else {
       console.log("Dữ liệu trả về không có trường 'result'"); // Log nếu `result` không tồn tại
     }
@@ -275,6 +275,13 @@ export default function BanHangTaiQuay() {
     }
   };
 
+  const addVoucher = async () => {
+    if (idPhieuGiamGiaDangChon) {
+      await addPhieuGiamGia(); // Gọi hàm addPhieuGiamGia khi mất focus
+      setIsSelectDisabled(true); // Disable Select sau khi gọi hàm
+    }
+  };
+
   //Xoa Phieu Giam Gia
   const XoaPhieuGiamGiaKhoiHoaDon = async () => {
     console.log("ID phiếu giảm giá đang chọn:", idPhieuGiamGiaDangChon);
@@ -288,6 +295,36 @@ export default function BanHangTaiQuay() {
     } catch (error) {
       toast.error("Có lỗi xảy ra!");
       console.log(error);
+    }
+  };
+
+  const addKhachHangVaoHoaDon = async () => {
+    try {
+      await axios.post(`${ApiThemKhachHangVaoHoaDon}/${idKhachHang}`);
+      toast.success("Thêm khach hàng thành công");
+      LayThongTinThanhToanCuaHoaDon();
+    } catch (error) {
+      console.log(error);
+      toast.error("Co loi xay ra!");
+    }
+  };
+
+  const ThemKhachHang = async () => {
+    if (idKhachHang) {
+      await addKhachHangVaoHoaDon();
+      setDisableSelectKhachHang(true); // Disable Select sau khi gọi hàm
+    }
+  };
+
+  const XoaKhachHangKhoiHoaDon = async () => {
+    try {
+      await axios.post(`${ApiXoaKhachHangKhoiHoaDon}/${idKhachHang}`);
+      LayThongTinThanhToanCuaHoaDon();
+      toast.success("Thanh cong");
+      setDisableSelectKhachHang(false);
+    } catch (error) {
+      console.log(error);
+      toast.error("Co Loi Xay Ra");
     }
   };
 
@@ -371,16 +408,6 @@ export default function BanHangTaiQuay() {
     // useEffect sẽ chạy lại mỗi khi một trong hai giá trị này thay đổi
   }, [selectedHoaDonId, hoaDonFalse]);
 
-  const handleVoucherChange = (value) => {
-    setIdPhieuGiamGiaDangChon(value); // Cập nhật giá trị voucher khi chọn
-  };
-
-  const handleBlur = async () => {
-    if (idPhieuGiamGiaDangChon) {
-      await addPhieuGiamGia(); // Gọi hàm addPhieuGiamGia khi mất focus
-      setIsSelectDisabled(true); // Disable Select sau khi gọi hàm
-    }
-  };
   return (
     <>
       <div className="mx-2 flex max-h-screen overflow-y-hidden font-mono">
@@ -569,8 +596,8 @@ export default function BanHangTaiQuay() {
                     placeholder="Chọn phiếu giảm giá"
                     optionLabelProp="label" // Chỉ hiển thị 'label' sau khi chọn
                     value={idPhieuGiamGiaDangChon}
-                    onChange={handleVoucherChange} // Cập nhật idPhieuGiamGiaDangChon khi chọn
-                    onBlur={handleBlur} // Gọi addPhieuGiamGia khi mất focus
+                    // onChange={handleVoucherChange} // Cập nhật idPhieuGiamGiaDangChon khi chọn
+                    onClick={addVoucher} // Gọi addPhieuGiamGia khi mất focus
                     disabled={isSelectDisabled} // Disable Select khi isSelectDisabled là true
                     options={[
                       { label: "Không chọn phiếu", value: "" }, // Option rỗng
@@ -590,7 +617,7 @@ export default function BanHangTaiQuay() {
                                 Mức giảm: {pgg.mucGiam} {pgg.hinhThucGiam}
                               </span>{" "}
                               <br />
-                              <span>Giảm tối đa: {pgg.giamToiDa} VNĐ</span>{" "}
+                              <span>Giảm tối đa: {pgg.giamToiDa} VNĐ</span>
                               <br />
                               <span className="text-red-600">
                                 Còn: {pgg.soLuong} phiếu
@@ -675,40 +702,71 @@ export default function BanHangTaiQuay() {
               <span className="text-xl font-semibold">Khach hang</span>
               <div>
                 <span className="">Chọn khách hàng:&nbsp;</span>
-                <Select
-                  placeholder="Chọn khách hàng"
-                  className="w-[300px]"
-                  optionLabelProp="label" // Chỉ hiển thị 'label' sau khi chọn
-                  options={[
-                    { label: "Chọn khách hàng", value: "" }, // Option rỗng
-                    ...danhSachKhachHang.map((kh) => ({
-                      label: `${kh.hoTen}`, // Hiển thị tên khách hàng sau khi chọn
-                      value: kh.id,
-                      description: (
-                        <>
-                          <span>tên: {kh.hoTen}</span> <br />
-                          <span>SĐT: {kh.sdt}</span>
-                          <br />
-                          <span>
-                            Địa chỉ:{" "}
-                            <DiaCHiMacDinhKhachHang idKhachHang={kh.id} />
-                          </span>
-                          <br />
-                          <hr />
-                        </>
-                      ),
-                    })),
-                  ]}
-                  fieldNames={{ label: "description", value: "value" }} // Hiển thị thông tin chi tiết khi mở dropdown
-                  filterOption={
-                    (input, option) =>
-                      option.label.toLowerCase().includes(input.toLowerCase()) // Tìm kiếm theo tên  (label)
-                  }
-                />
+                <div className="flex gap-2">
+                  <Select
+                    showSearch
+                    placeholder="Chọn khách hàng"
+                    className="w-[300px]"
+                    optionLabelProp="label" // Chỉ hiển thị 'label' sau khi chọn
+                    value={idKhachHang}
+                    onClick={ThemKhachHang}
+                    disabled={disableSelctKhachHang}
+                    options={[
+                      { label: "Chọn khách hàng", value: "" }, // Option rỗng
+                      ...danhSachKhachHang.map((kh) => ({
+                        label: `${kh.hoTen}`, // Hiển thị tên khách hàng sau khi chọn
+                        value: kh.id,
+                        description: (
+                          <>
+                            <div
+                              onMouseEnter={() => {
+                                setIdKhachHangDangChon(kh.id);
+                              }}
+                            >
+                              <span>tên: {kh.hoTen}</span> <br />
+                              <span>SĐT: {kh.sdt}</span>
+                              <br />
+                              <span>
+                                Địa chỉ:{" "}
+                                <DiaCHiMacDinhKhachHang idKhachHang={kh.id} />
+                              </span>
+                              <br />
+                              <hr />
+                            </div>
+                          </>
+                        ),
+                      })),
+                    ]}
+                    fieldNames={{ label: "description", value: "value" }} // Hiển thị thông tin chi tiết khi mở dropdown
+                    filterOption={
+                      (input, option) =>
+                        option.label.toLowerCase().includes(input.toLowerCase()) // Tìm kiếm theo tên  (label)
+                    }
+                  />
+
+                  <Button
+                    color="danger"
+                    variant="solid"
+                    className="ml-2 flex h-[35px] items-center justify-center" // Đặt chiều cao cho nút bằng với <Select />
+                    onClick={XoaKhachHangKhoiHoaDon}
+                  >
+                    <XMarkIcon className="h-5 w-5" />
+                  </Button>
+                </div>
               </div>
               <div>
-                <span className="text-lg font-medium">Tên khách hàng: </span>
-                <span>{tenKhachHang}</span>
+                <div className="my-1">
+                  <span className="text-lg font-medium">Tên khách hàng: </span>
+                  <span>{tenKhachHang}</span>
+                </div>
+                <div className="my-1">
+                  <span className="text-lg font-medium">Tên khách hàng: </span>
+                  <span>{tenKhachHang}</span>
+                </div>
+                <div className="my-1">
+                  <span className="text-lg font-medium">Tên khách hàng: </span>
+                  <span>{tenKhachHang}</span>
+                </div>
               </div>
             </div>
           </div>
