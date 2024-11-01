@@ -1,12 +1,11 @@
 package com.example.shoes.controller;
 
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
+import com.example.shoes.entity.HoaDon;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.service.HoaDonService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,6 +30,28 @@ public class HoaDonController {
         // Tạo đối tượng ApiResponse để trả về danh sách ChatLieuResponse
         return ApiResponse.<List<HoaDonResponse>>builder()
                 .result(hoaDonResponses)
+                .build();
+    }
+    @PostMapping("/addkhachhang")
+    public ApiResponse<HoaDonResponse> addKhachHang(
+            @RequestParam("idHoaDon") Integer idHoaDon,
+              @RequestParam("idKhachHang") Integer idKhachHang
+    ) {
+
+        return ApiResponse.<HoaDonResponse>builder()
+                .result(hoaDonService.addKhachHangHoaDon(idHoaDon,idKhachHang))
+                .build();
+    }
+
+    @PostMapping("/deletekhachhang")
+    public ApiResponse<HoaDonResponse> deleteKhachHang(
+            @RequestParam("idHoaDon") Integer idHoaDon,
+            @RequestParam("idKhachHang") Integer idKhachHang
+    ) {
+        HoaDonResponse hoaDonResponse = hoaDonService.xoaKhachHangHoaDon(idHoaDon,idKhachHang);
+
+        return ApiResponse.<HoaDonResponse>builder()
+                .result(hoaDonResponse)
                 .build();
     }
 }
