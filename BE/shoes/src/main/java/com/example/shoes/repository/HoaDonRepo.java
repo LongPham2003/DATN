@@ -1,6 +1,8 @@
 package com.example.shoes.repository;
+
 import com.example.shoes.dto.BaoCaoThongKeResponse;
 import com.example.shoes.dto.hoadon.response.HoaDonTheoIDResponse;
+
 import com.example.shoes.entity.HoaDon;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -23,6 +25,7 @@ public interface HoaDonRepo extends JpaRepository<HoaDon, Integer> {
     List<Object[]> findTotalsByIdHoaDon(@Param("idHoaDon") Integer idHoaDon);
 
 
+
     @Query("SELECT " +
             "SUM(h.tienPhaiThanhToan), " + // Tổng số tiền khách hàng phải thanh toán
             "SUM(h.tienDuocGiam), " + // Tổng tiền giảm giá được áp dụng cho hóa đơn
@@ -34,10 +37,13 @@ public interface HoaDonRepo extends JpaRepository<HoaDon, Integer> {
             "GROUP BY h.ngayTao " + // Nhóm theo ngày tạo
             "ORDER BY h.ngayTao") // Sắp xếp kết quả theo ngày tạo
     List<Object[]> layBaoCaoTaiChinhTheoNgay(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+
     @Query("SELECT " +
             "SUM(h.tienPhaiThanhToan), " + // Tổng số tiền khách hàng phải thanh toán
-            "SUM(h.tienDuocGiam), " + // Tổng tiền giảm giá
+            "SUM(h.tongTien - h.tienPhaiThanhToan), " + // Tổng chi phí
+            "(SUM(h.tienPhaiThanhToan) - SUM(h.tongTien - h.tienPhaiThanhToan)), " + // Lợi nhuận
             "COUNT(h.id), " + // Số lượng hóa đơn
+            "SUM(h.tienDuocGiam), " + // Tổng tiền giảm giá
             "COUNT(DISTINCT h.idKhachHang), " + // Số lượng khách hàng duy nhất
             "YEAR(h.ngayTao), MONTH(h.ngayTao) " + // Năm và tháng của ngày tạo hóa đơn
             "FROM HoaDon h " + // Từ bảng HoaDon
@@ -47,8 +53,10 @@ public interface HoaDonRepo extends JpaRepository<HoaDon, Integer> {
     List<Object[]> layBaoCaoTaiChinhTheoThang(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
     @Query("SELECT " +
             "SUM(h.tienPhaiThanhToan), " + // Tổng số tiền khách hàng phải thanh toán
+
             "SUM(h.tienDuocGiam), " + // Tổng tiền giảm giá
             "COUNT(h.id), " + // Số lượng hóa đơn
+
             "COUNT(DISTINCT h.idKhachHang), " + // Số lượng khách hàng duy nhất
             "YEAR(h.ngayTao) " + // Năm của ngày tạo hóa đơn
             "FROM HoaDon h " + // Từ bảng HoaDon
@@ -59,11 +67,14 @@ public interface HoaDonRepo extends JpaRepository<HoaDon, Integer> {
 
     @Query("SELECT " +
             "SUM(h.tienPhaiThanhToan), " + // Tổng số tiền khách hàng phải thanh toán
+
             "SUM(h.tienDuocGiam), " + // Tổng tiền giảm giá
             "COUNT(h.id), " + // Số lượng hóa đơn
+
             "COUNT(DISTINCT h.idKhachHang) " + // Số lượng khách hàng duy nhất
             "FROM HoaDon h") // Từ bảng HoaDon
     List<Object[]> layBaoCaoTaiChinhTongQuoc();
+
 
 
 }

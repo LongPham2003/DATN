@@ -1,6 +1,8 @@
 package com.example.shoes.controller;
 import com.example.shoes.dto.BaoCaoThongKeResponse;
+
 import com.example.shoes.dto.hoadon.request.HoaDonRequest;
+
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
 import com.example.shoes.dto.hoadon.response.HoaDonTheoIDResponse;
 import com.example.shoes.dto.hoadonchitiet.request.HoaDonChiTietRequest;
@@ -43,8 +45,8 @@ private HoaDonRepo hoaDonRepo;
     @PostMapping("/thanhtoan/{idhoadon}")
     public ApiResponse<String> thanhToan(
             @PathVariable("idhoadon") Integer idhoadon,
-            @RequestBody HoaDonRequest hoaDonRequest) {
-        hoaDonService.thanhToan(idhoadon, hoaDonRequest);
+            @RequestBody PhuongThucThanhToanRequest phuongThucThanhToanRequest) {
+        hoaDonService.thanhToan(idhoadon, phuongThucThanhToanRequest);
         return ApiResponse.<String>builder()
                 .message("thanh toan thanh cong")
                 .build();
@@ -119,9 +121,11 @@ private HoaDonRepo hoaDonRepo;
                 .build();
     }
 
+
 //    get tong tiền ,tien duoc giam,tien phai thanh toan theo idhoadon
 
     // Lay thong tin tien theo idHoaDon
+
 
     @GetMapping("/hoadon/gettheoid/{idHoaDon}")
     public ApiResponse<HoaDonTheoIDResponse> getTheoIdHoaDon(@PathVariable Integer idHoaDon) {
@@ -168,10 +172,10 @@ private HoaDonRepo hoaDonRepo;
                 .build();
     }
 
-
     // API để xuất hóa đơn theo ID
     @GetMapping("/xuathoadon/{id}")
     public String xuatHoaDon(@PathVariable Integer id) {
         return hoaDonService.xuatHoaDon(id);
     }
+
 }
