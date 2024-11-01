@@ -24,6 +24,9 @@ public interface HoaDonService {
  void xoaPhieuGiamGiaHoaDon(Integer idHoaDon, Integer idPhieuGiamGia);
  HoaDonTheoIDResponse getTheoIdHoaDon(Integer idHoaDon);
 
+ HoaDonResponse addKhachHangHoaDon(Integer idHoaDon, Integer idKhachHang);
+ HoaDonResponse xoaKhachHangHoaDon(Integer idHoaDon, Integer idKhachHang);
+
  List<BaoCaoThongKeResponse> layBaoCaoTaiChinhTheoNgay(LocalDate startDate, LocalDate endDate);
  List<BaoCaoThongKeResponse> layBaoCaoTaiChinhTheoThang(LocalDate startDate, LocalDate endDate);
  List<BaoCaoThongKeResponse> layBaoCaoTaiChinhTheoNam(LocalDate startDate, LocalDate endDate);

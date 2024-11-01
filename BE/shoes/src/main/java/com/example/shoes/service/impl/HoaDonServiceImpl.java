@@ -7,13 +7,7 @@ import com.example.shoes.dto.hoadon.response.HoaDonTheoIDResponse;
 import com.example.shoes.dto.hoadonchitiet.request.HoaDonChiTietRequest;
 import com.example.shoes.dto.phuongthucthanhtoan.request.PhuongThucThanhToanRequest;
 import com.example.shoes.dto.vnpay.response.TransactionStatus;
-import com.example.shoes.entity.HoaDon;
-import com.example.shoes.entity.HoaDonChiTiet;
-import com.example.shoes.entity.LichSuHoaDon;
-import com.example.shoes.entity.NhanVien;
-import com.example.shoes.entity.PhieuGiamGia;
-import com.example.shoes.entity.PhuongThucThanhToan;
-import com.example.shoes.entity.SanPhamChiTiet;
+import com.example.shoes.entity.*;
 import com.example.shoes.enums.TrangThai;
 import com.example.shoes.exception.AppException;
 import com.example.shoes.exception.ErrorCode;
@@ -893,6 +887,35 @@ public class HoaDonServiceImpl implements HoaDonService {
         response.setTienDuocGiam(formatCurrency(hoaDon.getTienDuocGiam()));
         response.setTienPhaiThanhToan(formatCurrency(hoaDon.getTienPhaiThanhToan()));
         return response;
+    }
+
+    //add khách hàng vào hóa đơn
+    @Override
+    public HoaDonResponse addKhachHangHoaDon(Integer idHoaDon, Integer idKhachHang) {
+        // Lấy thông tin hóa đơn từ idHoaDon
+        HoaDon hoaDon = hoaDonRepo.findById(idHoaDon)
+                .orElseThrow(() -> new AppException(ErrorCode.BILL_NOT_FOUND));
+
+        // Lấy thông tin phiếu giảm giá từ idPhieuGiamGia
+        KhachHang khachHang = khachHangRepo.findById(idKhachHang)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        // Lưu thông tin khach hang vao hoa don
+        hoaDon.setIdKhachHang(khachHang);
+
+        return converToHoaDonResponse(hoaDonRepo.save(hoaDon)); // Lưu hóa đơn đã cập nhật
+
+    }
+
+    @Override
+    public HoaDonResponse xoaKhachHangHoaDon(Integer idHoaDon, Integer idKhachHang) {
+
+        HoaDon hoaDon = hoaDonRepo.findById(idHoaDon)
+                .orElseThrow(() -> new AppException(ErrorCode.BILL_NOT_FOUND));
+
+        hoaDon.setIdKhachHang(null);
+
+        return converToHoaDonResponse(hoaDonRepo.save(hoaDon)); // Lưu hóa đơn đã cập nhật
     }
     // Phương thức chuyển đổi BigDecimal sang định dạng tiền tệ Việt Nam
     private String formatCurrency(Object value) {
