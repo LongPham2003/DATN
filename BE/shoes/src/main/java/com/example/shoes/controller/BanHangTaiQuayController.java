@@ -1,5 +1,6 @@
 package com.example.shoes.controller;
 import com.example.shoes.dto.BaoCaoThongKeResponse;
+import com.example.shoes.dto.hoadon.request.HoaDonRequest;
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
 import com.example.shoes.dto.hoadon.response.HoaDonTheoIDResponse;
 import com.example.shoes.dto.hoadonchitiet.request.HoaDonChiTietRequest;
@@ -42,8 +43,8 @@ private HoaDonRepo hoaDonRepo;
     @PostMapping("/thanhtoan/{idhoadon}")
     public ApiResponse<String> thanhToan(
             @PathVariable("idhoadon") Integer idhoadon,
-            @RequestBody PhuongThucThanhToanRequest phuongThucThanhToanRequest) {
-        hoaDonService.thanhToan(idhoadon, phuongThucThanhToanRequest);
+            @RequestBody HoaDonRequest hoaDonRequest) {
+        hoaDonService.thanhToan(idhoadon, hoaDonRequest);
         return ApiResponse.<String>builder()
                 .message("thanh toan thanh cong")
                 .build();
@@ -132,9 +133,9 @@ private HoaDonRepo hoaDonRepo;
 
     @GetMapping("/theo-ngay")
     public ApiResponse<List<BaoCaoThongKeResponse>> layBaoCaoTaiChinhTheoNgay(
-            @RequestParam LocalDate startDate,
-            @RequestParam LocalDate endDate) {
-        List<BaoCaoThongKeResponse> responses = hoaDonService.layBaoCaoTaiChinhTheoNgay(startDate, endDate);
+            @RequestParam LocalDate ngayBatDau,
+            @RequestParam LocalDate ngayKetThuc) {
+        List<BaoCaoThongKeResponse> responses = hoaDonService.layBaoCaoTaiChinhTheoNgay(ngayBatDau, ngayKetThuc);
         return ApiResponse.<List<BaoCaoThongKeResponse>>builder()
                 .result(responses)
                 .build();
@@ -142,9 +143,9 @@ private HoaDonRepo hoaDonRepo;
 
     @GetMapping("/theo-thang")
     public ApiResponse<List<BaoCaoThongKeResponse>> layBaoCaoTaiChinhTheoThang(
-            @RequestParam LocalDate startDate,
-            @RequestParam LocalDate endDate) {
-        List<BaoCaoThongKeResponse> responses =hoaDonService.layBaoCaoTaiChinhTheoThang(startDate, endDate);
+            @RequestParam LocalDate ngayBatDau,
+            @RequestParam LocalDate ngayKetThuc) {
+        List<BaoCaoThongKeResponse> responses =hoaDonService.layBaoCaoTaiChinhTheoThang(ngayBatDau, ngayKetThuc);
         return ApiResponse.<List<BaoCaoThongKeResponse>>builder()
                 .result(responses)
                 .build();
@@ -152,9 +153,9 @@ private HoaDonRepo hoaDonRepo;
 
     @GetMapping("/theo-nam")
     public ApiResponse<List<BaoCaoThongKeResponse>> layBaoCaoTaiChinhTheoNam(
-            @RequestParam LocalDate startDate,
-            @RequestParam LocalDate endDate) {
-        List<BaoCaoThongKeResponse> responses = hoaDonService.layBaoCaoTaiChinhTheoNam(startDate, endDate);
+            @RequestParam LocalDate ngayBatDau,
+            @RequestParam LocalDate ngayKetThuc) {
+        List<BaoCaoThongKeResponse> responses = hoaDonService.layBaoCaoTaiChinhTheoNam(ngayBatDau, ngayKetThuc);
         return ApiResponse.<List<BaoCaoThongKeResponse>>builder()
                 .result(responses)
                 .build();

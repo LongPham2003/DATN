@@ -1,6 +1,7 @@
 package com.example.shoes.service;
 
 import com.example.shoes.dto.BaoCaoThongKeResponse;
+import com.example.shoes.dto.hoadon.request.HoaDonRequest;
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
 import com.example.shoes.dto.hoadon.response.HoaDonTheoIDResponse;
 import com.example.shoes.dto.hoadonchitiet.request.HoaDonChiTietRequest;
@@ -15,7 +16,7 @@ public interface HoaDonService {
  HoaDonResponse findByid(Integer id);
  HoaDonResponse deleteHoaDon(Integer idHoaDon);
  List<HoaDonResponse> getAllHoaDon();
- void thanhToan(Integer idHoaDon, PhuongThucThanhToanRequest phuongThucThanhToanRequest);
+ void thanhToan(Integer idHoaDon, HoaDonRequest hoaDonRequest);
  HoaDonResponse addSanPhamChiTietToHoaDon(Integer idHoaDon, HoaDonChiTietRequest chiTietRequest);
  void apPhieuGiamGiaHoaDon(Integer idHoaDon, Integer idPhieuGiamGia);
  List<HoaDonResponse> getAllTrangThaiDaThanhToan();
