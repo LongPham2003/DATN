@@ -277,7 +277,10 @@ export default function SanPhamBanTaiQuay({ id, onProductAdded }) {
           <div className="flex justify-center gap-8 pb-3">
             <button
               className="rounded bg-blue-500 px-2 py-1 text-white"
-              onClick={()=>{handleResetSelectedChange(); getallSPCTBH()}}
+              onClick={() => {
+                handleResetSelectedChange();
+                getallSPCTBH();
+              }}
             >
               Reset bộ lọc & làm mới danh sách
             </button>
