@@ -896,10 +896,22 @@ public class HoaDonServiceImpl implements HoaDonService {
      return response;
  }
     // Phương thức chuyển đổi BigDecimal sang định dạng tiền tệ Việt Nam
-    private String formatCurrency(BigDecimal amount) {
-        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
-        String formatted = currencyFormat.format(amount);
-        return formatted.replace("₫", "").trim() + "VNĐ"; // Loại bỏ ký hiệu ₫ và thêm VNĐ
+    private String formatCurrency(Object value) {
+        if (value == null) return "0 VNĐ"; // Trả về "0 VNĐ" nếu giá trị là null
+
+        if (value instanceof Number) {
+            // Chuyển đổi value thành BigDecimal để đảm bảo độ chính xác khi định dạng tiền tệ
+            BigDecimal amount = new BigDecimal(((Number) value).toString());
+
+            // Sử dụng NumberFormat để định dạng tiền tệ Việt Nam
+            NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+            String formatted = currencyFormat.format(amount);
+
+            // Loại bỏ ký hiệu ₫ và thêm VNĐ
+            return formatted.replace("₫", "").trim() + " VNĐ";
+        } else {
+            throw new IllegalArgumentException("Provided value is not a number: " + value);
+        }
     }
 
 
