@@ -130,7 +130,7 @@ public class HoaDonServiceImpl implements HoaDonService {
 
         // Tạo hóa đơn mới
         HoaDon hoaDon = new HoaDon();
-        String maHoaDon = generateMaHoaDon();
+        String maHoaDon=generateMaHoaDon();
         hoaDon.setMa(maHoaDon);
         hoaDon.setIdNhanVien(nhanVien);
         hoaDon.setPhuongThucGiaoHang("tại quầy ");
@@ -150,7 +150,7 @@ public class HoaDonServiceImpl implements HoaDonService {
     }
 
     @Override
-    public HoaDonResponse updateHoaDon(Integer idHoaDon, HoaDonChiTietRequest chiTietRequest) {  // Tìm hóa đơn theo ID
+    public HoaDonResponse updateHoaDon(Integer idHoaDon, HoaDonChiTietRequest chiTietRequest) {
         // Tìm hóa đơn theo ID
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon)
                 .orElseThrow(() -> new AppException(ErrorCode.BILL_NOT_FOUND));
@@ -393,6 +393,7 @@ public class HoaDonServiceImpl implements HoaDonService {
 
         return true;
     }
+
 
 
     private void capNhatTrangThaiHoaDon(HoaDon hoaDon) {
@@ -837,6 +838,7 @@ public class HoaDonServiceImpl implements HoaDonService {
         response.setTongTienDaApDungPhieuGiamGia(formatCurrency((BigDecimal) result[1]));
         response.setSoLuongHoaDon(((Number) result[2]).intValue());
         response.setSoLuongKhachHang(((Number) result[3]).intValue());
+
         // Xử lý ngày tạo
         if (result.length >= 7) { // Kiểm tra xem có đủ phần tử không
             if (result[6] instanceof LocalDate) {
@@ -885,6 +887,7 @@ public class HoaDonServiceImpl implements HoaDonService {
 
         return builder.toString();
     }
+
  private HoaDonTheoIDResponse convert(HoaDon hoaDon){
      HoaDonTheoIDResponse response = new HoaDonTheoIDResponse();
      response.setTongTien(formatCurrency(hoaDon.getTongTien()));
@@ -898,6 +901,7 @@ public class HoaDonServiceImpl implements HoaDonService {
         String formatted = currencyFormat.format(amount);
         return formatted.replace("₫", "").trim() + "VNĐ"; // Loại bỏ ký hiệu ₫ và thêm VNĐ
     }
+
 
     private HoaDonResponse converToHoaDonResponse(HoaDon hoaDon) {
         HoaDonResponse hoaDonResponse = new HoaDonResponse();

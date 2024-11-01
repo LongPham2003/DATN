@@ -48,7 +48,7 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
         List<HoaDonChiTietBHRespose> hdbh= hoaDonChiTietRepo.getSPCTByIdHoaDon(idHoaDon);
         return hdbh;
     }
-
+  
 
     @Override
     public void deleteByIdHoaDonAndIdSpct(Integer idHoaDon, Integer idSpct) {

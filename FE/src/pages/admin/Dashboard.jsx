@@ -10,7 +10,7 @@ import ThuongHieu from "./ThuocTinhSP/ThuongHieu/ThuongHieu";
 
 export default function Dashboard() {
   return (
-    <div className="flex">
+    <div className="flex overflow-hidden">
       <aside className="w-1/5 drop-shadow-2xl">
         <Sidebar />
       </aside>
