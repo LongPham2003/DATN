@@ -31,6 +31,7 @@ export default function BanHangTaiQuay() {
   const [tienPhaiThanhToan, setTienPhaiThanhToan] = useState(0);
   const [tienDuocGiam, setTienDuocGiam] = useState(0);
   const [tenKhachHang, setTenKhachHang] = useState("Khách lẻ");
+  const [idKhachHang, setIdKhachHang] = useState();
   const [soDienThoai, setsoDienThoai] = useState("");
   const [diaChiGiaoHang, setdiaChiGiaoHang] = useState("");
   const [thaydoiSoLuongMua, setThayDoiSoLuongMua] = useState(0);
@@ -40,19 +41,22 @@ export default function BanHangTaiQuay() {
   const [idPhieuGiamGiaDangChon, setIdPhieuGiamGiaDangChon] = useState();
   const [tienKhachDua, setTienKhachDua] = useState();
   const [tienThuaTraKhach, setTienThuaTraKhach] = useState();
+  const [error, setError] = useState("");
 
-  let ApiTaoHoaDon = `http://localhost:8080/banhangtaiquay/taodon`;
-  let ApiLayHoaDonChuaThanhToan = `http://localhost:8080/api/hoadon/getall-chuathanhtoan`;
-  let ApiLaySanPhamOHoaDon = `http://localhost:8080/api/hoadonchitiet/SPCTbyidHD`;
-  let ApiUpdateSoLuongSPTrongHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/update`;
-  let ApiLaySoLuongTonCuaSPCT = `http://localhost:8080/api/sanphamchitiet/${idSPCTDangChon}`;
-  let ApiLayThongTinThanhToanTheoIdHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/gettheoid`;
-  let ApiLayPhieuGiamGia = `http://localhost:8080/api/phieugiamgia/trang-thai-true`;
-  let ApiHuyHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/delete/${selectedHoaDonId}`;
-  let ApiLayTatCaKhachHang = `http://localhost:8080/api/khachhang/getall`;
-  let ApiAddPhieuGiamGiaKhoiHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/${selectedHoaDonId}/voucher`;
-  let ApiXoaPhieuGiamGiaKhoiHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/delete/${selectedHoaDonId}/voucher/${idPhieuGiamGiaDangChon}`;
-  let ApiThanhToanHoaDon = `http://localhost:8080/banhangtaiquay/thanhtoan/${selectedHoaDonId}`;
+  const [isSelectDisabled, setIsSelectDisabled] = useState(false); // State để quản lý disable
+
+  let ApiTaoHoaDon = `http://localhost:8080/banhangtaiquay/taodon`; // Tao Hoa DOn
+  let ApiLayHoaDonChuaThanhToan = `http://localhost:8080/api/hoadon/getall-chuathanhtoan`; // Danh Sach Hoa DOn CHo
+  let ApiLaySanPhamOHoaDon = `http://localhost:8080/api/hoadonchitiet/SPCTbyidHD`; // Gio Hang
+  let ApiUpdateSoLuongSPTrongHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/update`; //Update So Luong San Pham trong gio hang
+  let ApiLaySoLuongTonCuaSPCT = `http://localhost:8080/api/sanphamchitiet/${idSPCTDangChon}`; // Lấy số lượng tồn  để valid
+  let ApiLayThongTinThanhToanTheoIdHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/gettheoid`; // Lay các thông tin tiền , voucher, khách hàng của hóa đơn
+  let ApiLayPhieuGiamGia = `http://localhost:8080/api/phieugiamgia/trang-thai-true`; // Danh Sach Phiếu Giam giá
+  let ApiHuyHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/delete/${selectedHoaDonId}`; // Hủy Hóa đơn
+  let ApiLayTatCaKhachHang = `http://localhost:8080/api/khachhang/getall`; // Danh sách khách hàng
+  let ApiAddPhieuGiamGiaVaoHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/${selectedHoaDonId}/voucher`; // thêm phiếu giam giá vào hóa đơn
+  let ApiXoaPhieuGiamGiaKhoiHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/delete/${selectedHoaDonId}/voucher`; // Xóa phiếu giam giá
+  let ApiThanhToanHoaDon = `http://localhost:8080/banhangtaiquay/thanhtoan/${selectedHoaDonId}`; // thanh toán tiền mặt
 
   //Lấy danh sách hóa đơn
   const LayDanhSachHoaDonChuaThanhToan = async () => {
@@ -65,6 +69,23 @@ export default function BanHangTaiQuay() {
       }
     } catch (error) {
       console.log("Lấy hóa đơn lỗi:", error);
+    }
+  };
+
+  //Lấy các kiểu tiền của hóa đơn
+  const LayThongTinThanhToanCuaHoaDon = async () => {
+    const ttThanhToan = await axios.get(
+      `${ApiLayThongTinThanhToanTheoIdHoaDon}/${selectedHoaDonId}`,
+    );
+    if (ttThanhToan.data.result) {
+      setTongTien(ttThanhToan.data.result.tongTien);
+      setTienPhaiThanhToan(ttThanhToan.data.result.tienPhaiThanhToan);
+      setTienDuocGiam(ttThanhToan.data.result.tienDuocGiam);
+      setIdPhieuGiamGiaDangChon(ttThanhToan.data.result.idVoucher);
+      setIdKhachHang(ttThanhToan.data.result.idKhachHang);
+      console.log("ID phiếu giảm giá:", ttThanhToan.data.result.idVoucher); // Log ID phiếu giảm giá nếu có
+    } else {
+      console.log("Dữ liệu trả về không có trường 'result'"); // Log nếu `result` không tồn tại
     }
   };
 
@@ -85,17 +106,6 @@ export default function BanHangTaiQuay() {
     const responseSoLuongTon = await axios.get(ApiLaySoLuongTonCuaSPCT);
     setSoLuongTonCuaSPCT(responseSoLuongTon.data.result.soLuong);
     console.log("soLuongTonCuaSPCT", responseSoLuongTon.data.result.soLuong);
-  };
-
-  //Lấy các kiểu tiền của hóa đơn
-  const LayThongTinThanhToanCuaHoaDon = async () => {
-    const ttThanhToan = await axios.get(
-      `${ApiLayThongTinThanhToanTheoIdHoaDon}/${selectedHoaDonId}`,
-    );
-    setTongTien(ttThanhToan.data.result.tongTien);
-    setTienPhaiThanhToan(ttThanhToan.data.result.tienPhaiThanhToan);
-    setTienDuocGiam(ttThanhToan.data.result.tienDuocGiam);
-    // console.log(ttThanhToan.data.result.tongTien);
   };
 
   const LayDanhSachPhieuGiamGia = async () => {
@@ -135,11 +145,11 @@ export default function BanHangTaiQuay() {
       toast.error("Tạo hóa đơn mới thất bại");
     }
   };
-
+  // Mở modal chọn SP
   const openModal = () => {
     setModalVisible(true);
   };
-
+  // Đóng modal chọn SP
   const closeModal = () => {
     setModalVisible(false);
   };
@@ -147,7 +157,6 @@ export default function BanHangTaiQuay() {
   const openthanhToan = () => {
     setOpenThanhToan(true);
   };
-
   const closethanhToan = () => {
     setOpenThanhToan(false);
   };
@@ -253,12 +262,62 @@ export default function BanHangTaiQuay() {
   };
 
   // add Phieu Giam Gia
+  const addPhieuGiamGia = async () => {
+    try {
+      await axios.post(
+        `${ApiAddPhieuGiamGiaVaoHoaDon}/${idPhieuGiamGiaDangChon}`,
+      );
+      toast.success("Áp dụng thành công");
+      LayThongTinThanhToanCuaHoaDon();
+    } catch (error) {
+      console.log(error);
+      toast.error("Có lỗi xảy ra");
+    }
+  };
+
+  //Xoa Phieu Giam Gia
+  const XoaPhieuGiamGiaKhoiHoaDon = async () => {
+    console.log("ID phiếu giảm giá đang chọn:", idPhieuGiamGiaDangChon);
+    try {
+      await axios.delete(
+        `${ApiXoaPhieuGiamGiaKhoiHoaDon}/${idPhieuGiamGiaDangChon}`,
+      );
+      toast.success("Không áp dụng voucher tahnfh công");
+      LayThongTinThanhToanCuaHoaDon();
+      setIsSelectDisabled(false);
+    } catch (error) {
+      toast.error("Có lỗi xảy ra!");
+      console.log(error);
+    }
+  };
+
+  const tinhTienThua = (value) => {
+    // Loại bỏ "VNĐ" và dấu chấm, sau đó chuyển thành số
+    const tienPhaiThanhToanNum = Number(
+      tienPhaiThanhToan.replace(/[.VNĐ]/g, "").trim(),
+    );
+
+    console.log(tienPhaiThanhToanNum);
+
+    setTienKhachDua(value);
+
+    // Tính tiền trả lại khách
+    const tienTraLaiKhach = value - tienPhaiThanhToanNum;
+
+    if (tienTraLaiKhach >= 0) {
+      setTienThuaTraKhach(tienTraLaiKhach);
+      setError(""); // Xóa lỗi nếu đủ tiền thanh toán
+    } else {
+      setError("không đủ tiền thanh toán"); // Báo lỗi nếu không đủ tiền
+    }
+  };
 
   //Thanh toan
   const thanhToanTienMat = async () => {
     try {
       await axios.post(ApiThanhToanHoaDon, {
-        tenPhuongThuc: "Tiền mặt",
+        phuongThucThanhToan: "Tiền mặt",
+        tienKhachDua: tienKhachDua,
       });
       toast.success("Thanh toán thành công");
       LayDanhSachHoaDonChuaThanhToan();
@@ -270,14 +329,19 @@ export default function BanHangTaiQuay() {
   };
 
   useEffect(() => {
-    LayDanhSachHoaDonChuaThanhToan();
-    LayDanhSachPhieuGiamGia();
-    LayDanhSachKhacHang();
+    Promise.all([
+      LayDanhSachHoaDonChuaThanhToan(),
+      LayDanhSachPhieuGiamGia(),
+      LayDanhSachKhacHang(),
+    ]);
+
+    // LayThongTinThanhToanCuaHoaDon();
   }, []);
 
   useEffect(() => {
     if (selectedHoaDonId) {
       LayChiTietSanPham(selectedHoaDonId); // Gọi hàm lấy chi tiết sản phẩm khi id của hóa đơn được chọn thay đổi
+      LayThongTinThanhToanCuaHoaDon(selectedHoaDonId);
     }
   }, [selectedHoaDonId]);
 
@@ -307,6 +371,16 @@ export default function BanHangTaiQuay() {
     // useEffect sẽ chạy lại mỗi khi một trong hai giá trị này thay đổi
   }, [selectedHoaDonId, hoaDonFalse]);
 
+  const handleVoucherChange = (value) => {
+    setIdPhieuGiamGiaDangChon(value); // Cập nhật giá trị voucher khi chọn
+  };
+
+  const handleBlur = async () => {
+    if (idPhieuGiamGiaDangChon) {
+      await addPhieuGiamGia(); // Gọi hàm addPhieuGiamGia khi mất focus
+      setIsSelectDisabled(true); // Disable Select sau khi gọi hàm
+    }
+  };
   return (
     <>
       <div className="mx-2 flex max-h-screen overflow-y-hidden font-mono">
@@ -494,6 +568,10 @@ export default function BanHangTaiQuay() {
                     style={{ width: 300, height: "35px" }}
                     placeholder="Chọn phiếu giảm giá"
                     optionLabelProp="label" // Chỉ hiển thị 'label' sau khi chọn
+                    value={idPhieuGiamGiaDangChon}
+                    onChange={handleVoucherChange} // Cập nhật idPhieuGiamGiaDangChon khi chọn
+                    onBlur={handleBlur} // Gọi addPhieuGiamGia khi mất focus
+                    disabled={isSelectDisabled} // Disable Select khi isSelectDisabled là true
                     options={[
                       { label: "Không chọn phiếu", value: "" }, // Option rỗng
                       ...danhSachPhieuGiamGia.map((pgg) => ({
@@ -502,16 +580,23 @@ export default function BanHangTaiQuay() {
                         disabled: pgg.soLuong === 0, // Disable option nếu soLuong = 0
                         description: (
                           <>
-                            <span>tên: {pgg.tenVoucher}</span> <br />
-                            <span>
-                              Mức giảm: {pgg.mucGiam} {pgg.hinhThucGiam}
-                            </span>{" "}
-                            <br />
-                            <span>Giảm tối đa: {pgg.giamToiDa} VNĐ</span> <br />
-                            <span className="text-red-600">
-                              Còn: {pgg.soLuong} phiếu
-                            </span>
-                            <hr />
+                            <div
+                              onMouseEnter={() =>
+                                setIdPhieuGiamGiaDangChon(pgg.id)
+                              }
+                            >
+                              <span>tên: {pgg.tenVoucher}</span> <br />
+                              <span>
+                                Mức giảm: {pgg.mucGiam} {pgg.hinhThucGiam}
+                              </span>{" "}
+                              <br />
+                              <span>Giảm tối đa: {pgg.giamToiDa} VNĐ</span>{" "}
+                              <br />
+                              <span className="text-red-600">
+                                Còn: {pgg.soLuong} phiếu
+                              </span>
+                              <hr />
+                            </div>
                           </>
                         ),
                       })),
@@ -527,6 +612,7 @@ export default function BanHangTaiQuay() {
                     color="danger"
                     variant="solid"
                     className="ml-2 flex h-[35px] items-center justify-center" // Đặt chiều cao cho nút bằng với <Select />
+                    onClick={XoaPhieuGiamGiaKhoiHoaDon}
                   >
                     <XMarkIcon className="h-5 w-5" />
                   </Button>
@@ -676,13 +762,19 @@ export default function BanHangTaiQuay() {
             addonAfter={"VNĐ"}
             defaultValue={0}
             onChange={(value) => {
-              setTienKhachDua(value), console.log(value);
+              tinhTienThua(value), console.log(value);
             }}
           />
         </div>
         <div>
           <p>Tiền thừa</p>
-          <InputNumber addonAfter={"VNĐ"} defaultValue={0} disabled />
+          <InputNumber
+            value={tienThuaTraKhach}
+            addonAfter={"VNĐ"}
+            defaultValue={0}
+            disabled
+          />
+          {error && <p className="text-red-500">{error}</p>}
         </div>
       </Modal>
 
