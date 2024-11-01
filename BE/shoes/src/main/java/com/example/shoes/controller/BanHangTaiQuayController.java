@@ -45,8 +45,8 @@ private HoaDonRepo hoaDonRepo;
     @PostMapping("/thanhtoan/{idhoadon}")
     public ApiResponse<String> thanhToan(
             @PathVariable("idhoadon") Integer idhoadon,
-            @RequestBody PhuongThucThanhToanRequest phuongThucThanhToanRequest) {
-        hoaDonService.thanhToan(idhoadon, phuongThucThanhToanRequest);
+            @RequestBody HoaDonRequest hoaDonRequest) {
+        hoaDonService.thanhToan(idhoadon, hoaDonRequest);
         return ApiResponse.<String>builder()
                 .message("thanh toan thanh cong")
                 .build();
@@ -110,6 +110,7 @@ private HoaDonRepo hoaDonRepo;
                     .message("Áp dụng phiếu giảm giá thành công")
                     .build();
     }
+
     @DeleteMapping("/hoadon/delete/{id}/voucher/{idPhieuGiamGia}")
     public ApiResponse<String> xoaPhieuGiamGia(
             @PathVariable Integer id,
@@ -123,10 +124,7 @@ private HoaDonRepo hoaDonRepo;
 
 
 //    get tong tiền ,tien duoc giam,tien phai thanh toan theo idhoadon
-
     // Lay thong tin tien theo idHoaDon
-
-
     @GetMapping("/hoadon/gettheoid/{idHoaDon}")
     public ApiResponse<HoaDonTheoIDResponse> getTheoIdHoaDon(@PathVariable Integer idHoaDon) {
         HoaDonTheoIDResponse hoaDonResponse = hoaDonService.getTheoIdHoaDon(idHoaDon);

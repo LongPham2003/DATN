@@ -16,19 +16,18 @@ public interface HoaDonService {
  HoaDonResponse findByid(Integer id);
  HoaDonResponse deleteHoaDon(Integer idHoaDon);
  List<HoaDonResponse> getAllHoaDon();
- void thanhToan(Integer idHoaDon, PhuongThucThanhToanRequest phuongThucThanhToanRequest);
+ void thanhToan(Integer idHoaDon, HoaDonRequest hoaDonRequest);
  HoaDonResponse addSanPhamChiTietToHoaDon(Integer idHoaDon, HoaDonChiTietRequest chiTietRequest);
  void apPhieuGiamGiaHoaDon(Integer idHoaDon, Integer idPhieuGiamGia);
  List<HoaDonResponse> getAllTrangThaiDaThanhToan();
  List<HoaDonResponse> getAllTrangThaiChuaThanhToan();
  void xoaPhieuGiamGiaHoaDon(Integer idHoaDon, Integer idPhieuGiamGia);
  HoaDonTheoIDResponse getTheoIdHoaDon(Integer idHoaDon);
+
  List<BaoCaoThongKeResponse> layBaoCaoTaiChinhTheoNgay(LocalDate startDate, LocalDate endDate);
  List<BaoCaoThongKeResponse> layBaoCaoTaiChinhTheoThang(LocalDate startDate, LocalDate endDate);
  List<BaoCaoThongKeResponse> layBaoCaoTaiChinhTheoNam(LocalDate startDate, LocalDate endDate);
  BaoCaoThongKeResponse layBaoCaoTaiChinhTongQuat();
-
  String xuatHoaDon(Integer idHoaDon);
-
 
 }
