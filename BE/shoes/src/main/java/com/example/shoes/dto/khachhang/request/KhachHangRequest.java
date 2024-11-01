@@ -46,6 +46,7 @@ public class KhachHangRequest {
     private String xaPhuong;
 
     private String diaChiChiTiet;
+
     private String soNhaDuongThonXom;
 
 

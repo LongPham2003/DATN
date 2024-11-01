@@ -84,7 +84,7 @@ public class SanPhamChiTietController {
                 .build();
     }
 
-    @GetMapping("/getallspctbh")
+    @GetMapping("/getallSPCTBH")
     public ApiResponse<List<SPCTBanHangResponse>> getAllSPCTBH(@RequestParam(required = false) String maSanPham,
                                                                @RequestParam(required = false) Integer idMauSac,
                                                                @RequestParam(required = false) Integer idkichThuoc,

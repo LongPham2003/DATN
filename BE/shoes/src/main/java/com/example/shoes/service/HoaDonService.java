@@ -22,9 +22,11 @@ public interface HoaDonService {
  List<HoaDonResponse> getAllTrangThaiChuaThanhToan();
  void xoaPhieuGiamGiaHoaDon(Integer idHoaDon, Integer idPhieuGiamGia);
  HoaDonTheoIDResponse getTheoIdHoaDon(Integer idHoaDon);
+
  List<BaoCaoThongKeResponse> layBaoCaoTaiChinhTheoNgay(LocalDate startDate, LocalDate endDate);
  List<BaoCaoThongKeResponse> layBaoCaoTaiChinhTheoThang(LocalDate startDate, LocalDate endDate);
  List<BaoCaoThongKeResponse> layBaoCaoTaiChinhTheoNam(LocalDate startDate, LocalDate endDate);
  BaoCaoThongKeResponse layBaoCaoTaiChinhTongQuat();
  String xuatHoaDon(Integer idHoaDon);
+
 }

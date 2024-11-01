@@ -20,6 +20,9 @@ public interface PhieuGiamGiaRepo extends JpaRepository<PhieuGiamGia, Integer> {
 
     List<PhieuGiamGia> findByTenVoucherContainingIgnoreCase(String tenVoucher);
 
+    @Query("select pgg from PhieuGiamGia  pgg where pgg.trangThai = true")
+    List<PhieuGiamGia> getAllByTrangThaiTrue();
+
     List<PhieuGiamGia> findByTrangThai(Boolean trangThai);
 
     @Query("SELECT p FROM PhieuGiamGia p WHERE "

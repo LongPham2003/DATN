@@ -7,9 +7,13 @@ import { ToastContainer } from "react-toastify";
 import CustomDropdown from "../../../CustomDropdown";
 import DetailProduct from "../Product/DetailProduct"; // Import the DetailProduct component
 import { Link } from "react-router-dom";
+import SanPhamChiTiet from "./SanPhamChiTiet.jsx";
 
 export default function ListProduct() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [isModalSuaOpen, setIsModalSuaOpen] = useState(false);
+
   const [danhSachSanPham, setDanhSachSanPham] = useState([]);
   const [loaiSelect, setLoaiSelect] = useState([]);
   const [tongSoTrang, setTongSoTrang] = useState(0);
@@ -17,7 +21,11 @@ export default function ListProduct() {
   const [idLoai, setidLoai] = useState();
   const [tenTimKiem, setTenTimKiem] = useState("");
 
+
+  const [selectedProductId, setSelectedProductId] = useState(null);
+
   const [trangThaiTimKiem, setTrangThaiTimKiem] = useState();
+
   const itemsPerPage = 5;
 
   const totalRows = itemsPerPage;
@@ -57,7 +65,7 @@ export default function ListProduct() {
       setTongSoTrang(
         response.data.result.totalPages === undefined
           ? 0
-          : response.data.result.totalPages,
+          : response.data.result.totalPages
       );
       // console.log(DetailPD.data);
     } catch (error) {
@@ -67,15 +75,31 @@ export default function ListProduct() {
 
   const openModal = () => {
     setIsModalOpen(true);
+    setIsModalSuaOpen(false);
   };
+
 
   const closeModal = () => {
     setIsModalOpen(false);
   };
 
+  const openSuaModal = (id) => {
+    setSelectedProductId(id);
+    setIsModalSuaOpen(true);
+    setIsModalOpen(false);
+  };
+
+  const closeSuaModal =async () => {
+    setSelectedProductId(null);
+    setIsModalSuaOpen(false);
+    await loadSanPham(trangHienTai); // Gọi lại danh sách sản phẩm sau khi sửa
+  };
+
   const handlePageChange = (selectedPage) => {
     setTrangHienTai(selectedPage.selected + 1);
   };
+
+
 
   // useEffect(() => {
   //   loadSanPham(trangHienTai);
@@ -92,12 +116,12 @@ export default function ListProduct() {
     setidLoai(""); // Đặt lại loại nếu cần
     // setLoaiTimKiem(""); // Đặt lại loại tìm kiếm nếu cần
     // Bỏ chọn radio button
-    const radioButtons = document.querySelectorAll('input[name="color"]');
+    const radioButtons = document.querySelectorAll("input[name=\"color\"]");
     radioButtons.forEach((radio) => {
       radio.checked = false; // Bỏ chọn tất cả radio button
     });
     // Xóa nội dung ô tìm kiếm
-    const searchInput = document.querySelector('input[type="text"]');
+    const searchInput = document.querySelector("input[type=\"text\"]");
     if (searchInput) {
       searchInput.value = ""; // Đặt lại giá trị ô tìm kiếm
     }
@@ -108,6 +132,11 @@ export default function ListProduct() {
   useEffect(() => {
     loadSanPham(trangHienTai, tenTimKiem, trangThaiTimKiem, idLoai);
   }, [trangHienTai, tenTimKiem, trangThaiTimKiem, idLoai]);
+
+
+  console.log(selectedProductId);
+
+  console.log("long");
 
   return (
     <>
@@ -198,69 +227,66 @@ export default function ListProduct() {
               <div className="">
                 <table className="min-w-full text-left text-sm font-light">
                   <thead className="bg-blue-700 text-xl font-medium text-white">
-                    <tr>
-                      <th className="w-10 px-6 py-4">STT</th>
-                      <th className="w-14 px-6 py-4">Mã</th>
-                      <th className="w-52 px-6 py-4">Ten</th>
-                      <th className="w-52 px-6 py-4">Loai</th>
-                      <th className="w-52 px-6 py-4">Ngay Tao</th>
-                      <th className="w-52 px-6 py-4">SO luong ton</th>
-                      <th className="w-52 px-6 py-4">Trang Thai</th>
-                      <th className="px-6 py-4">Hanh DOng</th>
-                    </tr>
+                  <tr>
+                    <th className="w-10 px-6 py-4">STT</th>
+                    <th className="w-14 px-6 py-4">Mã</th>
+                    <th className="w-52 px-6 py-4">Ten</th>
+                    <th className="w-52 px-6 py-4">Loai</th>
+                    <th className="w-52 px-6 py-4">Ngay Tao</th>
+                    <th className="w-52 px-6 py-4">SO luong ton</th>
+                    <th className="w-52 px-6 py-4">Trang Thai</th>
+                    <th className="px-6 py-4">Hanh DOng</th>
+                  </tr>
                   </thead>
                   <tbody>
-                    {danhSachSanPham.map((sp, index) => (
-                      <tr
-                        key={sp.id}
-                        className="border-b border-neutral-950 text-xl font-medium"
-                      >
-                        <td className="px-6 py-4">{index + 1}</td>
-                        <td className="px-6 py-4">{sp.ma}</td>
-                        <td className="px-6 py-4">{sp.tenSanPham}</td>
-                        <td className="px-6 py-4">{sp.tenLoai}</td>
-                        <td className="px-6 py-4">{sp.ngayTao}</td>
-                        <td className="px-6 py-4">{sp.soLuongTon}</td>
-                        <td className="px-6 py-4">
-                          {sp.trangThai ? "Bán" : "Không bán"}
-                        </td>
-                        <td className="px-6 py-4">
-                          {/* <button>Chi tiet</button> */}
-                          {/* Xem detail */}
-                          <div className="flex gap-4">
-                            <button className="rounded bg-blue-500 px-2 py-1 text-white">
-                              <Link to={`/admin/sanpham/${sp.id}`}>
-                                <div className="flex gap-2 transition-transform duration-500 hover:scale-125">
-                                  <span>Sửa</span>
-                                </div>
-                              </Link>
-                            </button>
+                  {danhSachSanPham.map((sp, index) => (
+                    <tr
+                      key={sp.id}
+                      className="border-b border-neutral-950 text-xl font-medium"
+                    >
+                      <td className="px-6 py-4">{index + 1}</td>
+                      <td className="px-6 py-4">{sp.ma}</td>
+                      <td className="px-6 py-4">{sp.tenSanPham}</td>
+                      <td className="px-6 py-4">{sp.tenLoai}</td>
+                      <td className="px-6 py-4">{sp.ngayTao}</td>
+                      <td className="px-6 py-4">{sp.soLuongTon}</td>
+                      <td className="px-6 py-4">
+                        {sp.trangThai ? "Bán" : "Không bán"}
+                      </td>
+                      <td className="px-6 py-4">
+                        {/* <button>Chi tiet</button> */}
+                        {/* Xem detail */}
+                        <div className="flex gap-4">
+                          <button className="rounded bg-blue-500 px-2 py-1 text-white"
+                                  onClick={() => openSuaModal(sp.id)}>Sửa
 
-                            <button className="rounded bg-blue-500 px-2 py-1 text-white">
-                              <Link to={`/admin/chitietsanpham/${sp.id}`}>
-                                <div className="flex gap-2 transition-transform duration-500 hover:scale-125">
-                                  <span>SPCT</span>
-                                </div>
-                              </Link>
-                            </button>
-                            <button className="rounded bg-blue-500 px-2 py-1 text-white">
-                              <Link to={`/admin/themsanphamchitiet/${sp.id}`}>
-                                <span>ADD_SPCT</span>
-                              </Link>
-                            </button>
-                          </div>
-                        </td>
+                          </button>
+
+                          <button className="rounded bg-blue-500 px-2 py-1 text-white">
+                            <Link to={`/admin/chitietsanpham/${sp.id}`}>
+                              <div className="flex gap-2 transition-transform duration-500 hover:scale-125">
+                                <span>SPCT</span>
+                              </div>
+                            </Link>
+                          </button>
+                          <button className="rounded bg-blue-500 px-2 py-1 text-white">
+                            <Link to={`/admin/themsanphamchitiet/${sp.id}`}>
+                              <span>ADD_SPCT</span>
+                            </Link>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                  {emptyRows > 0 &&
+                    Array.from({ length: emptyRows }).map((_, index) => (
+                      <tr key={`empty-${index}`} style={{ height: "61px" }}>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                       </tr>
                     ))}
-                    {emptyRows > 0 &&
-                      Array.from({ length: emptyRows }).map((_, index) => (
-                        <tr key={`empty-${index}`} style={{ height: "61px" }}>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                      ))}
                   </tbody>
                 </table>
                 {tongSoTrang > 1 && (
@@ -305,9 +331,24 @@ export default function ListProduct() {
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="h-[600px] w-[800px] rounded-lg bg-white p-8">
+
             <AddProduct />
             <button
               onClick={closeModal}
+              className="mt-4 rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600"
+            >
+              Đóng
+            </button>
+          </div>
+        </div>
+      )}
+
+      {isModalSuaOpen && (
+        <div className="fixed inset-0  flex items-center justify-center bg-black bg-opacity-50">
+          <div className="h-[750px] w-[800px]  rounded-lg bg-white p-8">
+            <SanPhamChiTiet productId={selectedProductId} closeModal={closeSuaModal} />
+            <button
+              onClick={closeSuaModal}
               className="mt-4 rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600"
             >
               Đóng

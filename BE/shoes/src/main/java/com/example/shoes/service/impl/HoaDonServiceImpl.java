@@ -257,6 +257,7 @@ public class HoaDonServiceImpl implements HoaDonService {
         // Kiểm tra trạng thái hóa đơn
 
         if (hoaDon.getTrangThai().equals(TrangThai.DA_THANH_TOAN)) {
+
             throw new RuntimeException("Hóa đơn đã thanh toán, không thể hủy!");
         }
 
@@ -766,13 +767,13 @@ public class HoaDonServiceImpl implements HoaDonService {
         return convertToSingleResponse(results);
     }
 
-    private HoaDonTheoIDResponse convert(HoaDon hoaDon) {
-        HoaDonTheoIDResponse response = new HoaDonTheoIDResponse();
-        response.setTongTien(formatCurrency(hoaDon.getTongTien()));
-        response.setTienDuocGiam(formatCurrency(hoaDon.getTienDuocGiam()));
-        response.setTienPhaiThanhToan(formatCurrency(hoaDon.getTienPhaiThanhToan()));
-        return response;
-    }
+//    private HoaDonTheoIDResponse convert(HoaDon hoaDon) {
+//        HoaDonTheoIDResponse response = new HoaDonTheoIDResponse();
+//        response.setTongTien(formatCurrency(hoaDon.getTongTien()));
+//        response.setTienDuocGiam(formatCurrency(hoaDon.getTienDuocGiam()));
+//        response.setTienPhaiThanhToan(formatCurrency(hoaDon.getTienPhaiThanhToan()));
+//        return response;
+//    }
     private List<BaoCaoThongKeResponse> convertToResponse(List<Object[]> results) {
         List<BaoCaoThongKeResponse> responses = new ArrayList<>();
         for (Object[] result : results) {
@@ -872,6 +873,14 @@ public class HoaDonServiceImpl implements HoaDonService {
 
         return builder.toString();
     }
+
+ private HoaDonTheoIDResponse convert(HoaDon hoaDon){
+     HoaDonTheoIDResponse response = new HoaDonTheoIDResponse();
+     response.setTongTien(formatCurrency(hoaDon.getTongTien()));
+     response.setTienDuocGiam(formatCurrency(hoaDon.getTienDuocGiam()));
+     response.setTienPhaiThanhToan(formatCurrency(hoaDon.getTienPhaiThanhToan()));
+     return response;
+ }
     // Phương thức chuyển đổi BigDecimal sang định dạng tiền tệ Việt Nam
     private String formatCurrency(BigDecimal amount) {
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));

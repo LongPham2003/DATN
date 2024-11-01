@@ -1,6 +1,4 @@
 package com.example.shoes.repository;
-import com.example.shoes.dto.BaoCaoThongKeResponse;
-import com.example.shoes.dto.hoadon.response.HoaDonTheoIDResponse;
 import com.example.shoes.entity.HoaDon;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -21,6 +19,7 @@ public interface HoaDonRepo extends JpaRepository<HoaDon, Integer> {
 
     @Query("SELECT h.tongTien, h.tienDuocGiam, h.tienPhaiThanhToan FROM HoaDon h WHERE h.id = :idHoaDon")
     List<Object[]> findTotalsByIdHoaDon(@Param("idHoaDon") Integer idHoaDon);
+
 
     @Query("SELECT " +
             "SUM(h.tienPhaiThanhToan), " + // Tổng số tiền khách hàng phải thanh toán
@@ -71,7 +70,6 @@ public interface HoaDonRepo extends JpaRepository<HoaDon, Integer> {
             "COUNT(DISTINCT h.idKhachHang) " + // Số lượng khách hàng duy nhất
             "FROM HoaDon h") // Từ bảng HoaDon
     List<Object[]> layBaoCaoTaiChinhTongQuoc();
-
 
 
 }

@@ -221,7 +221,7 @@ const ChiTietNhanVien = () => {
                 required
               >
                 <option value="">Chọn trạng thái</option>
-                <option value="true">Hoạt Động</option>
+                <option value="true">Đang làm</option>
                 <option value="false">Nghỉ</option>
               </select>
             </div>

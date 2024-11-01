@@ -117,7 +117,11 @@ private HoaDonRepo hoaDonRepo;
                 .message("Xóa phiếu giảm giá khỏi hóa đơn thành công")
                 .build();
     }
+
 //    get tong tiền ,tien duoc giam,tien phai thanh toan theo idhoadon
+
+    // Lay thong tin tien theo idHoaDon
+
     @GetMapping("/hoadon/gettheoid/{idHoaDon}")
     public ApiResponse<HoaDonTheoIDResponse> getTheoIdHoaDon(@PathVariable Integer idHoaDon) {
         HoaDonTheoIDResponse hoaDonResponse = hoaDonService.getTheoIdHoaDon(idHoaDon);
@@ -125,6 +129,7 @@ private HoaDonRepo hoaDonRepo;
                 .result(hoaDonResponse)
                 .build();
     }
+
     @GetMapping("/theo-ngay")
     public ApiResponse<List<BaoCaoThongKeResponse>> layBaoCaoTaiChinhTheoNgay(
             @RequestParam LocalDate startDate,

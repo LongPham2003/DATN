@@ -30,13 +30,15 @@ import java.util.TimeZone;
 
 @Configuration
 public class VNPAYConfig {
-    public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"; // URL thanh toán TEST
-    public static String vnp_ReturnUrl = "http://localhost:8080/api/paymentvnpay/payment-infor"; // Giữ nguyên nếu đang phát triển trên localhost
-    public static String vnp_Version = "2.1.0"; // Phiên bản giữ nguyên
-    public static String vnp_Command = "pay"; // Lệnh giữ nguyên
-    public static String vnp_TmnCode = "93V5QFEC"; // Thay đổi mã website thành mã mới
-    public static String secretKey = "3K3Z04W5TPETRZJVWJJUD44XKV1LV8Q0"; // Thay đổi secret key
-    public static String vnp_ApiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction"; // URL API giữ nguyên
+
+    public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
+    public static String vnp_ReturnUrl = "http://localhost:8080/api/paymentvnpay/payment-infor";
+    public static String vnp_Version = "2.1.0";
+    public static String vnp_Command = "pay";
+    public static String vnp_TmnCode = "W4S3TLV0";
+    public static String secretKey = "5PK7D7W3O5FBU8C07O5WQF4LZ1OEUVCI";
+    public static String vnp_ApiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
+
 
     public static String md5(String message) {
         String digest = null;
