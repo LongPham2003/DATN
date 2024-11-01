@@ -1,7 +1,9 @@
 package com.example.shoes.service;
 
 import com.example.shoes.dto.BaoCaoThongKeResponse;
+
 import com.example.shoes.dto.hoadon.request.HoaDonRequest;
+
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
 import com.example.shoes.dto.hoadon.response.HoaDonTheoIDResponse;
 import com.example.shoes.dto.hoadonchitiet.request.HoaDonChiTietRequest;
@@ -28,6 +30,8 @@ public interface HoaDonService {
  List<BaoCaoThongKeResponse> layBaoCaoTaiChinhTheoThang(LocalDate startDate, LocalDate endDate);
  List<BaoCaoThongKeResponse> layBaoCaoTaiChinhTheoNam(LocalDate startDate, LocalDate endDate);
  BaoCaoThongKeResponse layBaoCaoTaiChinhTongQuat();
+
  String xuatHoaDon(Integer idHoaDon);
+
 
 }

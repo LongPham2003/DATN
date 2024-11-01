@@ -84,7 +84,7 @@ export default function UpdateProductDetail() {
       idThuongHieu: SPCT.idThuongHieu,
       idDeGiay: SPCT.idDeGiay,
       soLuong: SPCT.soLuong,
-      donGia: SPCT.donGia,
+      donGia: SPCT.donGia.replace(/\D/g, ""),
       trangThai: SPCT.trangThai,
     };
 

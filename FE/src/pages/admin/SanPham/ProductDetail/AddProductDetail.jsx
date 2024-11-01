@@ -383,9 +383,9 @@ export default function AddProductDetail() {
 
   return (
     <>
-      <div className="rounded-lg font-mono">
+      <div className="overflow-y-hidden rounded-lg font-mono">
         <div>
-          <div className="mx-auto my-2 h-[420px] w-[1000px] rounded-sm">
+          <div className="mx-auto my-2 h-[410px] w-[1000px] rounded-sm">
             <div className="mt-5 text-center">
               <span className="mt-3 text-2xl font-bold">
                 Thêm sản phẩm chi tiết
@@ -532,7 +532,7 @@ export default function AddProductDetail() {
         </div>
 
         {/* Render danh sách sản phẩm chi tiết dưới dạng bảng */}
-        <div className="h-[500px] rounded-lg p-4">
+        <div className="h-[450px] rounded-lg p-4">
           <div className="max-h-[400px] overflow-y-auto">
             {listSPCT.length > 0 ? (
               <>
