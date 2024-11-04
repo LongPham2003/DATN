@@ -17,6 +17,7 @@ import { XMarkIcon } from "@heroicons/react/16/solid/index.js";
 import { TrashIcon } from "@heroicons/react/16/solid";
 import DiaCHiMacDinhKhachHang from "./DiaChiMacDinhKhachHang";
 import "react-toastify/dist/ReactToastify.css";
+import { ShoppingCartIcon } from "@heroicons/react/16/solid";
 
 export default function BanHangTaiQuay() {
   const [hoaDonFalse, setHoaDonFalse] = useState([]);
@@ -29,9 +30,9 @@ export default function BanHangTaiQuay() {
   const [tongTien, setTongTien] = useState(0);
   const [tienPhaiThanhToan, setTienPhaiThanhToan] = useState(0);
   const [tienDuocGiam, setTienDuocGiam] = useState(0);
-  const [tenKhachHang, setTenKhachHang] = useState("Khách lẻ");
+  const [tenKhachHang, setTenKhachHang] = useState(null);
   const [idKhachHang, setIdKhachHangDangChon] = useState();
-  const [soDienThoai, setsoDienThoai] = useState("");
+  const [soDienThoai, setsoDienThoai] = useState(null);
   const [diaChiGiaoHang, setdiaChiGiaoHang] = useState("");
   const [thaydoiSoLuongMua, setThayDoiSoLuongMua] = useState(0);
   const [idSPCTDangChon, setIdSPCTDangChon] = useState();
@@ -44,6 +45,11 @@ export default function BanHangTaiQuay() {
 
   const [disableSelctKhachHang, setDisableSelectKhachHang] = useState(false);
   const [isSelectDisabled, setIsSelectDisabled] = useState(false); // State để quản lý disable
+
+  //day la cai m can
+  const [maHD, setMaHD] = useState("");
+
+  let ApiLayThongTinHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/${selectedHoaDonId}`;
 
   let ApiTaoHoaDon = `http://localhost:8080/banhangtaiquay/taodon`; // Tao Hoa DOn
   let ApiLayHoaDonChuaThanhToan = `http://localhost:8080/api/hoadon/getall-chuathanhtoan`; // Danh Sach Hoa DOn CHo
@@ -59,14 +65,20 @@ export default function BanHangTaiQuay() {
   let ApiThanhToanHoaDon = `http://localhost:8080/banhangtaiquay/thanhtoan/${selectedHoaDonId}`; // thanh toán tiền mặt
   let ApiXoaKhachHangKhoiHoaDon = `http://localhost:8080/api/hoadon/${selectedHoaDonId}/deletekhachhang`; // Xoa khach hanng khoi hoa don
   let ApiThemKhachHangVaoHoaDon = `http://localhost:8080/api/hoadon/${selectedHoaDonId}/addkhachhang`; // Them khach hang vao hoa don
+  let ApiLayThongTinKhachHang = `http://localhost:8080/api/khachhang`;
   //Lấy danh sách hóa đơn
   const LayDanhSachHoaDonChuaThanhToan = async () => {
     try {
       const response = await axios.get(ApiLayHoaDonChuaThanhToan);
+      const hd = await axios.get(ApiLayThongTinHoaDon);
+      setMaHD(hd.data.result.ma);
       const hoaDonList = response.data.result;
       setHoaDonFalse(hoaDonList);
       if (hoaDonList.length > 0) {
         setSelectedHoaDonId(hoaDonList[0].id); // Chọn id hóa đơn đầu tiên khi tải dữ liệu lần đầu
+        // setTenKhachHang(
+        //   hoaDonList[0].tenKhachHang ? hoaDonList[0].tenKhachHang : "Khách lẻ",
+        // );
       }
     } catch (error) {
       console.log("Lấy hóa đơn lỗi:", error);
@@ -84,6 +96,21 @@ export default function BanHangTaiQuay() {
       setTienDuocGiam(ttThanhToan.data.result.tienDuocGiam);
       setIdPhieuGiamGiaDangChon(ttThanhToan.data.result.idVoucher);
       setIdKhachHangDangChon(ttThanhToan.data.result.idKhachHang);
+      if (ttThanhToan.data.result.idKhachHang != null) {
+        try {
+          const khachHang = await axios.get(
+            `${ApiLayThongTinKhachHang}/${ttThanhToan.data.result.idKhachHang}`,
+          );
+          // console.log(khachHang);
+          setTenKhachHang(khachHang.data.result.hoTen || "Khách lẻ");
+          setsoDienThoai(khachHang.data.result.sdt || "");
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        setTenKhachHang("Khách lẻ");
+        setsoDienThoai(null);
+      }
     } else {
       console.log("Dữ liệu trả về không có trường 'result'"); // Log nếu `result` không tồn tại
     }
@@ -377,35 +404,29 @@ export default function BanHangTaiQuay() {
 
   useEffect(() => {
     if (selectedHoaDonId) {
-      LayChiTietSanPham(selectedHoaDonId); // Gọi hàm lấy chi tiết sản phẩm khi id của hóa đơn được chọn thay đổi
-      LayThongTinThanhToanCuaHoaDon(selectedHoaDonId);
-    }
-  }, [selectedHoaDonId]);
+      // Gọi API lấy chi tiết sản phẩm và thông tin thanh toán cho hóa đơn đã chọn
+      Promise.all([
+        LayChiTietSanPham(selectedHoaDonId),
+        LayThongTinThanhToanCuaHoaDon(selectedHoaDonId),
+      ]);
 
-  // useEffect sẽ chạy khi `selectedHoaDonId` hoặc `hoaDonFalse` thay đổi
-  useEffect(() => {
-    // Kiểm tra xem `selectedHoaDonId` đã được đặt và `hoaDonFalse` không rỗng
-    if (selectedHoaDonId && hoaDonFalse.length > 0) {
       // Tìm hóa đơn trong `hoaDonFalse` có `id` khớp với `selectedHoaDonId`
       const selectedHoaDon = hoaDonFalse.find(
         (hoaDon) => hoaDon.id === Number(selectedHoaDonId), // Ép kiểu `selectedHoaDonId` thành số để so sánh
       );
 
-      // Nếu tìm thấy `selectedHoaDon`, cập nhật `tongTien` và `tienPhaiThanhToan`
+      // Nếu tìm thấy `selectedHoaDon`, cập nhật `tongTien`, `tienPhaiThanhToan` và `tienDuocGiam`
       if (selectedHoaDon) {
         setTongTien(selectedHoaDon.tongTien);
         setTienPhaiThanhToan(selectedHoaDon.tienPhaiThanhToan);
         setTienDuocGiam(selectedHoaDon.tienDuocGiam);
       } else {
-        // Nếu không tìm thấy, đặt `tongTien` và `tienPhaiThanhToan` về 0
+        // Nếu không tìm thấy, đặt `tongTien`, `tienPhaiThanhToan` và `tienDuocGiam` về 0
         setTongTien(0);
         setTienPhaiThanhToan(0);
         setTienDuocGiam(0);
       }
     }
-
-    // Mảng phụ thuộc bao gồm `selectedHoaDonId` và `hoaDonFalse`
-    // useEffect sẽ chạy lại mỗi khi một trong hai giá trị này thay đổi
   }, [selectedHoaDonId, hoaDonFalse]);
 
   return (
@@ -575,7 +596,12 @@ export default function BanHangTaiQuay() {
                 </div>
               ) : (
                 <div className="mt-4 text-center text-gray-500">
-                  Không có sản phẩm nào
+                  <div className="text-4xl text-black">
+                    Không có sản phẩm nào
+                  </div>
+                  <div className="">
+                    <ShoppingCartIcon className="mx-auto h-72 text-black" />
+                  </div>
                 </div>
               )}
             </div>
@@ -755,18 +781,28 @@ export default function BanHangTaiQuay() {
                 </div>
               </div>
               <div>
-                <div className="my-1">
-                  <span className="text-lg font-medium">Tên khách hàng: </span>
-                  <span>{tenKhachHang}</span>
-                </div>
-                <div className="my-1">
-                  <span className="text-lg font-medium">Tên khách hàng: </span>
-                  <span>{tenKhachHang}</span>
-                </div>
-                <div className="my-1">
-                  <span className="text-lg font-medium">Tên khách hàng: </span>
-                  <span>{tenKhachHang}</span>
-                </div>
+                {tenKhachHang && (
+                  <div className="my-1">
+                    <span className="text-lg font-medium">
+                      Tên khách hàng:{" "}
+                    </span>
+                    <span>{tenKhachHang}</span>
+                  </div>
+                )}
+                {soDienThoai && (
+                  <div className="my-1">
+                    <span className="text-lg font-medium">Số điện thoại: </span>
+                    <span>{soDienThoai}</span>
+                  </div>
+                )}
+                {idKhachHang && (
+                  <div className="my-1">
+                    <span className="text-lg font-medium">Địa chỉ: </span>
+                    <span>
+                      <DiaCHiMacDinhKhachHang idKhachHang={idKhachHang} />
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
           </div>
