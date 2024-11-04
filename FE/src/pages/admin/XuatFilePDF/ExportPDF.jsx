@@ -31,13 +31,13 @@ export const generatePDF = () => {
   }
 };
 
-export const ExportPDF = () => {
+export const ExportPDF = ({ idHoaDon }) => {
   const [hoadon, setHoaDon] = useState({});
   const [danhSachSP, setDanhSachSP] = useState([]);
   const [maHD, setMaHD] = useState("");
 
-  let ApiLayThongTinHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/28`;
-  let ApiLayDanhSachSanPham = `http://localhost:8080/api/hoadonchitiet/SPCTbyidHD/28`;
+  let ApiLayThongTinHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/${idHoaDon}`;
+  let ApiLayDanhSachSanPham = `http://localhost:8080/api/hoadonchitiet/SPCTbyidHD/${idHoaDon}`;
 
   useEffect(() => {
     // Định nghĩa hàm async trong useEffect
@@ -54,9 +54,11 @@ export const ExportPDF = () => {
       }
     };
 
-    // Gọi hàm fetchData
-    fetchData();
-  }, []);
+    // Gọi hàm fetchData chỉ khi idHoaDon thay đổi
+    if (idHoaDon) {
+      fetchData();
+    }
+  }, [idHoaDon]);
   return (
     <>
       <div
@@ -89,7 +91,7 @@ export const ExportPDF = () => {
         <div className="my-3">
           <table className="border-collapse border-2 border-solid border-gray-500 text-center">
             <thead>
-              <tr className="min-h-24 justify-center">
+              <tr className="min-h-24 justify-center" >
                 <th className="w-14 border-collapse border-2 border-solid border-gray-500 p-2 text-center">
                   STT
                 </th>
@@ -109,7 +111,7 @@ export const ExportPDF = () => {
             </thead>
             <tbody>
               {danhSachSP.map((sp, index) => (
-                <tr>
+                <tr key={index}>
                   <td className="border-collapse border-2 border-solid border-gray-500 p-2">
                     {index + 1}
                   </td>
