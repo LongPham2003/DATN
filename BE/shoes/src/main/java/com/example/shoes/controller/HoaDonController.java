@@ -1,7 +1,6 @@
 package com.example.shoes.controller;
 
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
-import com.example.shoes.entity.HoaDon;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.service.HoaDonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +31,11 @@ public class HoaDonController {
                 .result(hoaDonResponses)
                 .build();
     }
-    @PostMapping("/addkhachhang")
+
+    @PostMapping("/{idHoaDon}/addkhachhang/{idKhachHang}")
     public ApiResponse<HoaDonResponse> addKhachHang(
-            @RequestParam("idHoaDon") Integer idHoaDon,
-              @RequestParam("idKhachHang") Integer idKhachHang
+            @PathVariable("idHoaDon") Integer idHoaDon,
+            @PathVariable("idKhachHang") Integer idKhachHang
     ) {
 
         return ApiResponse.<HoaDonResponse>builder()
@@ -43,10 +43,10 @@ public class HoaDonController {
                 .build();
     }
 
-    @PostMapping("/deletekhachhang")
+    @PostMapping("/{idHoaDon}/deletekhachhang/{idKhachHang}")
     public ApiResponse<HoaDonResponse> deleteKhachHang(
-            @RequestParam("idHoaDon") Integer idHoaDon,
-            @RequestParam("idKhachHang") Integer idKhachHang
+            @PathVariable("idHoaDon") Integer idHoaDon,
+            @PathVariable("idKhachHang") Integer idKhachHang
     ) {
         HoaDonResponse hoaDonResponse = hoaDonService.xoaKhachHangHoaDon(idHoaDon,idKhachHang);
 
