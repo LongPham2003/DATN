@@ -881,6 +881,11 @@ public class HoaDonServiceImpl implements HoaDonService {
         return builder.toString();
     }
 
+    @Override
+    public Integer idHoaDon() {
+        return hoaDonRepo.idHoaDon();
+    }
+
     private HoaDonTheoIDResponse convert(HoaDon hoaDon){
         HoaDonTheoIDResponse response = new HoaDonTheoIDResponse();
         response.setTongTien(formatCurrency(hoaDon.getTongTien()));
@@ -942,7 +947,7 @@ public class HoaDonServiceImpl implements HoaDonService {
         hoaDonResponse.setId(hoaDon.getId());
         hoaDonResponse.setMa(hoaDon.getMa());
         hoaDonResponse.setTenNhanVien(hoaDon.getIdNhanVien() != null ? hoaDon.getIdNhanVien().getHoTen() : null);
-        hoaDonResponse.setTenKhachHang(hoaDon.getIdKhachHang() != null ? hoaDon.getIdKhachHang().getHoTen() : null);
+        hoaDonResponse.setTenKhachHang(hoaDon.getIdKhachHang() != null ? hoaDon.getIdKhachHang().getHoTen() : "Khách lẻ");
         hoaDonResponse.setSoDienThoai(hoaDon.getSoDienThoai());
         hoaDonResponse.setDiaChiGiaoHang(hoaDon.getDiaChiGiaoHang());
         // Định dạng và lưu trữ giá trị tiền

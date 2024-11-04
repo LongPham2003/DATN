@@ -54,4 +54,10 @@ public class HoaDonController {
                 .result(hoaDonResponse)
                 .build();
     }
+
+    @GetMapping("/da-thanh-toan/id-lon-nhat")
+    public ApiResponse<Integer> idLonNhat() {
+        Integer id = hoaDonService.idHoaDon();
+        return ApiResponse.<Integer>builder().result(id).build();
+    }
 }
