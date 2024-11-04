@@ -18,31 +18,25 @@ import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/paymentvnpay")
 public class PaymentVNPAYController {
 
     @GetMapping("/create-payment")
-    public ResponseEntity<?> creatPayment(HttpServletRequest request) throws UnsupportedEncodingException {
+    public String creatPayment(String maHoaDon ,String amount) throws UnsupportedEncodingException {
 
 
         String orderType = "other";
 //        long amount = Integer.parseInt(request.getParameter("amount"))*100;
 //        String bankCode = req.getParameter("bankCode");
         String vnp_TxnRef = VNPAYConfig.getRandomNumber(8);
-        String vnp_IpAddr = VNPAYConfig.getIpAddress(request);
+   //     String vnp_IpAddr = VNPAYConfig.getIpAddress(request);
+        String vnp_IpAddr = "127.0.0.1";
 
 
-        long amount = 1000000*100;
+//        long amount = 1000000*100;
 
         String vnp_TmnCode = VNPAYConfig.vnp_TmnCode;
 
@@ -50,10 +44,10 @@ public class PaymentVNPAYController {
         vnp_Params.put("vnp_Version", VNPAYConfig.vnp_Version);
         vnp_Params.put("vnp_Command", VNPAYConfig.vnp_Command);
         vnp_Params.put("vnp_TmnCode", vnp_TmnCode);
-        vnp_Params.put("vnp_Amount", String.valueOf(amount));
+        vnp_Params.put("vnp_Amount", String.valueOf(new BigDecimal(amount).multiply(BigDecimal.valueOf(100))));
         vnp_Params.put("vnp_CurrCode", "VND");
         vnp_Params.put("vnp_BankCode", "NCB");
-        vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
+        vnp_Params.put("vnp_TxnRef", maHoaDon);
         vnp_Params.put("vnp_OrderInfo", vnp_TxnRef);
         vnp_Params.put("vnp_Locale", "vn");
         vnp_Params.put("vnp_OrderType", orderType);
@@ -96,34 +90,29 @@ public class PaymentVNPAYController {
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
         String paymentUrl = VNPAYConfig.vnp_PayUrl + "?" + queryUrl;
 
-        VNPAYResponse vnpayResponse = new VNPAYResponse();
-        vnpayResponse.setStatus("OK");
-        vnpayResponse.setMessage("thanh toán thành công");
-        vnpayResponse.setURL(paymentUrl);
+//        VNPAYResponse vnpayResponse = new VNPAYResponse();
+//        vnpayResponse.setStatus("OK");
+//        vnpayResponse.setMessage("thanh toán thành công");
+//        vnpayResponse.setURL(paymentUrl);
 
-        return ResponseEntity.status(HttpStatus.OK).body(vnpayResponse);
+        return paymentUrl;
 
     }
 
-    @GetMapping("/payment-infor")
-    public ResponseEntity<?> transaction(
+    @GetMapping("/payment-return")
+    public Boolean transaction(
             @RequestParam(value = "vnp_Amount") String amount,
             @RequestParam(value = "vnp_BankCode") String bankCode,
             @RequestParam(value = "vnp_OrderInfo") String order,
             @RequestParam(value = "vnp_ResponseCode") String response
 
     ) {
-        TransactionStatus transactionStatus = new TransactionStatus();
         if (response.equals("00")) {
-            transactionStatus.setStatus("OK");
-            transactionStatus.setMessage("Successfully");
-            transactionStatus.setData("");
+            return  true;
         } else {
-            transactionStatus.setStatus(" no OK");
-            transactionStatus.setMessage("no Successfully");
-            transactionStatus.setData("");
+          return false;
         }
-        return ResponseEntity.status(HttpStatus.OK).body(transactionStatus);
+
     }
 
 }

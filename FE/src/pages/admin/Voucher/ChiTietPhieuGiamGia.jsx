@@ -14,7 +14,7 @@ const ChiTietPhieuGiamGia = () => {
   const [formData, setFormData] = useState({
     tenVoucher: "",
     dieuKienGiamGia: "",
-    hinhThucGiam: "",
+    hinhThucGiam: "VND",
     mucGiam: "",
     giamToiDa: "",
     soLuong: "",
@@ -143,7 +143,7 @@ const ChiTietPhieuGiamGia = () => {
                       value={formData.hinhThucGiam}
                       onChange={handleChange}
               >
-                <option value="Tiền mặt">Tiền mặt</option>
+                <option value="VND">Tiền mặt</option>
                 <option value="%">Phần trăm</option>
               </select>
             </div>
