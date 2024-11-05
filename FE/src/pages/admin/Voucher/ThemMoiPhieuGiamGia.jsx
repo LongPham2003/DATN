@@ -12,7 +12,7 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
   const [formData, setFormData] = useState({
     tenVoucher: "",
     dieuKienGiamGia: "",
-    hinhThucGiam: "Tiền mặt",
+    hinhThucGiam: "VND",
     mucGiam: "",
     giamToiDa: "",
     soLuong: "",
@@ -44,6 +44,11 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
     });
   };
 
+  // hàm format lại định dạng khi gửi về be
+  const formatCurrencyToNumber = (value) => {
+    return parseInt(value.replace(/[^\d]/g, ""));
+  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -58,10 +63,10 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
             "http://localhost:8080/api/phieugiamgia/add",
             {
               tenVoucher: formData.tenVoucher,
-              dieuKienGiamGia: formData.dieuKienGiamGia,
+              dieuKienGiamGia: formatCurrencyToNumber(formData.dieuKienGiamGia),
               hinhThucGiam: formData.hinhThucGiam,
-              mucGiam: formData.mucGiam,
-              giamToiDa: formData.giamToiDa,
+              mucGiam: formatCurrencyToNumber(formData.mucGiam),
+              giamToiDa: formatCurrencyToNumber(formData.giamToiDa),
               soLuong: formData.soLuong,
               ngayBatDau: formData.ngayBatDau,
               ngayKetThuc: formData.ngayKetThuc,
@@ -76,7 +81,7 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
             setFormData({
               tenVoucher: "",
               dieuKienGiamGia: "",
-              hinhThucGiam: "Tiền mặt",
+              hinhThucGiam: "VND",
               mucGiam: "",
               giamToiDa: "",
               soLuong: "",
@@ -134,7 +139,7 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
                       value={formData.hinhThucGiam}
                       onChange={handleChange}
               >
-                <option value="Tiền mặt">Tiền mặt</option>
+                <option value="VND">Tiền mặt</option>
                 <option value="%">Phần trăm</option>
               </select>
               {/*<input*/}

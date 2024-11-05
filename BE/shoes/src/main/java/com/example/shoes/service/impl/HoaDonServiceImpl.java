@@ -7,13 +7,7 @@ import com.example.shoes.dto.hoadon.response.HoaDonTheoIDResponse;
 import com.example.shoes.dto.hoadonchitiet.request.HoaDonChiTietRequest;
 import com.example.shoes.dto.phuongthucthanhtoan.request.PhuongThucThanhToanRequest;
 import com.example.shoes.dto.vnpay.response.TransactionStatus;
-import com.example.shoes.entity.HoaDon;
-import com.example.shoes.entity.HoaDonChiTiet;
-import com.example.shoes.entity.LichSuHoaDon;
-import com.example.shoes.entity.NhanVien;
-import com.example.shoes.entity.PhieuGiamGia;
-import com.example.shoes.entity.PhuongThucThanhToan;
-import com.example.shoes.entity.SanPhamChiTiet;
+import com.example.shoes.entity.*;
 import com.example.shoes.enums.TrangThai;
 import com.example.shoes.exception.AppException;
 import com.example.shoes.exception.ErrorCode;
@@ -130,7 +124,7 @@ public class HoaDonServiceImpl implements HoaDonService {
 
         // Tạo hóa đơn mới
         HoaDon hoaDon = new HoaDon();
-        String maHoaDon=generateMaHoaDon();
+        String maHoaDon = generateMaHoaDon();
         hoaDon.setMa(maHoaDon);
         hoaDon.setIdNhanVien(nhanVien);
         hoaDon.setPhuongThucGiaoHang("tại quầy ");
@@ -150,7 +144,7 @@ public class HoaDonServiceImpl implements HoaDonService {
     }
 
     @Override
-    public HoaDonResponse updateHoaDon(Integer idHoaDon, HoaDonChiTietRequest chiTietRequest) {
+    public HoaDonResponse updateHoaDon(Integer idHoaDon, HoaDonChiTietRequest chiTietRequest) {  // Tìm hóa đơn theo ID
         // Tìm hóa đơn theo ID
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon)
                 .orElseThrow(() -> new AppException(ErrorCode.BILL_NOT_FOUND));
@@ -393,7 +387,6 @@ public class HoaDonServiceImpl implements HoaDonService {
 
         return true;
     }
-
 
 
     private void capNhatTrangThaiHoaDon(HoaDon hoaDon) {
@@ -856,45 +849,35 @@ public class HoaDonServiceImpl implements HoaDonService {
         return response;
     }
 
-//    xuat hoa don
-    @Transactional
-    public String xuatHoaDon(Integer idHoaDon) {
+
+    //add khách hàng vào hóa đơn
+    @Override
+    public HoaDonResponse addKhachHangHoaDon(Integer idHoaDon, Integer idKhachHang) {
+        // Lấy thông tin hóa đơn từ idHoaDon
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy hóa đơn với ID: " + idHoaDon));
+                .orElseThrow(() -> new AppException(ErrorCode.BILL_NOT_FOUND));
 
-        StringBuilder builder = new StringBuilder();
-        builder.append("HÓA ĐƠN\n");
-        builder.append("Mã hóa đơn: ").append(hoaDon.getMa()).append("\n");
-        builder.append("Ngày tạo: ").append(hoaDon.getNgayTao()).append("\n");
-//        builder.append("Khách hàng: ").append(hoaDon.getIdKhachHang().getHoTen()).append("\n");
-//        builder.append("Số điện thoại: ").append(hoaDon.getSoDienThoai()).append("\n");
-//        builder.append("Địa chỉ giao hàng: ").append(hoaDon.getDiaChiGiaoHang()).append("\n");
-//        builder.append("Phương thức thanh toán: ").append(hoaDon.getPhuongThucThanhToan()).append("\n");
-        builder.append("\nChi tiết sản phẩm:\n");
-        BigDecimal tongTien = BigDecimal.ZERO;
-        for (HoaDonChiTiet chiTiet : hoaDon.getHoaDonChiTiets()) {
-            builder.append("- Sản phẩm: ").append(chiTiet.getIdSpct().getIdSanPham().getTenSanPham()).append("\n");
-            builder.append("  Số lượng: ").append(chiTiet.getSoLuong()).append(" x Đơn giá: ")
-                    .append(chiTiet.getDonGia()).append(" = ")
-                    .append(chiTiet.getDonGia().multiply(BigDecimal.valueOf(chiTiet.getSoLuong()))).append("\n");
-            tongTien = tongTien.add(chiTiet.getDonGia().multiply(BigDecimal.valueOf(chiTiet.getSoLuong())));
-        }
+        // Lấy thông tin phiếu giảm giá từ idPhieuGiamGia
+        KhachHang khachHang = khachHangRepo.findById(idKhachHang)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        builder.append("\nTổng tiền trước giảm giá: ").append(tongTien).append("\n");
-        builder.append("Tiền được giảm: ").append(hoaDon.getTienDuocGiam()).append("\n");
-        builder.append("Tổng tiền phải thanh toán: ").append(hoaDon.getTienPhaiThanhToan()).append("\n");
-        builder.append("Trạng thái: ").append(hoaDon.getTrangThai()).append("\n");
+        // Lưu thông tin khach hang vao hoa don
+        hoaDon.setIdKhachHang(khachHang);
 
-        return builder.toString();
+        return converToHoaDonResponse(hoaDonRepo.save(hoaDon)); // Lưu hóa đơn đã cập nhật
+
     }
 
- private HoaDonTheoIDResponse convert(HoaDon hoaDon){
-     HoaDonTheoIDResponse response = new HoaDonTheoIDResponse();
-     response.setTongTien(formatCurrency(hoaDon.getTongTien()));
-     response.setTienDuocGiam(formatCurrency(hoaDon.getTienDuocGiam()));
-     response.setTienPhaiThanhToan(formatCurrency(hoaDon.getTienPhaiThanhToan()));
-     return response;
- }
+    @Override
+    public HoaDonResponse xoaKhachHangHoaDon(Integer idHoaDon, Integer idKhachHang) {
+
+        HoaDon hoaDon = hoaDonRepo.findById(idHoaDon)
+                .orElseThrow(() -> new AppException(ErrorCode.BILL_NOT_FOUND));
+
+        hoaDon.setIdKhachHang(null);
+
+        return converToHoaDonResponse(hoaDonRepo.save(hoaDon)); // Lưu hóa đơn đã cập nhật
+    }
     // Phương thức chuyển đổi BigDecimal sang định dạng tiền tệ Việt Nam
     private String formatCurrency(Object value) {
         if (value == null) return "0 VNĐ"; // Trả về "0 VNĐ" nếu giá trị là null
@@ -913,7 +896,6 @@ public class HoaDonServiceImpl implements HoaDonService {
             throw new IllegalArgumentException("Provided value is not a number: " + value);
         }
     }
-
 
     private HoaDonResponse converToHoaDonResponse(HoaDon hoaDon) {
         HoaDonResponse hoaDonResponse = new HoaDonResponse();

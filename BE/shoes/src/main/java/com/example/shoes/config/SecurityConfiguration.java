@@ -46,7 +46,8 @@ public class SecurityConfiguration {
     private CustomAccessDeniedHandler customAccessDeniedHandler;
 
     private final String[] PUBLIC_ENDPOINTS = {"/auth/signup", "/auth/login",
-            "/auth/resetpass", "/auth/doimatkhau","/api/paymentvnpay/**","/api/paymentvnpay/payment-infor",
+
+            "/auth/resetpass", "/auth/doimatkhau", "/api/paymentvnpay/**", "/api/paymentvnpay/payment-infor",
             "/banhangonline/**"
     };
 
@@ -54,7 +55,7 @@ public class SecurityConfiguration {
             "/api/chatlieu/**",
             "/api/sanpham/**", "/api/sanphamchitiet/**", "/api/kichthuoc/**", "/api/mausac/**",
             "/api/thuonghieu/**", "/api/degiay/**", "/api/hinhanh/**", "/api/khachhang/**",
-            "/api/loai/**", "/api/phieugiamgia/**","/banhangtaiquay/**","/api/hoadonchitiet/**","/api/paymentvnpay/**",
+            "/api/loai/**", "/api/phieugiamgia/**", "/banhangtaiquay/**", "/api/hoadonchitiet/**", "/api/paymentvnpay/**",
             "/api/paymentvnpay/payment-infor"
     };
 
@@ -70,7 +71,7 @@ public class SecurityConfiguration {
                 .csrf().disable()
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
-                        .requestMatchers(NHANVIEN_ENDPOINTS).hasAnyRole("NHANVIEN","ADMIN")
+                        .requestMatchers(NHANVIEN_ENDPOINTS).hasAnyRole("NHANVIEN", "ADMIN")
                         .requestMatchers("/api/nhanvien/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
@@ -109,6 +110,6 @@ public class SecurityConfiguration {
 
         return new CorsFilter(source); // Trả về một CorsFilter với cấu hình đã định
     }
-
-
 }
+
+
