@@ -33,4 +33,5 @@ public interface HoaDonService {
  BaoCaoThongKeResponse layBaoCaoTaiChinhTongQuat();
  String xuatHoaDon(Integer idHoaDon);
 
+ Integer idHoaDon();
 }
