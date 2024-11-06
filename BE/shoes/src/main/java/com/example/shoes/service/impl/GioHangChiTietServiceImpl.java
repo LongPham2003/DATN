@@ -2,15 +2,19 @@ package com.example.shoes.service.impl;
 
 import com.example.shoes.dto.giohangchitiet.request.GioHangChiTietRequest;
 import com.example.shoes.dto.giohangchitiet.response.GioHangChiTietResponse;
+import com.example.shoes.dto.hoadon.request.HoaDonRequest;
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
 import com.example.shoes.dto.hoadonchitiet.request.HoaDonChiTietRequest;
+import com.example.shoes.dto.vnpay.response.TransactionStatus;
 import com.example.shoes.entity.DiaChi;
 import com.example.shoes.entity.GioHang;
 import com.example.shoes.entity.GioHangChiTiet;
 import com.example.shoes.entity.HoaDon;
 import com.example.shoes.entity.HoaDonChiTiet;
 import com.example.shoes.entity.KhachHang;
+import com.example.shoes.entity.LichSuHoaDon;
 import com.example.shoes.entity.NhanVien;
+import com.example.shoes.entity.PhuongThucThanhToan;
 import com.example.shoes.entity.SanPhamChiTiet;
 import com.example.shoes.enums.TrangThai;
 import com.example.shoes.exception.AppException;
@@ -21,22 +25,28 @@ import com.example.shoes.repository.GioHangRepo;
 import com.example.shoes.repository.HoaDonChiTietRepo;
 import com.example.shoes.repository.HoaDonRepo;
 import com.example.shoes.repository.KhachHangRepo;
+import com.example.shoes.repository.NhanVienRepo;
+import com.example.shoes.repository.PhuongThucThanhToanRepo;
 import com.example.shoes.repository.SanPhamChiTietRepo;
 import com.example.shoes.service.GioHangChiTietService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 @Service
 public class GioHangChiTietServiceImpl implements GioHangChiTietService {
@@ -54,6 +64,10 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
     private HoaDonChiTietRepo hoaDonChiTietRepo;
     @Autowired
     private DiaChiRepo diaChiRepo;
+    @Autowired
+    private PhuongThucThanhToanRepo phuongThucThanhToanRepo;
+    @Autowired
+    private NhanVienRepo nhanVienRepo;
     private KhachHang getCurrentKhachHang() {
         // Lấy thông tin người dùng hiện tại
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -228,7 +242,7 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
         hoaDon.setDiaChiGiaoHang(diaChi.getDiaChiChiTiet());
         hoaDon.setPhuongThucGiaoHang("giao hang nhanh");
         hoaDon.setNgayTao(LocalDate.now());
-        hoaDon.setTrangThai(TrangThai.CHO_XAC_NHAN_DON); // Chưa thanh toán
+        hoaDon.setTrangThai(TrangThai.TAO_MOI); // Chưa thanh toán
         // Khởi tạo tổng tiền, tiền được giảm và tiền phải trả bằng 0
         hoaDon.setTongTien(BigDecimal.ZERO);
         hoaDon.setTienDuocGiam(BigDecimal.ZERO);
@@ -247,7 +261,7 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
             hoaDonChiTiet.setIdSpct(spct); // Liên kết với sản phẩm
             hoaDonChiTiet.setSoLuong(chiTietRequest.getSoLuong());
             hoaDonChiTiet.setDonGia(spct.getDonGia());
-            hoaDonChiTiet.setTrangThai(TrangThai.CHO_XAC_NHAN_DON);
+            hoaDonChiTiet.setTrangThai(TrangThai.TAO_MOI);
 
             // Lưu chi tiết hóa đơn
             hoaDonChiTietRepo.save(hoaDonChiTiet);
@@ -266,31 +280,22 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
     }
 
     @Override
-    public HoaDonResponse muaHangTuGioHangChiTiet(Integer idGioHangChiTiet, HoaDonChiTietRequest request) {
+    public HoaDonResponse muaHangTuGioHangChiTiet(List<HoaDonChiTietRequest> chiTietRequests) {
         // Lấy thông tin khách hàng hiện đang đăng nhập
         KhachHang khachHang = getCurrentKhachHang();
 
-        // Lấy danh sách các chi tiết giỏ hàng của khách hàng hiện tại
-        List<GioHangChiTiet> gioHangChiTietList = gioHangChiTietRepo.findByKhachHangId(idGioHangChiTiet);
-
-        if (gioHangChiTietList.isEmpty()) {
-            throw new AppException(ErrorCode.EMPTY_CART); // Nếu giỏ hàng rỗng, báo lỗi
-        }
-        // Kiểm tra và lấy địa chỉ mặc định của khách hàng
+        // Lấy địa chỉ giao hàng mặc định của khách hàng
         DiaChi diaChi = diaChiRepo.getDiaChiByIdKhachHangAndDiaChiMacDinh(khachHang.getId());
 
         // Tạo mới HoaDon
         HoaDon hoaDon = new HoaDon();
-        String maHoaDon = generateMaHoaDon();
-        hoaDon.setMa(maHoaDon);
+        hoaDon.setMa(generateMaHoaDon());
         hoaDon.setIdKhachHang(khachHang);
         hoaDon.setSoDienThoai(khachHang.getSdt());
-//        hoaDon.setDiaChiGiaoHang(diaChi != null ? diaChi.getDiaChiChiTiet() : ""); // Nếu không có địa chỉ mặc định
+        hoaDon.setDiaChiGiaoHang(diaChi.getDiaChiChiTiet());
         hoaDon.setPhuongThucGiaoHang("giao hàng nhanh");
         hoaDon.setNgayTao(LocalDate.now());
-        hoaDon.setTrangThai(TrangThai.CHO_XAC_NHAN_DON);
-
-        // Khởi tạo các trường tài chính
+        hoaDon.setTrangThai(TrangThai.TAO_MOI);
         hoaDon.setTongTien(BigDecimal.ZERO);
         hoaDon.setTienDuocGiam(BigDecimal.ZERO);
         hoaDon.setTienPhaiThanhToan(BigDecimal.ZERO);
@@ -300,43 +305,180 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
         // Lưu HoaDon mới
         hoaDonRepo.save(hoaDon);
 
-        // Duyệt qua từng phần tử trong gioHangChiTietList
-        for (GioHangChiTiet gioHangChiTiet : gioHangChiTietList) {
-            // Lấy thông tin chi tiết sản phẩm (SanPhamChiTiet) từ GioHangChiTiet
+        // Khởi tạo tổng tiền
+        BigDecimal tongTienHoaDon = BigDecimal.ZERO;
+
+        // Duyệt qua từng chi tiết yêu cầu
+        for (HoaDonChiTietRequest request : chiTietRequests) {
+            // Kiểm tra sản phẩm chi tiết trong giỏ hàng của khách hàng
+            GioHangChiTiet gioHangChiTiet = gioHangChiTietRepo.findByIdGioHang_IdKhachHang_IdAndIdSanPhamChiTiet_Id(
+                    khachHang.getId(), request.getIdSpct() // ID sản phẩm chi tiết từ yêu cầu
+            ).orElseThrow(() -> new AppException(ErrorCode.ITEM_NOT_FOUND_IN_CART));
+
+            // Lấy thông tin chi tiết sản phẩm (SanPhamChiTiet)
             SanPhamChiTiet spct = gioHangChiTiet.getIdSanPhamChiTiet();
 
             // Kiểm tra số lượng có đủ hay không
-            if (gioHangChiTiet.getSoLuong() > spct.getSoLuong()) {
+            if (request.getSoLuong() > spct.getSoLuong()) {
                 throw new AppException(ErrorCode.INSUFFICIENT_STOCK);
             }
 
             // Tạo mới HoaDonChiTiet cho sản phẩm này
             HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
-            hoaDonChiTiet.setIdHoaDon(hoaDon); // Liên kết với HoaDon
-            hoaDonChiTiet.setIdSpct(spct); // Liên kết với SanPhamChiTiet
-            hoaDonChiTiet.setSoLuong(gioHangChiTiet.getSoLuong());
+            hoaDonChiTiet.setIdHoaDon(hoaDon);
+            hoaDonChiTiet.setIdSpct(spct);
+            hoaDonChiTiet.setSoLuong(request.getSoLuong());
             hoaDonChiTiet.setDonGia(spct.getDonGia());
-            hoaDonChiTiet.setTrangThai(TrangThai.CHO_XAC_NHAN_DON);
+            hoaDonChiTiet.setTrangThai(TrangThai.TAO_MOI);
 
             // Lưu HoaDonChiTiet
             hoaDonChiTietRepo.save(hoaDonChiTiet);
 
-            // Cập nhật tổng tiền của HoaDon
-            BigDecimal tongTienChiTiet = spct.getDonGia().multiply(BigDecimal.valueOf(gioHangChiTiet.getSoLuong()));
-            hoaDon.setTongTien(hoaDon.getTongTien().add(tongTienChiTiet));
-
-            // Cập nhật số lượng tồn kho trong sản phẩm
-            spct.setSoLuong(spct.getSoLuong() - gioHangChiTiet.getSoLuong());
-            sanPhamChiTietRepo.save(spct); // Lưu lại sản phẩm đã cập nhật
+            // Tính tổng tiền chi tiết và cộng vào tổng tiền của hóa đơn
+            BigDecimal tongTienChiTiet = spct.getDonGia().multiply(BigDecimal.valueOf(request.getSoLuong()));
+            tongTienHoaDon = tongTienHoaDon.add(tongTienChiTiet);
         }
 
-        // Cập nhật lại tiền phải thanh toán cho HoaDon
-        hoaDon.setTienPhaiThanhToan(hoaDon.getTongTien().subtract(hoaDon.getTienDuocGiam()));
+        // Cập nhật tổng tiền và tiền phải thanh toán cho HoaDon
+        hoaDon.setTongTien(tongTienHoaDon);
+        hoaDon.setTienPhaiThanhToan(tongTienHoaDon.subtract(hoaDon.getTienDuocGiam()));
 
         // Lưu lại HoaDon đã cập nhật
         hoaDonRepo.save(hoaDon);
 
         // Chuyển đổi HoaDon thành HoaDonResponse và trả về
+        return converToHoaDonResponse(hoaDon);
+    }
+
+
+    private boolean kiemTraTrangThaiThanhToanVNPAY(String phuongThuc, Integer idHoaDon) {
+        HoaDon hoaDon = hoaDonRepo.findById(idHoaDon).orElse(null);
+        if (hoaDon == null) return false;
+
+        // Tạo URL endpoint "/payment-infor"
+        String paymentInfoUrl = "http://localhost:8080/api/paymentvnpay/payment-infor";
+
+        // Tạo các tham số yêu cầu
+        Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("vnp_Amount", hoaDon.getTienPhaiThanhToan().multiply(BigDecimal.valueOf(100)).toBigInteger().toString());
+        queryParams.put("vnp_BankCode", "NCB"); // Giá trị giả lập hoặc lấy từ thông tin thực tế
+        queryParams.put("vnp_OrderInfo", String.valueOf(idHoaDon));
+        queryParams.put("vnp_ResponseCode", "00"); // Mã này cần lấy từ phản hồi VNPAY thực tế nếu có
+
+        // Tạo URL với các tham số
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(paymentInfoUrl);
+        queryParams.forEach((key, value) -> builder.queryParam(key, value));
+        String urlWithParams = builder.toUriString(); // Chuyển URL thành chuỗi
+        // Sử dụng RestTemplate để gọi API
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<TransactionStatus> response = restTemplate.getForEntity(builder.toUriString(), TransactionStatus.class);
+
+        // Kiểm tra phản hồi để xác định thanh toán có thành công không
+        if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+            TransactionStatus transactionStatus = response.getBody();
+            return "OK".equals(transactionStatus.getStatus());
+        }
+
+        return false;
+    }
+    @Override
+    public void thanhToan(Integer idHoaDon, HoaDonRequest hoaDonRequest) {
+// Tìm hóa đơn
+        HoaDon hoaDon = hoaDonRepo.findById(idHoaDon)
+                .orElseThrow(() -> new IllegalArgumentException("Hóa đơn không tồn tại."));
+
+        // Kiểm tra phương thức thanh toán
+        if (hoaDonRequest == null || hoaDonRequest.getPhuongThucThanhToan() == null) {
+            throw new IllegalArgumentException("Phương thức thanh toán không hợp lệ.");
+        }
+
+        String tenPhuongThuc = hoaDonRequest.getPhuongThucThanhToan();
+
+        if (tenPhuongThuc.equalsIgnoreCase("Tiền mặt")) {
+            // Lưu phương thức thanh toán
+            PhuongThucThanhToan phuongThucThanhToan = new PhuongThucThanhToan();
+            phuongThucThanhToan.setIdHoaDon(hoaDon);
+            phuongThucThanhToan.setTenPhuongThuc(hoaDonRequest.getPhuongThucThanhToan());
+            phuongThucThanhToan.setGhiChu("Tiền mặt" + hoaDon.getId() + "sotien" + hoaDon.getTienPhaiThanhToan());
+            phuongThucThanhToanRepo.save(phuongThucThanhToan);
+            hoaDon.setPhuongThucThanhToan(tenPhuongThuc);
+            // Kiểm tra nếu tiền khách đưa lớn hơn hoặc bằng tiền phải thanh toán
+            BigDecimal tienKhachDua = hoaDonRequest.getTienKhachDua();
+            BigDecimal tienPhaiThanhToan = hoaDon.getTienPhaiThanhToan();
+
+            if (tienKhachDua.compareTo(tienPhaiThanhToan) >= 0) {
+                // Thiết lập tiền khách đưa
+                hoaDon.setTienKhachDua(tienKhachDua);
+
+                // Tính toán tiền thừa
+                BigDecimal tienThua = tienKhachDua.subtract(tienPhaiThanhToan);
+                hoaDon.setTienThua(tienThua);
+                hoaDon.setTrangThai(TrangThai.CHO_XAC_NHAN_DON);
+                // Lưu hóa đơn vào cơ sở dữ liệu
+                hoaDonRepo.save(hoaDon);
+            } else {
+                // Nếu tiền khách đưa không đủ, ném ra ngoại lệ hoặc xử lý lỗi
+                throw new AppException(ErrorCode.INSUFFICIENT_PAYMENT);
+            }
+            // Nếu khách hàng đã thanh toán, cập nhật trạng thái hóa đơn
+//            capNhatTrangThaiHoaDon(hoaDon);
+        } else if (tenPhuongThuc.equalsIgnoreCase("VNPAY")) {
+
+            // Lấy trạng thái thanh toán
+            boolean daThanhToan = kiemTraTrangThaiThanhToanVNPAY("VNPAY", hoaDon.getId());
+
+            if (daThanhToan) {
+                // Lưu phương thức thanh toán
+                PhuongThucThanhToan phuongThucThanhToan = new PhuongThucThanhToan();
+                phuongThucThanhToan.setIdHoaDon(hoaDon);
+                phuongThucThanhToan.setTenPhuongThuc(hoaDonRequest.getPhuongThucThanhToan());
+                phuongThucThanhToan.setGhiChu("VNPAY " + hoaDon.getId() + " số tiền: " + hoaDon.getTienPhaiThanhToan());
+                phuongThucThanhToanRepo.save(phuongThucThanhToan);
+                hoaDon.setPhuongThucThanhToan(tenPhuongThuc);
+                hoaDonRepo.save(hoaDon);
+                // Cập nhật trạng thái hóa đơn
+//                capNhatTrangThaiHoaDon(hoaDon);
+            } else {
+                System.out.println("Chưa nhận được thanh toán từ VNPAY.");
+            }
+
+        }  else {
+                System.out.println("Chưa nhận được thanh toán từ ZaloPay.");
+            }
+
+        }
+
+    @Override
+    public HoaDonResponse datHang(Integer idHoaDon, HoaDonRequest hoaDonRequest) {
+        return null;
+    }
+    private NhanVien getCurrentNhanVien() {
+        // Lấy thông tin người dùng hiện tại
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName(); // Tên đăng nhập
+
+        // Tìm nhân viên từ tên đăng nhập
+        return nhanVienRepo.findByEmail(username)
+                .orElseThrow(() -> new AppException(ErrorCode.STAFF)); // Xử lý nếu không tìm thấy nhân viên
+    }
+    @Override
+    public HoaDonResponse nhanVienXacNhan(Integer idHoaDon) {
+        HoaDon hoaDon = hoaDonRepo.findById(idHoaDon) .orElseThrow(() -> new AppException(ErrorCode.BILL_NOT_FOUND));
+        NhanVien nhanVien=getCurrentNhanVien();
+        hoaDon.setIdNhanVien(nhanVien);
+        if(!hoaDon.getTrangThai().equals(TrangThai.CHO_XAC_NHAN_DON)){
+          throw new AppException(ErrorCode.BILL_NOT_FOUND_h);
+        }
+        // Lấy danh sách chi tiết hóa đơn
+        List<HoaDonChiTiet> chiTietList = hoaDonChiTietRepo.findByIdHoaDon(hoaDon.getId());
+        for (HoaDonChiTiet chiTiet : chiTietList) {
+            chiTiet.setTrangThai(TrangThai.DA_XAC_NHAN_DON);  // Cập nhật trạng thái thành true
+        }
+        hoaDonChiTietRepo.saveAll(chiTietList);
+
+        // Cập nhật trạng thái thanh toán của hóa đơn
+        hoaDon.setTrangThai(TrangThai.DA_XAC_NHAN_DON);
+        hoaDonRepo.save(hoaDon);
         return converToHoaDonResponse(hoaDon);
     }
 

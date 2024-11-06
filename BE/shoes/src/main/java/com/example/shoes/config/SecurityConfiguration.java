@@ -56,7 +56,7 @@ public class SecurityConfiguration {
             "/api/sanpham/**", "/api/sanphamchitiet/**", "/api/kichthuoc/**", "/api/mausac/**",
             "/api/thuonghieu/**", "/api/degiay/**", "/api/hinhanh/**", "/api/khachhang/**",
             "/api/loai/**", "/api/phieugiamgia/**", "/banhangtaiquay/**", "/api/hoadonchitiet/**", "/api/paymentvnpay/**",
-            "/api/paymentvnpay/payment-infor"
+            "/api/paymentvnpay/payment-infor","/banhangonline/**",
     };
 
 //    private final String[] ADMIN_ENDPOINTS = {

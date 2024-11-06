@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+
 @RestController
 @RequestMapping("/banhangonline")
 public class BanHangOnlineController {
@@ -52,7 +53,6 @@ public class BanHangOnlineController {
         GioHangChiTietResponse response = gioHangChiTietService.findByid(id);
         return ApiResponse.<GioHangChiTietResponse>builder()
                 .result(response)
-                .message("Lấy chi tiết giỏ hàng thành công")
                 .build();
     }
 
@@ -82,17 +82,24 @@ public class BanHangOnlineController {
         HoaDonResponse response = hangChiTietService.muaNgay(idSPCT, chiTietRequest);
         return ApiResponse.<HoaDonResponse>builder()
                 .result(response)
-                .message("Mua ngay sản phẩm thành công")
                 .build();
     }
-    @PostMapping("/muahangtugiohangchitiet/{idSPCT}")
-    public ApiResponse<HoaDonResponse> muahangtugiohangchitiet(@PathVariable Integer idSPCT,
-                                               @RequestBody HoaDonChiTietRequest chiTietRequest) {
-        HoaDonResponse response = hangChiTietService.muaHangTuGioHangChiTiet(idSPCT, chiTietRequest);
+    @PostMapping("/muahangtugiohangchitiet")
+    public ApiResponse<HoaDonResponse> muahangtugiohangchitiet(
+            @RequestBody List<HoaDonChiTietRequest> chiTietRequests) { // Chấp nhận danh sách yêu cầu chi tiết
+
+        // Gọi service để xử lý việc mua hàng
+        HoaDonResponse response = hangChiTietService.muaHangTuGioHangChiTiet(chiTietRequests);
+
         return ApiResponse.<HoaDonResponse>builder()
                 .result(response)
-                .message("Mua ngay sản phẩm thành công")
                 .build();
     }
-
+    @PostMapping("/nhanvienxacnhan/{idHoaDon}")
+    public ApiResponse<HoaDonResponse> nhanVienXacNhan(@PathVariable Integer idHoaDon) {
+        HoaDonResponse response = hangChiTietService.nhanVienXacNhan(idHoaDon);
+        return ApiResponse.<HoaDonResponse>builder()
+                .result(response)
+                .build();
+    }
 }
