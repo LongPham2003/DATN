@@ -23,4 +23,5 @@ public interface KhachHangRepo extends JpaRepository<KhachHang, Integer> {
     List<String> findTopMaNhanVien();
 //    khi tao hoa don se tim khach hang theo sdt de lay thong tin nhu ho ten dai chi
 Optional<KhachHang> findKhachHangBySdt(String sdt);
+    Optional<KhachHang> findByEmail(String email); // Tìm nhân viên theo email
 }

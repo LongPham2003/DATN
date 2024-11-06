@@ -11,11 +11,12 @@ import java.util.List;
 
 
 public interface PhieuGiamGiaService {
-    PhieuGiamGia getById(Integer id);
+    PhieuGiamGiaResponse getById(Integer id);
     PhieuGiamGiaResponse create(PhieuGiamGiaRequest request);
     PhieuGiamGiaResponse update(Integer id, PhieuGiamGiaRequest request);
     PhieuGiamGiaResponse delete(Integer id, PhieuGiamGiaRequest request);
 
+    List<PhieuGiamGiaResponse> getAllTrangThaiTrue();
 
     PhanTrangResponse<PhieuGiamGiaResponse> getPhieuGiamGia(int pageNumber, int pageSize, String keyword, String tenVoucher, Boolean trangThai, LocalDateTime ngayBatDau, LocalDateTime ngatKetThuc);
 }

@@ -21,4 +21,7 @@ public interface DiaChiRepo  extends JpaRepository<DiaChi, Integer> {
     @Query("UPDATE DiaChi dc SET dc.diaChiMacDinh = false WHERE dc.khachHang.id = :idKhachHang AND dc.id != :idDiaChi")
     void unsetAllOtherDefaultAddresses(@Param("idKhachHang") Integer idKhachHang, @Param("idDiaChi") Integer idDiaChi);
 
+    @Query("SELECT d FROM DiaChi d WHERE d.khachHang.id = :idKhachHang AND d.diaChiMacDinh = true")
+    DiaChi getDiaChiByIdKhachHangAndDiaChiMacDinh(@Param("idKhachHang")Integer idKhachHang);
+
 }

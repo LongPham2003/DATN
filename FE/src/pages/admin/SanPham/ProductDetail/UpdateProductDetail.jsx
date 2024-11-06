@@ -1,7 +1,7 @@
 import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import { Button, Input, Popconfirm, Select } from "antd";
 import TextArea from "antd/es/input/TextArea";
-import axios from "axios";
+import axios from "../../../../api/axiosConfig.js";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
@@ -24,7 +24,7 @@ export default function UpdateProductDetail() {
   const [hinhAnh, setHinhAnh] = useState([]);
   const [anhMoi, setAnhMoi] = useState([]);
 
-  const getSPCTById = `http://localhost:8080/api/sanphamchitiet/getSPCTDetail/${id}`;
+  const getSPCTById = `http://localhost:8080/api/sanphamchitiet/getspctdetail/${id}`;
   const getSPById = `http://localhost:8080/api/sanpham`;
   const getHinhAnh = `http://localhost:8080/api/hinhanh/tatcathinhanh`;
 
@@ -84,7 +84,7 @@ export default function UpdateProductDetail() {
       idThuongHieu: SPCT.idThuongHieu,
       idDeGiay: SPCT.idDeGiay,
       soLuong: SPCT.soLuong,
-      donGia: SPCT.donGia,
+      donGia: SPCT.donGia.replace(/\D/g, ""),
       trangThai: SPCT.trangThai,
     };
 

@@ -1,11 +1,18 @@
 package com.example.shoes.controller;
+import com.example.shoes.dto.BaoCaoThongKeResponse;
+
+import com.example.shoes.dto.hoadon.request.HoaDonRequest;
+
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
+import com.example.shoes.dto.hoadon.response.HoaDonTheoIDResponse;
 import com.example.shoes.dto.hoadonchitiet.request.HoaDonChiTietRequest;
 import com.example.shoes.dto.phuongthucthanhtoan.request.PhuongThucThanhToanRequest;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.repository.HoaDonRepo;
 import com.example.shoes.service.HoaDonService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,7 +20,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.io.UnsupportedEncodingException;
+import java.time.LocalDate;
 import java.util.List;
 @RestController
 @RequestMapping("/banhangtaiquay")
@@ -34,8 +45,8 @@ private HoaDonRepo hoaDonRepo;
     @PostMapping("/thanhtoan/{idhoadon}")
     public ApiResponse<String> thanhToan(
             @PathVariable("idhoadon") Integer idhoadon,
-            @RequestBody PhuongThucThanhToanRequest phuongThucThanhToanRequest) {
-        hoaDonService.thanhToan(idhoadon, phuongThucThanhToanRequest);
+            @RequestBody HoaDonRequest hoaDonRequest) {
+        hoaDonService.thanhToan(idhoadon, hoaDonRequest);
         return ApiResponse.<String>builder()
                 .message("thanh toan thanh cong")
                 .build();
@@ -73,7 +84,7 @@ private HoaDonRepo hoaDonRepo;
     }
 
     // Xóa hóa đơn
-    @DeleteMapping ("/hoadon/delete/{id}")
+    @PutMapping ("/hoadon/delete/{id}")
     public ApiResponse<String> deleteHoaDon(@PathVariable("id") Integer idHoaDon) {
         hoaDonService.deleteHoaDon(idHoaDon);
         return ApiResponse.<String>builder()
@@ -99,6 +110,7 @@ private HoaDonRepo hoaDonRepo;
                     .message("Áp dụng phiếu giảm giá thành công")
                     .build();
     }
+
     @DeleteMapping("/hoadon/delete/{id}/voucher/{idPhieuGiamGia}")
     public ApiResponse<String> xoaPhieuGiamGia(
             @PathVariable Integer id,
@@ -108,6 +120,60 @@ private HoaDonRepo hoaDonRepo;
         return ApiResponse.<String>builder()
                 .message("Xóa phiếu giảm giá khỏi hóa đơn thành công")
                 .build();
+    }
+
+
+//    get tong tiền ,tien duoc giam,tien phai thanh toan theo idhoadon
+    // Lay thong tin tien theo idHoaDon
+    @GetMapping("/hoadon/gettheoid/{idHoaDon}")
+    public ApiResponse<HoaDonTheoIDResponse> getTheoIdHoaDon(@PathVariable Integer idHoaDon) {
+        HoaDonTheoIDResponse hoaDonResponse = hoaDonService.getTheoIdHoaDon(idHoaDon);
+        return ApiResponse.<HoaDonTheoIDResponse>builder()
+                .result(hoaDonResponse)
+                .build();
+    }
+    @GetMapping("/theo-ngay")
+    public ApiResponse<List<BaoCaoThongKeResponse>> layBaoCaoTaiChinhTheoNgay(
+            @RequestParam LocalDate startDate,
+            @RequestParam LocalDate endDate) {
+        List<BaoCaoThongKeResponse> responses = hoaDonService.layBaoCaoTaiChinhTheoNgay(startDate, endDate);
+        return ApiResponse.<List<BaoCaoThongKeResponse>>builder()
+                .result(responses)
+                .build();
+    }
+
+    @GetMapping("/theo-thang")
+    public ApiResponse<List<BaoCaoThongKeResponse>> layBaoCaoTaiChinhTheoThang(
+            @RequestParam LocalDate startDate,
+            @RequestParam LocalDate endDate) {
+        List<BaoCaoThongKeResponse> responses =hoaDonService.layBaoCaoTaiChinhTheoThang(startDate, endDate);
+        return ApiResponse.<List<BaoCaoThongKeResponse>>builder()
+                .result(responses)
+                .build();
+    }
+
+    @GetMapping("/theo-nam")
+    public ApiResponse<List<BaoCaoThongKeResponse>> layBaoCaoTaiChinhTheoNam(
+            @RequestParam LocalDate startDate,
+            @RequestParam LocalDate endDate) {
+        List<BaoCaoThongKeResponse> responses = hoaDonService.layBaoCaoTaiChinhTheoNam(startDate, endDate);
+        return ApiResponse.<List<BaoCaoThongKeResponse>>builder()
+                .result(responses)
+                .build();
+    }
+
+    @GetMapping("/tong-quoc")
+    public ApiResponse<BaoCaoThongKeResponse> layBaoCaoTaiChinhTongQuuat() {
+        BaoCaoThongKeResponse response = hoaDonService.layBaoCaoTaiChinhTongQuat();
+        return ApiResponse.<BaoCaoThongKeResponse>builder()
+                .result(response)
+                .build();
+    }
+
+    // API để xuất hóa đơn theo ID
+    @GetMapping("/xuathoadon/{id}")
+    public String xuatHoaDon(@PathVariable Integer id) {
+        return hoaDonService.xuatHoaDon(id);
     }
 
 }

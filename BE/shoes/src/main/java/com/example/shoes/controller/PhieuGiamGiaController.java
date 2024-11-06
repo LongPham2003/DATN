@@ -40,9 +40,9 @@ public class PhieuGiamGiaController {
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<PhieuGiamGia> getById(@PathVariable Integer id ) {
-        PhieuGiamGia phieuGiamGia= phieuGiamGiaService.getById(id);
-        return ApiResponse.<PhieuGiamGia>builder()
+    public ApiResponse<PhieuGiamGiaResponse> getById(@PathVariable Integer id ) {
+        PhieuGiamGiaResponse phieuGiamGia= phieuGiamGiaService.getById(id);
+        return ApiResponse.<PhieuGiamGiaResponse>builder()
                 .result(phieuGiamGia)
                 .build();
     }
@@ -77,5 +77,10 @@ public class PhieuGiamGiaController {
                 .build();
     }
 
+    @GetMapping("/trang-thai-true")
+    public ApiResponse<List<PhieuGiamGiaResponse>> trangThaiTrue() {
+        List<PhieuGiamGiaResponse> listTrangThaiTrue = phieuGiamGiaService.getAllTrangThaiTrue();
+        return  ApiResponse.<List<PhieuGiamGiaResponse>>builder().result(listTrangThaiTrue).build();
+    }
 
 }

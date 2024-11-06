@@ -13,4 +13,5 @@ public interface KhachHangService {
     KhachHang add(KhachHangRequest request);
     KhachHang update(Integer id,KhachHangRequest request);
     KhachHang getById(Integer id);
+
 }

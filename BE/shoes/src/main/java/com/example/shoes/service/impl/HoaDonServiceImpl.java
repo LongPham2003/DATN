@@ -1,20 +1,13 @@
 package com.example.shoes.service.impl;
 
-import com.example.shoes.config.VNPAYConfig;
+import com.example.shoes.dto.BaoCaoThongKeResponse;
 import com.example.shoes.dto.hoadon.request.HoaDonRequest;
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
+import com.example.shoes.dto.hoadon.response.HoaDonTheoIDResponse;
 import com.example.shoes.dto.hoadonchitiet.request.HoaDonChiTietRequest;
 import com.example.shoes.dto.phuongthucthanhtoan.request.PhuongThucThanhToanRequest;
 import com.example.shoes.dto.vnpay.response.TransactionStatus;
-import com.example.shoes.entity.ChatLieu;
-import com.example.shoes.entity.HoaDon;
-import com.example.shoes.entity.HoaDonChiTiet;
-import com.example.shoes.entity.KhachHang;
-import com.example.shoes.entity.LichSuHoaDon;
-import com.example.shoes.entity.NhanVien;
-import com.example.shoes.entity.PhieuGiamGia;
-import com.example.shoes.entity.PhuongThucThanhToan;
-import com.example.shoes.entity.SanPhamChiTiet;
+import com.example.shoes.entity.*;
 import com.example.shoes.enums.TrangThai;
 import com.example.shoes.exception.AppException;
 import com.example.shoes.exception.ErrorCode;
@@ -28,10 +21,10 @@ import com.example.shoes.repository.PhuongThucThanhToanRepo;
 import com.example.shoes.repository.SanPhamChiTietRepo;
 import com.example.shoes.service.HoaDonService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -42,18 +35,18 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -131,7 +124,7 @@ public class HoaDonServiceImpl implements HoaDonService {
 
         // Tạo hóa đơn mới
         HoaDon hoaDon = new HoaDon();
-        String maHoaDon=generateMaHoaDon();
+        String maHoaDon = generateMaHoaDon();
         hoaDon.setMa(maHoaDon);
         hoaDon.setIdNhanVien(nhanVien);
         hoaDon.setPhuongThucGiaoHang("tại quầy ");
@@ -142,6 +135,8 @@ public class HoaDonServiceImpl implements HoaDonService {
         hoaDon.setTongTien(BigDecimal.ZERO);
         hoaDon.setTienDuocGiam(BigDecimal.ZERO);
         hoaDon.setTienPhaiThanhToan(BigDecimal.ZERO);
+        hoaDon.setTienKhachDua(BigDecimal.ZERO);
+        hoaDon.setTienThua(BigDecimal.ZERO);
         // Lưu hóa đơn
         HoaDon savedHoaDon = hoaDonRepo.save(hoaDon);
         // Trả về kết quả
@@ -258,8 +253,9 @@ public class HoaDonServiceImpl implements HoaDonService {
 
         // Kiểm tra trạng thái hóa đơn
 
-        if (hoaDon.getTrangThai().equals(TrangThai.DA_THANH_TOAN) ) {
-            throw new RuntimeException("Hóa đơn đã thanh toán, không thể xóa!");
+        if (hoaDon.getTrangThai().equals(TrangThai.DA_THANH_TOAN)) {
+
+            throw new RuntimeException("Hóa đơn đã thanh toán, không thể hủy!");
         }
 
         // Lấy danh sách chi tiết hóa đơn
@@ -270,13 +266,12 @@ public class HoaDonServiceImpl implements HoaDonService {
             SanPhamChiTiet spct = chiTiet.getIdSpct();
             spct.setSoLuong(spct.getSoLuong() + chiTiet.getSoLuong());
             sanPhamChiTietRepo.save(spct); // Lưu lại số lượng sản phẩm chi tiết đã cập nhật
+            chiTiet.setTrangThai(TrangThai.HUY_DON);
+            hoaDonChiTietRepo.save(chiTiet);
         }
-
-        // Xóa chi tiết hóa đơn
-        hoaDonChiTietRepo.deleteAll(chiTietList);
-
+        hoaDon.setTrangThai(TrangThai.HUY_DON);
         // Xóa hóa đơn
-        hoaDonRepo.delete(hoaDon);
+        hoaDonRepo.save(hoaDon);
         return converToHoaDonResponse(hoaDon);
     }
 
@@ -387,11 +382,11 @@ public class HoaDonServiceImpl implements HoaDonService {
             return null;
         }
     }
+
     private boolean kiemTraTrangThaiThanhToanMoMo(String phuongThuc, Integer idHoaDon) {
 
         return true;
     }
-
 
 
     private void capNhatTrangThaiHoaDon(HoaDon hoaDon) {
@@ -410,7 +405,7 @@ public class HoaDonServiceImpl implements HoaDonService {
         NhanVien nhanVien = getCurrentNhanVien();
         LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
         lichSuHoaDon.setIdHoaDon(hoaDon);
-        lichSuHoaDon.setMoTa("Thanh toán thành công "+ "id hóa đon:"+ hoaDon.getId() + "so tien :" +hoaDon.getTienPhaiThanhToan());
+        lichSuHoaDon.setMoTa("Thanh toán thành công " + "id hóa đon:" + hoaDon.getId() + "so tien :" + hoaDon.getTienPhaiThanhToan());
         lichSuHoaDon.setThoiGian(LocalDate.now());
         lichSuHoaDon.setNguoiThucHien(nhanVien.getHoTen());
         lichSuHoaDonRepo.save(lichSuHoaDon);
@@ -449,48 +444,65 @@ public class HoaDonServiceImpl implements HoaDonService {
 
 
     @Override
-    public void thanhToan(Integer idHoaDon, PhuongThucThanhToanRequest phuongThucThanhToanRequest) {
+    public void thanhToan(Integer idHoaDon, HoaDonRequest hoaDonRequest) {
         // Tìm hóa đơn
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon)
                 .orElseThrow(() -> new IllegalArgumentException("Hóa đơn không tồn tại."));
 
         // Kiểm tra phương thức thanh toán
-        if (phuongThucThanhToanRequest == null || phuongThucThanhToanRequest.getTenPhuongThuc() == null) {
+        if (hoaDonRequest == null || hoaDonRequest.getPhuongThucThanhToan() == null) {
             throw new IllegalArgumentException("Phương thức thanh toán không hợp lệ.");
         }
 
-        String tenPhuongThuc = phuongThucThanhToanRequest.getTenPhuongThuc();
+        String tenPhuongThuc = hoaDonRequest.getPhuongThucThanhToan();
 
         if (tenPhuongThuc.equalsIgnoreCase("Tiền mặt")) {
             // Lưu phương thức thanh toán
             PhuongThucThanhToan phuongThucThanhToan = new PhuongThucThanhToan();
             phuongThucThanhToan.setIdHoaDon(hoaDon);
-            phuongThucThanhToan.setTenPhuongThuc(phuongThucThanhToanRequest.getTenPhuongThuc());
-            phuongThucThanhToan.setGhiChu("Tiền mặt" +hoaDon.getId() +"sotien" +hoaDon.getTienPhaiThanhToan());
+            phuongThucThanhToan.setTenPhuongThuc(hoaDonRequest.getPhuongThucThanhToan());
+            phuongThucThanhToan.setGhiChu("Tiền mặt" + hoaDon.getId() + "sotien" + hoaDon.getTienPhaiThanhToan());
             phuongThucThanhToanRepo.save(phuongThucThanhToan);
             hoaDon.setPhuongThucThanhToan(tenPhuongThuc);
-            hoaDonRepo.save(hoaDon);
+            // Kiểm tra nếu tiền khách đưa lớn hơn hoặc bằng tiền phải thanh toán
+            BigDecimal tienKhachDua = hoaDonRequest.getTienKhachDua();
+            BigDecimal tienPhaiThanhToan = hoaDon.getTienPhaiThanhToan();
+
+            if (tienKhachDua.compareTo(tienPhaiThanhToan) >= 0) {
+                // Thiết lập tiền khách đưa
+                hoaDon.setTienKhachDua(tienKhachDua);
+
+                // Tính toán tiền thừa
+                BigDecimal tienThua = tienKhachDua.subtract(tienPhaiThanhToan);
+                hoaDon.setTienThua(tienThua);
+
+                // Lưu hóa đơn vào cơ sở dữ liệu
+                hoaDonRepo.save(hoaDon);
+            } else {
+                // Nếu tiền khách đưa không đủ, ném ra ngoại lệ hoặc xử lý lỗi
+                throw new AppException(ErrorCode.INSUFFICIENT_PAYMENT);
+            }
             // Nếu khách hàng đã thanh toán, cập nhật trạng thái hóa đơn
             capNhatTrangThaiHoaDon(hoaDon);
-        }  else if (tenPhuongThuc.equalsIgnoreCase("VNPAY")) {
+        } else if (tenPhuongThuc.equalsIgnoreCase("VNPAY")) {
 
-                // Lấy trạng thái thanh toán
-                boolean daThanhToan = kiemTraTrangThaiThanhToanVNPAY("VNPAY", hoaDon.getId());
+            // Lấy trạng thái thanh toán
+            boolean daThanhToan = kiemTraTrangThaiThanhToanVNPAY("VNPAY", hoaDon.getId());
 
-                if (daThanhToan) {
-                    // Lưu phương thức thanh toán
-                    PhuongThucThanhToan phuongThucThanhToan = new PhuongThucThanhToan();
-                    phuongThucThanhToan.setIdHoaDon(hoaDon);
-                    phuongThucThanhToan.setTenPhuongThuc(phuongThucThanhToanRequest.getTenPhuongThuc());
-                    phuongThucThanhToan.setGhiChu("VNPAY " + hoaDon.getId() + " số tiền: " + hoaDon.getTienPhaiThanhToan());
-                    phuongThucThanhToanRepo.save(phuongThucThanhToan);
-                    hoaDon.setPhuongThucThanhToan(tenPhuongThuc);
-                    hoaDonRepo.save(hoaDon);
-                    // Cập nhật trạng thái hóa đơn
-                    capNhatTrangThaiHoaDon(hoaDon);
-                } else {
-                    System.out.println("Chưa nhận được thanh toán từ VNPAY.");
-                }
+            if (daThanhToan) {
+                // Lưu phương thức thanh toán
+                PhuongThucThanhToan phuongThucThanhToan = new PhuongThucThanhToan();
+                phuongThucThanhToan.setIdHoaDon(hoaDon);
+                phuongThucThanhToan.setTenPhuongThuc(hoaDonRequest.getPhuongThucThanhToan());
+                phuongThucThanhToan.setGhiChu("VNPAY " + hoaDon.getId() + " số tiền: " + hoaDon.getTienPhaiThanhToan());
+                phuongThucThanhToanRepo.save(phuongThucThanhToan);
+                hoaDon.setPhuongThucThanhToan(tenPhuongThuc);
+                hoaDonRepo.save(hoaDon);
+                // Cập nhật trạng thái hóa đơn
+                capNhatTrangThaiHoaDon(hoaDon);
+            } else {
+                System.out.println("Chưa nhận được thanh toán từ VNPAY.");
+            }
 
         } else if (tenPhuongThuc.equalsIgnoreCase("MoMo")) {
             // Tạo mã QR cho MoMo với id hóa đơn và tổng tiền
@@ -500,12 +512,12 @@ public class HoaDonServiceImpl implements HoaDonService {
             // Kiểm tra trạng thái thanh toán từ MoMo
             boolean daThanhToan = kiemTraTrangThaiThanhToanMoMo("MoMo", hoaDon.getId());
 
-            if (daThanhToan==true) {
+            if (daThanhToan == true) {
                 // Lưu phương thức thanh toán
                 PhuongThucThanhToan phuongThucThanhToan = new PhuongThucThanhToan();
                 phuongThucThanhToan.setIdHoaDon(hoaDon);
-                phuongThucThanhToan.setTenPhuongThuc(phuongThucThanhToanRequest.getTenPhuongThuc());
-                phuongThucThanhToan.setGhiChu("MoMo" +hoaDon.getId() +"sotien" +hoaDon.getTienPhaiThanhToan());
+                phuongThucThanhToan.setTenPhuongThuc(hoaDonRequest.getPhuongThucThanhToan());
+                phuongThucThanhToan.setGhiChu("MoMo" + hoaDon.getId() + "sotien" + hoaDon.getTienPhaiThanhToan());
                 phuongThucThanhToanRepo.save(phuongThucThanhToan);
                 hoaDon.setPhuongThucThanhToan(tenPhuongThuc);
                 hoaDonRepo.save(hoaDon);
@@ -522,12 +534,12 @@ public class HoaDonServiceImpl implements HoaDonService {
             // Kiểm tra trạng thái thanh toán từ ZaloPay
             boolean daThanhToan = kiemTraTrangThaiThanhToanZaloPay("ZaloPay", hoaDon.getId());
 
-            if (daThanhToan==true) {
+            if (daThanhToan == true) {
                 // Lưu phương thức thanh toán
                 PhuongThucThanhToan phuongThucThanhToan = new PhuongThucThanhToan();
                 phuongThucThanhToan.setIdHoaDon(hoaDon);
-                phuongThucThanhToan.setTenPhuongThuc(phuongThucThanhToanRequest.getTenPhuongThuc());
-                phuongThucThanhToan.setGhiChu("ZaloPay" +hoaDon.getId() +"sotien" +hoaDon.getTienPhaiThanhToan());
+                phuongThucThanhToan.setTenPhuongThuc(hoaDonRequest.getPhuongThucThanhToan());
+                phuongThucThanhToan.setGhiChu("ZaloPay" + hoaDon.getId() + "sotien" + hoaDon.getTienPhaiThanhToan());
                 phuongThucThanhToanRepo.save(phuongThucThanhToan);
                 hoaDon.setPhuongThucThanhToan(tenPhuongThuc);
                 hoaDonRepo.save(hoaDon);
@@ -602,6 +614,7 @@ public class HoaDonServiceImpl implements HoaDonService {
         // Trả về kết quả
         return converToHoaDonResponse(hoaDon);
     }
+
     public BigDecimal apDungVoucher(BigDecimal tongTienDonHang, PhieuGiamGia phieuGiamGia) {
         // Kiểm tra điều kiện áp dụng voucher
         if (tongTienDonHang.compareTo(phieuGiamGia.getDieuKienGiamGia()) < 0) {
@@ -611,7 +624,7 @@ public class HoaDonServiceImpl implements HoaDonService {
         // Tính toán mức giảm giá
         BigDecimal soTienGiam = BigDecimal.ZERO;
         String phantram = "%";
-        String tienmat = "Tiền mặt";
+        String tienmat = "VND";
 
         if (phantram.equals(phieuGiamGia.getHinhThucGiam())) {
             // Giảm giá theo phần trăm
@@ -723,25 +736,226 @@ public class HoaDonServiceImpl implements HoaDonService {
         hoaDonRepo.save(hoaDon); // Lưu hóa đơn đã cập nhật
     }
 
-    // Phương thức chuyển đổi BigDecimal sang định dạng tiền tệ Việt Nam
-    private String formatCurrency(BigDecimal amount) {
-        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
-        String formatted = currencyFormat.format(amount);
-        return formatted.replace("₫", "").trim()+"VNĐ"; // Loại bỏ ký hiệu ₫ và thêm VNĐ
+    @Override
+    public HoaDonTheoIDResponse getTheoIdHoaDon(Integer idHoaDon) {
+        // Lấy thông tin tổng hợp hóa đơn
+        List<Object[]> totals = hoaDonRepo.findTotalsByIdHoaDon(idHoaDon);
+        // Kiểm tra nếu không tìm thấy hóa đơn
+        if (totals.isEmpty()) {
+            throw new AppException(ErrorCode.BILL_NOT_FOUND);
+        }
+
+        Object[] result = totals.get(0);
+
+        // Kiểm tra độ dài của kết quả truy vấn để xác định có đủ trường hay không
+        if (result.length != 5) {
+            throw new AppException(ErrorCode.BILL_NOT_FOUND_h);
+        }
+
+        Integer idKhachHang = result[0] != null ? (Integer) result[0] : null;
+        Integer idVoucher = result[1] != null ? (Integer) result[1] : null;
+        BigDecimal tongTien = result[2] != null ? (BigDecimal) result[2] : BigDecimal.ZERO;
+        BigDecimal tienDuocGiam = result[3] != null ? (BigDecimal) result[3] : BigDecimal.ZERO;
+        BigDecimal tienPhaiThanhToan = result[4] != null ? (BigDecimal) result[4] : BigDecimal.ZERO;
+
+        // Chuyển đổi sang HoaDonTheoIDResponse
+        HoaDonTheoIDResponse response = new HoaDonTheoIDResponse();
+        response.setIdKhachHang(idKhachHang);
+        response.setIdVoucher(idVoucher);
+        response.setTongTien(formatCurrency(tongTien));
+        response.setTienDuocGiam(formatCurrency(tienDuocGiam));
+        response.setTienPhaiThanhToan(formatCurrency(tienPhaiThanhToan));
+        return response;
     }
+
+    @Override
+    public List<BaoCaoThongKeResponse> layBaoCaoTaiChinhTheoNgay(LocalDate startDate, LocalDate endDate) {
+        List<Object[]> results = hoaDonRepo.layBaoCaoTaiChinhTheoNgay(startDate, endDate);
+        return convertToResponse(results);
+    }
+
+    @Override
+    public List<BaoCaoThongKeResponse> layBaoCaoTaiChinhTheoThang(LocalDate startDate, LocalDate endDate) {
+        List<Object[]> results = hoaDonRepo.layBaoCaoTaiChinhTheoThang(startDate, endDate);
+        return convertToResponse(results);
+    }
+
+    @Override
+    public List<BaoCaoThongKeResponse> layBaoCaoTaiChinhTheoNam(LocalDate startDate, LocalDate endDate) {
+        List<Object[]> results = hoaDonRepo.layBaoCaoTaiChinhTheoNam(startDate, endDate);
+        return convertToResponse(results);
+    }
+
+    @Override
+    public BaoCaoThongKeResponse layBaoCaoTaiChinhTongQuat() {
+        List<Object[]> results = hoaDonRepo.layBaoCaoTaiChinhTongQuoc();
+        return convertToSingleResponse(results);
+    }
+
+    private List<BaoCaoThongKeResponse> convertToResponse(List<Object[]> results) {
+        List<BaoCaoThongKeResponse> responses = new ArrayList<>();
+        for (Object[] result : results) {
+            BaoCaoThongKeResponse response = new BaoCaoThongKeResponse();
+
+            // Định dạng tiền tệ
+            response.setTongDoanhThu(formatCurrency((BigDecimal) result[0]));
+            response.setTongTienDaApDungPhieuGiamGia(formatCurrency((BigDecimal) result[1]));
+            response.setSoLuongHoaDon(((Number) result[2]).intValue());
+            response.setSoLuongKhachHang(((Number) result[3]).intValue());
+
+            // Xử lý ngày tạo
+            if (result.length >= 5) { // Kiểm tra xem có đủ phần tử không
+                if (result[4] instanceof LocalDate) {
+                    // Trường hợp theo ngày
+                    response.setNgayTao((LocalDate) result[4]);
+                } else if (result[4] instanceof Number) {
+                    // Trường hợp theo tháng
+                    int year = ((Number) result[4]).intValue();
+                    int month = ((Number) result[5]).intValue();
+                    response.setNgayTao(LocalDate.of(year, month, 1));
+                }
+            }
+
+            responses.add(response);
+        }
+        return responses;
+    }
+    private BaoCaoThongKeResponse convertToSingleResponse(List<Object[]> results) {
+        if (results.isEmpty()) return new BaoCaoThongKeResponse();
+
+        Object[] result = results.get(0);
+        BaoCaoThongKeResponse response = new BaoCaoThongKeResponse();
+
+        // Định dạng tiền tệ
+        response.setTongDoanhThu(formatCurrency((BigDecimal) result[0]));
+        response.setTongTienDaApDungPhieuGiamGia(formatCurrency((BigDecimal) result[1]));
+        response.setSoLuongHoaDon(((Number) result[2]).intValue());
+        response.setSoLuongKhachHang(((Number) result[3]).intValue());
+
+        // Xử lý ngày tạo
+        if (result.length >= 7) { // Kiểm tra xem có đủ phần tử không
+            if (result[6] instanceof LocalDate) {
+                response.setNgayTao((LocalDate) result[6]);
+            } else if (result[6] instanceof Number) {
+                // Trường hợp theo tháng
+                int year = ((Number) result[6]).intValue();
+                int month = ((Number) result[7]).intValue();
+                response.setNgayTao(LocalDate.of(year, month, 1));
+            } else {
+                throw new ClassCastException("Unexpected type at index 6: " + result[6].getClass());
+            }
+        }
+
+        return response;
+    }
+
+    //    xuat hoa don
+    @Transactional
+    public String xuatHoaDon(Integer idHoaDon) {
+        HoaDon hoaDon = hoaDonRepo.findById(idHoaDon)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy hóa đơn với ID: " + idHoaDon));
+
+        StringBuilder builder = new StringBuilder();
+        builder.append("HÓA ĐƠN\n");
+        builder.append("Mã hóa đơn: ").append(hoaDon.getMa()).append("\n");
+        builder.append("Ngày tạo: ").append(hoaDon.getNgayTao()).append("\n");
+//        builder.append("Khách hàng: ").append(hoaDon.getIdKhachHang().getHoTen()).append("\n");
+//        builder.append("Số điện thoại: ").append(hoaDon.getSoDienThoai()).append("\n");
+//        builder.append("Địa chỉ giao hàng: ").append(hoaDon.getDiaChiGiaoHang()).append("\n");
+//        builder.append("Phương thức thanh toán: ").append(hoaDon.getPhuongThucThanhToan()).append("\n");
+        builder.append("\nChi tiết sản phẩm:\n");
+        BigDecimal tongTien = BigDecimal.ZERO;
+        for (HoaDonChiTiet chiTiet : hoaDon.getHoaDonChiTiets()) {
+            builder.append("- Sản phẩm: ").append(chiTiet.getIdSpct().getIdSanPham().getTenSanPham()).append("\n");
+            builder.append("  Số lượng: ").append(chiTiet.getSoLuong()).append(" x Đơn giá: ")
+                    .append(chiTiet.getDonGia()).append(" = ")
+                    .append(chiTiet.getDonGia().multiply(BigDecimal.valueOf(chiTiet.getSoLuong()))).append("\n");
+            tongTien = tongTien.add(chiTiet.getDonGia().multiply(BigDecimal.valueOf(chiTiet.getSoLuong())));
+        }
+
+        builder.append("\nTổng tiền trước giảm giá: ").append(tongTien).append("\n");
+        builder.append("Tiền được giảm: ").append(hoaDon.getTienDuocGiam()).append("\n");
+        builder.append("Tổng tiền phải thanh toán: ").append(hoaDon.getTienPhaiThanhToan()).append("\n");
+        builder.append("Trạng thái: ").append(hoaDon.getTrangThai()).append("\n");
+
+        return builder.toString();
+    }
+
+    @Override
+    public Integer idHoaDon() {
+        return hoaDonRepo.idHoaDon();
+    }
+
+    private HoaDonTheoIDResponse convert(HoaDon hoaDon){
+        HoaDonTheoIDResponse response = new HoaDonTheoIDResponse();
+        response.setTongTien(formatCurrency(hoaDon.getTongTien()));
+        response.setTienDuocGiam(formatCurrency(hoaDon.getTienDuocGiam()));
+        response.setTienPhaiThanhToan(formatCurrency(hoaDon.getTienPhaiThanhToan()));
+        return response;
+    }
+
+    //add khách hàng vào hóa đơn
+    @Override
+    public HoaDonResponse addKhachHangHoaDon(Integer idHoaDon, Integer idKhachHang) {
+        // Lấy thông tin hóa đơn từ idHoaDon
+        HoaDon hoaDon = hoaDonRepo.findById(idHoaDon)
+                .orElseThrow(() -> new AppException(ErrorCode.BILL_NOT_FOUND));
+
+        // Lấy thông tin phiếu giảm giá từ idPhieuGiamGia
+        KhachHang khachHang = khachHangRepo.findById(idKhachHang)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        // Lưu thông tin khach hang vao hoa don
+        hoaDon.setIdKhachHang(khachHang);
+
+        return converToHoaDonResponse(hoaDonRepo.save(hoaDon)); // Lưu hóa đơn đã cập nhật
+
+    }
+
+    @Override
+    public HoaDonResponse xoaKhachHangHoaDon(Integer idHoaDon, Integer idKhachHang) {
+
+        HoaDon hoaDon = hoaDonRepo.findById(idHoaDon)
+                .orElseThrow(() -> new AppException(ErrorCode.BILL_NOT_FOUND));
+
+        hoaDon.setIdKhachHang(null);
+
+        return converToHoaDonResponse(hoaDonRepo.save(hoaDon)); // Lưu hóa đơn đã cập nhật
+    }
+    // Phương thức chuyển đổi BigDecimal sang định dạng tiền tệ Việt Nam
+    private String formatCurrency(Object value) {
+        if (value == null) return "0 VNĐ"; // Trả về "0 VNĐ" nếu giá trị là null
+
+        if (value instanceof Number) {
+            // Chuyển đổi value thành BigDecimal để đảm bảo độ chính xác khi định dạng tiền tệ
+            BigDecimal amount = new BigDecimal(((Number) value).toString());
+
+            // Sử dụng NumberFormat để định dạng tiền tệ Việt Nam
+            NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+            String formatted = currencyFormat.format(amount);
+
+            // Loại bỏ ký hiệu ₫ và thêm VNĐ
+            return formatted.replace("₫", "").trim() + " VNĐ";
+        } else {
+            throw new IllegalArgumentException("Provided value is not a number: " + value);
+        }
+    }
+
 
     private HoaDonResponse converToHoaDonResponse(HoaDon hoaDon) {
         HoaDonResponse hoaDonResponse = new HoaDonResponse();
         hoaDonResponse.setId(hoaDon.getId());
         hoaDonResponse.setMa(hoaDon.getMa());
         hoaDonResponse.setTenNhanVien(hoaDon.getIdNhanVien() != null ? hoaDon.getIdNhanVien().getHoTen() : null);
-        hoaDonResponse.setTenKhachHang(hoaDon.getIdKhachHang() != null ? hoaDon.getIdKhachHang().getHoTen() : null);
+        hoaDonResponse.setTenKhachHang(hoaDon.getIdKhachHang() != null ? hoaDon.getIdKhachHang().getHoTen() : "Khách lẻ");
         hoaDonResponse.setSoDienThoai(hoaDon.getSoDienThoai());
         hoaDonResponse.setDiaChiGiaoHang(hoaDon.getDiaChiGiaoHang());
         // Định dạng và lưu trữ giá trị tiền
         hoaDonResponse.setTongTien(formatCurrency(hoaDon.getTongTien()));
         hoaDonResponse.setTienDuocGiam(formatCurrency(hoaDon.getTienDuocGiam()));
         hoaDonResponse.setTienPhaiThanhToan(formatCurrency(hoaDon.getTienPhaiThanhToan()));
+        hoaDonResponse.setTienKhachDua(formatCurrency(hoaDon.getTienKhachDua()));
+        hoaDonResponse.setTienThua(formatCurrency(hoaDon.getTienThua()));
         hoaDonResponse.setPhuongThucThanhToan(hoaDon.getPhuongThucThanhToan());
         hoaDonResponse.setPhuongThucGiaoHang(hoaDon.getPhuongThucGiaoHang());
         hoaDonResponse.setNgayTao(hoaDon.getNgayTao());

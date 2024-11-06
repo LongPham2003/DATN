@@ -42,6 +42,7 @@ public class DeGiayController {
                 .build();
     }
 
+
     @GetMapping("/{id}")
     public ApiResponse<DeGiayResponse> getById(@PathVariable Integer id) {
         DeGiayResponse deGiayResponse = deGiayService.getById(id);
@@ -72,7 +73,7 @@ public class DeGiayController {
     }
 
 
-    @DeleteMapping("/delete/{id}")
+//    @DeleteMapping("/delete/{id}")
     @PutMapping("/updatetrangthai/{id}")
     public ApiResponse<Void> delete(@PathVariable Integer id) {
        deGiayService.delete(id);
