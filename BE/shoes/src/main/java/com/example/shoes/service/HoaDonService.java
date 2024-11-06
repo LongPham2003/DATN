@@ -34,4 +34,6 @@ public interface HoaDonService {
  String xuatHoaDon(Integer idHoaDon);
 
  Integer idHoaDon();
+
+ Void updateHoaDonById(Integer idHoaDon);
 }

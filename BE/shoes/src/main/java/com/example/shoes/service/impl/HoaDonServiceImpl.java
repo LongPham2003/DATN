@@ -886,6 +886,15 @@ public class HoaDonServiceImpl implements HoaDonService {
         return hoaDonRepo.idHoaDon();
     }
 
+    @Override
+    public Void updateHoaDonById(Integer idHoaDon) {
+        HoaDon hoaDon = hoaDonRepo.findById(idHoaDon).get();
+        hoaDon.setTrangThai(TrangThai.DA_THANH_TOAN);
+        hoaDon.setPhuongThucThanhToan("VNPAY");
+        hoaDonRepo.save(hoaDon);
+        return null;
+    }
+
     private HoaDonTheoIDResponse convert(HoaDon hoaDon){
         HoaDonTheoIDResponse response = new HoaDonTheoIDResponse();
         response.setTongTien(formatCurrency(hoaDon.getTongTien()));

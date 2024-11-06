@@ -60,4 +60,8 @@ public class HoaDonController {
         Integer id = hoaDonService.idHoaDon();
         return ApiResponse.<Integer>builder().result(id).build();
     }
+    @PostMapping("/thanh-toan/tc-vnpay/{id}")
+    private ApiResponse<Void> tc(@PathVariable Integer id){
+      return ApiResponse.<Void>builder().result(hoaDonService.updateHoaDonById(id)).build();
+    }
 }
