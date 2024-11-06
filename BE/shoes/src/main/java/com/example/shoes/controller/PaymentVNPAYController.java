@@ -8,10 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
@@ -20,6 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api/paymentvnpay")
 public class PaymentVNPAYController {
@@ -105,14 +103,18 @@ public class PaymentVNPAYController {
             @RequestParam(value = "vnp_BankCode") String bankCode,
             @RequestParam(value = "vnp_OrderInfo") String order,
             @RequestParam(value = "vnp_ResponseCode") String response
-
     ) {
-        if (response.equals("00")) {
-            return  true;
-        } else {
-          return false;
+        if ("00".equals(response)) {
+           return true;
+        }  else {
+            return false;
         }
 
     }
 
 }
+//http://localhost:5173/admin/payment
+//// ?vnp_Amount=1000000&vnp_BankCode=VNPAY&vnp_CardType=QRCODE&vnp_OrderInfo=96398637&
+//// vnp_PayDate=20241106195030&vnp_ResponseCode=24&vnp_TmnCode=W4S3TLV0&vnp_TransactionNo=0&vnp_TransactionStatus=02
+//// &vnp_TxnRef=36
+//// &vnp_SecureHash=34a91a15ff50b9575d24cf6c8994bba419af4986d3c6e2a7bc5508fcb8abfb693f05e003fdecc79c1545911f9d21b18423a6ca6b7f682638c140a0581de4a03c

@@ -6,7 +6,7 @@ import {
   Tabs,
   Modal,
   Popconfirm,
-  InputNumber,
+  InputNumber
 } from "antd";
 import { useEffect, useState } from "react";
 import SanPhamBanTaiQuay from "./SanPhamBanHang";
@@ -80,9 +80,9 @@ export default function BanHangTaiQuay() {
       if (hoaDonList.length > 0) {
         setSelectedHoaDonId(hoaDonList[0].id); // Chọn id hóa đơn đầu tiên khi tải dữ liệu lần đầu
         const hd = await axios.get(
-          `${ApiLayThongTinHoaDon}/${hoaDonList[0].id}`,
+          `${ApiLayThongTinHoaDon}/${hoaDonList[0].id}`
         );
-        setMaHD(hd.data.result.ma);
+        // setMaHD(hd.data.result.ma);
       }
 
       // console.log(hd.data.result.ma);
@@ -91,10 +91,28 @@ export default function BanHangTaiQuay() {
     }
   };
 
+  //Lấy danh sách hóa đơn
+  const LayMaHoaDon = async () => {
+    try {
+
+      const hd = await axios.get(
+        `${ApiLayThongTinHoaDon}/${selectedHoaDonId}`
+      );
+
+      setMaHD(hd.data.result.ma);
+
+
+    } catch (error) {
+      console.log("Lấy hóa đơn lỗi:", error);
+    }
+  };
+  console.log(maHD);
+
+
   //Lấy các kiểu tiền của hóa đơn
   const LayThongTinThanhToanCuaHoaDon = async () => {
     const ttThanhToan = await axios.get(
-      `${ApiLayThongTinThanhToanTheoIdHoaDon}/${selectedHoaDonId}`,
+      `${ApiLayThongTinThanhToanTheoIdHoaDon}/${selectedHoaDonId}`
     );
     if (ttThanhToan.data.result) {
       setTongTien(ttThanhToan.data.result.tongTien);
@@ -105,7 +123,7 @@ export default function BanHangTaiQuay() {
       if (ttThanhToan.data.result.idKhachHang != null) {
         try {
           const khachHang = await axios.get(
-            `${ApiLayThongTinKhachHang}/${ttThanhToan.data.result.idKhachHang}`,
+            `${ApiLayThongTinKhachHang}/${ttThanhToan.data.result.idKhachHang}`
           );
           // console.log(khachHang);
           setTenKhachHang(khachHang.data.result.hoTen || "Khách lẻ");
@@ -126,7 +144,7 @@ export default function BanHangTaiQuay() {
   const LayChiTietSanPham = async () => {
     try {
       const response = await axios.get(
-        `${ApiLaySanPhamOHoaDon}/${selectedHoaDonId}`,
+        `${ApiLaySanPhamOHoaDon}/${selectedHoaDonId}`
       );
       const danhSachSanPhamChiTiet = response.data.result;
       setSPCTChuaThanhToan(danhSachSanPhamChiTiet); // Cập nhật state với sản phẩm chi tiết của hóa đơn được chọn
@@ -152,18 +170,21 @@ export default function BanHangTaiQuay() {
       const khachHang = await axios.get(ApiLayTatCaKhachHang);
       setDanhSachKhachHang(khachHang.data.result);
       // console.log(khachHang.data.result.diaChi[0].diaChiChiTiet);
-    } catch (error) {}
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   const XoaSPKhoiGioHang = async (idSPCT) => {
     try {
       await axios.delete(
-        `http://localhost:8080/api/hoadonchitiet/hoadon/${selectedHoaDonId}/spct/${idSPCT}`,
+        `http://localhost:8080/api/hoadonchitiet/hoadon/${selectedHoaDonId}/spct/${idSPCT}`
       );
       toast.success("Xóa thành công");
       await LayChiTietSanPham(); // Cập nhật giỏ hàng sau khi thêm sản phẩm
       await LayThongTinThanhToanCuaHoaDon(); // Cập nhật thông tin hóa đơn mới, bao gồm tổng tiền
     } catch (error) {
+      console.error("Error:", error);
       toast.error("Có lỗi xẩy ra");
     }
   };
@@ -208,13 +229,13 @@ export default function BanHangTaiQuay() {
     try {
       await axios.put(`${ApiUpdateSoLuongSPTrongHoaDon}/${selectedHoaDonId}`, {
         idSpct: idSPCTDangChon,
-        soLuong: thaydoiSoLuongMua,
+        soLuong: thaydoiSoLuongMua
       });
 
       await Promise.all([
         LayChiTietSanPham(), // Cập nhật giỏ hàng sau khi thêm sản phẩm
         LayThongTinThanhToanCuaHoaDon(), // Cập nhật thông tin hóa đơn mới, bao gồm tổng tiền
-        LaySoLuongTonCuaSPCT(),
+        LaySoLuongTonCuaSPCT()
       ]);
       toast.success("Cập nhật thành công");
     } catch (error) {
@@ -235,14 +256,14 @@ export default function BanHangTaiQuay() {
           `${ApiUpdateSoLuongSPTrongHoaDon}/${selectedHoaDonId}`,
           {
             idSpct: idSpct,
-            soLuong: newQuantity,
-          },
+            soLuong: newQuantity
+          }
         );
 
         await Promise.all([
           LayChiTietSanPham(), // Cập nhật giỏ hàng sau khi thêm sản phẩm
           LayThongTinThanhToanCuaHoaDon(), // Cập nhật thông tin hóa đơn mới, bao gồm tổng tiền
-          LaySoLuongTonCuaSPCT(),
+          LaySoLuongTonCuaSPCT()
         ]);
         toast.success("Cập nhật thành công");
       } catch (error) {
@@ -266,14 +287,14 @@ export default function BanHangTaiQuay() {
           `${ApiUpdateSoLuongSPTrongHoaDon}/${selectedHoaDonId}`,
           {
             idSpct: idSpct,
-            soLuong: newQuantity,
-          },
+            soLuong: newQuantity
+          }
         );
         toast.success("Cập nhật thành công");
         await Promise.all([
           LayChiTietSanPham(), // Cập nhật giỏ hàng sau khi thêm sản phẩm
           LayThongTinThanhToanCuaHoaDon(), // Cập nhật thông tin hóa đơn mới, bao gồm tổng tiền
-          LaySoLuongTonCuaSPCT(),
+          LaySoLuongTonCuaSPCT()
         ]);
       } catch (error) {
         console.log(error);
@@ -298,7 +319,7 @@ export default function BanHangTaiQuay() {
   const addPhieuGiamGia = async () => {
     try {
       await axios.post(
-        `${ApiAddPhieuGiamGiaVaoHoaDon}/${idPhieuGiamGiaDangChon}`,
+        `${ApiAddPhieuGiamGiaVaoHoaDon}/${idPhieuGiamGiaDangChon}`
       );
       toast.success("Áp dụng thành công");
       LayThongTinThanhToanCuaHoaDon();
@@ -320,7 +341,7 @@ export default function BanHangTaiQuay() {
     console.log("ID phiếu giảm giá đang chọn:", idPhieuGiamGiaDangChon);
     try {
       await axios.delete(
-        `${ApiXoaPhieuGiamGiaKhoiHoaDon}/${idPhieuGiamGiaDangChon}`,
+        `${ApiXoaPhieuGiamGiaKhoiHoaDon}/${idPhieuGiamGiaDangChon}`
       );
       toast.success("Không áp dụng voucher tahnfh công");
       LayThongTinThanhToanCuaHoaDon();
@@ -364,7 +385,7 @@ export default function BanHangTaiQuay() {
   const tinhTienThua = (value) => {
     // Loại bỏ "VNĐ" và dấu chấm, sau đó chuyển thành số
     const tienPhaiThanhToanNum = Number(
-      tienPhaiThanhToan.replace(/[.VNĐ]/g, "").trim(),
+      tienPhaiThanhToan.replace(/[.VNĐ]/g, "").trim()
     );
 
     console.log(tienPhaiThanhToanNum);
@@ -383,16 +404,16 @@ export default function BanHangTaiQuay() {
   };
 
   //Thanh toan
-  
-const thanhToanTienMat = async () => {
-  try {
+
+  const thanhToanTienMat = async () => {
+    try {
       // Thực hiện gọi API thanh toán và lấy phản hồi
       const response = await axios.post(ApiThanhToanHoaDon, {
-          phuongThucThanhToan: "Tiền mặt",
-          tienKhachDua: tienKhachDua,
+        phuongThucThanhToan: "Tiền mặt",
+        tienKhachDua: tienKhachDua
       });
 
-     
+
       // Lưu selectedHoaDonId vào state tạm thời
       setTempHoaDonId(selectedHoaDonId); // Lưu ID hóa đơn được chọn vào state tạm thời
 
@@ -404,19 +425,19 @@ const thanhToanTienMat = async () => {
       closethanhToan();
 
       // Gọi hàm lấy ID lớn nhất sau khi thanh toán đã hoàn tất
-      await LayIdLonNhat(); // Gọi hàm này sau khi thanh toán thành công
+      // await LayIdLonNhat(); // Gọi hàm này sau khi thanh toán thành công
       handleGeneratePDF(); // Gọi hàm tạo PDF với ID hóa đơn
 
       // Xóa ID tạm thời sau 1 phút
       setTimeout(() => {
-          setTempHoaDonId(null); // Xóa ID tạm thời sau 1 phút
+        setTempHoaDonId(null); // Xóa ID tạm thời sau 1 phút
       }, 5000); // 60000 ms = 1 phút
-  } catch (error) {
+    } catch (error) {
       // Hiển thị thông báo lỗi
       toast.error("Thanh toán thất bại, có lỗi xảy ra!");
       console.log(error);
-  }
-};
+    }
+  };
 
 
   const handleGeneratePDF = () => {
@@ -427,7 +448,7 @@ const thanhToanTienMat = async () => {
     Promise.all([
       LayDanhSachHoaDonChuaThanhToan(),
       LayDanhSachPhieuGiamGia(),
-      LayDanhSachKhacHang(),
+      LayDanhSachKhacHang()
     ]);
 
     // LayThongTinThanhToanCuaHoaDon();
@@ -439,12 +460,13 @@ const thanhToanTienMat = async () => {
       Promise.all([
         LayChiTietSanPham(selectedHoaDonId),
         LayThongTinThanhToanCuaHoaDon(selectedHoaDonId),
-        LayIdLonNhat(),
+        LayMaHoaDon()
+        // LayIdLonNhat(),
       ]);
 
       // Tìm hóa đơn trong `hoaDonFalse` có `id` khớp với `selectedHoaDonId`
       const selectedHoaDon = hoaDonFalse.find(
-        (hoaDon) => hoaDon.id === Number(selectedHoaDonId), // Ép kiểu `selectedHoaDonId` thành số để so sánh
+        (hoaDon) => hoaDon.id === Number(selectedHoaDonId) // Ép kiểu `selectedHoaDonId` thành số để so sánh
       );
 
       // Nếu tìm thấy `selectedHoaDon`, cập nhật `tongTien`, `tienPhaiThanhToan` và `tienDuocGiam`
@@ -466,6 +488,27 @@ const thanhToanTienMat = async () => {
   //     handleGeneratePDF(); // Gọi hàm tạo PDF khi idLonNhat đã được cập nhật
   //   }
   // }, [idLonNhat]);
+
+
+  // hàm format lại định dạng khi gửi về be
+  const formatCurrencyToNumber = (value) => {
+    return parseInt(value.replace(/[^\d]/g, ""));
+  };
+
+// thanh toán vnpay
+  const handlePaymentClick = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/api/paymentvnpay/create-payment", {
+        params: { maHoaDon: selectedHoaDonId, amount: formatCurrencyToNumber(tienPhaiThanhToan) }
+      });
+
+      if (response.data) {
+        window.location.href = response.data
+      }
+    } catch (error) {
+      console.error("Lỗi khi gọi API:", error);
+    }
+  };
 
   return (
     <>
@@ -498,7 +541,7 @@ const thanhToanTienMat = async () => {
               animated={{ inkBar: true, tabPane: true }} // Bật hiệu ứng chuyển tab
               items={hoaDonFalse.map((tab) => ({
                 label: tab.ma, // Tên tab
-                key: tab.id, // Khóa của tab
+                key: tab.id // Khóa của tab
               }))}
             />
           </div>
@@ -510,7 +553,7 @@ const thanhToanTienMat = async () => {
                 height: "35px",
                 backgroundColor: "yellow",
                 color: "black",
-                fontWeight: "bold",
+                fontWeight: "bold"
               }}
               onClick={openModal}
             >
@@ -525,110 +568,110 @@ const thanhToanTienMat = async () => {
                 <div className="max-h-[570px] overflow-y-auto">
                   <table className="min-w-full text-center text-sm font-light">
                     <thead className="sticky top-0 bg-blue-700 text-xl font-medium text-white">
-                      <tr>
-                        <th className="w-10 px-6 py-4">STT</th>
-                        <th className="w-[130px] px-6 py-4">Ảnh</th>
-                        <th className="w-52 px-6 py-4">Sản phẩm</th>
-                        <th className="w-52 px-6 py-4">Số lượng</th>
-                        <th className="w-52 px-6 py-4">Thành tiền</th>
-                        <th className="px-6 py-4">Hành động</th>
-                      </tr>
+                    <tr>
+                      <th className="w-10 px-6 py-4">STT</th>
+                      <th className="w-[130px] px-6 py-4">Ảnh</th>
+                      <th className="w-52 px-6 py-4">Sản phẩm</th>
+                      <th className="w-52 px-6 py-4">Số lượng</th>
+                      <th className="w-52 px-6 py-4">Thành tiền</th>
+                      <th className="px-6 py-4">Hành động</th>
+                    </tr>
                     </thead>
                     <tbody>
-                      {SPCTChuaThanhToan.map((SPCT, index) => (
-                        <tr
-                          key={SPCT.id}
-                          className="hover:bg-gray-100"
-                          onMouseEnter={() => {
-                            setIdSPCTDangChon(SPCT.idSpct);
-                            setThayDoiSoLuongMua(SPCT.soLuong);
-                          }}
-                          onMouseLeave={() => {
-                            setIdSPCTDangChon(null);
-                          }}
-                        >
-                          <td>{index + 1}</td>
-                          <td>
-                            <LayAnhTheoIdSP
-                              id={SPCT.idSpct}
-                              className="h-[120px] w-[120px]"
-                            />
-                          </td>
-                          <td>
-                            {SPCT.tenSanPham} <br />
-                            {SPCT.maSPCT} [{SPCT.kichThuoc} - {SPCT.mauSac}]
-                            <br />
-                            {SPCT.donGia}
-                          </td>
+                    {SPCTChuaThanhToan.map((SPCT, index) => (
+                      <tr
+                        key={SPCT.id}
+                        className="hover:bg-gray-100"
+                        onMouseEnter={() => {
+                          setIdSPCTDangChon(SPCT.idSpct);
+                          setThayDoiSoLuongMua(SPCT.soLuong);
+                        }}
+                        onMouseLeave={() => {
+                          setIdSPCTDangChon(null);
+                        }}
+                      >
+                        <td>{index + 1}</td>
+                        <td>
+                          <LayAnhTheoIdSP
+                            id={SPCT.idSpct}
+                            className="h-[120px] w-[120px]"
+                          />
+                        </td>
+                        <td>
+                          {SPCT.tenSanPham} <br />
+                          {SPCT.maSPCT} [{SPCT.kichThuoc} - {SPCT.mauSac}]
+                          <br />
+                          {SPCT.donGia}
+                        </td>
 
-                          <td className="text-center">
-                            <div className="flex h-full items-center justify-center">
-                              <div className="flex items-center space-x-2">
-                                <button
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    setIdSPCTDangChon(SPCT.idSpct);
-                                    decrement(SPCT.idSpct, SPCT.soLuong - 1); // Giảm 1 số lượng
-                                  }}
-                                  className="flex h-8 w-8 items-center justify-center rounded bg-gray-200"
-                                >
-                                  -
-                                </button>
-                                <input
-                                  type="text"
-                                  value={
-                                    idSPCTDangChon === SPCT.idSpct
-                                      ? thaydoiSoLuongMua
-                                      : SPCT.soLuong
-                                  }
-                                  className="h-8 w-12 rounded border border-gray-300 text-center"
-                                  onClick={() => {
-                                    setIdSPCTDangChon(SPCT.idSpct);
-                                    setThayDoiSoLuongMua(SPCT.soLuong);
-                                  }}
-                                  onChange={(event) => {
-                                    setThayDoiSoLuongMua(
-                                      Number(event.target.value),
-                                    );
-                                  }}
-                                  onBlur={() => upDateSoLuongMua()} // Chỉ cập nhật khi số lượng thay đổi
-                                />
+                        <td className="text-center">
+                          <div className="flex h-full items-center justify-center">
+                            <div className="flex items-center space-x-2">
+                              <button
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  setIdSPCTDangChon(SPCT.idSpct);
+                                  decrement(SPCT.idSpct, SPCT.soLuong - 1); // Giảm 1 số lượng
+                                }}
+                                className="flex h-8 w-8 items-center justify-center rounded bg-gray-200"
+                              >
+                                -
+                              </button>
+                              <input
+                                type="text"
+                                value={
+                                  idSPCTDangChon === SPCT.idSpct
+                                    ? thaydoiSoLuongMua
+                                    : SPCT.soLuong
+                                }
+                                className="h-8 w-12 rounded border border-gray-300 text-center"
+                                onClick={() => {
+                                  setIdSPCTDangChon(SPCT.idSpct);
+                                  setThayDoiSoLuongMua(SPCT.soLuong);
+                                }}
+                                onChange={(event) => {
+                                  setThayDoiSoLuongMua(
+                                    Number(event.target.value)
+                                  );
+                                }}
+                                onBlur={() => upDateSoLuongMua()} // Chỉ cập nhật khi số lượng thay đổi
+                              />
 
-                                <button
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    setIdSPCTDangChon(SPCT.idSpct);
-                                    increment(SPCT.idSpct, SPCT.soLuong + 1); // Tăng 1 số lượng
-                                  }}
-                                  className="flex h-8 w-8 items-center justify-center rounded bg-gray-200"
-                                  // disabled={soLuongTonCuaSPCT === 0}
-                                >
-                                  +
-                                </button>
-                              </div>
+                              <button
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  setIdSPCTDangChon(SPCT.idSpct);
+                                  increment(SPCT.idSpct, SPCT.soLuong + 1); // Tăng 1 số lượng
+                                }}
+                                className="flex h-8 w-8 items-center justify-center rounded bg-gray-200"
+                                // disabled={soLuongTonCuaSPCT === 0}
+                              >
+                                +
+                              </button>
                             </div>
-                          </td>
+                          </div>
+                        </td>
 
-                          <td>{SPCT.donGia * SPCT.soLuong}</td>
-                          <td>
-                            <Popconfirm
-                              title="Delete the task"
-                              description="Are you sure to delete this task?"
-                              okText="Yes"
-                              cancelText="No"
-                              onConfirm={(e) => {
-                                e.preventDefault();
-                                XoaSPKhoiGioHang(SPCT.idSpct);
-                              }}
-                            >
-                              <Button type="primary" danger>
-                                <TrashIcon className="h-5 w-5 text-white" />
-                                khách k mua thì dã nó
-                              </Button>
-                            </Popconfirm>
-                          </td>
-                        </tr>
-                      ))}
+                        <td>{SPCT.donGia * SPCT.soLuong}</td>
+                        <td>
+                          <Popconfirm
+                            title="Delete the task"
+                            description="Are you sure to delete this task?"
+                            okText="Yes"
+                            cancelText="No"
+                            onConfirm={(e) => {
+                              e.preventDefault();
+                              XoaSPKhoiGioHang(SPCT.idSpct);
+                            }}
+                          >
+                            <Button type="primary" danger>
+                              <TrashIcon className="h-5 w-5 text-white" />
+                              khách k mua thì dã nó
+                            </Button>
+                          </Popconfirm>
+                        </td>
+                      </tr>
+                    ))}
                     </tbody>
                   </table>
                 </div>
@@ -689,8 +732,8 @@ const thanhToanTienMat = async () => {
                               <hr />
                             </div>
                           </>
-                        ),
-                      })),
+                        )
+                      }))
                     ]}
                     fieldNames={{ label: "description", value: "value" }} // Hiển thị thông tin chi tiết khi mở dropdown
                     filterOption={
@@ -746,6 +789,8 @@ const thanhToanTienMat = async () => {
                   <Button
                     style={{ height: "50px", width: "450px" }}
                     className="ml-[10px] border-2 border-yellow-500 text-lg font-medium text-yellow-500"
+                     onClick={handlePaymentClick}
+
                   >
                     Chuyển khoản
                   </Button>
@@ -798,8 +843,8 @@ const thanhToanTienMat = async () => {
                               <hr />
                             </div>
                           </>
-                        ),
-                      })),
+                        )
+                      }))
                     ]}
                     fieldNames={{ label: "description", value: "value" }} // Hiển thị thông tin chi tiết khi mở dropdown
                     filterOption={
@@ -885,7 +930,7 @@ const thanhToanTienMat = async () => {
             <Button key="submit" type="primary">
               Thanh toán và in hóa đơn
             </Button>
-          </Popconfirm>,
+          </Popconfirm>
         ]}
       >
         <div className="my-4">
@@ -894,7 +939,7 @@ const thanhToanTienMat = async () => {
             addonAfter={"VNĐ"}
             defaultValue={0}
             onChange={(value) => {
-              tinhTienThua(value), console.log(value);
+              tinhTienThua(value);
             }}
           />
         </div>

@@ -38,27 +38,37 @@ export const ExportPDF = ({ idHoaDon }) => {
 
   let ApiLayThongTinHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/${idHoaDon}`;
   let ApiLayDanhSachSanPham = `http://localhost:8080/api/hoadonchitiet/SPCTbyidHD/${idHoaDon}`;
+  const fetchData = async () => {
+    try {
+      // Gọi cả hai API đồng thời
+      const [hd, sp] = await Promise.all([
+        axios.get(ApiLayThongTinHoaDon),
+        axios.get(ApiLayDanhSachSanPham),
+      ]);
 
-  useEffect(() => {
-    // Định nghĩa hàm async trong useEffect
-    const fetchData = async () => {
-      try {
-        const hd = await axios.get(ApiLayThongTinHoaDon);
-        setHoaDon(hd.data.result);
-        setMaHD(hd.data.result.ma);
-
-        const sp = await axios.get(ApiLayDanhSachSanPham);
-        setDanhSachSP(sp.data.result);
-      } catch (error) {
-        console.error("Có lỗi xảy ra:", error);
+      setHoaDon(hd.data.result);
+      setMaHD(hd.data.result.ma);
+      console.log("Dữ liệu sản phẩm nhận được:", sp.data.result);
+      setDanhSachSP(sp.data.result);
+    } catch (error) {
+      console.error("Có lỗi xảy ra khi lấy dữ liệu:", error.message);
+      if (error.response) {
+        console.error("Dữ liệu lỗi:", error.response.data);
+        console.error("Mã lỗi:", error.response.status);
+      } else if (error.request) {
+        console.error("Không nhận được phản hồi từ server:", error.request);
+      } else {
+        console.error("Lỗi khác:", error.message);
       }
-    };
-
-    // Gọi hàm fetchData chỉ khi idHoaDon thay đổi
-    if (idHoaDon) {
-      fetchData();
     }
-  }, [idHoaDon]);
+  };
+
+// Gọi fetchData từ một sự kiện khác, ví dụ khi một prop thay đổi
+  useEffect(() => {
+    if (idHoaDon) {
+      fetchData(); // Gọi fetchData khi idHoaDon có giá trị
+    }
+  }, [idHoaDon]); // Chạy lại khi idHoaDon thay đổi
   return (
     <>
       <div
@@ -91,27 +101,28 @@ export const ExportPDF = ({ idHoaDon }) => {
         <div className="my-3">
           <table className="border-collapse border-2 border-solid border-gray-500 text-center">
             <thead>
-              <tr className="min-h-24 justify-center" >
-                <th className="w-14 border-collapse border-2 border-solid border-gray-500 p-2 text-center">
-                  STT
-                </th>
-                <th className="w-52 border-collapse border-2 border-solid border-gray-500 p-2">
-                  Ten san pham
-                </th>
-                <th className="w-20 border-collapse border-2 border-solid border-gray-500 p-2">
-                  So luong
-                </th>
-                <th className="w-36 border-collapse border-2 border-solid border-gray-500 p-2">
-                  Don gia
-                </th>
-                <th className="w-28 border-collapse border-2 border-solid border-gray-500 p-2">
-                  Thanh tien
-                </th>
-              </tr>
+            <tr className="min-h-24 justify-center">
+              <th className="w-14 border-collapse border-2 border-solid border-gray-500 p-2 text-center">
+                STT
+              </th>
+              <th className="w-52 border-collapse border-2 border-solid border-gray-500 p-2">
+                Ten san pham
+              </th>
+              <th className="w-20 border-collapse border-2 border-solid border-gray-500 p-2">
+                So luong
+              </th>
+              <th className="w-36 border-collapse border-2 border-solid border-gray-500 p-2">
+                Don gia
+              </th>
+              <th className="w-28 border-collapse border-2 border-solid border-gray-500 p-2">
+                Thanh tien
+              </th>
+            </tr>
             </thead>
             <tbody>
-              {danhSachSP.map((sp, index) => (
-                <tr key={index}>
+            {danhSachSP.length > 0 ? (
+              danhSachSP.map((sp, index) => (
+                <tr key={sp.idSpct}>
                   <td className="border-collapse border-2 border-solid border-gray-500 p-2">
                     {index + 1}
                   </td>
@@ -129,7 +140,12 @@ export const ExportPDF = ({ idHoaDon }) => {
                     {sp.soLuong * sp.donGia}
                   </td>
                 </tr>
-              ))}
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5" className="text-center">Không có sản phẩm nào.</td>
+              </tr>
+            )}
             </tbody>
           </table>
           <p className="mt-3 font-bold">Tổng sản phẩm mua:</p>
