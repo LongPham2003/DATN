@@ -2,6 +2,7 @@ import html2pdf from "html2pdf.js"; // Thêm import html2pdf
 import { useState } from "react";
 import { useEffect } from "react";
 import axios from "./../../../api/axiosConfig";
+import { Link } from "react-router-dom";
 
 export const generatePDF = () => {
   // Tìm phần tử với ID 'main'
@@ -185,6 +186,17 @@ export const ExportPDF = ({ idHoaDon }) => {
           </p>
         </div>
       </div>
+
+      <div className="">
+        <button className="w-[200px] rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 mr-5"
+                onClick={generatePDF}>In Hóa Đơn
+        </button>
+        <button className="w-[200px] rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600">
+          <Link to={"/admin/banhangoff"}>Quay về bán hàng</Link>
+        </button>
+      </div>
+
+
     </>
   );
 };
