@@ -849,8 +849,7 @@ public class HoaDonServiceImpl implements HoaDonService {
         return response;
     }
 
-<<<<<<< HEAD
-=======
+
     //    xuat hoa don
     @Transactional
     public String xuatHoaDon(Integer idHoaDon) {
@@ -904,8 +903,6 @@ public class HoaDonServiceImpl implements HoaDonService {
         response.setTienPhaiThanhToan(formatCurrency(hoaDon.getTienPhaiThanhToan()));
         return response;
     }
->>>>>>> edad49810c42098b0fe17766a72d6d60b9dd63a0
-
     //add khách hàng vào hóa đơn
     @Override
     public HoaDonResponse addKhachHangHoaDon(Integer idHoaDon, Integer idKhachHang) {
