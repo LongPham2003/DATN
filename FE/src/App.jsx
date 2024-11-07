@@ -31,19 +31,50 @@ import NotFound404 from "./pages/NotFound404";
 import ProtectedRoute from "./pages/ProtectedRoute";
 import BanHangTaiQuay from "./pages/admin/BanHangTaiQuay/BanHangTaiQuay";
 import HomePage from "./pages/client/Home/homePage.jsx";
+import SanPham from "./pages/client/SanPham/SanPham.jsx";
+import LienHe from "./pages/client/LienHe/LienHe.jsx";
+import TrangChu from "./pages/client/TrangChu/TrangChu.jsx";
 function App() {
   return (
     <>
       <BrowserRouter>
         <Routes>
-          <Route
-            path="/"
-            element={
-              <>
-                <HomePage />
-              </>
-            }
-          />
+          <Route path="/" element={<HomePage />}>
+            <Route
+              path="SanPham"
+              element={
+                <>
+                  <Helmet>
+                    <title>Sản Phẩm</title>
+                  </Helmet>
+                  <SanPham />
+                </>
+              }
+            />
+
+            <Route
+              path="LienHe"
+              element={
+                <>
+                  <Helmet>
+                    <title>Sản Phẩm</title>
+                  </Helmet>
+                  <LienHe />
+                </>
+              }
+            />
+            <Route
+              path="TrangChu"
+              element={
+                <>
+                  <Helmet>
+                    <title>Sản Phẩm</title>
+                  </Helmet>
+                  <TrangChu />
+                </>
+              }
+            />
+          </Route>
           <Route
             path="/403"
             element={

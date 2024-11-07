@@ -79,13 +79,13 @@ export default function BanHangTaiQuay() {
       setHoaDonFalse(hoaDonList);
       if (hoaDonList.length > 0) {
         setSelectedHoaDonId(hoaDonList[0].id); // Chọn id hóa đơn đầu tiên khi tải dữ liệu lần đầu
+
         const hd = await axios.get(
           `${ApiLayThongTinHoaDon}/${hoaDonList[0].id}`,
         );
         setMaHD(hd.data.result.ma);
+        console.log(hd.data.result.ma);
       }
-
-      // console.log(hd.data.result.ma);
     } catch (error) {
       console.log("Lấy hóa đơn lỗi:", error);
     }
@@ -226,9 +226,12 @@ export default function BanHangTaiQuay() {
   // Tăng số lượng mua lên 1
   const increment = async (idSpct, newQuantity) => {
     setIdSPCTDangChon(idSpct); // Cập nhật id của sản phẩm đang chọn
-    await LaySoLuongTonCuaSPCT(); // Lấy số lượng tồn của sản phẩm đang chọn
+    const soLuongTon = await axios.get(
+      `http://localhost:8080/api/sanphamchitiet/${idSPCTDangChon}`,
+    ); // Lấy số lượng tồn của sản phẩm đang chọn
 
-    if (soLuongTonCuaSPCT > 0) {
+    // Kiểm tra số lượng tồn ngay sau khi lấy
+    if (soLuongTon.data.result.soLuong > 0) {
       setThayDoiSoLuongMua(newQuantity); // Cập nhật ngay lập tức trên giao diện
       try {
         await axios.put(
@@ -240,9 +243,9 @@ export default function BanHangTaiQuay() {
         );
 
         await Promise.all([
+          LaySoLuongTonCuaSPCT(),
           LayChiTietSanPham(), // Cập nhật giỏ hàng sau khi thêm sản phẩm
           LayThongTinThanhToanCuaHoaDon(), // Cập nhật thông tin hóa đơn mới, bao gồm tổng tiền
-          LaySoLuongTonCuaSPCT(),
         ]);
         toast.success("Cập nhật thành công");
       } catch (error) {
@@ -250,13 +253,13 @@ export default function BanHangTaiQuay() {
         toast.error("Cập nhật thất bại");
       }
     } else {
+      // Nếu số lượng tồn <= 0, hiển thị thông báo ngay lập tức
       toast.warning("Sản phẩm đã hết hàng, không thể tăng số lượng");
     }
   };
   //Giam so luong mua di 1
   const decrement = async (idSpct, newQuantity) => {
     if (newQuantity > 0) {
-      // Đ��m bảo số lượng không âm
       setThayDoiSoLuongMua(newQuantity);
       setIdSPCTDangChon(idSpct); // Cập nhật id của sản phẩm đang chọn
       await LaySoLuongTonCuaSPCT(); // Gọi hàm lấy số lượng tồn của sản phẩm sau khi cập nhật id
@@ -383,16 +386,15 @@ export default function BanHangTaiQuay() {
   };
 
   //Thanh toan
-  
-const thanhToanTienMat = async () => {
-  try {
+
+  const thanhToanTienMat = async () => {
+    try {
       // Thực hiện gọi API thanh toán và lấy phản hồi
-      const response = await axios.post(ApiThanhToanHoaDon, {
-          phuongThucThanhToan: "Tiền mặt",
-          tienKhachDua: tienKhachDua,
+      await axios.post(ApiThanhToanHoaDon, {
+        phuongThucThanhToan: "Tiền mặt",
+        tienKhachDua: tienKhachDua,
       });
 
-     
       // Lưu selectedHoaDonId vào state tạm thời
       setTempHoaDonId(selectedHoaDonId); // Lưu ID hóa đơn được chọn vào state tạm thời
 
@@ -404,20 +406,19 @@ const thanhToanTienMat = async () => {
       closethanhToan();
 
       // Gọi hàm lấy ID lớn nhất sau khi thanh toán đã hoàn tất
-      await LayIdLonNhat(); // Gọi hàm này sau khi thanh toán thành công
+
       handleGeneratePDF(); // Gọi hàm tạo PDF với ID hóa đơn
 
       // Xóa ID tạm thời sau 1 phút
       setTimeout(() => {
-          setTempHoaDonId(null); // Xóa ID tạm thời sau 1 phút
+        setTempHoaDonId(null); // Xóa ID tạm thời sau 1 phút
       }, 5000); // 60000 ms = 1 phút
-  } catch (error) {
+    } catch (error) {
       // Hiển thị thông báo lỗi
       toast.error("Thanh toán thất bại, có lỗi xảy ra!");
       console.log(error);
-  }
-};
-
+    }
+  };
 
   const handleGeneratePDF = () => {
     generatePDF();
@@ -439,7 +440,8 @@ const thanhToanTienMat = async () => {
       Promise.all([
         LayChiTietSanPham(selectedHoaDonId),
         LayThongTinThanhToanCuaHoaDon(selectedHoaDonId),
-        LayIdLonNhat(),
+        // LayDanhSachHoaDonChuaThanhToan(),
+        // LayIdLonNhat(),
       ]);
 
       // Tìm hóa đơn trong `hoaDonFalse` có `id` khớp với `selectedHoaDonId`
@@ -493,7 +495,9 @@ const thanhToanTienMat = async () => {
             </div>
             <Tabs
               activeKey={selectedHoaDonId} // Hiển thị tab tương ứng với hóa đơn được chọn
-              onChange={(key) => setSelectedHoaDonId(key)} // Cập nhật id hóa đơn được chọn khi người dùng chọn tab mới
+              onChange={(key) => {
+                setSelectedHoaDonId(key);
+              }} // Cập nhật id hóa đơn được chọn khi người dùng chọn tab mới
               defaultActiveKey={hoaDonFalse[0]?.id} // Chọn tab đầu tiên mặc định
               animated={{ inkBar: true, tabPane: true }} // Bật hiệu ứng chuyển tab
               items={hoaDonFalse.map((tab) => ({
@@ -567,7 +571,7 @@ const thanhToanTienMat = async () => {
                                 <button
                                   onClick={(e) => {
                                     e.preventDefault();
-                                    setIdSPCTDangChon(SPCT.idSpct);
+
                                     decrement(SPCT.idSpct, SPCT.soLuong - 1); // Giảm 1 số lượng
                                   }}
                                   className="flex h-8 w-8 items-center justify-center rounded bg-gray-200"
@@ -595,9 +599,11 @@ const thanhToanTienMat = async () => {
                                 />
 
                                 <button
+                                  onMouseOver={() => {
+                                    setIdSPCTDangChon(SPCT.idSpct);
+                                  }}
                                   onClick={(e) => {
                                     e.preventDefault();
-                                    setIdSPCTDangChon(SPCT.idSpct);
                                     increment(SPCT.idSpct, SPCT.soLuong + 1); // Tăng 1 số lượng
                                   }}
                                   className="flex h-8 w-8 items-center justify-center rounded bg-gray-200"
@@ -783,7 +789,7 @@ const thanhToanTienMat = async () => {
                         description: (
                           <>
                             <div
-                              onMouseEnter={() => {
+                              onClick={() => {
                                 setIdKhachHangDangChon(kh.id);
                               }}
                             >

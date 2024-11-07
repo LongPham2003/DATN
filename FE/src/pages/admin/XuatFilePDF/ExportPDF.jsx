@@ -31,34 +31,46 @@ export const generatePDF = () => {
   }
 };
 
-export const ExportPDF = ({ idHoaDon }) => {
+export const ExportPDF = ({ idHoaDon, onFetchData }) => {
   const [hoadon, setHoaDon] = useState({});
   const [danhSachSP, setDanhSachSP] = useState([]);
   const [maHD, setMaHD] = useState("");
 
-  let ApiLayThongTinHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/${idHoaDon}`;
-  let ApiLayDanhSachSanPham = `http://localhost:8080/api/hoadonchitiet/SPCTbyidHD/${idHoaDon}`;
+  const id = idHoaDon;
 
-  useEffect(() => {
-    // Định nghĩa hàm async trong useEffect
-    const fetchData = async () => {
-      try {
-        const hd = await axios.get(ApiLayThongTinHoaDon);
-        setHoaDon(hd.data.result);
-        setMaHD(hd.data.result.ma);
+  let ApiLayThongTinHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/${id}`;
+  let ApiLayDanhSachSanPham = `http://localhost:8080/api/hoadonchitiet/SPCTbyidHD/${id}`;
+  const fetchData = async () => {
+    try {
+      const [hd, sp] = await Promise.all([
+        axios.get(ApiLayThongTinHoaDon),
+        axios.get(ApiLayDanhSachSanPham),
+      ]);
 
-        const sp = await axios.get(ApiLayDanhSachSanPham);
-        setDanhSachSP(sp.data.result);
-      } catch (error) {
-        console.error("Có lỗi xảy ra:", error);
+      setHoaDon(hd.data.result);
+      setMaHD(hd.data.result.ma);
+      console.log("Dữ liệu sản phẩm nhận được:", sp.data.result);
+      setDanhSachSP(sp.data.result);
+    } catch (error) {
+      console.error("Có lỗi xảy ra khi lấy dữ liệu:", error.message);
+      if (error.response) {
+        console.error("Dữ liệu lỗi:", error.response.data);
+        console.error("Mã lỗi:", error.response.status);
+      } else if (error.request) {
+        console.error("Không nhận được phản hồi từ server:", error.request);
+      } else {
+        console.error("Lỗi khác:", error.message);
       }
-    };
-
-    // Gọi hàm fetchData chỉ khi idHoaDon thay đổi
-    if (idHoaDon) {
-      fetchData();
     }
-  }, [idHoaDon]);
+  };
+
+  // Gọi fetchData từ một sự kiện khác, ví dụ khi một prop thay đổi
+  useEffect(() => {
+    if (idHoaDon) {
+      fetchData(); // Gọi fetchData khi idHoaDon có giá trị
+    }
+  }, [idHoaDon]); // Chạy lại khi idHoaDon thay đổi
+
   return (
     <>
       <div
@@ -91,7 +103,7 @@ export const ExportPDF = ({ idHoaDon }) => {
         <div className="my-3">
           <table className="border-collapse border-2 border-solid border-gray-500 text-center">
             <thead>
-              <tr className="min-h-24 justify-center" >
+              <tr className="min-h-24 justify-center">
                 <th className="w-14 border-collapse border-2 border-solid border-gray-500 p-2 text-center">
                   STT
                 </th>
@@ -111,7 +123,7 @@ export const ExportPDF = ({ idHoaDon }) => {
             </thead>
             <tbody>
               {danhSachSP.map((sp, index) => (
-                <tr key={index}>
+                <tr key={sp.idSpct}>
                   <td className="border-collapse border-2 border-solid border-gray-500 p-2">
                     {index + 1}
                   </td>
