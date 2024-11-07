@@ -76,5 +76,7 @@ public interface HoaDonRepo extends JpaRepository<HoaDon, Integer> {
     List<Object[]> layBaoCaoTaiChinhTongQuoc();
 
 
-
+    //Lay id Hoa Da Thanh Toan lon nhat
+    @Query("select hd.id  from HoaDon hd where hd.trangThai = 'DA_THANH_TOAN' order by hd.id desc limit 1")
+    Integer idHoaDon();
 }

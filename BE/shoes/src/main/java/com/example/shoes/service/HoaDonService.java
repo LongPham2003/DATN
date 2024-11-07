@@ -32,4 +32,7 @@ public interface HoaDonService {
  List<BaoCaoThongKeResponse> layBaoCaoTaiChinhTheoNam(LocalDate startDate, LocalDate endDate);
  BaoCaoThongKeResponse layBaoCaoTaiChinhTongQuat();
 
+ Integer idHoaDon();
+
+ Void updateHoaDonById(Integer idHoaDon);
 }
