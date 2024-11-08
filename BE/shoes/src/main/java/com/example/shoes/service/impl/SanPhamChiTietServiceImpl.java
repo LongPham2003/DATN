@@ -197,12 +197,11 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     }
 
     @Override
-    public List<SPCTBanHangResponse> getAllTrangThaitrue(String maSanPham,Integer idMauSac,Integer idkichThuoc,Integer idChatLieu,Integer idThuongHieu,Integer idDeGiay) {
-        List<SanPhamChiTiet> list = sanPhamChiTietRepo.getAllTrangThaiTrue(maSanPham, idMauSac, idkichThuoc, idChatLieu, idThuongHieu, idDeGiay);
-        return list.stream()
-                .map(this::converToBHResponse)
-                .collect(Collectors.toList());
+    public Page<SPCTBanHangResponse> getAllTrangThaitrue(String maSanPham, Integer idMauSac, Integer idkichThuoc, Integer idChatLieu, Integer idThuongHieu, Integer idDeGiay, Pageable pageable) {
+        Page<SanPhamChiTiet> page = sanPhamChiTietRepo.getAllTrangThaiTrue(maSanPham, idMauSac, idkichThuoc, idChatLieu, idThuongHieu, idDeGiay, pageable);
+        return page.map(this::converToBHResponse);
     }
+
 
     @Override
     public void updateTheoTrangThai(Integer id) {

@@ -86,4 +86,14 @@ public class SanPhamController {
                 .message("Update thành công")
                 .build();
     }
+    @GetMapping("/top3-ban-chay")
+    public ApiResponse<List<SanPhamResponse>> getTop3SanPhamBanChay() {
+        // Lấy danh sách sản phẩm bán chạy nhất từ service
+        List<SanPhamResponse> top3SanPham = sanPhamService.getTop3SanPhamBanChay();
+
+        // Trả về response với ApiResponse
+        return ApiResponse.<List<SanPhamResponse>>builder()
+                .result(top3SanPham)
+                .build();
+    }
 }

@@ -61,12 +61,13 @@ public interface SanPhamChiTietRepo extends JpaRepository<SanPhamChiTiet, Intege
             "AND (:idDeGiay IS NULL OR spct.idDeGiay.id = :idDeGiay) " +
             "AND (spct.idSanPham.trangThai = true) " +
             "AND (spct.trangThai = true)")
-    List<SanPhamChiTiet> getAllTrangThaiTrue(@Param("maSanPham") String maSanPham,
+    Page<SanPhamChiTiet> getAllTrangThaiTrue(@Param("maSanPham") String maSanPham,
                                              @Param("idMauSac") Integer idMauSac,
                                              @Param("idkichThuoc") Integer idkichThuoc,
                                              @Param("idChatLieu") Integer idChatLieu,
                                              @Param("idThuongHieu") Integer idThuongHieu,
-                                             @Param("idDeGiay") Integer idDeGiay);
+                                             @Param("idDeGiay") Integer idDeGiay,
+                                             Pageable pageable);
 
     @Query("select  spct FROM SanPhamChiTiet spct where spct.id = :idSPCT")
     SanPhamChiTiet getSPCTDetail(@Param("idSPCT") Integer idSPCT);

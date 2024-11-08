@@ -160,4 +160,13 @@ public class SanPhamServiceImpl implements SanPhamService {
         return sanPhamRepo.findAll().stream().map(SanPham::getTenSanPham).collect(Collectors.toList());
     }
 
+    @Override
+    public List<SanPhamResponse> getTop3SanPhamBanChay() {
+        List<SanPham> sanPhams = sanPhamRepo.findTop3SanPhamBanChay();
+        // Chuyển đổi danh sách SanPham thành danh sách SanPhamResponse
+        return sanPhams.stream()
+                .map(sanPham -> convertToSanPhamResponse(sanPham))
+                .collect(Collectors.toList());
+    }
+
 }

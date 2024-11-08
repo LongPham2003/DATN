@@ -8,6 +8,9 @@ import com.example.shoes.dto.sanphamchitiet.response.SanPhamChiTietResponse;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.service.SanPhamChiTietService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.function.EntityResponse;
 
@@ -85,15 +88,21 @@ public class SanPhamChiTietController {
     }
 
     @GetMapping("/getallSPCTBH")
-    public ApiResponse<List<SPCTBanHangResponse>> getAllSPCTBH(@RequestParam(required = false) String maSanPham,
-                                                               @RequestParam(required = false) Integer idMauSac,
-                                                               @RequestParam(required = false) Integer idkichThuoc,
-                                                               @RequestParam(required = false) Integer idChatLieu,
-                                                               @RequestParam(required = false) Integer idThuongHieu,
-                                                               @RequestParam(required = false) Integer idDeGiay) {
-        List<SPCTBanHangResponse> listSPCT = sanPhamChiTietService.getAllTrangThaitrue(maSanPham, idMauSac, idkichThuoc, idChatLieu, idThuongHieu, idDeGiay);
-        return ApiResponse.<List<SPCTBanHangResponse>>builder().result(listSPCT).build();
+    public ApiResponse<Page<SPCTBanHangResponse>> getAllSPCTBH(
+            @RequestParam(required = false) String maSanPham,
+            @RequestParam(required = false) Integer idMauSac,
+            @RequestParam(required = false) Integer idkichThuoc,
+            @RequestParam(required = false) Integer idChatLieu,
+            @RequestParam(required = false) Integer idThuongHieu,
+            @RequestParam(required = false) Integer idDeGiay,
+            @RequestParam(defaultValue = "0") int page, // Trang hiện tại (mặc định là 0)
+            @RequestParam(defaultValue = "9") int size // Số phần tử mỗi trang (mặc định là 9)
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<SPCTBanHangResponse> listSPCT = sanPhamChiTietService.getAllTrangThaitrue(maSanPham, idMauSac, idkichThuoc, idChatLieu, idThuongHieu, idDeGiay, pageable);
+        return ApiResponse.<Page<SPCTBanHangResponse>>builder().result(listSPCT).build();
     }
+
 
     @GetMapping("/getspctdetail/{idspct}")
     public ApiResponse<SanPhamChiTietDetailResponse> getSPCTDetail(@PathVariable Integer idspct) {

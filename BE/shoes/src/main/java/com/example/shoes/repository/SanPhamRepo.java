@@ -33,4 +33,13 @@ public interface SanPhamRepo extends JpaRepository<SanPham, Integer> {
     @Query("SELECT sp FROM SanPham sp WHERE sp.trangThai = true")
     List<SanPham> getAllTrangThaiTrue();
 
+    @Query(value = "SELECT sp.* " +
+            "FROM san_pham sp " +
+            "JOIN hoa_don_chi_tiet hdc " +
+            "ON sp.id = hdc.id_spct " +
+            "GROUP BY sp.id " +
+            "ORDER BY SUM(hdc.so_luong) DESC " +
+            "LIMIT 3", nativeQuery = true)
+    List<SanPham> findTop3SanPhamBanChay();
+
 }
