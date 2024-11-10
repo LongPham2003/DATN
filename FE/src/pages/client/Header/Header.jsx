@@ -4,6 +4,8 @@ import Search from "antd/es/input/Search";
 import { Link } from "react-router-dom";
 
 export default function Header() {
+
+  
   return (
     <>
       <header className="fixed left-0 right-0 top-0 z-50 bg-white shadow-md">
@@ -52,13 +54,15 @@ export default function Header() {
             href="#"
             className="mt-1 flex items-center space-x-1 hover:text-gray-400"
           >
-            <div className="flex items-center space-x-2">
-              <Badge count={1} size="small" offset={[5, -5]}>
-                <ShoppingCartOutlined
-                  style={{ fontSize: "24px", color: "white" }}
-                />
-              </Badge>
-              <span className="">Giỏ hàng</span>
+            <div className="mt-1 flex items-center space-x-2">
+              <Link to="/GioHang">
+                <Badge count={1} size="small" offset={[5, -5]}>
+                  <ShoppingCartOutlined
+                    style={{ fontSize: "24px", color: "white" }}
+                  />
+                </Badge>
+                <span className="">Giỏ hàng</span>
+              </Link>
             </div>
           </a>
         </div>

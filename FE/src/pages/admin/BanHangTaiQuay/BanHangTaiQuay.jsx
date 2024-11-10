@@ -327,6 +327,7 @@ export default function BanHangTaiQuay() {
       );
       toast.success("Không áp dụng voucher tahnfh công");
       LayThongTinThanhToanCuaHoaDon();
+      LayDanhSachPhieuGiamGia();
       setIsSelectDisabled(false);
     } catch (error) {
       toast.error("Có lỗi xảy ra!");
@@ -678,9 +679,7 @@ export default function BanHangTaiQuay() {
                         description: (
                           <>
                             <div
-                              onMouseEnter={() =>
-                                setIdPhieuGiamGiaDangChon(pgg.id)
-                              }
+                              onMouseDown={() => setIdPhieuGiamGiaDangChon(pgg.id)}
                             >
                               <span>tên: {pgg.tenVoucher}</span> <br />
                               <span>
@@ -789,7 +788,7 @@ export default function BanHangTaiQuay() {
                         description: (
                           <>
                             <div
-                              onClick={() => {
+                              onMouseDown={() => {
                                 setIdKhachHangDangChon(kh.id);
                               }}
                             >

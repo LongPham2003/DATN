@@ -34,6 +34,7 @@ import HomePage from "./pages/client/Home/homePage.jsx";
 import SanPham from "./pages/client/SanPham/SanPham.jsx";
 import LienHe from "./pages/client/LienHe/LienHe.jsx";
 import TrangChu from "./pages/client/TrangChu/TrangChu.jsx";
+import GioHang from "./pages/client/GioHang/GioHang.jsx";
 function App() {
   return (
     <>
@@ -57,7 +58,7 @@ function App() {
               element={
                 <>
                   <Helmet>
-                    <title>Sản Phẩm</title>
+                    <title>Liên Hệ</title>
                   </Helmet>
                   <LienHe />
                 </>
@@ -68,9 +69,20 @@ function App() {
               element={
                 <>
                   <Helmet>
-                    <title>Sản Phẩm</title>
+                    <title>Trang Chủ</title>
                   </Helmet>
                   <TrangChu />
+                </>
+              }
+            />
+            <Route
+              path="GioHang"
+              element={
+                <>
+                  <Helmet>
+                    <title>Giỏ hàng</title>
+                  </Helmet>
+                  <GioHang />
                 </>
               }
             />
