@@ -109,6 +109,7 @@ public class ChatLieuServiceImpl implements ChatLieuService {
         return chatLieuRepo.findAll().stream().map(ChatLieu::getTen).collect(Collectors.toList());
     }
 
+    //Chat Lieu trang thai true
     @Override
     public List<ChatLieuResponse> getAllChatLieu() {
         // Lấy tất cả các ChatLieu từ repository
