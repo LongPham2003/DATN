@@ -65,7 +65,7 @@ function App() {
               }
             />
             <Route
-              path="TrangChu"
+              path=""
               element={
                 <>
                   <Helmet>

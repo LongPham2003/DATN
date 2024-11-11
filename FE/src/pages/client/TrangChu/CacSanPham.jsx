@@ -10,37 +10,20 @@ import { useState } from "react";
 import { useEffect } from "react";
 
 export default function CacSanPham() {
-  const [selectedChatLieu, setSelectedChatLieu] = useState(null);
-  const [selectedChatLieuName, setSelectedChatLieuName] = useState(null);
-  const [listChatLieu, setListChatLieu] = useState([]);
+  const [selectedMauSac, setSelectedMauSac] = useState(null);
+  const [selectedMauSacName, setSelectedMauSacName] = useState(null);
+  const [listMauSac, setListMauSac] = useState([]);
 
-  let ApiChatLieu = `http://localhost:8080/api/chatlieu/getall`;
+  let ApiMauSac = `http://localhost:8080/api/mausac/getall`;
 
   const LayThuocTinh = async () => {
-    const chatlieu = await axios.get(ApiChatLieu);
-    setListChatLieu(chatlieu.data.result);
+    const MauSac = await axios.get(ApiMauSac);
+    setListMauSac(MauSac.data.result);
   };
 
   useEffect(() => {
     LayThuocTinh();
   }, []);
-
-  // const ChatLieuItems = listChatLieu.map((cl) => ({
-  //   key: cl.id,
-  //   label: (
-  //     <Button
-  //       className={`border border-gray-300 ${
-  //         selectedChatLieu === cl.id ? "bg-gray-200" : ""
-  //       }`}
-  //       onClick={() => {
-  //         setSelectedChatLieu(cl.id);
-  //         setSelectedChatLieuName(cl.ten);
-  //       }}
-  //     >
-  //       {cl.ten}
-  //     </Button>
-  //   ),
-  // }));
 
   return (
     <>
@@ -49,43 +32,8 @@ export default function CacSanPham() {
           <span className="text-3xl font-semibold">Bộ Lọc</span>
         </div>
         <div className="col-span-3 col-start-1 col-end-3 h-auto">
-          {/* <Dropdown
-            menu={{
-              items: [
-                {
-                  key: "chat-lieu-options",
-                  label: (
-                    <div className="flex flex-wrap p-2">
-                      {ChatLieuItems.map((item) => item.label)}
-                    </div>
-                  ),
-                },
-              ],
-            }}
-            trigger={["click"]}
-          >
-            <Button>
-              {selectedChatLieuName
-                ? `Chất liệu: ${selectedChatLieuName}`
-                : "Chất liệu"}
-            </Button>
-          </Dropdown> */}
-          <Select
-            options={[
-              { label: "Không chọn phiếu", value: "" }, // Option rỗng
-              ...listChatLieu.map((cl, index) => ({
-                label: `${cl.ten}`,
-                value: cl.id,
-                description: (
-                  <>
-                    <div className="flex gap-1">
-                      <button>{cl.ten}</button>
-                    </div>
-                  </>
-                ),
-              })),
-            ]}
-          />
+       
+         
           <div className="my-2">
             <Card
               title="Loại"
@@ -155,18 +103,22 @@ export default function CacSanPham() {
               }}
             >
               <div className="grid grid-cols-3">
-                <p className="m-1 flex h-9 w-20 items-center justify-center rounded-lg bg-red-200">
-                  a
-                </p>
-                <p className="m-1 flex h-9 w-20 items-center justify-center rounded-lg bg-red-200">
-                  b
-                </p>
-                <p className="m-1 flex h-9 w-20 items-center justify-center rounded-lg bg-red-200">
-                  c
-                </p>
-                <p className="m-1 flex h-9 w-20 items-center justify-center rounded-lg bg-red-200">
-                  c
-                </p>
+            
+                {listMauSac.map((ms) => (
+                  <Button
+                    className={`m-2 ${selectedMauSac === ms.id ? 'bg-blue-500' : ''}`}
+                    onClick={() => {
+                      if (selectedMauSac !== ms.id) {
+                        setSelectedMauSac(ms.id);
+                        console.log(ms.id);
+                      } else {
+                        setSelectedMauSac(null);
+                      }
+                    }}
+                  >
+                    {ms.ten}
+                  </Button>
+                ))}
               </div>
             </Card>
           </div>
