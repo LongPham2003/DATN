@@ -51,6 +51,9 @@ public class ThuongHieuServiceImpl implements ThuongHieuService {
 
     @Override
     public ThuongHieuResponse create(ThuongHieuRequest request) {
+        if (thuongHieuRepo.existsByTen(request.getTen())) {
+            throw new AppException(ErrorCode.THUONG_HIEU_EXISTED);
+        }
         ThuongHieu thuongHieu = new ThuongHieu();
         thuongHieu.setTen(request.getTen());
         thuongHieu.setTrangThai(request.getTrangThai());
@@ -62,6 +65,9 @@ public class ThuongHieuServiceImpl implements ThuongHieuService {
     public ThuongHieuResponse update(Integer id, ThuongHieuRequest request) {
         ThuongHieu thuongHieu=thuongHieuRepo.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.BRAND_NOT_FOUND));
+        if (thuongHieuRepo.existsByTen(request.getTen())) {
+            throw new AppException(ErrorCode.THUONG_HIEU_EXISTED);
+        }
         thuongHieu.setTen(request.getTen());
         thuongHieu.setTrangThai(request.getTrangThai());
         ThuongHieu updated =thuongHieuRepo.save(thuongHieu);

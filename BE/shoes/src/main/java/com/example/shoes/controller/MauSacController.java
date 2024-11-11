@@ -6,9 +6,12 @@ import com.example.shoes.dto.mausac.response.MauSacResponse;
 import com.example.shoes.entity.MauSac;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.service.MauSacService;
+import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -57,7 +60,10 @@ public class MauSacController {
 
 
     @PostMapping("/add")
-    public ApiResponse<MauSacResponse> create(@RequestBody MauSacRequest request) {
+    public ApiResponse<MauSacResponse> create(@Valid  @RequestBody MauSacRequest request , BindingResult result) {
+        if(result.hasErrors()) {
+            throw new ValidationException(result.getFieldError().getDefaultMessage());
+        }
         MauSacResponse mauSacResponses = mausacService.create(request);
         return ApiResponse.<MauSacResponse>builder()
                 .result(mauSacResponses)
@@ -65,7 +71,10 @@ public class MauSacController {
     }
 
     @PutMapping("/update/{id}")
-    public ApiResponse<MauSacResponse> update(@PathVariable Integer id, @RequestBody MauSacRequest request) {
+    public ApiResponse<MauSacResponse> update(@Valid @PathVariable Integer id, @RequestBody MauSacRequest request , BindingResult result) {
+        if(result.hasErrors()) {
+            throw new ValidationException(result.getFieldError().getDefaultMessage());
+        }
         MauSacResponse updated = mausacService.update(id, request);
         return ApiResponse.<MauSacResponse>builder()
                 .result(updated)

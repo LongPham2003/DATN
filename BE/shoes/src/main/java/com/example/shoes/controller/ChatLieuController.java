@@ -6,8 +6,11 @@ import com.example.shoes.dto.chatlieu.response.ChatLieuResponse;
 import com.example.shoes.entity.ChatLieu;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.service.ChatLieuService;
+import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -53,7 +56,10 @@ public class ChatLieuController {
 
 
     @PostMapping("/add")
-    public ApiResponse<ChatLieuResponse> createChatLieu(@RequestBody ChatLieuRequest request) {
+    public ApiResponse<ChatLieuResponse> createChatLieu(@Valid @RequestBody ChatLieuRequest request, BindingResult result) {
+        if(result.hasErrors()) {
+            throw new ValidationException(result.getFieldError().getDefaultMessage());
+        }
         ChatLieuResponse newChatLieu = chatLieuService.create(request);
         return ApiResponse.<ChatLieuResponse>builder()
                 .result(newChatLieu)
@@ -62,7 +68,10 @@ public class ChatLieuController {
     }
 
     @PutMapping("/update/{id}")
-    public ApiResponse<ChatLieuResponse> updateChatLieu(@PathVariable Integer id, @RequestBody ChatLieuRequest request) {
+    public ApiResponse<ChatLieuResponse> updateChatLieu(@Valid @PathVariable Integer id, @RequestBody ChatLieuRequest request,BindingResult result) {
+        if(result.hasErrors()) {
+            throw new ValidationException(result.getFieldError().getDefaultMessage());
+        }
         ChatLieuResponse updatedChatLieu = chatLieuService.update(id, request);
         return ApiResponse.<ChatLieuResponse>builder()
                 .result(updatedChatLieu)
