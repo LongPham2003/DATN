@@ -32,6 +32,7 @@ import ProtectedRoute from "./pages/ProtectedRoute";
 import BanHangTaiQuay from "./pages/admin/BanHangTaiQuay/BanHangTaiQuay";
 import HomePage from "./pages/client/Home/homePage.jsx";
 import PaymentResult from "./pages/admin/BanHangTaiQuay/Payment.jsx";
+import DanhSachHoaDon from "./pages/admin/QuanLiHoaDon/DanhSachHoaDon.jsx";
 
 function App() {
   return (
@@ -115,6 +116,14 @@ function App() {
             element={
               <>
                 <PaymentResult />
+              </>
+            }
+          />
+          <Route
+            path="hoadon"
+            element={
+              <>
+                <DanhSachHoaDon />
               </>
             }
           />

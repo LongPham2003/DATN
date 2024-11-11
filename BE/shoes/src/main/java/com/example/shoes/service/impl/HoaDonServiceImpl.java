@@ -1,6 +1,7 @@
 package com.example.shoes.service.impl;
 
 import com.example.shoes.dto.BaoCaoThongKeResponse;
+import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.hoadon.request.HoaDonRequest;
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
 import com.example.shoes.dto.hoadon.response.HoaDonTheoIDResponse;
@@ -23,6 +24,9 @@ import com.example.shoes.service.HoaDonService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -693,6 +697,24 @@ public class HoaDonServiceImpl implements HoaDonService {
                 .map(this::converToHoaDonResponse)
                 .collect(Collectors.toList());
     }
+    @Override
+    public PhanTrangResponse<HoaDonResponse> getHoaDon(int pageNumber, int pageSize,String keyword,String phuongThucGiaoHang,String trangThai) {
+
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+
+        // Gọi phương thức trong hoaDonRepo để lấy dữ liệu phân trang
+        Page<HoaDon> hoaDonPage = hoaDonRepo.getAll(pageable,keyword,phuongThucGiaoHang,trangThai);
+
+        // Tạo đối tượng PhanTrangResponse và thiết lập các giá trị
+        PhanTrangResponse<HoaDonResponse> phanTrangResponse = new PhanTrangResponse<>();
+        phanTrangResponse.setPageNumber(hoaDonPage.getNumber());
+        phanTrangResponse.setPageSize(pageSize); // Đúng là pageSize, không phải totalPages
+        phanTrangResponse.setTotalPages(hoaDonPage.getTotalPages());
+        phanTrangResponse.setTotalElements(hoaDonPage.getTotalElements());
+        phanTrangResponse.setResult(hoaDonPage.getContent().stream().map(this::converToHoaDonResponse).toList());
+
+        return phanTrangResponse;
+    }
 
     @Override
     public List<HoaDonResponse> getAllTrangThaiChuaThanhToan() {
@@ -895,6 +917,9 @@ public class HoaDonServiceImpl implements HoaDonService {
         return null;
     }
 
+
+
+
     private HoaDonTheoIDResponse convert(HoaDon hoaDon){
         HoaDonTheoIDResponse response = new HoaDonTheoIDResponse();
         response.setTongTien(formatCurrency(hoaDon.getTongTien()));
@@ -957,7 +982,7 @@ public class HoaDonServiceImpl implements HoaDonService {
         hoaDonResponse.setMa(hoaDon.getMa());
         hoaDonResponse.setTenNhanVien(hoaDon.getIdNhanVien() != null ? hoaDon.getIdNhanVien().getHoTen() : null);
         hoaDonResponse.setTenKhachHang(hoaDon.getIdKhachHang() != null ? hoaDon.getIdKhachHang().getHoTen() : "Khách lẻ");
-        hoaDonResponse.setSoDienThoai(hoaDon.getSoDienThoai());
+        hoaDonResponse.setSoDienThoai(hoaDon.getIdKhachHang() !=null ? hoaDon.getIdKhachHang().getSdt():"Không có");
         hoaDonResponse.setDiaChiGiaoHang(hoaDon.getDiaChiGiaoHang());
         // Định dạng và lưu trữ giá trị tiền
         hoaDonResponse.setTongTien(formatCurrency(hoaDon.getTongTien()));

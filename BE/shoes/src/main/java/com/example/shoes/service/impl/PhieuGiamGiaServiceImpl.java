@@ -48,6 +48,16 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
         phieuGiamGia.setTenVoucher(request.getTenVoucher());
         phieuGiamGia.setDieuKienGiamGia(request.getDieuKienGiamGia());
         phieuGiamGia.setHinhThucGiam(request.getHinhThucGiam());
+        if(request.getHinhThucGiam().equals("%")){
+            if(request.getMucGiam().compareTo(BigDecimal.valueOf(100))>0 ||request.getMucGiam().compareTo(BigDecimal.ZERO)<=0){
+                throw  new AppException(ErrorCode.VALID_PHIEU_GIAM_GIA_MUC_GIAM);
+            }
+        }
+        if(request.getHinhThucGiam().equals("VND")){
+            if(request.getMucGiam().compareTo(BigDecimal.ZERO)<=0){
+                throw  new AppException(ErrorCode.VALID_PHIEU_GIAM_GIA_MUC_GIAM);
+            }
+        }
         phieuGiamGia.setMucGiam(request.getMucGiam());
         phieuGiamGia.setGiamToiDa(request.getGiamToiDa());
         phieuGiamGia.setSoLuong(request.getSoLuong());
@@ -67,8 +77,22 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
             throw new AppException(ErrorCode.VALID_PHIEU_GIAM_GIA);
         }
         phieuGiamGia.setTenVoucher(request.getTenVoucher());
+        if(request.getDieuKienGiamGia().compareTo(BigDecimal.ZERO)<=0){
+            throw  new AppException(ErrorCode.VALID_PHIEU_GIAM_GIA_DK_GIAM);
+        }
         phieuGiamGia.setDieuKienGiamGia(request.getDieuKienGiamGia());
+
         phieuGiamGia.setHinhThucGiam(request.getHinhThucGiam());
+        if(request.getHinhThucGiam().equals("%")){
+            if(request.getMucGiam().compareTo(BigDecimal.valueOf(100))>0 ||request.getMucGiam().compareTo(BigDecimal.ZERO)<=0){
+                throw  new AppException(ErrorCode.VALID_PHIEU_GIAM_GIA_MUC_GIAM);
+            }
+        }
+        if(request.getHinhThucGiam().equals("VND")){
+            if(request.getMucGiam().compareTo(BigDecimal.ZERO)<=0){
+                throw  new AppException(ErrorCode.VALID_PHIEU_GIAM_GIA_MUC_GIAM);
+            }
+        }
         phieuGiamGia.setMucGiam(request.getMucGiam());
         phieuGiamGia.setGiamToiDa(request.getGiamToiDa());
         phieuGiamGia.setSoLuong(request.getSoLuong());
@@ -140,7 +164,7 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
         return phieuGiamGiaResponse;
     }
 
-    @Scheduled(cron = "0 0 0 * * ?") // Chạy hàng ngày lúc 12:00 AM
+    @Scheduled(cron = "0 0 * * *  ?") // mỗi giờ chạy 1 lần
     public void checkAndUpdateVoucherStatus() {
         // Lấy tất cả các voucher còn active
         List<PhieuGiamGia> phieuGiamGias = phieuGiamGiaRepo.findByTrangThai(true);

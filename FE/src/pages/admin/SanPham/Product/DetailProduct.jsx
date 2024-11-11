@@ -1,6 +1,6 @@
 import axios from "../../../../api/axiosConfig";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { Bounce, ToastContainer } from "react-toastify";
 import LayAnhTheoIdSP from "./LayANhTheoIDSP";
 import { Button, Select } from "antd";
@@ -15,6 +15,7 @@ export default function DetailProduct() {
   const [chatLieus, setChatLieus] = useState([]);
   const [kichThuocs, setKichThuocs] = useState([]);
   const [deGiays, setDeGiays] = useState([]);
+  const [maSp,setMaSp] = useState("");
 
   const [trangThai, setTrangThai] = useState(null);
 
@@ -35,6 +36,7 @@ export default function DetailProduct() {
   const getByIdSP = async () => {
     const data = await axios.get(ApiLaySP);
     setSP(data.data.result);
+    setMaSp(data.data.result.ma);
     console.log(data.data.result);
   };
 
@@ -265,7 +267,7 @@ export default function DetailProduct() {
       <div className="mx-5 my-3 font-mono">
         <div className="my-5 flex">
           <span className="text-xl font-bold">
-            Danh sách sản phẩm chi tiết của sản phẩm:
+            Danh sách sản phẩm chi tiết của sản phẩm: {maSp}
           </span>
           <div className="ml-[850px]">
             <select name="" id="" onChange={(e) => setPageSize(e.target.value)}>
@@ -319,9 +321,9 @@ export default function DetailProduct() {
                       </td>
                       <td className="border-b-[1px] border-indigo-500">
                         {item.trangThai ? (
-                          <span className="text-green-600">đang bán</span>
+                          <span className="text-green-600">Đang bán</span>
                         ) : (
-                          <span className="text-red-600">deo ban nua</span>
+                          <span className="text-red-600">Ngừng bán</span>
                         )}
                       </td>
                       <td className="border-b-[1px] border-indigo-500">

@@ -33,7 +33,7 @@ const ChiTietPhieuGiamGia = () => {
 
   // hàm format lại định dạng khi gửi về be
   const formatCurrencyToNumber = (value) => {
-    return parseInt(value.replace(/[^\d]/g, ""));
+    return parseInt(value.replace(/(?!^-)\D/g, ""));
   };
 
   // update phiếu giảm giá
@@ -65,7 +65,7 @@ const ChiTietPhieuGiamGia = () => {
           })
           .catch((error) => {
             console.error("Lỗi khi cập nhật:", error);
-            setError("Cập nhật thất bại. Vui lòng thử lại.");
+            setError(error.response.data.message);
           });
       },
       onCancel() {
@@ -74,7 +74,7 @@ const ChiTietPhieuGiamGia = () => {
     });
   };
 
-  // chi tiết nhân viên
+  // chi tiết  phiếu giảm giá
 
   useEffect(() => {
     axios
@@ -142,6 +142,8 @@ const ChiTietPhieuGiamGia = () => {
                       name="hinhThucGiam"
                       value={formData.hinhThucGiam}
                       onChange={handleChange}
+                      disabled
+
               >
                 <option value="VND">Tiền mặt</option>
                 <option value="%">Phần trăm</option>

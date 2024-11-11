@@ -265,7 +265,8 @@ export default function BanHangTaiQuay() {
           LayThongTinThanhToanCuaHoaDon(), // Cập nhật thông tin hóa đơn mới, bao gồm tổng tiền
           LaySoLuongTonCuaSPCT()
         ]);
-        toast.success("Cập nhật thành công");
+         toast.success("Cập nhật thành công");
+
       } catch (error) {
         console.log(error);
         toast.error("Cập nhật thất bại");
@@ -666,7 +667,7 @@ export default function BanHangTaiQuay() {
                           >
                             <Button type="primary" danger>
                               <TrashIcon className="h-5 w-5 text-white" />
-                              khách k mua thì dã nó
+                              Xóa
                             </Button>
                           </Popconfirm>
                         </td>

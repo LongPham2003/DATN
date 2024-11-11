@@ -340,7 +340,7 @@ export default function SanPhamBanTaiQuay({ id, onProductAdded }) {
                             }}
                             disabled={item.soLuong === 0}
                           >
-                            Em là người được chọn
+                            Thêm sản
                           </Button>
                         </td>
                       </tr>
