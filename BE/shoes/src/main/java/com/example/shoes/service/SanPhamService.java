@@ -2,6 +2,7 @@ package com.example.shoes.service;
 
 import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.sanpham.request.SanPhamRequest;
+import com.example.shoes.dto.sanpham.response.SanPhamBanChayResponse;
 import com.example.shoes.dto.sanpham.response.SanPhamResponse;
 
 import java.util.List;
@@ -14,5 +15,5 @@ public interface SanPhamService {
     List<SanPhamResponse> getAll();
     void updateTheoTrangThai(Integer id);
     List<String> getAlltenSP();
-    List<SanPhamResponse> getTop3SanPhamBanChay();
+    List<SanPhamBanChayResponse> getTop3SanPhamBanChayTheoThang(int month, int year);
 }

@@ -3,6 +3,7 @@ package com.example.shoes.service.impl;
 
 import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.sanpham.request.SanPhamRequest;
+import com.example.shoes.dto.sanpham.response.SanPhamBanChayResponse;
 import com.example.shoes.dto.sanpham.response.SanPhamResponse;
 import com.example.shoes.entity.Loai;
 import com.example.shoes.entity.SanPham;
@@ -161,12 +162,20 @@ public class SanPhamServiceImpl implements SanPhamService {
     }
 
     @Override
-    public List<SanPhamResponse> getTop3SanPhamBanChay() {
-        List<SanPham> sanPhams = sanPhamRepo.findTop3SanPhamBanChay();
-        // Chuyển đổi danh sách SanPham thành danh sách SanPhamResponse
-        return sanPhams.stream()
-                .map(sanPham -> convertToSanPhamResponse(sanPham))
+    public List<SanPhamBanChayResponse> getTop3SanPhamBanChayTheoThang(int month, int year) {
+        List<Object[]> results = sanPhamRepo.findTop3SanPhamBanChayTheoThang(month, year);
+
+        return results.stream()
+                .map(row -> {
+                    SanPhamBanChayResponse response = new SanPhamBanChayResponse();
+                    response.setIdSP(((Number) row[0]).intValue()); // id sản phẩm
+                    response.setMaSanPham((String) row[1]); // mã sản phẩm
+                    response.setTenSanPham((String) row[2]); // tên sản phẩm
+                    response.setTongSoLuongDaBan(((Number) row[3]).intValue()); // tổng số lượng
+                    return response;
+                })
                 .collect(Collectors.toList());
     }
+
 
 }
