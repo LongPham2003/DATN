@@ -3,6 +3,13 @@ import { useEffect, useState } from "react";
 import LayAnhTheoIdSP from "../SanPham/Product/LayANhTheoIDSP";
 import { Button, Input, InputNumber, Modal, Select } from "antd";
 import { Bounce, toast, ToastContainer } from "react-toastify";
+// import { getAllSPCTBH } from "./SanPhamService.js";
+
+export const getAllSPBH = async (params = {}) => {
+  const ApiLaySPCT = `http://localhost:8080/api/sanphamchitiet/getallSPCTBH`;
+  const data = await axios.get(ApiLaySPCT, { params });
+  return data.data.result;
+};
 
 export default function SanPhamBanTaiQuay({ id, onProductAdded }) {
   const [modalVisible, setModalVisible] = useState(false);
@@ -20,24 +27,24 @@ export default function SanPhamBanTaiQuay({ id, onProductAdded }) {
   const [selectedIdKichThuoc, setSelectedIdKichThuoc] = useState(null);
   const [selectedIdDeGiay, setSelectedIdDeGiay] = useState(null);
   const [idSPCT, setIdSPCT] = useState();
-  const [soLuongMua, setSoLuongMua] = useState(1);
+  const [soLuongMua, setSoLuongMua] = useState(0);
   const [error, setError] = useState("");
 
-  let ApiLaySPCT = `http://localhost:8080/api/sanphamchitiet/getallSPCTBH`;
   let ApiThemSPvaoHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/addspct/${id}`;
-
+  let ApiLaySPCT = `http://localhost:8080/api/sanphamchitiet/getallSPCTBH`;
   const getallSPCTBH = async () => {
-    const data = await axios.get(`${ApiLaySPCT}`, {
-      params: {
-        maSanPham: maSanPham,
-        idMauSac: selectedIdMauSac,
-        idkichThuoc: selectedIdKichThuoc,
-        idChatLieu: selectedIdChatLieu,
-        idThuongHieu: selectedIdHang,
-        idDeGiay: selectedIdDeGiay,
-      },
-    });
-    setSPCTBH(data.data.result);
+    const params = {};
+
+    // Only add parameters if they have values
+    if (maSanPham) params.maSanPham = maSanPham;
+    if (selectedIdMauSac) params.idMauSac = selectedIdMauSac;
+    if (selectedIdKichThuoc) params.idkichThuoc = selectedIdKichThuoc;
+    if (selectedIdChatLieu) params.idChatLieu = selectedIdChatLieu;
+    if (selectedIdHang) params.idThuongHieu = selectedIdHang;
+    if (selectedIdDeGiay) params.idDeGiay = selectedIdDeGiay;
+
+    const data = await getAllSPBH(params);
+    setSPCTBH(data);
   };
 
   const ThemSP = async () => {
@@ -61,11 +68,11 @@ export default function SanPhamBanTaiQuay({ id, onProductAdded }) {
         theme: "light",
         transition: Bounce,
       });
-
       // Gọi hàm onProductAdded để báo cho component cha biết và cập nhật giỏ hàng
       if (onProductAdded) {
         onProductAdded();
       }
+
       getallSPCTBH();
       setModalVisible(false);
     } catch (error) {
@@ -105,14 +112,28 @@ export default function SanPhamBanTaiQuay({ id, onProductAdded }) {
     setIdSPCT(id);
     setModalVisible(true);
   };
+  const handleQuantityChange = (event) => {
+    const value = event.target.value; // Lấy giá trị từ event
 
-  const handleQuantityChange = (value) => {
-    if (value === null || value === undefined) return;
-    if (value > soLuongTon) {
-      setError(`Số lượng mua không thể lớn hơn ${soLuongTon}`);
+    // Nếu input là rỗng, xóa thông báo lỗi và đặt giá trị mặc định
+    if (value === "") {
+      setError(""); // Xóa thông báo lỗi
+      setSoLuongMua(1); // Đặt giá trị mặc định
+      return;
+    }
+
+    const regex = /^[0-9]*$/; // Biểu thức chính quy cho phép số nguyên dương (bao gồm cả chuỗi rỗng)
+    if (!regex.test(value)) {
+      setError("Vui lòng nhập một số hợp lệ."); // Hiển thị thông báo lỗi nếu không phải số
+      return;
+    }
+
+    const numericValue = Number(value); // Chuyển đổi giá trị nhập vào thành số
+    if (numericValue > soLuongTon) {
+      setError(`Số lượng mua không thể lớn hơn ${soLuongTon}`); // Hiển thị thông báo lỗi
     } else {
-      setError("");
-      setSoLuongMua(value);
+      setError(""); // Xóa thông báo lỗi nếu số lượng hợp lệ
+      setSoLuongMua(numericValue); // Cập nhật số lượng mua
     }
   };
 
@@ -357,18 +378,17 @@ export default function SanPhamBanTaiQuay({ id, onProductAdded }) {
         open={modalVisible}
         onCancel={closeModal}
         onOk={ThemSP}
-        cancelText="Hủy" // Replace with your desired text
-        okText="Xác nhận" // Replace with your desired text
+        cancelText="Hủy"
+        okText="Xác nhận"
       >
-        <label>Số Lượng tồn :{soLuongTon} </label>
-
+        <label>Số Lượng tồn: {soLuongTon}</label>
         <div>
-          <InputNumber
+          <Input
             min={1}
             max={soLuongTon}
             value={soLuongMua}
             className="min-w-full"
-            onChange={handleQuantityChange}
+            onChange={handleQuantityChange} // Gọi hàm với event
           />
           {error && <p className="text-red-500">{error}</p>}
         </div>
