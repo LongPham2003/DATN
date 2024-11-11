@@ -31,6 +31,8 @@ public class ChatLieuController {
                 .result(chatLieuResponses)
                 .build();
     }
+
+    //Trang Thai true
     @GetMapping("/getall")
     public ApiResponse<List<ChatLieuResponse>> getAll() {
         // Gọi hàm getAllChatLieu() để lấy danh sách các ChatLieuResponse
