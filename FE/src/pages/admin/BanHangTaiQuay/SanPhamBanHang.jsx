@@ -112,6 +112,7 @@ export default function SanPhamBanTaiQuay({ id, onProductAdded }) {
     setIdSPCT(id);
     setModalVisible(true);
   };
+
   const handleQuantityChange = (event) => {
     const value = event.target.value; // Lấy giá trị từ event
 

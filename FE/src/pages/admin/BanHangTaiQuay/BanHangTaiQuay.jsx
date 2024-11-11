@@ -282,7 +282,6 @@ export default function BanHangTaiQuay() {
             soLuong: newQuantity,
           },
         );
-
         await Promise.all([
           LayChiTietSanPham(),
           LayThongTinThanhToanCuaHoaDon(),
@@ -295,7 +294,6 @@ export default function BanHangTaiQuay() {
       console.log(error);
       toast.error("Cập nhật thất bại");
     }
-    getAllSPBH();
   };
 
   //Giam so luong mua di 1
@@ -313,8 +311,6 @@ export default function BanHangTaiQuay() {
             soLuong: newQuantity,
           },
         );
-
-        getAllSPBH();
         await Promise.all([
           LayChiTietSanPham(), // Cập nhật giỏ hàng sau khi thêm sản phẩm
           LayThongTinThanhToanCuaHoaDon(), // Cập nhật thông tin hóa đơn mới, bao gồm tổng tiền
@@ -664,7 +660,11 @@ export default function BanHangTaiQuay() {
                                       Number(event.target.value),
                                     );
                                   }}
-                                  onBlur={() => upDateSoLuongMua()} // Chỉ cập nhật khi số lượng thay đổi
+                                  onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                      upDateSoLuongMua();
+                                    }
+                                  }} // Chỉ cập nhật khi số lượng thay đổi
                                 />
 
                                 <button
@@ -822,6 +822,7 @@ export default function BanHangTaiQuay() {
                   <Button
                     style={{ height: "50px", width: "450px" }}
                     className="ml-[10px] border-2 border-yellow-500 text-lg font-medium text-yellow-500"
+                    onClick={handlePaymentClick}
                   >
                     Chuyển khoản
                   </Button>
