@@ -3,7 +3,7 @@ import { Button, Input, Popconfirm, Select } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import axios from "../../../../api/axiosConfig.js";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import ImageUpload from "./UploadAnh";
 import GetImage from "./GetImage";
@@ -11,6 +11,8 @@ import GetImage from "./GetImage";
 export default function UpdateProductDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+
+
 
   const [idSanPham, setIdSanPham] = useState();
   const [SPCT, setSPCT] = useState({});

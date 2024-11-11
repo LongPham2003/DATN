@@ -7,9 +7,12 @@ import com.example.shoes.dto.kichthuoc.response.KichThuocResponse;
 import com.example.shoes.entity.KichThuoc;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.service.KichThuocService;
+import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,7 +54,10 @@ public class KichThuocController {
 
 
     @PostMapping("/add")
-    public ApiResponse<KichThuocResponse> create(@RequestBody KichThuocRequest request) {
+    public ApiResponse<KichThuocResponse> create(@Valid  @RequestBody KichThuocRequest request, BindingResult result) {
+        if(result.hasErrors()) {
+            throw new ValidationException(result.getFieldError().getDefaultMessage());
+        }
         KichThuocResponse kichThuocResponse = kichThuocService.create(request);
         return ApiResponse.<KichThuocResponse>builder()
                 .result(kichThuocResponse)
@@ -64,7 +70,10 @@ public class KichThuocController {
     }
 
     @PutMapping("/update/{id}")
-    public ApiResponse<KichThuocResponse> update(@PathVariable Integer id, @RequestBody KichThuocRequest request) {
+    public ApiResponse<KichThuocResponse> update(@Valid @PathVariable Integer id, @RequestBody KichThuocRequest request,BindingResult result) {
+        if(result.hasErrors()) {
+            throw new ValidationException(result.getFieldError().getDefaultMessage());
+        }
         KichThuocResponse updated = kichThuocService.update(id, request);
         return ApiResponse.<KichThuocResponse>builder()
                 .result(updated)

@@ -65,6 +65,9 @@ public class ChatLieuServiceImpl implements ChatLieuService {
     public ChatLieuResponse update(Integer id, ChatLieuRequest request) {
         ChatLieu chatLieu = chatLieuRepo.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.MATERIAL_NOT_FOUND));
+        if (chatLieuRepo.existsByTen(request.getTen())) {
+            throw new AppException(ErrorCode.THUONG_HIEU_EXISTED);
+        }
         chatLieu.setTen(request.getTen());
         chatLieu.setTrangThai(request.getTrangThai());
         ChatLieu updatedChatLieu = chatLieuRepo.save(chatLieu);

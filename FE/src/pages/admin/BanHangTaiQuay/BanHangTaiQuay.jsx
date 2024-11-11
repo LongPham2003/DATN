@@ -79,13 +79,29 @@ export default function BanHangTaiQuay() {
       setHoaDonFalse(hoaDonList);
       if (hoaDonList.length > 0) {
         setSelectedHoaDonId(hoaDonList[0].id); // Chọn id hóa đơn đầu tiên khi tải dữ liệu lần đầu
-
         const hd = await axios.get(
           `${ApiLayThongTinHoaDon}/${hoaDonList[0].id}`,
         );
-        setMaHD(hd.data.result.ma);
-        console.log(hd.data.result.ma);
+        // setMaHD(hd.data.result.ma);
       }
+
+      // console.log(hd.data.result.ma);
+    } catch (error) {
+      console.log("Lấy hóa đơn lỗi:", error);
+    }
+  };
+
+  //Lấy danh sách hóa đơn
+  const LayMaHoaDon = async () => {
+    try {
+
+      const hd = await axios.get(
+        `${ApiLayThongTinHoaDon}/${selectedHoaDonId}`
+      );
+
+      setMaHD(hd.data.result.ma);
+
+
     } catch (error) {
       console.log("Lấy hóa đơn lỗi:", error);
     }
@@ -164,6 +180,7 @@ export default function BanHangTaiQuay() {
       await LayChiTietSanPham(); // Cập nhật giỏ hàng sau khi thêm sản phẩm
       await LayThongTinThanhToanCuaHoaDon(); // Cập nhật thông tin hóa đơn mới, bao gồm tổng tiền
     } catch (error) {
+      console.error("Error:", error);
       toast.error("Có lỗi xẩy ra");
     }
   };
@@ -226,12 +243,9 @@ export default function BanHangTaiQuay() {
   // Tăng số lượng mua lên 1
   const increment = async (idSpct, newQuantity) => {
     setIdSPCTDangChon(idSpct); // Cập nhật id của sản phẩm đang chọn
-    const soLuongTon = await axios.get(
-      `http://localhost:8080/api/sanphamchitiet/${idSPCTDangChon}`,
-    ); // Lấy số lượng tồn của sản phẩm đang chọn
+    await LaySoLuongTonCuaSPCT(); // Lấy số lượng tồn của sản phẩm đang chọn
 
-    // Kiểm tra số lượng tồn ngay sau khi lấy
-    if (soLuongTon.data.result.soLuong > 0) {
+    if (soLuongTonCuaSPCT > 0) {
       setThayDoiSoLuongMua(newQuantity); // Cập nhật ngay lập tức trên giao diện
       try {
         await axios.put(
@@ -243,11 +257,12 @@ export default function BanHangTaiQuay() {
         );
 
         await Promise.all([
-          LaySoLuongTonCuaSPCT(),
           LayChiTietSanPham(), // Cập nhật giỏ hàng sau khi thêm sản phẩm
           LayThongTinThanhToanCuaHoaDon(), // Cập nhật thông tin hóa đơn mới, bao gồm tổng tiền
+          LaySoLuongTonCuaSPCT()
         ]);
-        toast.success("Cập nhật thành công");
+         toast.success("Cập nhật thành công");
+
       } catch (error) {
         console.log(error);
         toast.error("Cập nhật thất bại");
@@ -260,6 +275,7 @@ export default function BanHangTaiQuay() {
   //Giam so luong mua di 1
   const decrement = async (idSpct, newQuantity) => {
     if (newQuantity > 0) {
+      // Đ��m bảo số lượng không âm
       setThayDoiSoLuongMua(newQuantity);
       setIdSPCTDangChon(idSpct); // Cập nhật id của sản phẩm đang chọn
       await LaySoLuongTonCuaSPCT(); // Gọi hàm lấy số lượng tồn của sản phẩm sau khi cập nhật id
@@ -269,14 +285,14 @@ export default function BanHangTaiQuay() {
           `${ApiUpdateSoLuongSPTrongHoaDon}/${selectedHoaDonId}`,
           {
             idSpct: idSpct,
-            soLuong: newQuantity,
-          },
+            soLuong: newQuantity
+          }
         );
         toast.success("Cập nhật thành công");
         await Promise.all([
           LayChiTietSanPham(), // Cập nhật giỏ hàng sau khi thêm sản phẩm
           LayThongTinThanhToanCuaHoaDon(), // Cập nhật thông tin hóa đơn mới, bao gồm tổng tiền
-          LaySoLuongTonCuaSPCT(),
+          LaySoLuongTonCuaSPCT()
         ]);
       } catch (error) {
         console.log(error);
@@ -327,7 +343,6 @@ export default function BanHangTaiQuay() {
       );
       toast.success("Không áp dụng voucher tahnfh công");
       LayThongTinThanhToanCuaHoaDon();
-      LayDanhSachPhieuGiamGia();
       setIsSelectDisabled(false);
     } catch (error) {
       toast.error("Có lỗi xảy ra!");
@@ -387,15 +402,16 @@ export default function BanHangTaiQuay() {
   };
 
   //Thanh toan
-
-  const thanhToanTienMat = async () => {
-    try {
+  
+const thanhToanTienMat = async () => {
+  try {
       // Thực hiện gọi API thanh toán và lấy phản hồi
-      await axios.post(ApiThanhToanHoaDon, {
+      const response = await axios.post(ApiThanhToanHoaDon, {
         phuongThucThanhToan: "Tiền mặt",
-        tienKhachDua: tienKhachDua,
+        tienKhachDua: tienKhachDua
       });
 
+     
       // Lưu selectedHoaDonId vào state tạm thời
       setTempHoaDonId(selectedHoaDonId); // Lưu ID hóa đơn được chọn vào state tạm thời
 
@@ -412,14 +428,15 @@ export default function BanHangTaiQuay() {
 
       // Xóa ID tạm thời sau 1 phút
       setTimeout(() => {
-        setTempHoaDonId(null); // Xóa ID tạm thời sau 1 phút
+          setTempHoaDonId(null); // Xóa ID tạm thời sau 1 phút
       }, 5000); // 60000 ms = 1 phút
-    } catch (error) {
+  } catch (error) {
       // Hiển thị thông báo lỗi
       toast.error("Thanh toán thất bại, có lỗi xảy ra!");
       console.log(error);
-    }
-  };
+  }
+};
+
 
   const handleGeneratePDF = () => {
     generatePDF();
@@ -441,13 +458,13 @@ export default function BanHangTaiQuay() {
       Promise.all([
         LayChiTietSanPham(selectedHoaDonId),
         LayThongTinThanhToanCuaHoaDon(selectedHoaDonId),
-        // LayDanhSachHoaDonChuaThanhToan(),
+        LayMaHoaDon()
         // LayIdLonNhat(),
       ]);
 
       // Tìm hóa đơn trong `hoaDonFalse` có `id` khớp với `selectedHoaDonId`
       const selectedHoaDon = hoaDonFalse.find(
-        (hoaDon) => hoaDon.id === Number(selectedHoaDonId), // Ép kiểu `selectedHoaDonId` thành số để so sánh
+        (hoaDon) => hoaDon.id === Number(selectedHoaDonId) // Ép kiểu `selectedHoaDonId` thành số để so sánh
       );
 
       // Nếu tìm thấy `selectedHoaDon`, cập nhật `tongTien`, `tienPhaiThanhToan` và `tienDuocGiam`
@@ -469,6 +486,27 @@ export default function BanHangTaiQuay() {
   //     handleGeneratePDF(); // Gọi hàm tạo PDF khi idLonNhat đã được cập nhật
   //   }
   // }, [idLonNhat]);
+
+
+  // hàm format lại định dạng khi gửi về be
+  const formatCurrencyToNumber = (value) => {
+    return parseInt(value.replace(/[^\d]/g, ""));
+  };
+
+// thanh toán vnpay
+  const handlePaymentClick = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/api/paymentvnpay/create-payment", {
+        params: { maHoaDon: selectedHoaDonId, amount: formatCurrencyToNumber(tienPhaiThanhToan) }
+      });
+
+      if (response.data) {
+        window.location.href = response.data
+      }
+    } catch (error) {
+      console.error("Lỗi khi gọi API:", error);
+    }
+  };
 
   return (
     <>
@@ -496,9 +534,7 @@ export default function BanHangTaiQuay() {
             </div>
             <Tabs
               activeKey={selectedHoaDonId} // Hiển thị tab tương ứng với hóa đơn được chọn
-              onChange={(key) => {
-                setSelectedHoaDonId(key);
-              }} // Cập nhật id hóa đơn được chọn khi người dùng chọn tab mới
+              onChange={(key) => setSelectedHoaDonId(key)} // Cập nhật id hóa đơn được chọn khi người dùng chọn tab mới
               defaultActiveKey={hoaDonFalse[0]?.id} // Chọn tab đầu tiên mặc định
               animated={{ inkBar: true, tabPane: true }} // Bật hiệu ứng chuyển tab
               items={hoaDonFalse.map((tab) => ({
@@ -530,41 +566,41 @@ export default function BanHangTaiQuay() {
                 <div className="max-h-[570px] overflow-y-auto">
                   <table className="min-w-full text-center text-sm font-light">
                     <thead className="sticky top-0 bg-blue-700 text-xl font-medium text-white">
-                      <tr>
-                        <th className="w-10 px-6 py-4">STT</th>
-                        <th className="w-[130px] px-6 py-4">Ảnh</th>
-                        <th className="w-52 px-6 py-4">Sản phẩm</th>
-                        <th className="w-52 px-6 py-4">Số lượng</th>
-                        <th className="w-52 px-6 py-4">Thành tiền</th>
-                        <th className="px-6 py-4">Hành động</th>
-                      </tr>
+                    <tr>
+                      <th className="w-10 px-6 py-4">STT</th>
+                      <th className="w-[130px] px-6 py-4">Ảnh</th>
+                      <th className="w-52 px-6 py-4">Sản phẩm</th>
+                      <th className="w-52 px-6 py-4">Số lượng</th>
+                      <th className="w-52 px-6 py-4">Thành tiền</th>
+                      <th className="px-6 py-4">Hành động</th>
+                    </tr>
                     </thead>
                     <tbody>
-                      {SPCTChuaThanhToan.map((SPCT, index) => (
-                        <tr
-                          key={SPCT.id}
-                          className="hover:bg-gray-100"
-                          onMouseEnter={() => {
-                            setIdSPCTDangChon(SPCT.idSpct);
-                            setThayDoiSoLuongMua(SPCT.soLuong);
-                          }}
-                          onMouseLeave={() => {
-                            setIdSPCTDangChon(null);
-                          }}
-                        >
-                          <td>{index + 1}</td>
-                          <td>
-                            <LayAnhTheoIdSP
-                              id={SPCT.idSpct}
-                              className="h-[120px] w-[120px]"
-                            />
-                          </td>
-                          <td>
-                            {SPCT.tenSanPham} <br />
-                            {SPCT.maSPCT} [{SPCT.kichThuoc} - {SPCT.mauSac}]
-                            <br />
-                            {SPCT.donGia}
-                          </td>
+                    {SPCTChuaThanhToan.map((SPCT, index) => (
+                      <tr
+                        key={SPCT.id}
+                        className="hover:bg-gray-100"
+                        onMouseEnter={() => {
+                          setIdSPCTDangChon(SPCT.idSpct);
+                          setThayDoiSoLuongMua(SPCT.soLuong);
+                        }}
+                        onMouseLeave={() => {
+                          setIdSPCTDangChon(null);
+                        }}
+                      >
+                        <td>{index + 1}</td>
+                        <td>
+                          <LayAnhTheoIdSP
+                            id={SPCT.idSpct}
+                            className="h-[120px] w-[120px]"
+                          />
+                        </td>
+                        <td>
+                          {SPCT.tenSanPham} <br />
+                          {SPCT.maSPCT} [{SPCT.kichThuoc} - {SPCT.mauSac}]
+                          <br />
+                          {SPCT.donGia}
+                        </td>
 
                           <td className="text-center">
                             <div className="flex h-full items-center justify-center">
@@ -616,26 +652,26 @@ export default function BanHangTaiQuay() {
                             </div>
                           </td>
 
-                          <td>{SPCT.donGia * SPCT.soLuong}</td>
-                          <td>
-                            <Popconfirm
-                              title="Delete the task"
-                              description="Are you sure to delete this task?"
-                              okText="Yes"
-                              cancelText="No"
-                              onConfirm={(e) => {
-                                e.preventDefault();
-                                XoaSPKhoiGioHang(SPCT.idSpct);
-                              }}
-                            >
-                              <Button type="primary" danger>
-                                <TrashIcon className="h-5 w-5 text-white" />
-                                khách k mua thì dã nó
-                              </Button>
-                            </Popconfirm>
-                          </td>
-                        </tr>
-                      ))}
+                        <td>{SPCT.donGia * SPCT.soLuong}</td>
+                        <td>
+                          <Popconfirm
+                            title="Delete the task"
+                            description="Are you sure to delete this task?"
+                            okText="Yes"
+                            cancelText="No"
+                            onConfirm={(e) => {
+                              e.preventDefault();
+                              XoaSPKhoiGioHang(SPCT.idSpct);
+                            }}
+                          >
+                            <Button type="primary" danger>
+                              <TrashIcon className="h-5 w-5 text-white" />
+                              Xóa
+                            </Button>
+                          </Popconfirm>
+                        </td>
+                      </tr>
+                    ))}
                     </tbody>
                   </table>
                 </div>
@@ -679,7 +715,9 @@ export default function BanHangTaiQuay() {
                         description: (
                           <>
                             <div
-                              onMouseDown={() => setIdPhieuGiamGiaDangChon(pgg.id)}
+                              onMouseEnter={() =>
+                                setIdPhieuGiamGiaDangChon(pgg.id)
+                              }
                             >
                               <span>tên: {pgg.tenVoucher}</span> <br />
                               <span>
@@ -788,7 +826,7 @@ export default function BanHangTaiQuay() {
                         description: (
                           <>
                             <div
-                              onMouseDown={() => {
+                              onMouseEnter={() => {
                                 setIdKhachHangDangChon(kh.id);
                               }}
                             >

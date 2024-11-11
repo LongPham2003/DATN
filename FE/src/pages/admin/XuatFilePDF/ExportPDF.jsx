@@ -2,6 +2,7 @@ import html2pdf from "html2pdf.js"; // Thêm import html2pdf
 import { useState } from "react";
 import { useEffect } from "react";
 import axios from "./../../../api/axiosConfig";
+import { Link } from "react-router-dom";
 
 export const generatePDF = () => {
   // Tìm phần tử với ID 'main'
@@ -31,17 +32,16 @@ export const generatePDF = () => {
   }
 };
 
-export const ExportPDF = ({ idHoaDon, onFetchData }) => {
+export const ExportPDF = ({ idHoaDon }) => {
   const [hoadon, setHoaDon] = useState({});
   const [danhSachSP, setDanhSachSP] = useState([]);
   const [maHD, setMaHD] = useState("");
 
-  const id = idHoaDon;
-
-  let ApiLayThongTinHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/${id}`;
-  let ApiLayDanhSachSanPham = `http://localhost:8080/api/hoadonchitiet/SPCTbyidHD/${id}`;
+  let ApiLayThongTinHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/${idHoaDon}`;
+  let ApiLayDanhSachSanPham = `http://localhost:8080/api/hoadonchitiet/SPCTbyidHD/${idHoaDon}`;
   const fetchData = async () => {
     try {
+      // Gọi cả hai API đồng thời
       const [hd, sp] = await Promise.all([
         axios.get(ApiLayThongTinHoaDon),
         axios.get(ApiLayDanhSachSanPham),
@@ -61,16 +61,14 @@ export const ExportPDF = ({ idHoaDon, onFetchData }) => {
       } else {
         console.error("Lỗi khác:", error.message);
       }
-    }
-  };
+    };
 
-  // Gọi fetchData từ một sự kiện khác, ví dụ khi một prop thay đổi
+// Gọi fetchData từ một sự kiện khác, ví dụ khi một prop thay đổi
   useEffect(() => {
     if (idHoaDon) {
       fetchData(); // Gọi fetchData khi idHoaDon có giá trị
     }
   }, [idHoaDon]); // Chạy lại khi idHoaDon thay đổi
-
   return (
     <>
       <div
@@ -103,26 +101,27 @@ export const ExportPDF = ({ idHoaDon, onFetchData }) => {
         <div className="my-3">
           <table className="border-collapse border-2 border-solid border-gray-500 text-center">
             <thead>
-              <tr className="min-h-24 justify-center">
-                <th className="w-14 border-collapse border-2 border-solid border-gray-500 p-2 text-center">
-                  STT
-                </th>
-                <th className="w-52 border-collapse border-2 border-solid border-gray-500 p-2">
-                  Ten san pham
-                </th>
-                <th className="w-20 border-collapse border-2 border-solid border-gray-500 p-2">
-                  So luong
-                </th>
-                <th className="w-36 border-collapse border-2 border-solid border-gray-500 p-2">
-                  Don gia
-                </th>
-                <th className="w-28 border-collapse border-2 border-solid border-gray-500 p-2">
-                  Thanh tien
-                </th>
-              </tr>
+            <tr className="min-h-24 justify-center">
+              <th className="w-14 border-collapse border-2 border-solid border-gray-500 p-2 text-center">
+                STT
+              </th>
+              <th className="w-52 border-collapse border-2 border-solid border-gray-500 p-2">
+                Ten san pham
+              </th>
+              <th className="w-20 border-collapse border-2 border-solid border-gray-500 p-2">
+                So luong
+              </th>
+              <th className="w-36 border-collapse border-2 border-solid border-gray-500 p-2">
+                Don gia
+              </th>
+              <th className="w-28 border-collapse border-2 border-solid border-gray-500 p-2">
+                Thanh tien
+              </th>
+            </tr>
             </thead>
             <tbody>
-              {danhSachSP.map((sp, index) => (
+            {danhSachSP.length > 0 ? (
+              danhSachSP.map((sp, index) => (
                 <tr key={sp.idSpct}>
                   <td className="border-collapse border-2 border-solid border-gray-500 p-2">
                     {index + 1}
@@ -141,7 +140,12 @@ export const ExportPDF = ({ idHoaDon, onFetchData }) => {
                     {sp.soLuong * sp.donGia}
                   </td>
                 </tr>
-              ))}
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5" className="text-center">Không có sản phẩm nào.</td>
+              </tr>
+            )}
             </tbody>
           </table>
           <p className="mt-3 font-bold">Tổng sản phẩm mua:</p>
@@ -181,6 +185,17 @@ export const ExportPDF = ({ idHoaDon, onFetchData }) => {
           </p>
         </div>
       </div>
+
+      <div className="">
+        <button className="w-[200px] rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 mr-5"
+                onClick={generatePDF}>In Hóa Đơn
+        </button>
+        <button className="w-[200px] rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600">
+          <Link to={"/admin/banhangoff"}>Quay về bán hàng</Link>
+        </button>
+      </div>
+
+
     </>
   );
 };

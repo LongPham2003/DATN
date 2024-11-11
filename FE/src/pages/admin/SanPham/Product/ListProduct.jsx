@@ -89,7 +89,7 @@ export default function ListProduct() {
     setIsModalOpen(false);
   };
 
-  const closeSuaModal =async () => {
+  const closeSuaModal = async () => {
     setSelectedProductId(null);
     setIsModalSuaOpen(false);
     await loadSanPham(trangHienTai); // Gọi lại danh sách sản phẩm sau khi sửa
@@ -98,7 +98,6 @@ export default function ListProduct() {
   const handlePageChange = (selectedPage) => {
     setTrangHienTai(selectedPage.selected + 1);
   };
-
 
 
   // useEffect(() => {
@@ -134,26 +133,40 @@ export default function ListProduct() {
   }, [trangHienTai, tenTimKiem, trangThaiTimKiem, idLoai]);
 
 
-  console.log(selectedProductId);
-
-  console.log("long");
-
   return (
     <>
       <div>
-        <span className="text-xl font-medium">Tìm kiếm sản phẩm</span>
-        <div className="ml-96">
-          <div className="w-auto">
-            <label className="mr-2">Tên Sản Phẩm:</label>
-            <input
-              type="text"
-              placeholder="Nhập tên Sản Phẩm"
-              className="w-[500px] rounded-md border-2 border-gray-300 p-2 outline-none transition-colors duration-300 hover:border-blue-500 focus:border-blue-500"
-              onChange={(e) => setTenTimKiem(e.target.value)}
+        <span className="text-xl font-medium">Tìm kiếm sản phẩm:</span>
+        <div className="flex">
+          <div className="mx-10 my-5">
+            <div className="w-auto">
+              <label className="mr-2">Tên Sản Phẩm:</label>
+              <input
+                type="text"
+                placeholder="Nhập tên Sản Phẩm"
+                className="w-[500px] rounded-md border-2 border-gray-300 p-2 outline-none transition-colors duration-300 hover:border-blue-500 focus:border-blue-500"
+                onChange={(e) => setTenTimKiem(e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="mx-10 my-5">
+            <label htmlFor="Loai" className="mr-3 text-xl">
+              Loại:
+            </label>
+            <CustomDropdown
+
+              options={loaiSelect}
+              selectedValue={
+                idLoai
+                  ? loaiSelect.find((loai) => loai.id === idLoai)
+                  : { ten: "Mời bạn chọn loại", id: "" }
+              }
+              onSelect={(e) => setidLoai(e.id)}
             />
           </div>
         </div>
-        <div className="mt-7 flex">
+
+        <div className="mt-7 justify-center flex">
           {/* <div className="items-center justify-start">
             <label htmlFor="">Danh mục:</label>
             <select className="ml-9 h-[44px] w-[500px] rounded-md border-2 border-gray-300 p-2 outline-none transition-colors duration-300 hover:border-blue-500 focus:border-yellow-500">
@@ -164,21 +177,8 @@ export default function ListProduct() {
               ))}
             </select>
           </div> */}
-          <div className="ml-20 justify-center">
-            <label htmlFor="Loai" className="mr-3 text-xl">
-              Loại:
-            </label>
-            <CustomDropdown
-              options={loaiSelect}
-              selectedValue={
-                idLoai
-                  ? loaiSelect.find((loai) => loai.id === idLoai)
-                  : { ten: "Mời bạn chọn loại", id: "" }
-              }
-              onSelect={(e) => setidLoai(e.id)}
-            />
-          </div>
-          <div className="ml-72 justify-center">
+
+          <div className=" flex items-center ">
             <label className="mr-3 text-xl">Trạng thái:</label>
             Đang kinh doanh
             <Radio
@@ -230,12 +230,12 @@ export default function ListProduct() {
                   <tr>
                     <th className="w-10 px-6 py-4">STT</th>
                     <th className="w-14 px-6 py-4">Mã</th>
-                    <th className="w-52 px-6 py-4">Ten</th>
-                    <th className="w-52 px-6 py-4">Loai</th>
-                    <th className="w-52 px-6 py-4">Ngay Tao</th>
-                    <th className="w-52 px-6 py-4">SO luong ton</th>
-                    <th className="w-52 px-6 py-4">Trang Thai</th>
-                    <th className="px-6 py-4">Hanh DOng</th>
+                    <th className="w-52 px-6 py-4">Tên</th>
+                    <th className="w-52 px-6 py-4">Loại</th>
+                    <th className="w-52 px-6 py-4">Ngày tạo</th>
+                    <th className="w-52 px-6 py-4">Số lượng tồn</th>
+                    <th className="w-52 px-6 py-4">Trạng thái</th>
+                    <th className="px-6 py-4">Hành động</th>
                   </tr>
                   </thead>
                   <tbody>
@@ -265,13 +265,13 @@ export default function ListProduct() {
                           <button className="rounded bg-blue-500 px-2 py-1 text-white">
                             <Link to={`/admin/chitietsanpham/${sp.id}`}>
                               <div className="flex gap-2 transition-transform duration-500 hover:scale-125">
-                                <span>SPCT</span>
+                                <span>Chi tiết</span>
                               </div>
                             </Link>
                           </button>
                           <button className="rounded bg-blue-500 px-2 py-1 text-white">
                             <Link to={`/admin/themsanphamchitiet/${sp.id}`}>
-                              <span>ADD_SPCT</span>
+                              <span>Thêm SPCT</span>
                             </Link>
                           </button>
                         </div>
