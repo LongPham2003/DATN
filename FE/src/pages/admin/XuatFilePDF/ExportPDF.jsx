@@ -1,11 +1,14 @@
-import html2pdf from "html2pdf.js";
-import { useState, useEffect } from "react";
+import html2pdf from "html2pdf.js"; // Thêm import html2pdf
+import { useState } from "react";
+import { useEffect } from "react";
 import axios from "./../../../api/axiosConfig";
 import { Link } from "react-router-dom";
 
 export const generatePDF = () => {
+  // Tìm phần tử với ID 'main'
   const element = document.querySelector("#main");
   if (element) {
+    // Tùy chọn cho html2pdf
     const opt = {
       margin: 1,
       filename: "download.pdf",
@@ -14,14 +17,15 @@ export const generatePDF = () => {
       jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
     };
 
+    // Tạo PDF và mở cửa sổ in
     html2pdf()
       .from(element)
       .set(opt)
       .toPdf()
       .get("pdf")
       .then((pdf) => {
-        pdf.autoPrint();
-        window.open(pdf.output("bloburl"));
+        pdf.autoPrint(); // Tự động mở cửa sổ in
+        window.open(pdf.output("bloburl")); // Mở PDF trong cửa sổ mới
       });
   } else {
     console.error("Không tìm thấy phần tử với ID 'main'.");
@@ -33,11 +37,11 @@ export const ExportPDF = ({ idHoaDon }) => {
   const [danhSachSP, setDanhSachSP] = useState([]);
   const [maHD, setMaHD] = useState("");
 
-  const ApiLayThongTinHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/${idHoaDon}`;
-  const ApiLayDanhSachSanPham = `http://localhost:8080/api/hoadonchitiet/SPCTbyidHD/${idHoaDon}`;
-
+  let ApiLayThongTinHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/${idHoaDon}`;
+  let ApiLayDanhSachSanPham = `http://localhost:8080/api/hoadonchitiet/SPCTbyidHD/${idHoaDon}`;
   const fetchData = async () => {
     try {
+      // Gọi cả hai API đồng thời
       const [hd, sp] = await Promise.all([
         axios.get(ApiLayThongTinHoaDon),
         axios.get(ApiLayDanhSachSanPham),
@@ -45,17 +49,27 @@ export const ExportPDF = ({ idHoaDon }) => {
 
       setHoaDon(hd.data.result);
       setMaHD(hd.data.result.ma);
+      console.log("Dữ liệu sản phẩm nhận được:", sp.data.result);
       setDanhSachSP(sp.data.result);
     } catch (error) {
       console.error("Có lỗi xảy ra khi lấy dữ liệu:", error.message);
+      if (error.response) {
+        console.error("Dữ liệu lỗi:", error.response.data);
+        console.error("Mã lỗi:", error.response.status);
+      } else if (error.request) {
+        console.error("Không nhận được phản hồi từ server:", error.request);
+      } else {
+        console.error("Lỗi khác:", error.message);
+      }
     }
   };
 
+  // Gọi fetchData từ một sự kiện khác, ví dụ khi một prop thay đổi
   useEffect(() => {
     if (idHoaDon) {
-      fetchData();
+      fetchData(); // Gọi fetchData khi idHoaDon có giá trị
     }
-  }, [idHoaDon]);
+  }, [idHoaDon]); // Chạy lại khi idHoaDon thay đổi
   return (
     <>
       <div

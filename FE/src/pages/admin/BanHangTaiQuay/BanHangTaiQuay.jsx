@@ -429,7 +429,6 @@ export default function BanHangTaiQuay() {
   };
 
   //Thanh toan
-
   const thanhToanTienMat = async () => {
     try {
       // Thực hiện gọi API thanh toán và lấy phản hồi
@@ -449,8 +448,11 @@ export default function BanHangTaiQuay() {
       closethanhToan();
 
       // Gọi hàm lấy ID lớn nhất sau khi thanh toán đã hoàn tất
-
-      handleGeneratePDF(); // Gọi hàm tạo PDF với ID hóa đơn
+      // await LayIdLonNhat(); // Gọi hàm này sau khi thanh toán thành công
+      // Gọi hàm tạo PDF với ID hóa đơn
+      setTimeout(() => {
+        handleGeneratePDF();
+      }, 900);
 
       // Xóa ID tạm thời sau 1 phút
       setTimeout(() => {
@@ -462,7 +464,6 @@ export default function BanHangTaiQuay() {
       console.log(error);
     }
   };
-
   const handleGeneratePDF = () => {
     generatePDF();
   };
