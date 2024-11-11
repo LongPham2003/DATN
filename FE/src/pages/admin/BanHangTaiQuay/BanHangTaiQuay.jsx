@@ -9,7 +9,7 @@ import {
   InputNumber,
 } from "antd";
 import { useEffect, useState } from "react";
-import SanPhamBanTaiQuay from "./SanPhamBanHang";
+import SanPhamBanTaiQuay, { getAllSPBH } from "./SanPhamBanHang";
 import axios from "../../../api/axiosConfig";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import LayAnhTheoIdSP from "../SanPham/Product/LayANhTheoIDSP";
@@ -19,6 +19,7 @@ import DiaCHiMacDinhKhachHang from "./DiaChiMacDinhKhachHang";
 import "react-toastify/dist/ReactToastify.css";
 import { ShoppingCartIcon } from "@heroicons/react/16/solid";
 import { ExportPDF, generatePDF } from "../XuatFilePDF/ExportPDF";
+import { getAllSPCTBH } from "./SanPhamService";
 
 export default function BanHangTaiQuay() {
   const [hoaDonFalse, setHoaDonFalse] = useState([]);
@@ -51,7 +52,7 @@ export default function BanHangTaiQuay() {
   let ApiLayHoaDonChuaThanhToan = `http://localhost:8080/api/hoadon/getall-chuathanhtoan`; // Danh Sach Hoa DOn CHo
   let ApiLaySanPhamOHoaDon = `http://localhost:8080/api/hoadonchitiet/SPCTbyidHD`; // Gio Hang
   let ApiUpdateSoLuongSPTrongHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/update`; //Update So Luong San Pham trong gio hang
-  let ApiLaySoLuongTonCuaSPCT = `http://localhost:8080/api/sanphamchitiet/${idSPCTDangChon}`; // Lấy số lượng tồn  để valid
+  let ApiLaySoLuongTonCuaSPCT = `http://localhost:8080/api/sanphamchitiet`; // Lấy số lượng tồn  để valid
   let ApiLayThongTinThanhToanTheoIdHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/gettheoid`; // Lay các thông tin tiền , voucher, khách hàng của hóa đơn
   let ApiLayPhieuGiamGia = `http://localhost:8080/api/phieugiamgia/trang-thai-true`; // Danh Sach Phiếu Giam giá
   let ApiHuyHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/delete/${selectedHoaDonId}`; // Hủy Hóa đơn
@@ -94,14 +95,9 @@ export default function BanHangTaiQuay() {
   //Lấy danh sách hóa đơn
   const LayMaHoaDon = async () => {
     try {
-
-      const hd = await axios.get(
-        `${ApiLayThongTinHoaDon}/${selectedHoaDonId}`
-      );
+      const hd = await axios.get(`${ApiLayThongTinHoaDon}/${selectedHoaDonId}`);
 
       setMaHD(hd.data.result.ma);
-
-
     } catch (error) {
       console.log("Lấy hóa đơn lỗi:", error);
     }
@@ -152,7 +148,9 @@ export default function BanHangTaiQuay() {
   };
   // Lấy số lượng tồn của sản phẩm
   const LaySoLuongTonCuaSPCT = async () => {
-    const responseSoLuongTon = await axios.get(ApiLaySoLuongTonCuaSPCT);
+    const responseSoLuongTon = await axios.get(
+      `${ApiLaySoLuongTonCuaSPCT}/${idSPCTDangChon}`,
+    );
     setSoLuongTonCuaSPCT(responseSoLuongTon.data.result.soLuong);
     console.log("soLuongTonCuaSPCT", responseSoLuongTon.data.result.soLuong);
   };
@@ -222,11 +220,36 @@ export default function BanHangTaiQuay() {
   };
 
   const upDateSoLuongMua = async () => {
+    const responseSoLuongTon = await axios.get(
+      `${ApiLaySoLuongTonCuaSPCT}/${idSPCTDangChon}`,
+    );
+    const SLT = responseSoLuongTon.data.result.soLuong;
+    const previousQuantity = thaydoiSoLuongMua; // Store the previous quantity
     try {
+      // Check if the quantity to update exceeds the available stock
+      if (thaydoiSoLuongMua > SLT) {
+        console.log(SLT);
+        toast.error(
+          `Số lượng tồn của sản phẩm còn ${SLT} sản phẩm. Không thể cập nhật!`,
+        );
+        return; // Exit the function if the condition is met
+      }
+
       await axios.put(`${ApiUpdateSoLuongSPTrongHoaDon}/${selectedHoaDonId}`, {
         idSpct: idSPCTDangChon,
         soLuong: thaydoiSoLuongMua,
       });
+
+      // Check if SLT is -1 after the update
+      const updatedResponseSoLuongTon = await axios.get(
+        `${ApiLaySoLuongTonCuaSPCT}/${idSPCTDangChon}`,
+      );
+      const updatedSLT = updatedResponseSoLuongTon.data.result.soLuong;
+      if (updatedSLT === -1) {
+        toast.error("Cập nhật không thành công, số lượng tồn không hợp lệ!");
+        setThayDoiSoLuongMua(previousQuantity); // Restore previous quantity
+        return; // Exit the function if SLT is -1
+      }
 
       await Promise.all([
         LayChiTietSanPham(), // Cập nhật giỏ hàng sau khi thêm sản phẩm
@@ -236,18 +259,22 @@ export default function BanHangTaiQuay() {
       toast.success("Cập nhật thành công");
     } catch (error) {
       console.log(error);
+      setThayDoiSoLuongMua(previousQuantity); // Restore previous quantity on error
       toast.error("Cập nhật thất bại");
     }
   };
 
   // Tăng số lượng mua lên 1
   const increment = async (idSpct, newQuantity) => {
-    setIdSPCTDangChon(idSpct); // Cập nhật id của sản phẩm đang chọn
-    await LaySoLuongTonCuaSPCT(); // Lấy số lượng tồn của sản phẩm đang chọn
+    try {
+      // Đợi lấy số lượng tồn trước khi kiểm tra
+      const responseSoLuongTon = await axios.get(
+        `http://localhost:8080/api/sanphamchitiet/${idSpct}`,
+      );
+      const soLuongTon = responseSoLuongTon.data.result.soLuong;
 
-    if (soLuongTonCuaSPCT > 0) {
-      setThayDoiSoLuongMua(newQuantity); // Cập nhật ngay lập tức trên giao diện
-      try {
+      if (soLuongTon > 0) {
+        setThayDoiSoLuongMua(newQuantity);
         await axios.put(
           `${ApiUpdateSoLuongSPTrongHoaDon}/${selectedHoaDonId}`,
           {
@@ -257,43 +284,43 @@ export default function BanHangTaiQuay() {
         );
 
         await Promise.all([
-          LayChiTietSanPham(), // Cập nhật giỏ hàng sau khi thêm sản phẩm
-          LayThongTinThanhToanCuaHoaDon(), // Cập nhật thông tin hóa đơn mới, bao gồm tổng tiền
-          LaySoLuongTonCuaSPCT()
+          LayChiTietSanPham(),
+          LayThongTinThanhToanCuaHoaDon(),
         ]);
-         toast.success("Cập nhật thành công");
-
-      } catch (error) {
-        console.log(error);
-        toast.error("Cập nhật thất bại");
+        toast.success("Cập nhật thành công");
+      } else {
+        toast.warning("Sản phẩm đã hết hàng, không thể tăng số lượng");
       }
-    } else {
-      // Nếu số lượng tồn <= 0, hiển thị thông báo ngay lập tức
-      toast.warning("Sản phẩm đã hết hàng, không thể tăng số lượng");
+    } catch (error) {
+      console.log(error);
+      toast.error("Cập nhật thất bại");
     }
+    getAllSPBH();
   };
+
   //Giam so luong mua di 1
   const decrement = async (idSpct, newQuantity) => {
     if (newQuantity > 0) {
-      // Đ��m bảo số lượng không âm
       setThayDoiSoLuongMua(newQuantity);
       setIdSPCTDangChon(idSpct); // Cập nhật id của sản phẩm đang chọn
-      await LaySoLuongTonCuaSPCT(); // Gọi hàm lấy số lượng tồn của sản phẩm sau khi cập nhật id
+      // await LaySoLuongTonCuaSPCT(); // Gọi hàm lấy số lượng tồn của sản phẩm sau khi cập nhật id
 
       try {
         await axios.put(
           `${ApiUpdateSoLuongSPTrongHoaDon}/${selectedHoaDonId}`,
           {
             idSpct: idSpct,
-            soLuong: newQuantity
-          }
+            soLuong: newQuantity,
+          },
         );
-        toast.success("Cập nhật thành công");
+
+        getAllSPBH();
         await Promise.all([
           LayChiTietSanPham(), // Cập nhật giỏ hàng sau khi thêm sản phẩm
           LayThongTinThanhToanCuaHoaDon(), // Cập nhật thông tin hóa đơn mới, bao gồm tổng tiền
-          LaySoLuongTonCuaSPCT()
+          // LaySoLuongTonCuaSPCT(),
         ]);
+        toast.success("Cập nhật thành công");
       } catch (error) {
         console.log(error);
         toast.error("Cập nhật thất bại");
@@ -402,16 +429,15 @@ export default function BanHangTaiQuay() {
   };
 
   //Thanh toan
-  
-const thanhToanTienMat = async () => {
-  try {
+
+  const thanhToanTienMat = async () => {
+    try {
       // Thực hiện gọi API thanh toán và lấy phản hồi
       const response = await axios.post(ApiThanhToanHoaDon, {
         phuongThucThanhToan: "Tiền mặt",
-        tienKhachDua: tienKhachDua
+        tienKhachDua: tienKhachDua,
       });
 
-     
       // Lưu selectedHoaDonId vào state tạm thời
       setTempHoaDonId(selectedHoaDonId); // Lưu ID hóa đơn được chọn vào state tạm thời
 
@@ -428,15 +454,14 @@ const thanhToanTienMat = async () => {
 
       // Xóa ID tạm thời sau 1 phút
       setTimeout(() => {
-          setTempHoaDonId(null); // Xóa ID tạm thời sau 1 phút
+        setTempHoaDonId(null); // Xóa ID tạm thời sau 1 phút
       }, 5000); // 60000 ms = 1 phút
-  } catch (error) {
+    } catch (error) {
       // Hiển thị thông báo lỗi
       toast.error("Thanh toán thất bại, có lỗi xảy ra!");
       console.log(error);
-  }
-};
-
+    }
+  };
 
   const handleGeneratePDF = () => {
     generatePDF();
@@ -458,13 +483,13 @@ const thanhToanTienMat = async () => {
       Promise.all([
         LayChiTietSanPham(selectedHoaDonId),
         LayThongTinThanhToanCuaHoaDon(selectedHoaDonId),
-        LayMaHoaDon()
+        LayMaHoaDon(),
         // LayIdLonNhat(),
       ]);
 
       // Tìm hóa đơn trong `hoaDonFalse` có `id` khớp với `selectedHoaDonId`
       const selectedHoaDon = hoaDonFalse.find(
-        (hoaDon) => hoaDon.id === Number(selectedHoaDonId) // Ép kiểu `selectedHoaDonId` thành số để so sánh
+        (hoaDon) => hoaDon.id === Number(selectedHoaDonId), // Ép kiểu `selectedHoaDonId` thành số để so sánh
       );
 
       // Nếu tìm thấy `selectedHoaDon`, cập nhật `tongTien`, `tienPhaiThanhToan` và `tienDuocGiam`
@@ -487,21 +512,26 @@ const thanhToanTienMat = async () => {
   //   }
   // }, [idLonNhat]);
 
-
   // hàm format lại định dạng khi gửi về be
   const formatCurrencyToNumber = (value) => {
     return parseInt(value.replace(/[^\d]/g, ""));
   };
 
-// thanh toán vnpay
+  // thanh toán vnpay
   const handlePaymentClick = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/api/paymentvnpay/create-payment", {
-        params: { maHoaDon: selectedHoaDonId, amount: formatCurrencyToNumber(tienPhaiThanhToan) }
-      });
+      const response = await axios.get(
+        "http://localhost:8080/api/paymentvnpay/create-payment",
+        {
+          params: {
+            maHoaDon: selectedHoaDonId,
+            amount: formatCurrencyToNumber(tienPhaiThanhToan),
+          },
+        },
+      );
 
       if (response.data) {
-        window.location.href = response.data
+        window.location.href = response.data;
       }
     } catch (error) {
       console.error("Lỗi khi gọi API:", error);
@@ -566,41 +596,41 @@ const thanhToanTienMat = async () => {
                 <div className="max-h-[570px] overflow-y-auto">
                   <table className="min-w-full text-center text-sm font-light">
                     <thead className="sticky top-0 bg-blue-700 text-xl font-medium text-white">
-                    <tr>
-                      <th className="w-10 px-6 py-4">STT</th>
-                      <th className="w-[130px] px-6 py-4">Ảnh</th>
-                      <th className="w-52 px-6 py-4">Sản phẩm</th>
-                      <th className="w-52 px-6 py-4">Số lượng</th>
-                      <th className="w-52 px-6 py-4">Thành tiền</th>
-                      <th className="px-6 py-4">Hành động</th>
-                    </tr>
+                      <tr>
+                        <th className="w-10 px-6 py-4">STT</th>
+                        <th className="w-[130px] px-6 py-4">Ảnh</th>
+                        <th className="w-52 px-6 py-4">Sản phẩm</th>
+                        <th className="w-52 px-6 py-4">Số lượng</th>
+                        <th className="w-52 px-6 py-4">Thành tiền</th>
+                        <th className="px-6 py-4">Hành động</th>
+                      </tr>
                     </thead>
                     <tbody>
-                    {SPCTChuaThanhToan.map((SPCT, index) => (
-                      <tr
-                        key={SPCT.id}
-                        className="hover:bg-gray-100"
-                        onMouseEnter={() => {
-                          setIdSPCTDangChon(SPCT.idSpct);
-                          setThayDoiSoLuongMua(SPCT.soLuong);
-                        }}
-                        onMouseLeave={() => {
-                          setIdSPCTDangChon(null);
-                        }}
-                      >
-                        <td>{index + 1}</td>
-                        <td>
-                          <LayAnhTheoIdSP
-                            id={SPCT.idSpct}
-                            className="h-[120px] w-[120px]"
-                          />
-                        </td>
-                        <td>
-                          {SPCT.tenSanPham} <br />
-                          {SPCT.maSPCT} [{SPCT.kichThuoc} - {SPCT.mauSac}]
-                          <br />
-                          {SPCT.donGia}
-                        </td>
+                      {SPCTChuaThanhToan.map((SPCT, index) => (
+                        <tr
+                          key={SPCT.id}
+                          className="hover:bg-gray-100"
+                          onMouseEnter={() => {
+                            setIdSPCTDangChon(SPCT.idSpct);
+                            setThayDoiSoLuongMua(SPCT.soLuong);
+                          }}
+                          onMouseLeave={() => {
+                            setIdSPCTDangChon(null);
+                          }}
+                        >
+                          <td>{index + 1}</td>
+                          <td>
+                            <LayAnhTheoIdSP
+                              id={SPCT.idSpct}
+                              className="h-[120px] w-[120px]"
+                            />
+                          </td>
+                          <td>
+                            {SPCT.tenSanPham} <br />
+                            {SPCT.maSPCT} [{SPCT.kichThuoc} - {SPCT.mauSac}]
+                            <br />
+                            {SPCT.donGia}
+                          </td>
 
                           <td className="text-center">
                             <div className="flex h-full items-center justify-center">
@@ -626,6 +656,7 @@ const thanhToanTienMat = async () => {
                                   onClick={() => {
                                     setIdSPCTDangChon(SPCT.idSpct);
                                     setThayDoiSoLuongMua(SPCT.soLuong);
+                                    // LaySoLuongTonCuaSPCT();
                                   }}
                                   onChange={(event) => {
                                     setThayDoiSoLuongMua(
@@ -641,6 +672,7 @@ const thanhToanTienMat = async () => {
                                   }}
                                   onClick={(e) => {
                                     e.preventDefault();
+                                    setIdSPCTDangChon(SPCT.idSpct);
                                     increment(SPCT.idSpct, SPCT.soLuong + 1); // Tăng 1 số lượng
                                   }}
                                   className="flex h-8 w-8 items-center justify-center rounded bg-gray-200"
@@ -652,26 +684,26 @@ const thanhToanTienMat = async () => {
                             </div>
                           </td>
 
-                        <td>{SPCT.donGia * SPCT.soLuong}</td>
-                        <td>
-                          <Popconfirm
-                            title="Delete the task"
-                            description="Are you sure to delete this task?"
-                            okText="Yes"
-                            cancelText="No"
-                            onConfirm={(e) => {
-                              e.preventDefault();
-                              XoaSPKhoiGioHang(SPCT.idSpct);
-                            }}
-                          >
-                            <Button type="primary" danger>
-                              <TrashIcon className="h-5 w-5 text-white" />
-                              Xóa
-                            </Button>
-                          </Popconfirm>
-                        </td>
-                      </tr>
-                    ))}
+                          <td>{SPCT.donGia * SPCT.soLuong}</td>
+                          <td>
+                            <Popconfirm
+                              title="Delete the task"
+                              description="Are you sure to delete this task?"
+                              okText="Yes"
+                              cancelText="No"
+                              onConfirm={(e) => {
+                                e.preventDefault();
+                                XoaSPKhoiGioHang(SPCT.idSpct);
+                              }}
+                            >
+                              <Button type="primary" danger>
+                                <TrashIcon className="h-5 w-5 text-white" />
+                                Xóa
+                              </Button>
+                            </Popconfirm>
+                          </td>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                 </div>
@@ -826,7 +858,7 @@ const thanhToanTienMat = async () => {
                         description: (
                           <>
                             <div
-                              onMouseEnter={() => {
+                              onMouseDown={() => {
                                 setIdKhachHangDangChon(kh.id);
                               }}
                             >
