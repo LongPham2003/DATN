@@ -11,7 +11,11 @@ export const getAllSPBH = async (params = {}) => {
   return data.data.result;
 };
 
-export default function SanPhamBanTaiQuay({ id, onProductAdded }) {
+export default function SanPhamBanTaiQuay({
+  id,
+  onProductAdded,
+  thayDoiSoLuong,
+}) {
   const [modalVisible, setModalVisible] = useState(false);
   const [SPCTBH, setSPCTBH] = useState([]);
   const [hangs, setHangs] = useState([]);
@@ -198,6 +202,8 @@ export default function SanPhamBanTaiQuay({ id, onProductAdded }) {
     selectedIdKichThuoc,
     selectedIdDeGiay,
     selectedIdChatLieu,
+    thayDoiSoLuong,
+    getallSPCTBH,
   ]);
 
   const handleResetSelectedChange = () => {
