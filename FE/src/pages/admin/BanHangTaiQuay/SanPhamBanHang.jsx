@@ -190,7 +190,7 @@ export default function SanPhamBanTaiQuay({ id, onProductAdded, thayDoiSoLuong }
 
   useEffect(() => {
     getallSPCTBH();
-  }, [maSanPham, selectedIdHang, selectedIdMauSac, selectedIdKichThuoc, selectedIdDeGiay, selectedIdChatLieu, thayDoiSoLuong, getallSPCTBH]);
+  }, [maSanPham, selectedIdHang, selectedIdMauSac, selectedIdKichThuoc, selectedIdDeGiay, selectedIdChatLieu, thayDoiSoLuong]);
 
   const handleResetSelectedChange = () => {
     setSelectedIdChatLieu(null);
