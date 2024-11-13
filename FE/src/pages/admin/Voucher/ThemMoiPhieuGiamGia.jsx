@@ -55,7 +55,7 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
               soLuong: formData.soLuong,
               ngayBatDau: formData.ngayBatDau,
               ngayKetThuc: formData.ngayKetThuc,
-              trangThai: true
+              // trangThai: true
             }
           );
 

@@ -11,7 +11,7 @@ export const getAllSPBH = async (params = {}) => {
   return data.data.result;
 };
 
-export default function SanPhamBanTaiQuay({ id, onProductAdded }) {
+export default function SanPhamBanTaiQuay({ id, onProductAdded, thayDoiSoLuong }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [SPCTBH, setSPCTBH] = useState([]);
   const [hangs, setHangs] = useState([]);
@@ -51,7 +51,7 @@ export default function SanPhamBanTaiQuay({ id, onProductAdded }) {
     try {
       const newSPCT = {
         idSpct: idSPCT,
-        soLuong: soLuongMua,
+        soLuong: soLuongMua
       };
 
       await axios.post(ApiThemSPvaoHoaDon, newSPCT);
@@ -66,7 +66,7 @@ export default function SanPhamBanTaiQuay({ id, onProductAdded }) {
         draggable: true,
         pauseOnHover: true,
         theme: "light",
-        transition: Bounce,
+        transition: Bounce
       });
       // Gọi hàm onProductAdded để báo cho component cha biết và cập nhật giỏ hàng
       if (onProductAdded) {
@@ -86,7 +86,7 @@ export default function SanPhamBanTaiQuay({ id, onProductAdded }) {
         draggable: true,
         progress: undefined,
         theme: "light",
-        transition: Bounce,
+        transition: Bounce
       });
     }
   };
@@ -190,14 +190,7 @@ export default function SanPhamBanTaiQuay({ id, onProductAdded }) {
 
   useEffect(() => {
     getallSPCTBH();
-  }, [
-    maSanPham,
-    selectedIdHang,
-    selectedIdMauSac,
-    selectedIdKichThuoc,
-    selectedIdDeGiay,
-    selectedIdChatLieu,
-  ]);
+  }, [maSanPham, selectedIdHang, selectedIdMauSac, selectedIdKichThuoc, selectedIdDeGiay, selectedIdChatLieu, thayDoiSoLuong, getallSPCTBH]);
 
   const handleResetSelectedChange = () => {
     setSelectedIdChatLieu(null);
@@ -231,7 +224,7 @@ export default function SanPhamBanTaiQuay({ id, onProductAdded }) {
                 value={selectedIdHang} // Liên kết giá trị với state
                 options={hangs.map((item) => ({
                   label: item.ten,
-                  value: item.id,
+                  value: item.id
                 }))}
                 onChange={(value) => setSelectedIdHang(value)} // Gọi hàm khi có thay đổi
               />
@@ -245,7 +238,7 @@ export default function SanPhamBanTaiQuay({ id, onProductAdded }) {
                 value={selectedIdMauSac} // Liên kết giá trị với state
                 options={mauSacs.map((item) => ({
                   label: item.ten,
-                  value: item.id,
+                  value: item.id
                 }))}
                 onChange={(value) => setSelectedIdMauSac(value)}
               />
@@ -261,7 +254,7 @@ export default function SanPhamBanTaiQuay({ id, onProductAdded }) {
                 value={selectedIdChatLieu}
                 options={chatLieus.map((item) => ({
                   label: item.ten,
-                  value: item.id,
+                  value: item.id
                 }))}
                 onChange={(value) => setSelectedIdChatLieu(value)}
               />
@@ -275,7 +268,7 @@ export default function SanPhamBanTaiQuay({ id, onProductAdded }) {
                 value={selectedIdKichThuoc}
                 options={kichThuocs.map((item) => ({
                   label: item.kichThuoc,
-                  value: item.id,
+                  value: item.id
                 }))}
                 onChange={(value) => setSelectedIdKichThuoc(value)}
               />
@@ -289,7 +282,7 @@ export default function SanPhamBanTaiQuay({ id, onProductAdded }) {
                 value={selectedIdDeGiay}
                 options={deGiays.map((item) => ({
                   label: item.ten,
-                  value: item.id,
+                  value: item.id
                 }))}
                 onChange={(value) => setSelectedIdDeGiay(value)}
               />
@@ -319,53 +312,53 @@ export default function SanPhamBanTaiQuay({ id, onProductAdded }) {
               <div className="max-h-[400px] overflow-y-auto">
                 <table className="mb-[60px] min-w-full bg-white text-[20px]">
                   <thead className="sticky top-0 z-10 bg-white">
-                    <tr className="h-10 border-b-2 border-indigo-500 text-base">
-                      <th className="w-20">Mã sản phẩm</th>
-                      <th className="w-[230px]">Sản phẩm</th>
-                      <th className="w-[100px] border-b">Ảnh</th>
+                  <tr className="h-10 border-b-2 border-indigo-500 text-base">
+                    <th className="w-20">Mã sản phẩm</th>
+                    <th className="w-[230px]">Sản phẩm</th>
+                    <th className="w-[100px] border-b">Ảnh</th>
 
-                      <th className="w-[100px] border-b">Đơn giá</th>
-                      <th className="w-[100px] border-b">Số lượng tồn</th>
-                      <th className="w-[100px] border-b">Hành động</th>
-                    </tr>
+                    <th className="w-[100px] border-b">Đơn giá</th>
+                    <th className="w-[100px] border-b">Số lượng tồn</th>
+                    <th className="w-[100px] border-b">Hành động</th>
+                  </tr>
                   </thead>
                   <tbody className="text-center">
-                    {SPCTBH.map((item, index) => (
-                      <tr key={item.id} className="hover:bg-gray-100">
-                        <td className="border-b-[1px] border-indigo-500 px-4 py-2">
-                          {item.maSPCT}
-                        </td>
-                        <td className="border-b-[1px] border-indigo-500 px-4 py-2">
-                          {item.tenSanPham} [ {item.kichThuoc}-{item.mauSac}]
-                        </td>
-                        <td className="border-b-[1px] border-indigo-500">
-                          <div className="flex justify-center">
-                            <LayAnhTheoIdSP
-                              id={item.id}
-                              className="h-[70px] w-[70px]"
-                            />
-                          </div>
-                        </td>
+                  {SPCTBH.map((item, index) => (
+                    <tr key={item.id} className="hover:bg-gray-100">
+                      <td className="border-b-[1px] border-indigo-500 px-4 py-2">
+                        {item.maSPCT}
+                      </td>
+                      <td className="border-b-[1px] border-indigo-500 px-4 py-2">
+                        {item.tenSanPham} [ {item.kichThuoc}-{item.mauSac}]
+                      </td>
+                      <td className="border-b-[1px] border-indigo-500">
+                        <div className="flex justify-center">
+                          <LayAnhTheoIdSP
+                            id={item.id}
+                            className="h-[70px] w-[70px]"
+                          />
+                        </div>
+                      </td>
 
-                        <td className="border-b-[1px] border-indigo-500">
-                          {item.donGia}
-                        </td>
-                        <td className="border-b-[1px] border-indigo-500">
-                          {item.soLuong}
-                        </td>
-                        <td className="border-b-[1px] border-indigo-500">
-                          <Button
-                            onClick={() => {
-                              handleButtonClick(item.id);
-                              openModal();
-                            }}
-                            disabled={item.soLuong === 0}
-                          >
-                            Thêm sản
-                          </Button>
-                        </td>
-                      </tr>
-                    ))}
+                      <td className="border-b-[1px] border-indigo-500">
+                        {item.donGia}
+                      </td>
+                      <td className="border-b-[1px] border-indigo-500">
+                        {item.soLuong}
+                      </td>
+                      <td className="border-b-[1px] border-indigo-500">
+                        <Button
+                          onClick={() => {
+                            handleButtonClick(item.id);
+                            openModal();
+                          }}
+                          disabled={item.soLuong === 0}
+                        >
+                          Thêm sản
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
                   </tbody>
                 </table>
               </div>

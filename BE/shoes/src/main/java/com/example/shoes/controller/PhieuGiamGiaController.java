@@ -28,7 +28,7 @@ public class PhieuGiamGiaController {
     public ApiResponse<PhanTrangResponse<PhieuGiamGiaResponse>> getAllPhieuGiamGia(
             @RequestParam(value = "tenVoucher", defaultValue = "") String tenVoucher,
             @RequestParam(value = "keyword", defaultValue = "") String keyword,
-            @RequestParam(value = "trangThai", required = false) Boolean trangThai,
+            @RequestParam(value = "trangThai", required = false) String trangThai,
             @RequestParam(value = "ngayBatDau", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDateTime ngayBatDau,
             @RequestParam(value = "ngayKetThuc", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDateTime ngayKetThuc,
             @RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber,
