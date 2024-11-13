@@ -946,9 +946,7 @@ export default function BanHangTaiQuay() {
         <SanPhamBanTaiQuay
           id={selectedHoaDonId}
           onProductAdded={closeModalAndReloadCart}
-          thayDoiSoLuong={thaydoiSoLuongMua}
-          idSPCTDangChon={upDateSoLuongMua}
-
+          thayDoiSoLuong={upDateSoLuongMua}
         />
       </Modal>
 
