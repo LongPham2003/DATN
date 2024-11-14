@@ -1,9 +1,7 @@
 package com.example.shoes.dto.thongke.response;
 
-import lombok.Data;
 
-
-public interface DoanhThuNgayHomNayProjection {
+public interface DoanhThu {
     Integer getTongTien();
     Integer getTongKhachHang();
     Integer getKhachLe();
