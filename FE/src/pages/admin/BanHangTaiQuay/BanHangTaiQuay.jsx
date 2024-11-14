@@ -409,7 +409,7 @@ export default function BanHangTaiQuay() {
       tienPhaiThanhToan.replace(/[.VNĐ]/g, "").trim(),
     );
 
-    console.log(tienPhaiThanhToanNum);
+    // console.log(tienPhaiThanhToanNum);
 
     setTienKhachDua(value);
 
@@ -443,11 +443,12 @@ export default function BanHangTaiQuay() {
       await LayDanhSachHoaDonChuaThanhToan();
       closethanhToan();
 
-      // Gọi hàm lấy ID lớn nhất sau khi thanh toán đã hoàn tất
-      // await LayIdLonNhat(); // Gọi hàm này sau khi thanh toán thành công
       // Gọi hàm tạo PDF với ID hóa đơn
       setTimeout(() => {
         handleGeneratePDF();
+        setTimeout(() => {
+          window.location.reload();
+        }, 900);
       }, 900);
 
       // Xóa ID tạm thời sau 1 phút
@@ -503,15 +504,15 @@ export default function BanHangTaiQuay() {
     }
   }, [selectedHoaDonId, hoaDonFalse]);
 
-  // useEffect(() => {
-  //   if (idLonNhat) {
-  //     handleGeneratePDF(); // Gọi hàm tạo PDF khi idLonNhat đã được cập nhật
-  //   }
-  // }, [idLonNhat]);
-
   // hàm format lại định dạng khi gửi về be
   const formatCurrencyToNumber = (value) => {
     return parseInt(value.replace(/[^\d]/g, ""));
+  };
+  const formatTien = (number) => {
+    const roundedNumber = Math.round(Number(number));
+    // Format the number with thousands separators
+    return `${roundedNumber.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} VNĐ`;
+
   };
 
   // thanh toán vnpay
@@ -626,7 +627,7 @@ export default function BanHangTaiQuay() {
                             {SPCT.tenSanPham} <br />
                             {SPCT.maSPCT} [{SPCT.kichThuoc} - {SPCT.mauSac}]
                             <br />
-                            {SPCT.donGia}
+                            {formatTien(SPCT.donGia)}
                           </td>
 
                           <td className="text-center">
@@ -685,7 +686,7 @@ export default function BanHangTaiQuay() {
                             </div>
                           </td>
 
-                          <td>{SPCT.donGia * SPCT.soLuong}</td>
+                          <td>{formatTien(SPCT.donGia * SPCT.soLuong)}</td>
                           <td>
                             <Popconfirm
                               title="Delete the task"
@@ -936,7 +937,7 @@ export default function BanHangTaiQuay() {
         <SanPhamBanTaiQuay
           id={selectedHoaDonId}
           onProductAdded={closeModalAndReloadCart}
-          thayDoiSoLuong={setThayDoiSoLuongMua}
+          thayDoiSoLuong={upDateSoLuongMua}
         />
       </Modal>
 

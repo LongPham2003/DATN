@@ -75,7 +75,7 @@ export const ExportPDF = ({ idHoaDon }) => {
       <div
         className="p-4 font-mono"
         id="main"
-        style={{ width: "620px", height: "800px" }}
+        style={{ width: "620px", height: "auto" }}
       >
         <div className="text-center text-3xl font-bold uppercase">
           <span>Hóa đơn mua hàng</span>

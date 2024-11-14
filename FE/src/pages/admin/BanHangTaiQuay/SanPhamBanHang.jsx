@@ -80,8 +80,8 @@ export default function SanPhamBanTaiQuay({
       getallSPCTBH();
       setModalVisible(false);
     } catch (error) {
-      console.log(error);
-      toast.error(error.message || "Thêm mới thất bại", {
+      // console.log(error);
+      toast.error("Bạn chưa chọn hóa đơn", {
         position: "top-right",
         autoClose: 600,
         hideProgressBar: false,
@@ -203,7 +203,6 @@ export default function SanPhamBanTaiQuay({
     selectedIdDeGiay,
     selectedIdChatLieu,
     thayDoiSoLuong,
-    getallSPCTBH,
   ]);
 
   const handleResetSelectedChange = () => {
