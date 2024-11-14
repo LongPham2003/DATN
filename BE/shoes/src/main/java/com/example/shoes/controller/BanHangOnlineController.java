@@ -6,7 +6,6 @@ import com.example.shoes.dto.hoadon.response.HoaDonResponse;
 import com.example.shoes.dto.hoadonchitiet.request.HoaDonChiTietRequest;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.service.GioHangChiTietService;
-import com.example.shoes.service.HoaDonChiTietService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +26,6 @@ public class BanHangOnlineController {
     private GioHangChiTietService gioHangChiTietService;
     @Autowired
     private GioHangChiTietService hangChiTietService;
-
     @PostMapping("/themvaogiohangchitiet")
     public ApiResponse<GioHangChiTietResponse> themVaoGioHangChiTiet(@RequestBody GioHangChiTietRequest request) {
         GioHangChiTietResponse response = gioHangChiTietService.themVaoGioHangChiTiet(request);

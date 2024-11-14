@@ -2,6 +2,7 @@ package com.example.shoes.controller;
 
 import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.sanphamchitiet.request.SanPhamChiTietRequest;
+import com.example.shoes.dto.sanphamchitiet.response.KichThuocMauSacResponse;
 import com.example.shoes.dto.sanphamchitiet.response.SPCTBanHangResponse;
 import com.example.shoes.dto.sanphamchitiet.response.SanPhamChiTietDetailResponse;
 import com.example.shoes.dto.sanphamchitiet.response.SanPhamChiTietResponse;
@@ -108,5 +109,43 @@ public class SanPhamChiTietController {
     public ApiResponse<SanPhamChiTietDetailResponse> getSPCTDetail(@PathVariable Integer idspct) {
         SanPhamChiTietDetailResponse response = sanPhamChiTietService.getSPCTDetail(idspct);
         return ApiResponse.<SanPhamChiTietDetailResponse>builder().result(response).build();
+    }
+
+    @GetMapping("/{idSanPham}/kich-thuoc")
+    public ApiResponse<List<String>> getKichThuoc(@PathVariable("idSanPham") Integer idSanPham) {
+        List<String> kichThuoc = sanPhamChiTietService.getKichThuocBySanPhamId(idSanPham);
+        return ApiResponse.<List<String>>builder()
+                .result(kichThuoc)
+                .build();
+    }
+
+    @GetMapping("/{idSanPham}/mau-sac")
+    public ApiResponse<List<String>> getMauSac(@PathVariable("idSanPham") Integer idSanPham) {
+        List<String> mauSac = sanPhamChiTietService.getMauSacBySanPhamId(idSanPham);
+        return ApiResponse.<List<String>>builder()
+                .result(mauSac)
+                .build();
+    }
+    @GetMapping("/loc")
+    public ApiResponse<List<SanPhamChiTietResponse>> getKichThuocAndMauSacByTen(
+            @RequestParam(value = "idSanPham", required = true) Integer idSanPham, // đảm bảo tham số là bắt buộc
+            @RequestParam(value = "idKichThuoc", required = false) Integer idKichThuoc, // không bắt buộc
+            @RequestParam(value = "idMauSac", required = false) Integer idMauSac // không bắt buộc
+    ) {
+        if (idSanPham == null) {
+            throw new IllegalArgumentException("Tham số 'idSp' là bắt buộc");
+        }
+        List<SanPhamChiTietResponse> response = sanPhamChiTietService.getKichThuocAndMauSacByTen(idSanPham,idKichThuoc, idMauSac);
+        return ApiResponse.<List<SanPhamChiTietResponse>>builder()
+                .result(response)
+                .build();
+    }
+    @GetMapping("/loc2")
+    public ApiResponse<List<SanPhamChiTietResponse>> getKichThuocAndMauSacByTen(@RequestBody SanPhamChiTietRequest request
+            ) {
+        List<SanPhamChiTietResponse> response = sanPhamChiTietService.KichThuocAndMauSac(request);
+        return ApiResponse.<List<SanPhamChiTietResponse>>builder()
+                .result(response)
+                .build();
     }
 }

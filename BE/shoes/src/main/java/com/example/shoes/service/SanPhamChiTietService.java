@@ -1,6 +1,7 @@
 package com.example.shoes.service;
 import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.sanphamchitiet.request.SanPhamChiTietRequest;
+import com.example.shoes.dto.sanphamchitiet.response.KichThuocMauSacResponse;
 import com.example.shoes.dto.sanphamchitiet.response.SPCTBanHangResponse;
 import com.example.shoes.dto.sanphamchitiet.response.SanPhamChiTietDetailResponse;
 import com.example.shoes.dto.sanphamchitiet.response.SanPhamChiTietResponse;
@@ -26,4 +27,8 @@ public interface SanPhamChiTietService {
     void updateTheoTrangThai(Integer id);
     List<SanPhamChiTietResponse> findByIdSanPhamAndTrangThaiTrue( Integer idSanPham);
     SanPhamChiTietDetailResponse getSPCTDetail(Integer idSPCT);
+    List<String> getKichThuocBySanPhamId(Integer idSanPham);
+    List<String> getMauSacBySanPhamId(Integer idSanPham);
+    List<SanPhamChiTietResponse> getKichThuocAndMauSacByTen(Integer idSanPham,Integer idKichThuoc, Integer idMauSac);
+    List<SanPhamChiTietResponse> KichThuocAndMauSac(SanPhamChiTietRequest sanPhamChiTietRequest);
 }

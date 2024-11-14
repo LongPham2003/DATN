@@ -162,8 +162,8 @@ public class SanPhamServiceImpl implements SanPhamService {
     }
 
     @Override
-    public List<SanPhamBanChayResponse> getTop3SanPhamBanChayTheoThang(int month, int year) {
-        List<Object[]> results = sanPhamRepo.findTop3SanPhamBanChayTheoThang(month, year);
+    public List<SanPhamBanChayResponse> getTop3SanPhamBanChayTheoThang() {
+        List<Object[]> results = sanPhamRepo.findTop3SanPhamBanChayTrongThangHienTai();
 
         return results.stream()
                 .map(row -> {

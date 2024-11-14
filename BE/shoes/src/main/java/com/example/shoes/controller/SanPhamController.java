@@ -88,12 +88,9 @@ public class SanPhamController {
                 .build();
     }
     @GetMapping("/top3-ban-chay")
-    public ApiResponse<List<SanPhamBanChayResponse>> getTop3SanPhamBanChayTheoThang(
-            @RequestParam("month") int month,
-            @RequestParam("year") int year) {
+    public ApiResponse<List<SanPhamBanChayResponse>> getTop3SanPhamBanChayTheoThang() {
         // Lấy danh sách sản phẩm bán chạy theo tháng và năm
-        List<SanPhamBanChayResponse> top3SanPham = sanPhamService.getTop3SanPhamBanChayTheoThang(month, year);
-
+        List<SanPhamBanChayResponse> top3SanPham = sanPhamService.getTop3SanPhamBanChayTheoThang();
         // Trả về response với ApiResponse
         return ApiResponse.<List<SanPhamBanChayResponse>>builder()
                 .result(top3SanPham)

@@ -15,5 +15,5 @@ public interface SanPhamService {
     List<SanPhamResponse> getAll();
     void updateTheoTrangThai(Integer id);
     List<String> getAlltenSP();
-    List<SanPhamBanChayResponse> getTop3SanPhamBanChayTheoThang(int month, int year);
+    List<SanPhamBanChayResponse> getTop3SanPhamBanChayTheoThang();
 }
