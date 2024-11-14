@@ -2,7 +2,9 @@ import html2pdf from "html2pdf.js"; // Thêm import html2pdf
 import { useState } from "react";
 import { useEffect } from "react";
 import axios from "./../../../api/axiosConfig";
+
 import { Link } from "react-router-dom";
+
 
 export const generatePDF = () => {
   // Tìm phần tử với ID 'main'
@@ -39,6 +41,7 @@ export const ExportPDF = ({ idHoaDon }) => {
 
   let ApiLayThongTinHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/${idHoaDon}`;
   let ApiLayDanhSachSanPham = `http://localhost:8080/api/hoadonchitiet/SPCTbyidHD/${idHoaDon}`;
+
   const fetchData = async () => {
     try {
       // Gọi cả hai API đồng thời
@@ -70,12 +73,15 @@ export const ExportPDF = ({ idHoaDon }) => {
       fetchData(); // Gọi fetchData khi idHoaDon có giá trị
     }
   }, [idHoaDon]); // Chạy lại khi idHoaDon thay đổi
+
   return (
     <>
       <div
         className="p-4 font-mono"
         id="main"
+
         style={{ width: "620px", height: "auto" }}
+
       >
         <div className="text-center text-3xl font-bold uppercase">
           <span>Hóa đơn mua hàng</span>
@@ -102,7 +108,9 @@ export const ExportPDF = ({ idHoaDon }) => {
         <div className="my-3">
           <table className="border-collapse border-2 border-solid border-gray-500 text-center">
             <thead>
+
               <tr className="min-h-24 justify-center">
+
                 <th className="w-14 border-collapse border-2 border-solid border-gray-500 p-2 text-center">
                   STT
                 </th>
@@ -121,6 +129,7 @@ export const ExportPDF = ({ idHoaDon }) => {
               </tr>
             </thead>
             <tbody>
+
               {danhSachSP.length > 0 ? (
                 danhSachSP.map((sp, index) => (
                   <tr key={sp.idSpct}>
@@ -149,6 +158,7 @@ export const ExportPDF = ({ idHoaDon }) => {
                   </td>
                 </tr>
               )}
+
             </tbody>
           </table>
           <p className="mt-3 font-bold">Tổng sản phẩm mua:</p>
@@ -189,6 +199,7 @@ export const ExportPDF = ({ idHoaDon }) => {
         </div>
       </div>
 
+
       <div className="">
         <button
           className="mr-5 w-[200px] rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
@@ -200,6 +211,7 @@ export const ExportPDF = ({ idHoaDon }) => {
           <Link to={"/admin/banhangoff"}>Quay về bán hàng</Link>
         </button>
       </div>
+
     </>
   );
 };

@@ -33,7 +33,9 @@ const ChiTietPhieuGiamGia = () => {
 
   // hàm format lại định dạng khi gửi về be
   const formatCurrencyToNumber = (value) => {
+
     return parseInt(value.replace(/(?!^-)\D/g, ""));
+
   };
 
   // update phiếu giảm giá
@@ -142,10 +144,12 @@ const ChiTietPhieuGiamGia = () => {
                       name="hinhThucGiam"
                       value={formData.hinhThucGiam}
                       onChange={handleChange}
+
                       disabled
 
               >
                 <option value="VND">Tiền mặt</option>
+
                 <option value="%">Phần trăm</option>
               </select>
             </div>
