@@ -8,41 +8,33 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
+import java.util.*;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api/paymentvnpay")
 public class PaymentVNPAYController {
 
     @GetMapping("/create-payment")
-    public ResponseEntity<?> creatPayment(HttpServletRequest request) throws UnsupportedEncodingException {
+    public String creatPayment(String maHoaDon ,String amount) throws UnsupportedEncodingException {
 
 
         String orderType = "other";
 //        long amount = Integer.parseInt(request.getParameter("amount"))*100;
 //        String bankCode = req.getParameter("bankCode");
         String vnp_TxnRef = VNPAYConfig.getRandomNumber(8);
-        String vnp_IpAddr = VNPAYConfig.getIpAddress(request);
+   //     String vnp_IpAddr = VNPAYConfig.getIpAddress(request);
+        String vnp_IpAddr = "127.0.0.1";
 
 
-        long amount = 1000000*100;
+//        long amount = 1000000*100;
 
         String vnp_TmnCode = VNPAYConfig.vnp_TmnCode;
 
@@ -50,10 +42,10 @@ public class PaymentVNPAYController {
         vnp_Params.put("vnp_Version", VNPAYConfig.vnp_Version);
         vnp_Params.put("vnp_Command", VNPAYConfig.vnp_Command);
         vnp_Params.put("vnp_TmnCode", vnp_TmnCode);
-        vnp_Params.put("vnp_Amount", String.valueOf(amount));
+        vnp_Params.put("vnp_Amount", String.valueOf(new BigDecimal(amount).multiply(BigDecimal.valueOf(100))));
         vnp_Params.put("vnp_CurrCode", "VND");
         vnp_Params.put("vnp_BankCode", "NCB");
-        vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
+        vnp_Params.put("vnp_TxnRef", maHoaDon);
         vnp_Params.put("vnp_OrderInfo", vnp_TxnRef);
         vnp_Params.put("vnp_Locale", "vn");
         vnp_Params.put("vnp_OrderType", orderType);
@@ -96,34 +88,33 @@ public class PaymentVNPAYController {
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
         String paymentUrl = VNPAYConfig.vnp_PayUrl + "?" + queryUrl;
 
-        VNPAYResponse vnpayResponse = new VNPAYResponse();
-        vnpayResponse.setStatus("OK");
-        vnpayResponse.setMessage("thanh toán thành công");
-        vnpayResponse.setURL(paymentUrl);
+//        VNPAYResponse vnpayResponse = new VNPAYResponse();
+//        vnpayResponse.setStatus("OK");
+//        vnpayResponse.setMessage("thanh toán thành công");
+//        vnpayResponse.setURL(paymentUrl);
 
-        return ResponseEntity.status(HttpStatus.OK).body(vnpayResponse);
+        return paymentUrl;
 
     }
 
-    @GetMapping("/payment-infor")
-    public ResponseEntity<?> transaction(
+    @GetMapping("/payment-return")
+    public Boolean transaction(
             @RequestParam(value = "vnp_Amount") String amount,
             @RequestParam(value = "vnp_BankCode") String bankCode,
             @RequestParam(value = "vnp_OrderInfo") String order,
             @RequestParam(value = "vnp_ResponseCode") String response
-
     ) {
-        TransactionStatus transactionStatus = new TransactionStatus();
-        if (response.equals("00")) {
-            transactionStatus.setStatus("OK");
-            transactionStatus.setMessage("Successfully");
-            transactionStatus.setData("");
-        } else {
-            transactionStatus.setStatus(" no OK");
-            transactionStatus.setMessage("no Successfully");
-            transactionStatus.setData("");
+        if ("00".equals(response)) {
+           return true;
+        }  else {
+            return false;
         }
-        return ResponseEntity.status(HttpStatus.OK).body(transactionStatus);
+
     }
 
 }
+//http://localhost:5173/admin/payment
+//// ?vnp_Amount=1000000&vnp_BankCode=VNPAY&vnp_CardType=QRCODE&vnp_OrderInfo=96398637&
+//// vnp_PayDate=20241106195030&vnp_ResponseCode=24&vnp_TmnCode=W4S3TLV0&vnp_TransactionNo=0&vnp_TransactionStatus=02
+//// &vnp_TxnRef=36
+//// &vnp_SecureHash=34a91a15ff50b9575d24cf6c8994bba419af4986d3c6e2a7bc5508fcb8abfb693f05e003fdecc79c1545911f9d21b18423a6ca6b7f682638c140a0581de4a03c

@@ -32,7 +32,7 @@ import java.util.TimeZone;
 public class VNPAYConfig {
 
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static String vnp_ReturnUrl = "http://localhost:8080/api/paymentvnpay/payment-infor";
+    public static String vnp_ReturnUrl = "http://localhost:5173/admin/payment";
     public static String vnp_Version = "2.1.0";
     public static String vnp_Command = "pay";
     public static String vnp_TmnCode = "W4S3TLV0";

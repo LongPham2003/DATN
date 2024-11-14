@@ -3,6 +3,9 @@ import { useState } from "react";
 import { useEffect } from "react";
 import axios from "./../../../api/axiosConfig";
 
+import { Link } from "react-router-dom";
+
+
 export const generatePDF = () => {
   // Tìm phần tử với ID 'main'
   const element = document.querySelector("#main");
@@ -39,32 +42,46 @@ export const ExportPDF = ({ idHoaDon }) => {
   let ApiLayThongTinHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/${idHoaDon}`;
   let ApiLayDanhSachSanPham = `http://localhost:8080/api/hoadonchitiet/SPCTbyidHD/${idHoaDon}`;
 
-  useEffect(() => {
-    // Định nghĩa hàm async trong useEffect
-    const fetchData = async () => {
-      try {
-        const hd = await axios.get(ApiLayThongTinHoaDon);
-        setHoaDon(hd.data.result);
-        setMaHD(hd.data.result.ma);
+  const fetchData = async () => {
+    try {
+      // Gọi cả hai API đồng thời
+      const [hd, sp] = await Promise.all([
+        axios.get(ApiLayThongTinHoaDon),
+        axios.get(ApiLayDanhSachSanPham),
+      ]);
 
-        const sp = await axios.get(ApiLayDanhSachSanPham);
-        setDanhSachSP(sp.data.result);
-      } catch (error) {
-        console.error("Có lỗi xảy ra:", error);
+      setHoaDon(hd.data.result);
+      setMaHD(hd.data.result.ma);
+      console.log("Dữ liệu sản phẩm nhận được:", sp.data.result);
+      setDanhSachSP(sp.data.result);
+    } catch (error) {
+      console.error("Có lỗi xảy ra khi lấy dữ liệu:", error.message);
+      if (error.response) {
+        console.error("Dữ liệu lỗi:", error.response.data);
+        console.error("Mã lỗi:", error.response.status);
+      } else if (error.request) {
+        console.error("Không nhận được phản hồi từ server:", error.request);
+      } else {
+        console.error("Lỗi khác:", error.message);
       }
-    };
-
-    // Gọi hàm fetchData chỉ khi idHoaDon thay đổi
-    if (idHoaDon) {
-      fetchData();
     }
-  }, [idHoaDon]);
+  };
+
+  // Gọi fetchData từ một sự kiện khác, ví dụ khi một prop thay đổi
+  useEffect(() => {
+    if (idHoaDon) {
+      fetchData(); // Gọi fetchData khi idHoaDon có giá trị
+    }
+  }, [idHoaDon]); // Chạy lại khi idHoaDon thay đổi
+
   return (
     <>
       <div
         className="p-4 font-mono"
         id="main"
-        style={{ width: "620px", height: "800px" }}
+
+        style={{ width: "620px", height: "auto" }}
+
       >
         <div className="text-center text-3xl font-bold uppercase">
           <span>Hóa đơn mua hàng</span>
@@ -91,7 +108,9 @@ export const ExportPDF = ({ idHoaDon }) => {
         <div className="my-3">
           <table className="border-collapse border-2 border-solid border-gray-500 text-center">
             <thead>
-              <tr className="min-h-24 justify-center" >
+
+              <tr className="min-h-24 justify-center">
+
                 <th className="w-14 border-collapse border-2 border-solid border-gray-500 p-2 text-center">
                   STT
                 </th>
@@ -110,26 +129,36 @@ export const ExportPDF = ({ idHoaDon }) => {
               </tr>
             </thead>
             <tbody>
-              {danhSachSP.map((sp, index) => (
-                <tr key={index}>
-                  <td className="border-collapse border-2 border-solid border-gray-500 p-2">
-                    {index + 1}
-                  </td>
-                  <td className="border-collapse border-2 border-solid border-gray-500 p-2">
-                    {sp.tenSanPham} - {sp.maSPCT} <br />
-                    {sp.kichThuoc} - {sp.mauSac}
-                  </td>
-                  <td className="border-collapse border-2 border-solid border-gray-500 p-2">
-                    {sp.soLuong}
-                  </td>
-                  <td className="border-collapse border-2 border-solid border-gray-500 p-2">
-                    {sp.donGia}
-                  </td>
-                  <td className="border-collapse border-2 border-solid border-gray-500 p-2">
-                    {sp.soLuong * sp.donGia}
+
+              {danhSachSP.length > 0 ? (
+                danhSachSP.map((sp, index) => (
+                  <tr key={sp.idSpct}>
+                    <td className="border-collapse border-2 border-solid border-gray-500 p-2">
+                      {index + 1}
+                    </td>
+                    <td className="border-collapse border-2 border-solid border-gray-500 p-2">
+                      {sp.tenSanPham} - {sp.maSPCT} <br />
+                      {sp.kichThuoc} - {sp.mauSac}
+                    </td>
+                    <td className="border-collapse border-2 border-solid border-gray-500 p-2">
+                      {sp.soLuong}
+                    </td>
+                    <td className="border-collapse border-2 border-solid border-gray-500 p-2">
+                      {sp.donGia}
+                    </td>
+                    <td className="border-collapse border-2 border-solid border-gray-500 p-2">
+                      {sp.soLuong * sp.donGia}
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5" className="text-center">
+                    Không có sản phẩm nào.
                   </td>
                 </tr>
-              ))}
+              )}
+
             </tbody>
           </table>
           <p className="mt-3 font-bold">Tổng sản phẩm mua:</p>
@@ -169,6 +198,20 @@ export const ExportPDF = ({ idHoaDon }) => {
           </p>
         </div>
       </div>
+
+
+      <div className="">
+        <button
+          className="mr-5 w-[200px] rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+          onClick={generatePDF}
+        >
+          In Hóa Đơn
+        </button>
+        <button className="w-[200px] rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600">
+          <Link to={"/admin/banhangoff"}>Quay về bán hàng</Link>
+        </button>
+      </div>
+
     </>
   );
 };

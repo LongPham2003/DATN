@@ -9,9 +9,12 @@ import com.example.shoes.dto.degiay.response.DeGiayResponse;
 import com.example.shoes.entity.DeGiay;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.service.DeGiayService;
+import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -57,7 +60,10 @@ public class DeGiayController {
     }
 
     @PostMapping("/add")
-    public ApiResponse<DeGiayResponse> create(@RequestBody DeGiayRequet request) {
+    public ApiResponse<DeGiayResponse> create(@Valid  @RequestBody DeGiayRequet request, BindingResult result) {
+        if(result.hasErrors()) {
+            throw new ValidationException(result.getFieldError().getDefaultMessage());
+        }
         DeGiayResponse deGiayResponse = deGiayService.create(request);
         return ApiResponse.<DeGiayResponse>builder()
                 .result(deGiayResponse)
@@ -65,7 +71,10 @@ public class DeGiayController {
     }
 
     @PutMapping("/update/{id}")
-    public ApiResponse<DeGiayResponse> update(@PathVariable Integer id, @RequestBody DeGiayRequet request) {
+    public ApiResponse<DeGiayResponse> update(@Valid @PathVariable Integer id, @RequestBody DeGiayRequet request,BindingResult result) {
+        if(result.hasErrors()) {
+            throw new ValidationException(result.getFieldError().getDefaultMessage());
+        }
         DeGiayResponse updatedDeGiay = deGiayService.update(id, request);
         return ApiResponse.<DeGiayResponse>builder()
                 .result(updatedDeGiay)

@@ -31,19 +31,65 @@ import NotFound404 from "./pages/NotFound404";
 import ProtectedRoute from "./pages/ProtectedRoute";
 import BanHangTaiQuay from "./pages/admin/BanHangTaiQuay/BanHangTaiQuay";
 import HomePage from "./pages/client/Home/homePage.jsx";
+import PaymentResult from "./pages/admin/BanHangTaiQuay/Payment.jsx";
+import DanhSachHoaDon from "./pages/admin/QuanLiHoaDon/DanhSachHoaDon.jsx";
+
+import SanPham from "./pages/client/SanPham/SanPham.jsx";
+import LienHe from "./pages/client/LienHe/LienHe.jsx";
+import TrangChu from "./pages/client/TrangChu/TrangChu.jsx";
+import GioHang from "./pages/client/GioHang/GioHang.jsx";
 function App() {
   return (
     <>
       <BrowserRouter>
         <Routes>
-          <Route
-            path="/"
-            element={
-              <>
-                <HomePage />
-              </>
-            }
-          />
+          <Route path="/" element={<HomePage />}>
+            <Route
+              path="SanPham"
+              element={
+                <>
+                  <Helmet>
+                    <title>Sản Phẩm</title>
+                  </Helmet>
+                  <SanPham />
+                </>
+              }
+            />
+
+            <Route
+              path="LienHe"
+              element={
+                <>
+                  <Helmet>
+                    <title>Liên Hệ</title>
+                  </Helmet>
+                  <LienHe />
+                </>
+              }
+            />
+            <Route
+              path=""
+              element={
+                <>
+                  <Helmet>
+                    <title>Trang Chủ</title>
+                  </Helmet>
+                  <TrangChu />
+                </>
+              }
+            />
+            <Route
+              path="GioHang"
+              element={
+                <>
+                  <Helmet>
+                    <title>Giỏ hàng</title>
+                  </Helmet>
+                  <GioHang />
+                </>
+              }
+            />
+          </Route>
           <Route
             path="/403"
             element={
@@ -107,263 +153,280 @@ function App() {
           />
           {/* roter dashboard */}
 
-          <Route path="/admin" element={<Dashboard />}>
-            <Route
-              path="phieugiamgia"
-              element={
-                <>
-                  <Helmet>
-                    <title>Thống kê</title>
-                  </Helmet>
-                  <ListPhieuGiamGia />
-                </>
-              }
-            />
-            <Route
-              path="phieugiamgia/:id"
-              element={
-                <>
-                  <Helmet>
-                    <title>Thống kê</title>
-                  </Helmet>
-                  <ChiTietPhieuGiamGia />
-                </>
-              }
-            />
-            <Route
-              path="diachi"
-              element={
-                <>
-                  <Helmet>
-                    <title>Thống kê</title>
-                  </Helmet>
-                  <DiaChi />
-                </>
-              }
-            />
-            {/* roter thong ke */}
-            <Route
-              path="thongke"
-              element={
-                <ProtectedRoute requiredRoles="ROLE_ADMIN">
-                  <>
-                    <Helmet>
-                      <title>Thống kê</title>
-                    </Helmet>
-                    <ThongKe />
-                  </>
-                </ProtectedRoute>
-              }
-            />
-            {/* bán hàng */}
-            <Route
-              path="banhangoff"
-              element={
-                <>
-                  <Helmet>
-                    <title>Bán hàng tại quầy</title>
-                  </Helmet>
-                  <BanHangTaiQuay />
-                </>
-              }
-            />
-            {/* roter chat lieu */}
-            <Route
-              path="chatlieu"
-              element={
-                <>
-                  <Helmet>
-                    <title>Chất liệu</title>
-                  </Helmet>
-                  <ChatLieu />
-                </>
-              }
-            />
-            {/* roter de giay */}
-            <Route
-              path="degiay"
-              element={
-                <>
-                  <Helmet>
-                    <title>Đế giày</title>
-                  </Helmet>
-                  <DeGiay />
-                </>
-              }
-            />
-            {/* roter kich thuoc */}
-            <Route
-              path="kichthuoc"
-              element={
-                <>
-                  <Helmet>
-                    <title>Kích thước</title>
-                  </Helmet>
-                  <KichThuoc />
-                </>
-              }
-            />
-            {/* roter loai giay */}
-            <Route
-              path="loaigiay"
-              element={
-                <>
-                  <Helmet>
-                    <title>Loại giày</title>
-                  </Helmet>
-                  <LoaiGiay />
-                </>
-              }
-            />
-            {/* roter mau sac */}
-            <Route
-              path="mausac"
-              element={
-                <>
-                  <Helmet>
-                    <title>Màu sắc</title>
-                  </Helmet>
-                  <MauSac />
-                </>
-              }
-            />
-            {/* roter thuong hieu */}
-            <Route
-              path="thuonghieu"
-              element={
-                <>
-                  <Helmet>
-                    <title>Thương hiệu</title>
-                  </Helmet>
-                  <ThuongHieu />
-                </>
-              }
-            />
-            {/* roter voucher */}
-            <Route
-              path="voucher"
-              element={
-                <>
-                  <Helmet>
-                    <title>Voucher</title>
-                  </Helmet>
-                  <Voucher />
-                </>
-              }
-            />
-            {/* roter san pham */}
-            <Route
-              path="sanpham"
-              element={
-                <>
-                  <Helmet>
-                    <title>Sản phẩm</title>
-                  </Helmet>
-                  <ListProduct />
-                </>
-              }
-            />
-            <Route
-              path="sanpham/:id"
-              element={
-                <>
-                  <Helmet>
-                    <title>Sản phẩm</title>
-                  </Helmet>
-                  <SanPhamChiTiet />
-                </>
-              }
-            />
-            <Route
-              path="chitietsanpham/:id"
-              element={
-                <>
-                  <Helmet>
-                    <title>Chi tiết sản phẩm</title>
-                  </Helmet>
-                  <DetailProduct />
-                </>
-              }
-            />
-            {/* roter add san pham chi tiet  */}
-            <Route
-              path="themsanphamchitiet/:id"
-              element={
-                <>
-                  <Helmet>
-                    <title>Thêm sản phẩm chi tiết</title>
-                  </Helmet>
-                  <AddProductDetail />
-                </>
-              }
-            />
-            {/* roter update san pham chi tiet*/}
-            <Route
-              path="Update-DetailProduct/:id"
-              element={
-                <>
-                  <Helmet>
-                    <title>Thêm sản phẩm chi tiết</title>
-                  </Helmet>
-                  <UpdateProductDetail />
-                </>
-              }
-            />
-            {/* roter danh sach nhan vien */}
-            <Route
-              path="nhanvien"
-              element={
-                <ProtectedRoute requiredRoles="ROLE_ADMIN">
-                  <>
-                    <Helmet>
-                      <title>Danh sách nhân viên</title>
-                    </Helmet>
-                    <DanhSachNhanVien />
-                  </>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="nhanvien/:id"
-              element={
-                <>
-                  <Helmet>
-                    <title>Chi tiết nhân viên</title>
-                  </Helmet>
-                  <ChiTietNhanVien />
-                </>
-              }
-            />
-            {/* roter danh sach khach hang */}
-            <Route
-              path="khachhang"
-              element={
-                <ProtectedRoute requiredRoles={["ROLE_NHANVIEN", "ROLE_ADMIN"]}>
-                  <>
-                    <Helmet>
-                      <title>Danh sách khách hàng</title>
-                    </Helmet>
-                    <DanhSachKhachHang />
-                  </>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="khachhang/:id"
-              element={
-                <>
-                  <Helmet>
-                    <title>Chi tiết khách hàng</title>
-                  </Helmet>
-                  <ChiTietKhachHang />
-                </>
-              }
-            />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </>
-  );
+        <Route path="/admin" element={<Dashboard />}>
+          <Route
+            path="payment"
+            element={
+              <>
+                <PaymentResult />
+              </>
+            }
+          />
+          <Route
+            path="hoadon"
+            element={
+              <>
+                <DanhSachHoaDon />
+              </>
+            }
+          />
+        <Route
+          path="phieugiamgia"
+          element={
+            <>
+              <Helmet>
+                <title>Thống kê</title>
+              </Helmet>
+              <ListPhieuGiamGia />
+            </>
+          }
+        />
+        <Route
+          path="phieugiamgia/:id"
+          element={
+            <>
+              <Helmet>
+                <title>Thống kê</title>
+              </Helmet>
+              <ChiTietPhieuGiamGia />
+            </>
+          }
+        />
+        <Route
+          path="diachi"
+          element={
+            <>
+              <Helmet>
+                <title>Thống kê</title>
+              </Helmet>
+              <DiaChi />
+            </>
+          }
+        />
+        {/* roter thong ke */}
+        <Route
+          path="thongke"
+          element={
+            <ProtectedRoute requiredRoles="ROLE_ADMIN">
+              <>
+                <Helmet>
+                  <title>Thống kê</title>
+                </Helmet>
+                <ThongKe />
+              </>
+            </ProtectedRoute>
+          }
+        />
+        {/* bán hàng */}
+        <Route
+          path="banhangoff"
+          element={
+            <>
+              <Helmet>
+                <title>Bán hàng tại quầy</title>
+              </Helmet>
+              <BanHangTaiQuay />
+            </>
+          }
+        />
+        {/* roter chat lieu */}
+        <Route
+          path="chatlieu"
+          element={
+            <>
+              <Helmet>
+                <title>Chất liệu</title>
+              </Helmet>
+              <ChatLieu />
+            </>
+          }
+        />
+        {/* roter de giay */}
+        <Route
+          path="degiay"
+          element={
+            <>
+              <Helmet>
+                <title>Đế giày</title>
+              </Helmet>
+              <DeGiay />
+            </>
+          }
+        />
+        {/* roter kich thuoc */}
+        <Route
+          path="kichthuoc"
+          element={
+            <>
+              <Helmet>
+                <title>Kích thước</title>
+              </Helmet>
+              <KichThuoc />
+            </>
+          }
+        />
+        {/* roter loai giay */}
+        <Route
+          path="loaigiay"
+          element={
+            <>
+              <Helmet>
+                <title>Loại giày</title>
+              </Helmet>
+              <LoaiGiay />
+            </>
+          }
+        />
+        {/* roter mau sac */}
+        <Route
+          path="mausac"
+          element={
+            <>
+              <Helmet>
+                <title>Màu sắc</title>
+              </Helmet>
+              <MauSac />
+            </>
+          }
+        />
+        {/* roter thuong hieu */}
+        <Route
+          path="thuonghieu"
+          element={
+            <>
+              <Helmet>
+                <title>Thương hiệu</title>
+              </Helmet>
+              <ThuongHieu />
+            </>
+          }
+        />
+        {/* roter voucher */}
+        <Route
+          path="voucher"
+          element={
+            <>
+              <Helmet>
+                <title>Voucher</title>
+              </Helmet>
+              <Voucher />
+            </>
+          }
+        />
+        {/* roter san pham */}
+        <Route
+          path="sanpham"
+          element={
+            <>
+              <Helmet>
+                <title>Sản phẩm</title>
+              </Helmet>
+              <ListProduct />
+            </>
+          }
+        />
+        <Route
+          path="sanpham/:id"
+          element={
+            <>
+              <Helmet>
+                <title>Sản phẩm</title>
+              </Helmet>
+              <SanPhamChiTiet />
+            </>
+          }
+        />
+        <Route
+          path="chitietsanpham/:id"
+          element={
+            <>
+              <Helmet>
+                <title>Chi tiết sản phẩm</title>
+              </Helmet>
+              <DetailProduct />
+            </>
+          }
+        />
+        {/* roter add san pham chi tiet  */}
+        <Route
+          path="themsanphamchitiet/:id"
+          element={
+            <>
+              <Helmet>
+                <title>Thêm sản phẩm chi tiết</title>
+              </Helmet>
+              <AddProductDetail />
+            </>
+          }
+        />
+        {/* roter update san pham chi tiet*/}
+        <Route
+          path="Update-DetailProduct/:id"
+          element={
+            <>
+              <Helmet>
+                <title>Thêm sản phẩm chi tiết</title>
+              </Helmet>
+              <UpdateProductDetail />
+            </>
+          }
+        />
+        {/* roter danh sach nhan vien */}
+        <Route
+          path="nhanvien"
+          element={
+            <ProtectedRoute requiredRoles="ROLE_ADMIN">
+              <>
+                <Helmet>
+                  <title>Danh sách nhân viên</title>
+                </Helmet>
+                <DanhSachNhanVien />
+              </>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="nhanvien/:id"
+          element={
+            <>
+              <Helmet>
+                <title>Chi tiết nhân viên</title>
+              </Helmet>
+              <ChiTietNhanVien />
+            </>
+          }
+        />
+        {/* roter danh sach khach hang */}
+        <Route
+          path="khachhang"
+          element={
+            <ProtectedRoute requiredRoles={["ROLE_NHANVIEN", "ROLE_ADMIN"]}>
+              <>
+                <Helmet>
+                  <title>Danh sách khách hàng</title>
+                </Helmet>
+                <DanhSachKhachHang />
+              </>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="khachhang/:id"
+          element={
+            <>
+              <Helmet>
+                <title>Chi tiết khách hàng</title>
+              </Helmet>
+              <ChiTietKhachHang />
+            </>
+          }
+        />
+      </Route>
+    </Routes>
+    </BrowserRouter>
+</>
+)
+  ;
 }
 
 export default App;

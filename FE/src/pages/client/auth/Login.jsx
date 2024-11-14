@@ -52,7 +52,7 @@ const Login = () => {
           navigate("/admin");
           return;
         } else {
-          navigate("/home");
+          navigate("/");
         }
       } else {
         // Nếu không có result, lấy thông báo lỗi

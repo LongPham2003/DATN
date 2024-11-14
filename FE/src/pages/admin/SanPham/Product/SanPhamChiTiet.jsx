@@ -108,7 +108,7 @@ const SanPhamChiTiet = ({productId,closeModal}) => {
                 className="w-[400px] rounded-md border-2 border-gray-300 p-2 outline-none transition-colors duration-300 hover:border-blue-500 focus:border-blue-500"
                 value={formData.ma}
                 name="tenSanPham"
-                onChange={handleChange}
+                disabled
               />
             </div>
             <div className="mb-4">
@@ -131,6 +131,7 @@ const SanPhamChiTiet = ({productId,closeModal}) => {
                 Ngày tạo:
               </label>
               <input
+                disabled
                 type="date"
                 value={formData.ngayTao}
                 name="ngayTao"

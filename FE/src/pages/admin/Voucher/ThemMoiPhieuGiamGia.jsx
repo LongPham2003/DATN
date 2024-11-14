@@ -12,7 +12,7 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
   const [formData, setFormData] = useState({
     tenVoucher: "",
     dieuKienGiamGia: "",
-    hinhThucGiam: "Tiền mặt",
+    hinhThucGiam: "VND",
     mucGiam: "",
     giamToiDa: "",
     soLuong: "",
@@ -23,25 +23,15 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    setFormData((prevState)=>({
+      ...prevState,
+      [name]:value
+    }))
+  };
 
-    setFormData((prevState) => {
-      let newValue = value;
-
-      // Kiểm tra nếu người dùng chọn "%" và "mucGiam" lớn hơn 100
-      if (name === "hinhThucGiam" && value === "%") {
-        if (prevState.mucGiam > 100) {
-          newValue = 100; // Giới hạn mucGiam về 100
-        }
-        return { ...prevState, [name]: value, mucGiam: Math.min(prevState.mucGiam, 100) };
-      }
-
-      // Nếu người dùng thay đổi mucGiam
-      if (name === "mucGiam" && formData.hinhThucGiam === "%") {
-        newValue = Math.min(value, 100); // Giới hạn mucGiam không quá 100
-      }
-
-      return { ...prevState, [name]: newValue };
-    });
+  // hàm format lại định dạng khi gửi về be
+  const formatCurrencyToNumber = (value) => {
+    return parseInt(value.replace(/[^\d]/g, ""));
   };
 
 
@@ -58,10 +48,10 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
             "http://localhost:8080/api/phieugiamgia/add",
             {
               tenVoucher: formData.tenVoucher,
-              dieuKienGiamGia: formData.dieuKienGiamGia,
+              dieuKienGiamGia: formatCurrencyToNumber(formData.dieuKienGiamGia),
               hinhThucGiam: formData.hinhThucGiam,
-              mucGiam: formData.mucGiam,
-              giamToiDa: formData.giamToiDa,
+              mucGiam: formatCurrencyToNumber(formData.mucGiam),
+              giamToiDa: formatCurrencyToNumber(formData.giamToiDa),
               soLuong: formData.soLuong,
               ngayBatDau: formData.ngayBatDau,
               ngayKetThuc: formData.ngayKetThuc,
@@ -76,7 +66,7 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
             setFormData({
               tenVoucher: "",
               dieuKienGiamGia: "",
-              hinhThucGiam: "Tiền mặt",
+              hinhThucGiam: "VND",
               mucGiam: "",
               giamToiDa: "",
               soLuong: "",
@@ -134,7 +124,7 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
                       value={formData.hinhThucGiam}
                       onChange={handleChange}
               >
-                <option value="Tiền mặt">Tiền mặt</option>
+                <option value="VND">Tiền mặt</option>
                 <option value="%">Phần trăm</option>
               </select>
               {/*<input*/}

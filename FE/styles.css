@@ -1,0 +1,7 @@
+.borderdoc {
+  border-right: 1px solid gray; /* Hoặc màu bạn muốn */
+  height: 50%; /* Chiều cao 50% */
+  /* display: flex; /* Sử dụng flexbox */
+  /* align-items: center; Căn giữa theo chiều dọc */
+  /* justify-content: center;  */
+}
