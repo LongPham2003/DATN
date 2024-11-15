@@ -1,7 +1,9 @@
 package com.example.shoes.repository;
 
 import com.example.shoes.dto.BaoCaoThongKeResponse;
+
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
+
 import com.example.shoes.dto.hoadon.response.HoaDonTheoIDResponse;
 
 import com.example.shoes.entity.HoaDon;
@@ -83,6 +85,7 @@ public interface HoaDonRepo extends JpaRepository<HoaDon, Integer> {
     @Query("select hd.id  from HoaDon hd where hd.trangThai = 'DA_THANH_TOAN' order by hd.id desc limit 1")
     Integer idHoaDon();
 
+
     // lấy hóa dơn theo ma phan trang loc
     @Query( value = "select  hd.id ,hd.create_at,hd.create_by,hd.update_at,hd.update_by ,hd.dia_chi_giao_hang, " +
             "hd.ma,hd.ngay_sua ,hd.ngay_tao ,hd.phuong_thuc_giao_hang , hd.phuong_thuc_thanh_toan , hd.so_dien_thoai ," +
@@ -98,6 +101,7 @@ public interface HoaDonRepo extends JpaRepository<HoaDon, Integer> {
             "order by  hd.create_at desc "
             ,nativeQuery = true)
     Page<HoaDon> getAll(Pageable pageable,String keyword,String phuongThucGiaoHang,String trangThai);
+
 
 
 }
