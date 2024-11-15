@@ -2,6 +2,7 @@ package com.example.shoes.controller;
 
 import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
+import com.example.shoes.dto.payment.PaymentRequest;
 import com.example.shoes.entity.HoaDon;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.service.HoaDonService;
@@ -84,7 +85,7 @@ public class HoaDonController {
         return ApiResponse.<Integer>builder().result(id).build();
     }
     @PostMapping("/thanh-toan/tc-vnpay/{id}")
-    private ApiResponse<Void> tc(@PathVariable Integer id){
-      return ApiResponse.<Void>builder().result(hoaDonService.updateHoaDonById(id)).build();
+    private ApiResponse<Void> tc(@PathVariable Integer id, @RequestBody PaymentRequest paymentRequest){
+      return ApiResponse.<Void>builder().result(hoaDonService.updateHoaDonById(id,paymentRequest)).build();
     }
 }

@@ -20,6 +20,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { ShoppingCartIcon } from "@heroicons/react/16/solid";
 import { ExportPDF, generatePDF } from "../XuatFilePDF/ExportPDF";
 import { getAllSPCTBH } from "./SanPhamService";
+import ThemMauSac from "../SanPham/ProductDetail/ThemMauSac.jsx";
+import ThanhToanCKTM from "./ThanhToanCKTM.jsx";
 
 export default function BanHangTaiQuay() {
   const [hoaDonFalse, setHoaDonFalse] = useState([]);
@@ -28,6 +30,15 @@ export default function BanHangTaiQuay() {
   const [SPCTChuaThanhToan, setSPCTChuaThanhToan] = useState([]);
   const [selectedHoaDonId, setSelectedHoaDonId] = useState(null); // State lưu trữ id hóa đơn được chọn
 
+  // model thanh toán 50 50
+  const [openThanhToanCKTM, setOpenThanhToanCKTM] = useState(false);
+
+  const openModalThanhToanCKTM = () => {
+    setOpenThanhToanCKTM(true);
+  };
+  const closeModalThanhToanCKTM = async () => {
+    setOpenThanhToanCKTM(false);
+  };
   const [danhSachPhieuGiamGia, setDanhSachPhieuGiamGia] = useState([]);
   const [tongTien, setTongTien] = useState(0);
   const [tienPhaiThanhToan, setTienPhaiThanhToan] = useState(0);
@@ -531,6 +542,7 @@ export default function BanHangTaiQuay() {
 
       if (response.data) {
         window.location.href = response.data;
+        localStorage.setItem("check", "VNPAY");
       }
     } catch (error) {
       console.error("Lỗi khi gọi API:", error);
@@ -830,17 +842,16 @@ export default function BanHangTaiQuay() {
                 <div className="my-2">
                   <Button
                     style={{ height: "50px", width: "450px" }}
-                    className="ml-[10px] border-2 border-yellow-500 text-lg font-medium text-yellow-500"
-
-
+                    className="ml-[10px] border-2 border-orange-600 text-lg font-medium text-orange-700"
+                    onClick={openModalThanhToanCKTM}
                   >
-                   Tiền mặt & Chuyển khoản
+                    Tiền mặt & Chuyển khoản
                   </Button>
                 </div>
                 <div className="my-2">
                   <Button
                     style={{ height: "50px", width: "450px" }}
-                    className="ml-[10px] border-2 border-red-500 text-lg font-medium text-red-500"
+                    className="ml-[10px] border-2 border-red-700 text-lg font-medium text-red-700"
                     onClick={huyHoaDon}
                   >
                     Hủy
@@ -997,6 +1008,26 @@ export default function BanHangTaiQuay() {
           {error && <p className="text-red-500">{error}</p>}
         </div>
       </Modal>
+
+
+      {openThanhToanCKTM && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className=" flex justify-between h-[200px] w-[600px] rounded-lg bg-white p-8">
+            <div className="">
+              <ThanhToanCKTM closeModel={closeModalThanhToanCKTM} maHoaDon={selectedHoaDonId}
+                             tienPhaiThanhToan={formatCurrencyToNumber(tienPhaiThanhToan)}
+              />
+
+            </div>
+            <button
+              onClick={closeModalThanhToanCKTM}
+              className="h-10 rounded bg-red-500 px-4 text-white hover:bg-red-600"
+            >
+              X
+            </button>
+          </div>
+        </div>
+      )}
 
       <ToastContainer
         position="top-right"

@@ -6,6 +6,7 @@ import com.example.shoes.dto.hoadon.request.HoaDonRequest;
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
 import com.example.shoes.dto.hoadon.response.HoaDonTheoIDResponse;
 import com.example.shoes.dto.hoadonchitiet.request.HoaDonChiTietRequest;
+import com.example.shoes.dto.payment.PaymentRequest;
 import com.example.shoes.dto.phuongthucthanhtoan.request.PhuongThucThanhToanRequest;
 import com.example.shoes.dto.vnpay.response.TransactionStatus;
 import com.example.shoes.entity.*;
@@ -909,11 +910,26 @@ public class HoaDonServiceImpl implements HoaDonService {
     }
 
     @Override
-    public Void updateHoaDonById(Integer idHoaDon) {
+    public Void updateHoaDonById(Integer idHoaDon, PaymentRequest paymentRequest) {
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon).get();
         hoaDon.setTrangThai(TrangThai.DA_THANH_TOAN);
-        hoaDon.setPhuongThucThanhToan("VNPAY");
+        hoaDon.setPhuongThucThanhToan(paymentRequest.getPhuongThucThanhToan());
         hoaDonRepo.save(hoaDon);
+
+        PhuongThucThanhToan phuongThucThanhToan = new PhuongThucThanhToan();
+        phuongThucThanhToan.setIdHoaDon(hoaDon);
+        phuongThucThanhToan.setTenPhuongThuc(hoaDon.getPhuongThucThanhToan());
+        phuongThucThanhToan.setGhiChu("VNPAY " + hoaDon.getId() + " số tiền: " + hoaDon.getTienPhaiThanhToan());
+        phuongThucThanhToanRepo.save(phuongThucThanhToan);
+
+        NhanVien nhanVien = getCurrentNhanVien();
+
+        LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
+        lichSuHoaDon.setIdHoaDon(hoaDon);
+        lichSuHoaDon.setMoTa("Thanh toán thành công " + "id hóa đon:" + hoaDon.getId() + "so tien :" + hoaDon.getTienPhaiThanhToan());
+        lichSuHoaDon.setThoiGian(LocalDate.now());
+        lichSuHoaDon.setNguoiThucHien(nhanVien.getHoTen());
+        lichSuHoaDonRepo.save(lichSuHoaDon);
         return null;
     }
 

@@ -6,6 +6,7 @@ import com.example.shoes.dto.hoadon.request.HoaDonRequest;
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
 import com.example.shoes.dto.hoadon.response.HoaDonTheoIDResponse;
 import com.example.shoes.dto.hoadonchitiet.request.HoaDonChiTietRequest;
+import com.example.shoes.dto.payment.PaymentRequest;
 import com.example.shoes.dto.phuongthucthanhtoan.request.PhuongThucThanhToanRequest;
 import com.example.shoes.entity.HoaDon;
 
@@ -37,7 +38,7 @@ public interface HoaDonService {
 
  Integer idHoaDon();
 
- Void updateHoaDonById(Integer idHoaDon);
+ Void updateHoaDonById(Integer idHoaDon , PaymentRequest paymentRequest);
 
  PhanTrangResponse<HoaDonResponse> getHoaDon(int pageNumber,int pageSize,String keyword,String phuongThucGiaoHang,String trangThai);
 }
