@@ -341,7 +341,7 @@ export default function BanHangTaiQuay() {
   //Huy Hoa Don
   const huyHoaDon = async () => {
     try {
-      await axios.delete(ApiHuyHoaDon);
+      await axios.put(ApiHuyHoaDon);
       toast.success("Hủy hóa đơn thành công");
       LayDanhSachHoaDonChuaThanhToan();
     } catch (error) {
