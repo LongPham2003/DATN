@@ -69,6 +69,16 @@ export function Sidebar() {
             </Typography>
           </ListItem>
         </Link>
+        <Link to="/admin/hoadon">
+          <ListItem className="ml-3 h-[50px] p-0">
+            <ListItemPrefix>
+              <PresentationChartBarIcon className="h-5 w-5" />
+            </ListItemPrefix>
+            <Typography color="blue-gray" className="mr-auto font-normal">
+              Hóa Đơn
+            </Typography>
+          </ListItem>
+        </Link>
         <Link to="/admin/banhangoff">
           <ListItem className="ml-3 h-[50px] p-0">
             <ListItemPrefix>

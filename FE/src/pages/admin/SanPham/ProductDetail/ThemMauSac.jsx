@@ -57,6 +57,7 @@ export default function ThemMauSac({ closeModel }) {
         </button>
         {/* <p>{error}</p> */}
       </div>
+      {error && <p className="mb-4 text-sm text-red-500">{error}</p>}
     </>
   );
 }

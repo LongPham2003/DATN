@@ -6,10 +6,10 @@ import {
   Tabs,
   Modal,
   Popconfirm,
-  InputNumber
+  InputNumber,
 } from "antd";
 import { useEffect, useState } from "react";
-import SanPhamBanTaiQuay from "./SanPhamBanHang";
+import SanPhamBanTaiQuay, { getAllSPBH } from "./SanPhamBanHang";
 import axios from "../../../api/axiosConfig";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import LayAnhTheoIdSP from "../SanPham/Product/LayANhTheoIDSP";
@@ -19,6 +19,9 @@ import DiaCHiMacDinhKhachHang from "./DiaChiMacDinhKhachHang";
 import "react-toastify/dist/ReactToastify.css";
 import { ShoppingCartIcon } from "@heroicons/react/16/solid";
 import { ExportPDF, generatePDF } from "../XuatFilePDF/ExportPDF";
+
+import { getAllSPCTBH } from "./SanPhamService";
+
 
 export default function BanHangTaiQuay() {
   const [hoaDonFalse, setHoaDonFalse] = useState([]);
@@ -51,7 +54,9 @@ export default function BanHangTaiQuay() {
   let ApiLayHoaDonChuaThanhToan = `http://localhost:8080/api/hoadon/getall-chuathanhtoan`; // Danh Sach Hoa DOn CHo
   let ApiLaySanPhamOHoaDon = `http://localhost:8080/api/hoadonchitiet/SPCTbyidHD`; // Gio Hang
   let ApiUpdateSoLuongSPTrongHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/update`; //Update So Luong San Pham trong gio hang
-  let ApiLaySoLuongTonCuaSPCT = `http://localhost:8080/api/sanphamchitiet/${idSPCTDangChon}`; // Lấy số lượng tồn  để valid
+
+  let ApiLaySoLuongTonCuaSPCT = `http://localhost:8080/api/sanphamchitiet`; // Lấy số lượng tồn  để valid
+
   let ApiLayThongTinThanhToanTheoIdHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/gettheoid`; // Lay các thông tin tiền , voucher, khách hàng của hóa đơn
   let ApiLayPhieuGiamGia = `http://localhost:8080/api/phieugiamgia/trang-thai-true`; // Danh Sach Phiếu Giam giá
   let ApiHuyHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/delete/${selectedHoaDonId}`; // Hủy Hóa đơn
@@ -80,8 +85,9 @@ export default function BanHangTaiQuay() {
       if (hoaDonList.length > 0) {
         setSelectedHoaDonId(hoaDonList[0].id); // Chọn id hóa đơn đầu tiên khi tải dữ liệu lần đầu
         const hd = await axios.get(
-          `${ApiLayThongTinHoaDon}/${hoaDonList[0].id}`
+          `${ApiLayThongTinHoaDon}/${hoaDonList[0].id}`,
         );
+
         // setMaHD(hd.data.result.ma);
       }
 
@@ -94,25 +100,19 @@ export default function BanHangTaiQuay() {
   //Lấy danh sách hóa đơn
   const LayMaHoaDon = async () => {
     try {
-
-      const hd = await axios.get(
-        `${ApiLayThongTinHoaDon}/${selectedHoaDonId}`
-      );
+      const hd = await axios.get(`${ApiLayThongTinHoaDon}/${selectedHoaDonId}`);
 
       setMaHD(hd.data.result.ma);
-
 
     } catch (error) {
       console.log("Lấy hóa đơn lỗi:", error);
     }
   };
-  console.log(maHD);
-
 
   //Lấy các kiểu tiền của hóa đơn
   const LayThongTinThanhToanCuaHoaDon = async () => {
     const ttThanhToan = await axios.get(
-      `${ApiLayThongTinThanhToanTheoIdHoaDon}/${selectedHoaDonId}`
+      `${ApiLayThongTinThanhToanTheoIdHoaDon}/${selectedHoaDonId}`,
     );
     if (ttThanhToan.data.result) {
       setTongTien(ttThanhToan.data.result.tongTien);
@@ -123,7 +123,7 @@ export default function BanHangTaiQuay() {
       if (ttThanhToan.data.result.idKhachHang != null) {
         try {
           const khachHang = await axios.get(
-            `${ApiLayThongTinKhachHang}/${ttThanhToan.data.result.idKhachHang}`
+            `${ApiLayThongTinKhachHang}/${ttThanhToan.data.result.idKhachHang}`,
           );
           // console.log(khachHang);
           setTenKhachHang(khachHang.data.result.hoTen || "Khách lẻ");
@@ -144,7 +144,7 @@ export default function BanHangTaiQuay() {
   const LayChiTietSanPham = async () => {
     try {
       const response = await axios.get(
-        `${ApiLaySanPhamOHoaDon}/${selectedHoaDonId}`
+        `${ApiLaySanPhamOHoaDon}/${selectedHoaDonId}`,
       );
       const danhSachSanPhamChiTiet = response.data.result;
       setSPCTChuaThanhToan(danhSachSanPhamChiTiet); // Cập nhật state với sản phẩm chi tiết của hóa đơn được chọn
@@ -154,7 +154,9 @@ export default function BanHangTaiQuay() {
   };
   // Lấy số lượng tồn của sản phẩm
   const LaySoLuongTonCuaSPCT = async () => {
-    const responseSoLuongTon = await axios.get(ApiLaySoLuongTonCuaSPCT);
+    const responseSoLuongTon = await axios.get(
+      `${ApiLaySoLuongTonCuaSPCT}/${idSPCTDangChon}`,
+    );
     setSoLuongTonCuaSPCT(responseSoLuongTon.data.result.soLuong);
     console.log("soLuongTonCuaSPCT", responseSoLuongTon.data.result.soLuong);
   };
@@ -170,21 +172,21 @@ export default function BanHangTaiQuay() {
       const khachHang = await axios.get(ApiLayTatCaKhachHang);
       setDanhSachKhachHang(khachHang.data.result);
       // console.log(khachHang.data.result.diaChi[0].diaChiChiTiet);
-    } catch (error) {
-      console.error("Error:", error);
-    }
+    } catch (error) {}
   };
 
   const XoaSPKhoiGioHang = async (idSPCT) => {
     try {
       await axios.delete(
-        `http://localhost:8080/api/hoadonchitiet/hoadon/${selectedHoaDonId}/spct/${idSPCT}`
+        `http://localhost:8080/api/hoadonchitiet/hoadon/${selectedHoaDonId}/spct/${idSPCT}`,
       );
       toast.success("Xóa thành công");
       await LayChiTietSanPham(); // Cập nhật giỏ hàng sau khi thêm sản phẩm
       await LayThongTinThanhToanCuaHoaDon(); // Cập nhật thông tin hóa đơn mới, bao gồm tổng tiền
     } catch (error) {
+
       console.error("Error:", error);
+
       toast.error("Có lỗi xẩy ra");
     }
   };
@@ -226,76 +228,109 @@ export default function BanHangTaiQuay() {
   };
 
   const upDateSoLuongMua = async () => {
+    const responseSoLuongTon = await axios.get(
+      `${ApiLaySoLuongTonCuaSPCT}/${idSPCTDangChon}`,
+    );
+    const SLT = responseSoLuongTon.data.result.soLuong;
+    const previousQuantity = thaydoiSoLuongMua; // Store the previous quantity
     try {
+      // Check if the quantity to update exceeds the available stock
+      if (thaydoiSoLuongMua > SLT) {
+        console.log(SLT);
+        toast.error(
+          `Số lượng tồn của sản phẩm còn ${SLT} sản phẩm. Không thể cập nhật!`,
+        );
+        return; // Exit the function if the condition is met
+      }
+
       await axios.put(`${ApiUpdateSoLuongSPTrongHoaDon}/${selectedHoaDonId}`, {
         idSpct: idSPCTDangChon,
-        soLuong: thaydoiSoLuongMua
+        soLuong: thaydoiSoLuongMua,
       });
+
+      // Check if SLT is -1 after the update
+      const updatedResponseSoLuongTon = await axios.get(
+        `${ApiLaySoLuongTonCuaSPCT}/${idSPCTDangChon}`,
+      );
+      const updatedSLT = updatedResponseSoLuongTon.data.result.soLuong;
+      if (updatedSLT === -1) {
+        toast.error("Cập nhật không thành công, số lượng tồn không hợp lệ!");
+        setThayDoiSoLuongMua(previousQuantity); // Restore previous quantity
+        return; // Exit the function if SLT is -1
+      }
 
       await Promise.all([
         LayChiTietSanPham(), // Cập nhật giỏ hàng sau khi thêm sản phẩm
         LayThongTinThanhToanCuaHoaDon(), // Cập nhật thông tin hóa đơn mới, bao gồm tổng tiền
-        LaySoLuongTonCuaSPCT()
+        LaySoLuongTonCuaSPCT(),
       ]);
       toast.success("Cập nhật thành công");
     } catch (error) {
       console.log(error);
+      setThayDoiSoLuongMua(previousQuantity); // Restore previous quantity on error
       toast.error("Cập nhật thất bại");
     }
   };
 
   // Tăng số lượng mua lên 1
   const increment = async (idSpct, newQuantity) => {
-    setIdSPCTDangChon(idSpct); // Cập nhật id của sản phẩm đang chọn
-    await LaySoLuongTonCuaSPCT(); // Lấy số lượng tồn của sản phẩm đang chọn
+    try {
+      // Đợi lấy số lượng tồn trước khi kiểm tra
+      const responseSoLuongTon = await axios.get(
+        `http://localhost:8080/api/sanphamchitiet/${idSpct}`,
+      );
+      const soLuongTon = responseSoLuongTon.data.result.soLuong;
 
-    if (soLuongTonCuaSPCT > 0) {
-      setThayDoiSoLuongMua(newQuantity); // Cập nhật ngay lập tức trên giao diện
-      try {
+      if (soLuongTon > 0) {
+        setThayDoiSoLuongMua(newQuantity);
         await axios.put(
           `${ApiUpdateSoLuongSPTrongHoaDon}/${selectedHoaDonId}`,
           {
             idSpct: idSpct,
-            soLuong: newQuantity
-          }
+            soLuong: newQuantity,
+          },
         );
-
         await Promise.all([
-          LayChiTietSanPham(), // Cập nhật giỏ hàng sau khi thêm sản phẩm
-          LayThongTinThanhToanCuaHoaDon(), // Cập nhật thông tin hóa đơn mới, bao gồm tổng tiền
-          LaySoLuongTonCuaSPCT()
+
+          LayChiTietSanPham(),
+          LayThongTinThanhToanCuaHoaDon(),
+
         ]);
         toast.success("Cập nhật thành công");
-      } catch (error) {
-        console.log(error);
-        toast.error("Cập nhật thất bại");
+      } else {
+        toast.warning("Sản phẩm đã hết hàng, không thể tăng số lượng");
       }
-    } else {
-      toast.warning("Sản phẩm đã hết hàng, không thể tăng số lượng");
+    } catch (error) {
+      console.log(error);
+      toast.error("Cập nhật thất bại");
     }
   };
+
+
   //Giam so luong mua di 1
   const decrement = async (idSpct, newQuantity) => {
     if (newQuantity > 0) {
-      // Đ��m bảo số lượng không âm
+
       setThayDoiSoLuongMua(newQuantity);
       setIdSPCTDangChon(idSpct); // Cập nhật id của sản phẩm đang chọn
-      await LaySoLuongTonCuaSPCT(); // Gọi hàm lấy số lượng tồn của sản phẩm sau khi cập nhật id
+      // await LaySoLuongTonCuaSPCT(); // Gọi hàm lấy số lượng tồn của sản phẩm sau khi cập nhật id
 
       try {
         await axios.put(
           `${ApiUpdateSoLuongSPTrongHoaDon}/${selectedHoaDonId}`,
           {
             idSpct: idSpct,
-            soLuong: newQuantity
-          }
+            soLuong: newQuantity,
+          },
         );
-        toast.success("Cập nhật thành công");
         await Promise.all([
           LayChiTietSanPham(), // Cập nhật giỏ hàng sau khi thêm sản phẩm
           LayThongTinThanhToanCuaHoaDon(), // Cập nhật thông tin hóa đơn mới, bao gồm tổng tiền
-          LaySoLuongTonCuaSPCT()
+
+          // LaySoLuongTonCuaSPCT(),
+
         ]);
+        toast.success("Cập nhật thành công");
       } catch (error) {
         console.log(error);
         toast.error("Cập nhật thất bại");
@@ -319,7 +354,7 @@ export default function BanHangTaiQuay() {
   const addPhieuGiamGia = async () => {
     try {
       await axios.post(
-        `${ApiAddPhieuGiamGiaVaoHoaDon}/${idPhieuGiamGiaDangChon}`
+        `${ApiAddPhieuGiamGiaVaoHoaDon}/${idPhieuGiamGiaDangChon}`,
       );
       toast.success("Áp dụng thành công");
       LayThongTinThanhToanCuaHoaDon();
@@ -341,7 +376,7 @@ export default function BanHangTaiQuay() {
     console.log("ID phiếu giảm giá đang chọn:", idPhieuGiamGiaDangChon);
     try {
       await axios.delete(
-        `${ApiXoaPhieuGiamGiaKhoiHoaDon}/${idPhieuGiamGiaDangChon}`
+        `${ApiXoaPhieuGiamGiaKhoiHoaDon}/${idPhieuGiamGiaDangChon}`,
       );
       toast.success("Không áp dụng voucher tahnfh công");
       LayThongTinThanhToanCuaHoaDon();
@@ -385,10 +420,9 @@ export default function BanHangTaiQuay() {
   const tinhTienThua = (value) => {
     // Loại bỏ "VNĐ" và dấu chấm, sau đó chuyển thành số
     const tienPhaiThanhToanNum = Number(
-      tienPhaiThanhToan.replace(/[.VNĐ]/g, "").trim()
+      tienPhaiThanhToan.replace(/[.VNĐ]/g, "").trim(),
     );
 
-    console.log(tienPhaiThanhToanNum);
 
     setTienKhachDua(value);
 
@@ -410,7 +444,7 @@ export default function BanHangTaiQuay() {
       // Thực hiện gọi API thanh toán và lấy phản hồi
       const response = await axios.post(ApiThanhToanHoaDon, {
         phuongThucThanhToan: "Tiền mặt",
-        tienKhachDua: tienKhachDua
+        tienKhachDua: tienKhachDua,
       });
 
 
@@ -424,9 +458,14 @@ export default function BanHangTaiQuay() {
       await LayDanhSachHoaDonChuaThanhToan();
       closethanhToan();
 
-      // Gọi hàm lấy ID lớn nhất sau khi thanh toán đã hoàn tất
-      // await LayIdLonNhat(); // Gọi hàm này sau khi thanh toán thành công
-      handleGeneratePDF(); // Gọi hàm tạo PDF với ID hóa đơn
+
+      // Gọi hàm tạo PDF với ID hóa đơn
+      setTimeout(() => {
+        handleGeneratePDF();
+        setTimeout(() => {
+          window.location.reload();
+        }, 900);
+      }, 900);
 
       // Xóa ID tạm thời sau 1 phút
       setTimeout(() => {
@@ -439,7 +478,6 @@ export default function BanHangTaiQuay() {
     }
   };
 
-
   const handleGeneratePDF = () => {
     generatePDF();
   };
@@ -448,7 +486,7 @@ export default function BanHangTaiQuay() {
     Promise.all([
       LayDanhSachHoaDonChuaThanhToan(),
       LayDanhSachPhieuGiamGia(),
-      LayDanhSachKhacHang()
+      LayDanhSachKhacHang(),
     ]);
 
     // LayThongTinThanhToanCuaHoaDon();
@@ -460,13 +498,15 @@ export default function BanHangTaiQuay() {
       Promise.all([
         LayChiTietSanPham(selectedHoaDonId),
         LayThongTinThanhToanCuaHoaDon(selectedHoaDonId),
-        LayMaHoaDon()
+
+        LayMaHoaDon(),
         // LayIdLonNhat(),
+
       ]);
 
       // Tìm hóa đơn trong `hoaDonFalse` có `id` khớp với `selectedHoaDonId`
       const selectedHoaDon = hoaDonFalse.find(
-        (hoaDon) => hoaDon.id === Number(selectedHoaDonId) // Ép kiểu `selectedHoaDonId` thành số để so sánh
+        (hoaDon) => hoaDon.id === Number(selectedHoaDonId), // Ép kiểu `selectedHoaDonId` thành số để so sánh
       );
 
       // Nếu tìm thấy `selectedHoaDon`, cập nhật `tongTien`, `tienPhaiThanhToan` và `tienDuocGiam`
@@ -483,32 +523,39 @@ export default function BanHangTaiQuay() {
     }
   }, [selectedHoaDonId, hoaDonFalse]);
 
-  // useEffect(() => {
-  //   if (idLonNhat) {
-  //     handleGeneratePDF(); // Gọi hàm tạo PDF khi idLonNhat đã được cập nhật
-  //   }
-  // }, [idLonNhat]);
-
 
   // hàm format lại định dạng khi gửi về be
   const formatCurrencyToNumber = (value) => {
     return parseInt(value.replace(/[^\d]/g, ""));
   };
+  const formatTien = (number) => {
+    const roundedNumber = Math.round(Number(number));
+    // Format the number with thousands separators
+    return `${roundedNumber.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} VNĐ`;
 
-// thanh toán vnpay
+  };
+
+  // thanh toán vnpay
   const handlePaymentClick = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/api/paymentvnpay/create-payment", {
-        params: { maHoaDon: selectedHoaDonId, amount: formatCurrencyToNumber(tienPhaiThanhToan) }
-      });
+      const response = await axios.get(
+        "http://localhost:8080/api/paymentvnpay/create-payment",
+        {
+          params: {
+            maHoaDon: selectedHoaDonId,
+            amount: formatCurrencyToNumber(tienPhaiThanhToan),
+          },
+        },
+      );
 
       if (response.data) {
-        window.location.href = response.data
+        window.location.href = response.data;
       }
     } catch (error) {
       console.error("Lỗi khi gọi API:", error);
     }
   };
+
 
   return (
     <>
@@ -541,7 +588,7 @@ export default function BanHangTaiQuay() {
               animated={{ inkBar: true, tabPane: true }} // Bật hiệu ứng chuyển tab
               items={hoaDonFalse.map((tab) => ({
                 label: tab.ma, // Tên tab
-                key: tab.id // Khóa của tab
+                key: tab.id, // Khóa của tab
               }))}
             />
           </div>
@@ -553,7 +600,7 @@ export default function BanHangTaiQuay() {
                 height: "35px",
                 backgroundColor: "yellow",
                 color: "black",
-                fontWeight: "bold"
+                fontWeight: "bold",
               }}
               onClick={openModal}
             >
@@ -568,110 +615,120 @@ export default function BanHangTaiQuay() {
                 <div className="max-h-[570px] overflow-y-auto">
                   <table className="min-w-full text-center text-sm font-light">
                     <thead className="sticky top-0 bg-blue-700 text-xl font-medium text-white">
-                    <tr>
-                      <th className="w-10 px-6 py-4">STT</th>
-                      <th className="w-[130px] px-6 py-4">Ảnh</th>
-                      <th className="w-52 px-6 py-4">Sản phẩm</th>
-                      <th className="w-52 px-6 py-4">Số lượng</th>
-                      <th className="w-52 px-6 py-4">Thành tiền</th>
-                      <th className="px-6 py-4">Hành động</th>
-                    </tr>
+                      <tr>
+                        <th className="w-10 px-6 py-4">STT</th>
+                        <th className="w-[130px] px-6 py-4">Ảnh</th>
+                        <th className="w-52 px-6 py-4">Sản phẩm</th>
+                        <th className="w-52 px-6 py-4">Số lượng</th>
+                        <th className="w-52 px-6 py-4">Thành tiền</th>
+                        <th className="px-6 py-4">Hành động</th>
+                      </tr>
                     </thead>
                     <tbody>
-                    {SPCTChuaThanhToan.map((SPCT, index) => (
-                      <tr
-                        key={SPCT.id}
-                        className="hover:bg-gray-100"
-                        onMouseEnter={() => {
-                          setIdSPCTDangChon(SPCT.idSpct);
-                          setThayDoiSoLuongMua(SPCT.soLuong);
-                        }}
-                        onMouseLeave={() => {
-                          setIdSPCTDangChon(null);
-                        }}
-                      >
-                        <td>{index + 1}</td>
-                        <td>
-                          <LayAnhTheoIdSP
-                            id={SPCT.idSpct}
-                            className="h-[120px] w-[120px]"
-                          />
-                        </td>
-                        <td>
-                          {SPCT.tenSanPham} <br />
-                          {SPCT.maSPCT} [{SPCT.kichThuoc} - {SPCT.mauSac}]
-                          <br />
-                          {SPCT.donGia}
-                        </td>
+                      {SPCTChuaThanhToan.map((SPCT, index) => (
+                        <tr
+                          key={SPCT.id}
+                          className="hover:bg-gray-100"
+                          onMouseEnter={() => {
+                            setIdSPCTDangChon(SPCT.idSpct);
+                            setThayDoiSoLuongMua(SPCT.soLuong);
+                          }}
+                          onMouseLeave={() => {
+                            setIdSPCTDangChon(null);
+                          }}
+                        >
+                          <td>{index + 1}</td>
+                          <td>
+                            <LayAnhTheoIdSP
+                              id={SPCT.idSpct}
+                              className="h-[120px] w-[120px]"
+                            />
+                          </td>
+                          <td>
+                            {SPCT.tenSanPham} <br />
+                            {SPCT.maSPCT} [{SPCT.kichThuoc} - {SPCT.mauSac}]
+                            <br />
+                            {formatTien(SPCT.donGia)}
+                          </td>
 
-                        <td className="text-center">
-                          <div className="flex h-full items-center justify-center">
-                            <div className="flex items-center space-x-2">
-                              <button
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  setIdSPCTDangChon(SPCT.idSpct);
-                                  decrement(SPCT.idSpct, SPCT.soLuong - 1); // Giảm 1 số lượng
-                                }}
-                                className="flex h-8 w-8 items-center justify-center rounded bg-gray-200"
-                              >
-                                -
-                              </button>
-                              <input
-                                type="text"
-                                value={
-                                  idSPCTDangChon === SPCT.idSpct
-                                    ? thaydoiSoLuongMua
-                                    : SPCT.soLuong
-                                }
-                                className="h-8 w-12 rounded border border-gray-300 text-center"
-                                onClick={() => {
-                                  setIdSPCTDangChon(SPCT.idSpct);
-                                  setThayDoiSoLuongMua(SPCT.soLuong);
-                                }}
-                                onChange={(event) => {
-                                  setThayDoiSoLuongMua(
-                                    Number(event.target.value)
-                                  );
-                                }}
-                                onBlur={() => upDateSoLuongMua()} // Chỉ cập nhật khi số lượng thay đổi
-                              />
+                          <td className="text-center">
+                            <div className="flex h-full items-center justify-center">
+                              <div className="flex items-center space-x-2">
+                                <button
+                                  onClick={(e) => {
+                                    e.preventDefault();
 
-                              <button
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  setIdSPCTDangChon(SPCT.idSpct);
-                                  increment(SPCT.idSpct, SPCT.soLuong + 1); // Tăng 1 số lượng
-                                }}
-                                className="flex h-8 w-8 items-center justify-center rounded bg-gray-200"
-                                // disabled={soLuongTonCuaSPCT === 0}
-                              >
-                                +
-                              </button>
+                                    decrement(SPCT.idSpct, SPCT.soLuong - 1); // Giảm 1 số lượng
+                                  }}
+                                  className="flex h-8 w-8 items-center justify-center rounded bg-gray-200"
+                                >
+                                  -
+                                </button>
+                                <input
+                                  type="text"
+                                  value={
+                                    idSPCTDangChon === SPCT.idSpct
+                                      ? thaydoiSoLuongMua
+                                      : SPCT.soLuong
+                                  }
+                                  className="h-8 w-12 rounded border border-gray-300 text-center"
+                                  onClick={() => {
+                                    setIdSPCTDangChon(SPCT.idSpct);
+                                    setThayDoiSoLuongMua(SPCT.soLuong);
+                                    // LaySoLuongTonCuaSPCT();
+                                  }}
+                                  onChange={(event) => {
+                                    setThayDoiSoLuongMua(
+                                      Number(event.target.value),
+                                    );
+                                  }}
+                                  onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                      upDateSoLuongMua();
+                                    }
+                                  }} // Chỉ cập nhật khi số lượng thay đổi
+                                />
+
+                                <button
+                                  onMouseOver={() => {
+                                    setIdSPCTDangChon(SPCT.idSpct);
+                                  }}
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    setIdSPCTDangChon(SPCT.idSpct);
+                                    increment(SPCT.idSpct, SPCT.soLuong + 1); // Tăng 1 số lượng
+                                  }}
+                                  className="flex h-8 w-8 items-center justify-center rounded bg-gray-200"
+                                  // disabled={soLuongTonCuaSPCT === 0}
+                                >
+                                  +
+                                </button>
+                              </div>
                             </div>
-                          </div>
-                        </td>
+                          </td>
 
-                        <td>{SPCT.donGia * SPCT.soLuong}</td>
-                        <td>
-                          <Popconfirm
-                            title="Delete the task"
-                            description="Are you sure to delete this task?"
-                            okText="Yes"
-                            cancelText="No"
-                            onConfirm={(e) => {
-                              e.preventDefault();
-                              XoaSPKhoiGioHang(SPCT.idSpct);
-                            }}
-                          >
-                            <Button type="primary" danger>
-                              <TrashIcon className="h-5 w-5 text-white" />
-                              khách k mua thì dã nó
-                            </Button>
-                          </Popconfirm>
-                        </td>
-                      </tr>
-                    ))}
+                          <td>{formatTien(SPCT.donGia * SPCT.soLuong)}</td>
+                          <td>
+                            <Popconfirm
+                              title="Delete the task"
+                              description="Are you sure to delete this task?"
+                              okText="Yes"
+                              cancelText="No"
+                              onConfirm={(e) => {
+                                e.preventDefault();
+                                XoaSPKhoiGioHang(SPCT.idSpct);
+                              }}
+                            >
+                              <Button type="primary" danger>
+                                <TrashIcon className="h-5 w-5 text-white" />
+
+                                Xóa
+
+                              </Button>
+                            </Popconfirm>
+                          </td>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                 </div>
@@ -732,8 +789,8 @@ export default function BanHangTaiQuay() {
                               <hr />
                             </div>
                           </>
-                        )
-                      }))
+                        ),
+                      })),
                     ]}
                     fieldNames={{ label: "description", value: "value" }} // Hiển thị thông tin chi tiết khi mở dropdown
                     filterOption={
@@ -789,8 +846,7 @@ export default function BanHangTaiQuay() {
                   <Button
                     style={{ height: "50px", width: "450px" }}
                     className="ml-[10px] border-2 border-yellow-500 text-lg font-medium text-yellow-500"
-                     onClick={handlePaymentClick}
-
+                    onClick={handlePaymentClick}
                   >
                     Chuyển khoản
                   </Button>
@@ -828,7 +884,9 @@ export default function BanHangTaiQuay() {
                         description: (
                           <>
                             <div
-                              onMouseEnter={() => {
+
+                              onMouseDown={() => {
+
                                 setIdKhachHangDangChon(kh.id);
                               }}
                             >
@@ -843,8 +901,8 @@ export default function BanHangTaiQuay() {
                               <hr />
                             </div>
                           </>
-                        )
-                      }))
+                        ),
+                      })),
                     ]}
                     fieldNames={{ label: "description", value: "value" }} // Hiển thị thông tin chi tiết khi mở dropdown
                     filterOption={
@@ -904,6 +962,7 @@ export default function BanHangTaiQuay() {
         <SanPhamBanTaiQuay
           id={selectedHoaDonId}
           onProductAdded={closeModalAndReloadCart}
+          thayDoiSoLuong={upDateSoLuongMua}
         />
       </Modal>
 
@@ -930,7 +989,7 @@ export default function BanHangTaiQuay() {
             <Button key="submit" type="primary">
               Thanh toán và in hóa đơn
             </Button>
-          </Popconfirm>
+          </Popconfirm>,
         ]}
       >
         <div className="my-4">
@@ -939,7 +998,7 @@ export default function BanHangTaiQuay() {
             addonAfter={"VNĐ"}
             defaultValue={0}
             onChange={(value) => {
-              tinhTienThua(value);
+              tinhTienThua(value), console.log(value);
             }}
           />
         </div>

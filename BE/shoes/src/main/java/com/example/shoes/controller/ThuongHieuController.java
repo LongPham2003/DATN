@@ -7,8 +7,11 @@ import com.example.shoes.dto.thuonghieu.response.ThuongHieuResponse;
 import com.example.shoes.entity.ThuongHieu;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.service.ThuongHieuService;
+import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,7 +51,10 @@ public class ThuongHieuController {
 
 
     @PostMapping("/add")
-    public ApiResponse<ThuongHieuResponse> create(@RequestBody ThuongHieuRequest request) {
+    public ApiResponse<ThuongHieuResponse> create(@Valid  @RequestBody ThuongHieuRequest request, BindingResult  result) {
+        if(result.hasErrors()) {
+            throw new ValidationException(result.getFieldError().getDefaultMessage());
+        }
         ThuongHieuResponse thuongHieuResponses = thuongHieuService.create(request);
         return ApiResponse.<ThuongHieuResponse>builder()
                 .result(thuongHieuResponses)
@@ -56,7 +62,10 @@ public class ThuongHieuController {
     }
 
     @PutMapping("/update/{id}")
-    public ApiResponse<ThuongHieuResponse> update(@PathVariable Integer id, @RequestBody ThuongHieuRequest request) {
+    public ApiResponse<ThuongHieuResponse> update(@Valid @PathVariable Integer id, @RequestBody ThuongHieuRequest request,BindingResult result) {
+        if(result.hasErrors()) {
+            throw new ValidationException(result.getFieldError().getDefaultMessage());
+        }
         ThuongHieuResponse updated = thuongHieuService.update(id, request);
         return ApiResponse.<ThuongHieuResponse>builder()
                 .result(updated)

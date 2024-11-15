@@ -48,7 +48,7 @@ export default function ThemChatLieu({closeModel}) {
                placeholder="Mời nhập tên chất liệu" />
         <button onClick={them} className="border bordered bg-blue-400 h-10 rounded-lg">Thêm</button>
       </div>
-
+      {error && <p className="mb-4 text-sm text-red-500">{error}</p>}
     </>
   );
 }

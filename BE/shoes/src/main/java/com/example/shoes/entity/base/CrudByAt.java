@@ -40,7 +40,7 @@ public class CrudByAt {
     public void handleBeforUpdate() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         updatedAt = LocalDateTime.now();
-        updatedBy = authentication.getName();
+        updatedBy = authentication != null ? authentication.getName() : "system" ;
     }
 
 }

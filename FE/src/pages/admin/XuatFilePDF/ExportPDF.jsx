@@ -2,7 +2,9 @@ import html2pdf from "html2pdf.js"; // Thêm import html2pdf
 import { useState } from "react";
 import { useEffect } from "react";
 import axios from "./../../../api/axiosConfig";
+
 import { Link } from "react-router-dom";
+
 
 export const generatePDF = () => {
   // Tìm phần tử với ID 'main'
@@ -39,6 +41,7 @@ export const ExportPDF = ({ idHoaDon }) => {
 
   let ApiLayThongTinHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/${idHoaDon}`;
   let ApiLayDanhSachSanPham = `http://localhost:8080/api/hoadonchitiet/SPCTbyidHD/${idHoaDon}`;
+
   const fetchData = async () => {
     try {
       // Gọi cả hai API đồng thời
@@ -64,18 +67,21 @@ export const ExportPDF = ({ idHoaDon }) => {
     }
   };
 
-// Gọi fetchData từ một sự kiện khác, ví dụ khi một prop thay đổi
+  // Gọi fetchData từ một sự kiện khác, ví dụ khi một prop thay đổi
   useEffect(() => {
     if (idHoaDon) {
       fetchData(); // Gọi fetchData khi idHoaDon có giá trị
     }
   }, [idHoaDon]); // Chạy lại khi idHoaDon thay đổi
+
   return (
     <>
       <div
         className="p-4 font-mono"
         id="main"
-        style={{ width: "620px", height: "800px" }}
+
+        style={{ width: "620px", height: "auto" }}
+
       >
         <div className="text-center text-3xl font-bold uppercase">
           <span>Hóa đơn mua hàng</span>
@@ -102,51 +108,57 @@ export const ExportPDF = ({ idHoaDon }) => {
         <div className="my-3">
           <table className="border-collapse border-2 border-solid border-gray-500 text-center">
             <thead>
-            <tr className="min-h-24 justify-center">
-              <th className="w-14 border-collapse border-2 border-solid border-gray-500 p-2 text-center">
-                STT
-              </th>
-              <th className="w-52 border-collapse border-2 border-solid border-gray-500 p-2">
-                Ten san pham
-              </th>
-              <th className="w-20 border-collapse border-2 border-solid border-gray-500 p-2">
-                So luong
-              </th>
-              <th className="w-36 border-collapse border-2 border-solid border-gray-500 p-2">
-                Don gia
-              </th>
-              <th className="w-28 border-collapse border-2 border-solid border-gray-500 p-2">
-                Thanh tien
-              </th>
-            </tr>
+
+              <tr className="min-h-24 justify-center">
+
+                <th className="w-14 border-collapse border-2 border-solid border-gray-500 p-2 text-center">
+                  STT
+                </th>
+                <th className="w-52 border-collapse border-2 border-solid border-gray-500 p-2">
+                  Ten san pham
+                </th>
+                <th className="w-20 border-collapse border-2 border-solid border-gray-500 p-2">
+                  So luong
+                </th>
+                <th className="w-36 border-collapse border-2 border-solid border-gray-500 p-2">
+                  Don gia
+                </th>
+                <th className="w-28 border-collapse border-2 border-solid border-gray-500 p-2">
+                  Thanh tien
+                </th>
+              </tr>
             </thead>
             <tbody>
-            {danhSachSP.length > 0 ? (
-              danhSachSP.map((sp, index) => (
-                <tr key={sp.idSpct}>
-                  <td className="border-collapse border-2 border-solid border-gray-500 p-2">
-                    {index + 1}
-                  </td>
-                  <td className="border-collapse border-2 border-solid border-gray-500 p-2">
-                    {sp.tenSanPham} - {sp.maSPCT} <br />
-                    {sp.kichThuoc} - {sp.mauSac}
-                  </td>
-                  <td className="border-collapse border-2 border-solid border-gray-500 p-2">
-                    {sp.soLuong}
-                  </td>
-                  <td className="border-collapse border-2 border-solid border-gray-500 p-2">
-                    {sp.donGia}
-                  </td>
-                  <td className="border-collapse border-2 border-solid border-gray-500 p-2">
-                    {sp.soLuong * sp.donGia}
+
+              {danhSachSP.length > 0 ? (
+                danhSachSP.map((sp, index) => (
+                  <tr key={sp.idSpct}>
+                    <td className="border-collapse border-2 border-solid border-gray-500 p-2">
+                      {index + 1}
+                    </td>
+                    <td className="border-collapse border-2 border-solid border-gray-500 p-2">
+                      {sp.tenSanPham} - {sp.maSPCT} <br />
+                      {sp.kichThuoc} - {sp.mauSac}
+                    </td>
+                    <td className="border-collapse border-2 border-solid border-gray-500 p-2">
+                      {sp.soLuong}
+                    </td>
+                    <td className="border-collapse border-2 border-solid border-gray-500 p-2">
+                      {sp.donGia}
+                    </td>
+                    <td className="border-collapse border-2 border-solid border-gray-500 p-2">
+                      {sp.soLuong * sp.donGia}
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5" className="text-center">
+                    Không có sản phẩm nào.
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="5" className="text-center">Không có sản phẩm nào.</td>
-              </tr>
-            )}
+              )}
+
             </tbody>
           </table>
           <p className="mt-3 font-bold">Tổng sản phẩm mua:</p>
@@ -187,15 +199,18 @@ export const ExportPDF = ({ idHoaDon }) => {
         </div>
       </div>
 
+
       <div className="">
-        <button className="w-[200px] rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 mr-5"
-                onClick={generatePDF}>In Hóa Đơn
+        <button
+          className="mr-5 w-[200px] rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+          onClick={generatePDF}
+        >
+          In Hóa Đơn
         </button>
         <button className="w-[200px] rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600">
           <Link to={"/admin/banhangoff"}>Quay về bán hàng</Link>
         </button>
       </div>
-
 
     </>
   );
