@@ -873,6 +873,7 @@ public class HoaDonServiceImpl implements HoaDonService {
         return response;
     }
 
+
     //    xuat hoa don
     @Transactional
     public String xuatHoaDon(Integer idHoaDon) {
@@ -945,7 +946,6 @@ public class HoaDonServiceImpl implements HoaDonService {
         response.setTienPhaiThanhToan(formatCurrency(hoaDon.getTienPhaiThanhToan()));
         return response;
     }
-
     //add khách hàng vào hóa đơn
     @Override
     public HoaDonResponse addKhachHangHoaDon(Integer idHoaDon, Integer idKhachHang) {
@@ -992,7 +992,6 @@ public class HoaDonServiceImpl implements HoaDonService {
             throw new IllegalArgumentException("Provided value is not a number: " + value);
         }
     }
-
 
     private HoaDonResponse converToHoaDonResponse(HoaDon hoaDon) {
         HoaDonResponse hoaDonResponse = new HoaDonResponse();

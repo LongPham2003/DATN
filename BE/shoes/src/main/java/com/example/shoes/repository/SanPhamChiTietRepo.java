@@ -1,5 +1,6 @@
 package com.example.shoes.repository;
 
+import com.example.shoes.dto.sanphamchitiet.response.KichThuocMauSacResponse;
 import com.example.shoes.dto.sanphamchitiet.response.SanPhamChiTietDetailResponse;
 import com.example.shoes.entity.KichThuoc;
 import com.example.shoes.entity.SanPham;
@@ -16,6 +17,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 public interface SanPhamChiTietRepo extends JpaRepository<SanPhamChiTiet, Integer> {
 
@@ -61,17 +63,51 @@ public interface SanPhamChiTietRepo extends JpaRepository<SanPhamChiTiet, Intege
             "AND (:idDeGiay IS NULL OR spct.idDeGiay.id = :idDeGiay) " +
             "AND (spct.idSanPham.trangThai = true) " +
             "AND (spct.trangThai = true)")
-    List<SanPhamChiTiet> getAllTrangThaiTrue(@Param("maSanPham") String maSanPham,
+    Page<SanPhamChiTiet> getAllTrangThaiTrue(@Param("maSanPham") String maSanPham,
                                              @Param("idMauSac") Integer idMauSac,
                                              @Param("idkichThuoc") Integer idkichThuoc,
                                              @Param("idChatLieu") Integer idChatLieu,
                                              @Param("idThuongHieu") Integer idThuongHieu,
-                                             @Param("idDeGiay") Integer idDeGiay);
+                                             @Param("idDeGiay") Integer idDeGiay,
+                                             Pageable pageable);
 
     @Query("select  spct FROM SanPhamChiTiet spct where spct.id = :idSPCT")
     SanPhamChiTiet getSPCTDetail(@Param("idSPCT") Integer idSPCT);
 
     @Query("SELECT s.ma FROM SanPhamChiTiet s ORDER BY s.ma DESC LIMIT 1")
     String findMaxMaSanPhamChiTiet();
+    @Query(value = """
+        SELECT 
+            DISTINCT kt.kich_thuoc AS tenKichThuoc
+        FROM 
+            san_pham_chi_tiet spct
+        JOIN 
+            kich_thuoc kt ON spct.id_kich_thuoc = kt.id
+        WHERE 
+            spct.id_san_pham = :idSanPham
+        """, nativeQuery = true)
+    List<String> findTenKichThuocBySanPhamId(@Param("idSanPham") Integer idSanPham);
+
+    @Query(value = """
+            SELECT 
+                DISTINCT ms.ten AS tenMauSac
+            FROM 
+                san_pham_chi_tiet spct
+            JOIN 
+                mau_sac ms ON spct.id_mau_sac = ms.id
+            WHERE 
+                spct.id_san_pham = :idSanPham
+            """, nativeQuery = true)
+    List<String> findTenMauSacBySanPhamId(@Param("idSanPham") Integer idSanPham);
+//loc kich thuoc và mau sac theo ten
+@Query("SELECT spct FROM SanPhamChiTiet spct " +
+        "WHERE spct.idSanPham.id = :idSanPham " +
+        "AND (:idKichThuoc IS NULL OR spct.idKichThuoc .id =:idKichThuoc) " +
+        "AND (:idMauSac IS NULL OR spct.idMauSac .id = :idMauSac)")
+List<SanPhamChiTiet> findSanPhamChiTiet(
+        @Param("idSanPham") Integer idSanPham,
+        @Param("idKichThuoc") Integer idKichThuoc,
+        @Param("idMauSac") Integer idMauSac);
+
 }
 

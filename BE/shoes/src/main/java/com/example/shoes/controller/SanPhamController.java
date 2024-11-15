@@ -3,6 +3,7 @@ package com.example.shoes.controller;
 
 import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.sanpham.request.SanPhamRequest;
+import com.example.shoes.dto.sanpham.response.SanPhamBanChayResponse;
 import com.example.shoes.dto.sanpham.response.SanPhamResponse;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.service.SanPhamService;
@@ -86,4 +87,14 @@ public class SanPhamController {
                 .message("Update thành công")
                 .build();
     }
+    @GetMapping("/top3-ban-chay")
+    public ApiResponse<List<SanPhamBanChayResponse>> getTop3SanPhamBanChayTheoThang() {
+        // Lấy danh sách sản phẩm bán chạy theo tháng và năm
+        List<SanPhamBanChayResponse> top3SanPham = sanPhamService.getTop3SanPhamBanChayTheoThang();
+        // Trả về response với ApiResponse
+        return ApiResponse.<List<SanPhamBanChayResponse>>builder()
+                .result(top3SanPham)
+                .build();
+    }
+
 }

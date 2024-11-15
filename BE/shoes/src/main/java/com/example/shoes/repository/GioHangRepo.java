@@ -1,12 +1,15 @@
 package com.example.shoes.repository;
 
 import com.example.shoes.entity.GioHang;
+import com.example.shoes.entity.KhachHang;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 @Repository
 public interface GioHangRepo extends JpaRepository<GioHang, Integer> {
 
-//    GioHang findByIdKhachHang(Integer idKhachHang);
-
+    // Phương thức để tìm giỏ hàng theo khách hàng
+    Optional<GioHang> findByIdKhachHang(KhachHang khachHang);
 }
