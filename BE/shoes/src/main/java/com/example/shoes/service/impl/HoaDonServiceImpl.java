@@ -917,9 +917,23 @@ public class HoaDonServiceImpl implements HoaDonService {
         hoaDon.setTrangThai(TrangThai.DA_THANH_TOAN);
         hoaDon.setPhuongThucThanhToan("VNPAY");
         hoaDonRepo.save(hoaDon);
+
+        PhuongThucThanhToan phuongThucThanhToan = new PhuongThucThanhToan();
+        phuongThucThanhToan.setIdHoaDon(hoaDon);
+        phuongThucThanhToan.setTenPhuongThuc(hoaDon.getPhuongThucThanhToan());
+        phuongThucThanhToan.setGhiChu("VNPAY " + hoaDon.getId() + " số tiền: " + hoaDon.getTienPhaiThanhToan());
+        phuongThucThanhToanRepo.save(phuongThucThanhToan);
+
+        NhanVien nhanVien = getCurrentNhanVien();
+
+        LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
+        lichSuHoaDon.setIdHoaDon(hoaDon);
+        lichSuHoaDon.setMoTa("Thanh toán thành công " + "id hóa đon:" + hoaDon.getId() + "so tien :" + hoaDon.getTienPhaiThanhToan());
+        lichSuHoaDon.setThoiGian(LocalDate.now());
+        lichSuHoaDon.setNguoiThucHien(nhanVien.getHoTen());
+        lichSuHoaDonRepo.save(lichSuHoaDon);
         return null;
     }
-
 
 
 
