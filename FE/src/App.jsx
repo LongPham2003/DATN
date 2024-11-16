@@ -6,7 +6,6 @@ import DeGiay from "./pages/admin/ThuocTinhSP/DeGiay/DeGiay";
 import KichThuoc from "./pages/admin/ThuocTinhSP/KichThuoc/KichThuoc";
 import LoaiGiay from "./pages/admin/ThuocTinhSP/LoaiGiay/LoaiGiay";
 import MauSac from "./pages/admin/ThuocTinhSP/MauSac/MauSac";
-import Voucher from "./pages/admin/Voucher/Voucher";
 import ThuongHieu from "./pages/admin/ThuocTinhSP/ThuongHieu/ThuongHieu";
 import ListProduct from "./pages/admin/SanPham/Product/ListProduct";
 
@@ -32,20 +31,64 @@ import ProtectedRoute from "./pages/ProtectedRoute";
 import BanHangTaiQuay from "./pages/admin/BanHangTaiQuay/BanHangTaiQuay";
 import HomePage from "./pages/client/Home/homePage.jsx";
 import PaymentResult from "./pages/admin/BanHangTaiQuay/Payment.jsx";
+import DanhSachHoaDon from "./pages/admin/QuanLiHoaDon/DanhSachHoaDon.jsx";
+import SanPham from "./pages/client/SanPham/SanPham.jsx";
+import LienHe from "./pages/client/LienHe/LienHe.jsx";
+import TrangChu from "./pages/client/TrangChu/TrangChu.jsx";
+import GioHang from "./pages/client/GioHang/GioHang.jsx";
 
 function App() {
   return (
     <>
     <BrowserRouter>
       <Routes>
-        <Route
-          path="/"
-          element={
-            <>
-              <HomePage />
-            </>
-          }
-        />
+        <Route path="/" element={<HomePage />}>
+          <Route
+            path="SanPham"
+            element={
+              <>
+                <Helmet>
+                  <title>Sản Phẩm</title>
+                </Helmet>
+                <SanPham />
+              </>
+            }
+          />
+
+          <Route
+            path="LienHe"
+            element={
+              <>
+                <Helmet>
+                  <title>Liên Hệ</title>
+                </Helmet>
+                <LienHe />
+              </>
+            }
+          />
+          <Route
+            path="TrangChu"
+            element={
+              <>
+                <Helmet>
+                  <title>Trang Chủ</title>
+                </Helmet>
+                <TrangChu />
+              </>
+            }
+          />
+          <Route
+            path="GioHang"
+            element={
+              <>
+                <Helmet>
+                  <title>Giỏ hàng</title>
+                </Helmet>
+                <GioHang />
+              </>
+            }
+          />
+        </Route>
         <Route
           path="/403"
           element={
@@ -115,6 +158,14 @@ function App() {
             element={
               <>
                 <PaymentResult />
+              </>
+            }
+          />
+          <Route
+            path="hoadon"
+            element={
+              <>
+                <DanhSachHoaDon />
               </>
             }
           />
@@ -246,18 +297,6 @@ function App() {
                 <title>Thương hiệu</title>
               </Helmet>
               <ThuongHieu />
-            </>
-          }
-        />
-        {/* roter voucher */}
-        <Route
-          path="voucher"
-          element={
-            <>
-              <Helmet>
-                <title>Voucher</title>
-              </Helmet>
-              <Voucher />
             </>
           }
         />

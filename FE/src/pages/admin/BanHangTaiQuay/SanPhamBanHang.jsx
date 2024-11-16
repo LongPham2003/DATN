@@ -3,8 +3,15 @@ import { useEffect, useState } from "react";
 import LayAnhTheoIdSP from "../SanPham/Product/LayANhTheoIDSP";
 import { Button, Input, InputNumber, Modal, Select } from "antd";
 import { Bounce, toast, ToastContainer } from "react-toastify";
+// import { getAllSPCTBH } from "./SanPhamService.js";
 
-export default function SanPhamBanTaiQuay({ id, onProductAdded }) {
+export const getAllSPBH = async (params = {}) => {
+  const ApiLaySPCT = `http://localhost:8080/api/sanphamchitiet/getallSPCTBH`;
+  const data = await axios.get(ApiLaySPCT, { params });
+  return data.data.result;
+};
+
+export default function SanPhamBanTaiQuay({ id, onProductAdded, thayDoiSoLuong }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [SPCTBH, setSPCTBH] = useState([]);
   const [hangs, setHangs] = useState([]);
@@ -20,31 +27,31 @@ export default function SanPhamBanTaiQuay({ id, onProductAdded }) {
   const [selectedIdKichThuoc, setSelectedIdKichThuoc] = useState(null);
   const [selectedIdDeGiay, setSelectedIdDeGiay] = useState(null);
   const [idSPCT, setIdSPCT] = useState();
-  const [soLuongMua, setSoLuongMua] = useState(1);
+  const [soLuongMua, setSoLuongMua] = useState(0);
   const [error, setError] = useState("");
 
-  let ApiLaySPCT = `http://localhost:8080/api/sanphamchitiet/getallSPCTBH`;
   let ApiThemSPvaoHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/addspct/${id}`;
-
+  let ApiLaySPCT = `http://localhost:8080/api/sanphamchitiet/getallSPCTBH`;
   const getallSPCTBH = async () => {
-    const data = await axios.get(`${ApiLaySPCT}`, {
-      params: {
-        maSanPham: maSanPham,
-        idMauSac: selectedIdMauSac,
-        idkichThuoc: selectedIdKichThuoc,
-        idChatLieu: selectedIdChatLieu,
-        idThuongHieu: selectedIdHang,
-        idDeGiay: selectedIdDeGiay,
-      },
-    });
-    setSPCTBH(data.data.result);
+    const params = {};
+
+    // Only add parameters if they have values
+    if (maSanPham) params.maSanPham = maSanPham;
+    if (selectedIdMauSac) params.idMauSac = selectedIdMauSac;
+    if (selectedIdKichThuoc) params.idkichThuoc = selectedIdKichThuoc;
+    if (selectedIdChatLieu) params.idChatLieu = selectedIdChatLieu;
+    if (selectedIdHang) params.idThuongHieu = selectedIdHang;
+    if (selectedIdDeGiay) params.idDeGiay = selectedIdDeGiay;
+
+    const data = await getAllSPBH(params);
+    setSPCTBH(data);
   };
 
   const ThemSP = async () => {
     try {
       const newSPCT = {
         idSpct: idSPCT,
-        soLuong: soLuongMua,
+        soLuong: soLuongMua
       };
 
       await axios.post(ApiThemSPvaoHoaDon, newSPCT);
@@ -59,13 +66,13 @@ export default function SanPhamBanTaiQuay({ id, onProductAdded }) {
         draggable: true,
         pauseOnHover: true,
         theme: "light",
-        transition: Bounce,
+        transition: Bounce
       });
-
       // Gọi hàm onProductAdded để báo cho component cha biết và cập nhật giỏ hàng
       if (onProductAdded) {
         onProductAdded();
       }
+
       getallSPCTBH();
       setModalVisible(false);
     } catch (error) {
@@ -79,7 +86,7 @@ export default function SanPhamBanTaiQuay({ id, onProductAdded }) {
         draggable: true,
         progress: undefined,
         theme: "light",
-        transition: Bounce,
+        transition: Bounce
       });
     }
   };
@@ -105,14 +112,28 @@ export default function SanPhamBanTaiQuay({ id, onProductAdded }) {
     setIdSPCT(id);
     setModalVisible(true);
   };
+  const handleQuantityChange = (event) => {
+    const value = event.target.value; // Lấy giá trị từ event
 
-  const handleQuantityChange = (value) => {
-    if (value === null || value === undefined) return;
-    if (value > soLuongTon) {
-      setError(`Số lượng mua không thể lớn hơn ${soLuongTon}`);
+    // Nếu input là rỗng, xóa thông báo lỗi và đặt giá trị mặc định
+    if (value === "") {
+      setError(""); // Xóa thông báo lỗi
+      setSoLuongMua(1); // Đặt giá trị mặc định
+      return;
+    }
+
+    const regex = /^[0-9]*$/; // Biểu thức chính quy cho phép số nguyên dương (bao gồm cả chuỗi rỗng)
+    if (!regex.test(value)) {
+      setError("Vui lòng nhập một số hợp lệ."); // Hiển thị thông báo lỗi nếu không phải số
+      return;
+    }
+
+    const numericValue = Number(value); // Chuyển đổi giá trị nhập vào thành số
+    if (numericValue > soLuongTon) {
+      setError(`Số lượng mua không thể lớn hơn ${soLuongTon}`); // Hiển thị thông báo lỗi
     } else {
-      setError("");
-      setSoLuongMua(value);
+      setError(""); // Xóa thông báo lỗi nếu số lượng hợp lệ
+      setSoLuongMua(numericValue); // Cập nhật số lượng mua
     }
   };
 
@@ -169,14 +190,7 @@ export default function SanPhamBanTaiQuay({ id, onProductAdded }) {
 
   useEffect(() => {
     getallSPCTBH();
-  }, [
-    maSanPham,
-    selectedIdHang,
-    selectedIdMauSac,
-    selectedIdKichThuoc,
-    selectedIdDeGiay,
-    selectedIdChatLieu,
-  ]);
+  }, [maSanPham, selectedIdHang, selectedIdMauSac, selectedIdKichThuoc, selectedIdDeGiay, selectedIdChatLieu, thayDoiSoLuong]);
 
   const handleResetSelectedChange = () => {
     setSelectedIdChatLieu(null);
@@ -210,7 +224,7 @@ export default function SanPhamBanTaiQuay({ id, onProductAdded }) {
                 value={selectedIdHang} // Liên kết giá trị với state
                 options={hangs.map((item) => ({
                   label: item.ten,
-                  value: item.id,
+                  value: item.id
                 }))}
                 onChange={(value) => setSelectedIdHang(value)} // Gọi hàm khi có thay đổi
               />
@@ -224,7 +238,7 @@ export default function SanPhamBanTaiQuay({ id, onProductAdded }) {
                 value={selectedIdMauSac} // Liên kết giá trị với state
                 options={mauSacs.map((item) => ({
                   label: item.ten,
-                  value: item.id,
+                  value: item.id
                 }))}
                 onChange={(value) => setSelectedIdMauSac(value)}
               />
@@ -240,7 +254,7 @@ export default function SanPhamBanTaiQuay({ id, onProductAdded }) {
                 value={selectedIdChatLieu}
                 options={chatLieus.map((item) => ({
                   label: item.ten,
-                  value: item.id,
+                  value: item.id
                 }))}
                 onChange={(value) => setSelectedIdChatLieu(value)}
               />
@@ -254,7 +268,7 @@ export default function SanPhamBanTaiQuay({ id, onProductAdded }) {
                 value={selectedIdKichThuoc}
                 options={kichThuocs.map((item) => ({
                   label: item.kichThuoc,
-                  value: item.id,
+                  value: item.id
                 }))}
                 onChange={(value) => setSelectedIdKichThuoc(value)}
               />
@@ -268,7 +282,7 @@ export default function SanPhamBanTaiQuay({ id, onProductAdded }) {
                 value={selectedIdDeGiay}
                 options={deGiays.map((item) => ({
                   label: item.ten,
-                  value: item.id,
+                  value: item.id
                 }))}
                 onChange={(value) => setSelectedIdDeGiay(value)}
               />
@@ -298,53 +312,53 @@ export default function SanPhamBanTaiQuay({ id, onProductAdded }) {
               <div className="max-h-[400px] overflow-y-auto">
                 <table className="mb-[60px] min-w-full bg-white text-[20px]">
                   <thead className="sticky top-0 z-10 bg-white">
-                    <tr className="h-10 border-b-2 border-indigo-500 text-base">
-                      <th className="w-20">Mã sản phẩm</th>
-                      <th className="w-[230px]">Sản phẩm</th>
-                      <th className="w-[100px] border-b">Ảnh</th>
+                  <tr className="h-10 border-b-2 border-indigo-500 text-base">
+                    <th className="w-20">Mã sản phẩm</th>
+                    <th className="w-[230px]">Sản phẩm</th>
+                    <th className="w-[100px] border-b">Ảnh</th>
 
-                      <th className="w-[100px] border-b">Đơn giá</th>
-                      <th className="w-[100px] border-b">Số lượng tồn</th>
-                      <th className="w-[100px] border-b">Hành động</th>
-                    </tr>
+                    <th className="w-[100px] border-b">Đơn giá</th>
+                    <th className="w-[100px] border-b">Số lượng tồn</th>
+                    <th className="w-[100px] border-b">Hành động</th>
+                  </tr>
                   </thead>
                   <tbody className="text-center">
-                    {SPCTBH.map((item, index) => (
-                      <tr key={item.id} className="hover:bg-gray-100">
-                        <td className="border-b-[1px] border-indigo-500 px-4 py-2">
-                          {item.maSPCT}
-                        </td>
-                        <td className="border-b-[1px] border-indigo-500 px-4 py-2">
-                          {item.tenSanPham} [ {item.kichThuoc}-{item.mauSac}]
-                        </td>
-                        <td className="border-b-[1px] border-indigo-500">
-                          <div className="flex justify-center">
-                            <LayAnhTheoIdSP
-                              id={item.id}
-                              className="h-[70px] w-[70px]"
-                            />
-                          </div>
-                        </td>
+                  {SPCTBH.map((item, index) => (
+                    <tr key={item.id} className="hover:bg-gray-100">
+                      <td className="border-b-[1px] border-indigo-500 px-4 py-2">
+                        {item.maSPCT}
+                      </td>
+                      <td className="border-b-[1px] border-indigo-500 px-4 py-2">
+                        {item.tenSanPham} [ {item.kichThuoc}-{item.mauSac}]
+                      </td>
+                      <td className="border-b-[1px] border-indigo-500">
+                        <div className="flex justify-center">
+                          <LayAnhTheoIdSP
+                            id={item.id}
+                            className="h-[70px] w-[70px]"
+                          />
+                        </div>
+                      </td>
 
-                        <td className="border-b-[1px] border-indigo-500">
-                          {item.donGia}
-                        </td>
-                        <td className="border-b-[1px] border-indigo-500">
-                          {item.soLuong}
-                        </td>
-                        <td className="border-b-[1px] border-indigo-500">
-                          <Button
-                            onClick={() => {
-                              handleButtonClick(item.id);
-                              openModal();
-                            }}
-                            disabled={item.soLuong === 0}
-                          >
-                            Em là người được chọn
-                          </Button>
-                        </td>
-                      </tr>
-                    ))}
+                      <td className="border-b-[1px] border-indigo-500">
+                        {item.donGia}
+                      </td>
+                      <td className="border-b-[1px] border-indigo-500">
+                        {item.soLuong}
+                      </td>
+                      <td className="border-b-[1px] border-indigo-500">
+                        <Button
+                          onClick={() => {
+                            handleButtonClick(item.id);
+                            openModal();
+                          }}
+                          disabled={item.soLuong === 0}
+                        >
+                          Thêm sản
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
                   </tbody>
                 </table>
               </div>
@@ -357,18 +371,17 @@ export default function SanPhamBanTaiQuay({ id, onProductAdded }) {
         open={modalVisible}
         onCancel={closeModal}
         onOk={ThemSP}
-        cancelText="Hủy" // Replace with your desired text
-        okText="Xác nhận" // Replace with your desired text
+        cancelText="Hủy"
+        okText="Xác nhận"
       >
-        <label>Số Lượng tồn :{soLuongTon} </label>
-
+        <label>Số Lượng tồn: {soLuongTon}</label>
         <div>
-          <InputNumber
+          <Input
             min={1}
             max={soLuongTon}
             value={soLuongMua}
             className="min-w-full"
-            onChange={handleQuantityChange}
+            onChange={handleQuantityChange} // Gọi hàm với event
           />
           {error && <p className="text-red-500">{error}</p>}
         </div>

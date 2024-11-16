@@ -17,7 +17,7 @@ import {
 } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import ImageUpload from "./UploadAnh";
 import AddProduct from "../Product/AddProduct.jsx";
@@ -43,6 +43,8 @@ export default function AddProductDetail() {
   const [listSPCT, setListSPCT] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]); // Lưu trữ các sản phẩm được chọn
   const [open, setOpen] = useState(false);
+  const [maSp,setMaSp] = useState("")
+
 
   // model them nhan thuong hieu
   const [OpenModelAddBrand, setOpenModelAddBrand] = useState(false);
@@ -141,6 +143,7 @@ export default function AddProductDetail() {
   const layTenSP = async () => {
     const response = await axios.get(ApiGetSPById);
     SetTenSP(response.data.result.tenSanPham);
+    setMaSp(response.data.result.ma)
   };
 
   const layMauSac = async () => {
@@ -388,7 +391,7 @@ export default function AddProductDetail() {
           <div className="mx-auto my-2 h-[410px] w-[1000px] rounded-sm">
             <div className="mt-5 text-center">
               <span className="mt-3 text-2xl font-bold">
-                Thêm sản phẩm chi tiết
+                Thêm sản phẩm chi tiết của sản phẩm :{maSp}
               </span>
             </div>
             <div className="h-[300px] rounded-lg shadow drop-shadow-2xl">
@@ -712,80 +715,84 @@ export default function AddProductDetail() {
 
       {OpenModelAddBrand && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="h-[100px] w-[400px] rounded-lg bg-white p-8">
-            <div className="flex justify-between">
+          <div className=" flex justify-between h-[100px] w-[400px] rounded-lg bg-white p-8">
+            <div className="">
               <ThemThuongHieu closeModel={closeModalBrand} />
-              <button
-                onClick={closeModalBrand}
-                className="h-10 rounded bg-red-500 px-4 text-white hover:bg-red-600"
-              >
-                X
-              </button>
+
             </div>
+            <button
+              onClick={closeModalBrand}
+              className="h-10 rounded bg-red-500 px-4 text-white hover:bg-red-600"
+            >
+              X
+            </button>
           </div>
         </div>
       )}
 
       {OpenModelAddChatLieu && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="h-[100px] w-[400px] rounded-lg bg-white p-8">
-            <div className="flex justify-between">
+          <div className=" flex justify-between h-[100px] w-[400px] rounded-lg bg-white p-8">
+            <div className="">
               <ThemChatLieu closeModel={closeModalChatLieu} />
-              <button
-                onClick={closeModalChatLieu}
-                className="h-10 rounded bg-red-500 px-4 text-white hover:bg-red-600"
-              >
-                X
-              </button>
             </div>
+            <button
+              onClick={closeModalChatLieu}
+              className="h-10 rounded bg-red-500 px-4 text-white hover:bg-red-600"
+            >
+              X
+            </button>
           </div>
         </div>
       )}
 
       {OpenModelAddDeGiay && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="h-[100px] w-[400px] rounded-lg bg-white p-8">
-            <div className="flex justify-between">
+          <div className=" flex justify-between h-[100px] w-[400px] rounded-lg bg-white p-8">
+            <div className="">
               <ThemDeGiay closeModel={closeModalDeGiay} />
-              <button
-                onClick={closeModalDeGiay}
-                className="h-10 rounded bg-red-500 px-4 text-white hover:bg-red-600"
-              >
-                X
-              </button>
+
             </div>
+            <button
+              onClick={closeModalDeGiay}
+              className="h-10 rounded bg-red-500 px-4 text-white hover:bg-red-600"
+            >
+              X
+            </button>
           </div>
         </div>
       )}
 
       {OpenModelAddKichThuoc && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="h-[100px] w-[400px] rounded-lg bg-white p-8">
-            <div className="flex justify-between">
+          <div className=" flex justify-between h-[100px] w-[400px] rounded-lg bg-white p-8">
+            <div className="">
               <ThemKichThuoc closeModel={closeModalKichThuoc} />
-              <button
-                onClick={closeModalKichThuoc}
-                className="h-10 rounded bg-red-500 px-4 text-white hover:bg-red-600"
-              >
-                X
-              </button>
+
             </div>
+            <button
+              onClick={closeModalKichThuoc}
+              className="h-10 rounded bg-red-500 px-4 text-white hover:bg-red-600"
+            >
+              X
+            </button>
           </div>
         </div>
       )}
 
       {OpenModelAddMauSac && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="h-[100px] w-[400px] rounded-lg bg-white p-8">
-            <div className="flex justify-between">
+          <div className=" flex justify-between h-[100px] w-[400px] rounded-lg bg-white p-8">
+            <div className="">
               <ThemMauSac closeModel={closeModalMauSac} />
-              <button
-                onClick={closeModalMauSac}
-                className="h-10 rounded bg-red-500 px-4 text-white hover:bg-red-600"
-              >
-                X
-              </button>
+
             </div>
+            <button
+              onClick={closeModalMauSac}
+              className="h-10 rounded bg-red-500 px-4 text-white hover:bg-red-600"
+            >
+              X
+            </button>
           </div>
         </div>
       )}

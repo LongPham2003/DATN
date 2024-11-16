@@ -1,9 +1,12 @@
 package com.example.shoes.repository;
 
 import com.example.shoes.dto.BaoCaoThongKeResponse;
+import com.example.shoes.dto.hoadon.response.HoaDonResponse;
 import com.example.shoes.dto.hoadon.response.HoaDonTheoIDResponse;
 
 import com.example.shoes.entity.HoaDon;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -79,4 +82,22 @@ public interface HoaDonRepo extends JpaRepository<HoaDon, Integer> {
     //Lay id Hoa Da Thanh Toan lon nhat
     @Query("select hd.id  from HoaDon hd where hd.trangThai = 'DA_THANH_TOAN' order by hd.id desc limit 1")
     Integer idHoaDon();
+
+    // lấy hóa dơn theo ma phan trang loc
+    @Query( value = "select  hd.id ,hd.create_at,hd.create_by,hd.update_at,hd.update_by ,hd.dia_chi_giao_hang, " +
+            "hd.ma,hd.ngay_sua ,hd.ngay_tao ,hd.phuong_thuc_giao_hang , hd.phuong_thuc_thanh_toan , hd.so_dien_thoai ," +
+            "hd.tien_duoc_giam ,hd.tien_phai_thanh_toan ,hd.tong_tien,hd.id_khach_hang,hd.id_nhan_vien ,hd.id_phieu_giam_gia ," +
+            "hd.tien_khach_dua ,hd.tien_thua ,hd.trang_thai " +
+            " from  hoa_don hd " +
+            "left  join  khach_hang kh on kh.id = hd.id_khach_hang " +
+            "left  join  nhan_vien nv on nv.id = hd.id_nhan_vien " +
+            "left  join  phieu_giam_gia pgg on pgg.id= hd.id_phieu_giam_gia " +
+            "where (hd.ma like %:keyword%  or  kh.ho_ten like %:keyword% or kh.sdt like %:keyword%) " +
+            "AND (:trangThai is null or hd.trang_thai = :trangThai)" +
+            "AND (:phuongThucGiaoHang is null or hd.phuong_thuc_giao_hang =:phuongThucGiaoHang)" +
+            "order by  hd.create_at desc "
+            ,nativeQuery = true)
+    Page<HoaDon> getAll(Pageable pageable,String keyword,String phuongThucGiaoHang,String trangThai);
+
+
 }

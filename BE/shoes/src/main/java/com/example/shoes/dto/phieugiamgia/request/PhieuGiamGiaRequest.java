@@ -43,7 +43,7 @@ public class PhieuGiamGiaRequest {
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm[:ss]")
     private LocalDateTime ngayKetThuc;
 
-    private Boolean trangThai;
+    private String trangThai;
 
     @NotNull(message = "Hình thức giảm không được để trống")
     private String hinhThucGiam;

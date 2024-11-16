@@ -85,14 +85,13 @@ export default function ListPhieuGiamGia() {
               id="trangThai"
               className="w-full rounded border border-gray-300 p-2"
               onChange={(e) => {
-                const value =
-                  e.target.value === "" ? null : e.target.value === "true";
-                setTrangThai(value);
+                  e.target.value === "" ? setTrangThai(null) : setTrangThai(e.target.value);
               }}
             >
               <option value="">Tất cả</option>
-              <option value="true">Hoạt động</option>
-              <option value="false">Không hoạt động</option>
+              <option value="Hoạt Động">Hoạt động</option>
+              <option value="Ngừng Hoạt Động">Không hoạt động</option>
+              <option value="Sắp Hoạt Động">Sắp hoạt động</option>
             </select>
           </div>
         </div>
@@ -119,7 +118,7 @@ export default function ListPhieuGiamGia() {
         </div>
       </div>
 
-      {/* Danh sách nhân viên */}
+      {/* Danh sách  */}
       <div className="rounded bg-white p-4 shadow">
         <div className="flex justify-between">
           <h2 className="mb-4 text-xl font-semibold">
@@ -206,10 +205,11 @@ export default function ListPhieuGiamGia() {
                 <td className="mx-auto flex justify-center border-b px-4 py-2 text-center">
                   <button
                     className={`px-4 py-2 rounded border-2 ${
-                      item.trangThai ? "border-green-400 text-green-400" : "border-red-600 text-red-600"
+                      item.trangThai ==="Hoạt Động" ? "border-green-400 text-green-400":
+                        item.trangThai === "Ngừng Hoạt Động" ? "border-red-600 text-red-600" : "border-yellow-600 text-yellow-600"
                     }`}
                   >
-                    {item.trangThai ? "Còn" : "Hết"}
+                    {item.trangThai}
                   </button>
                 </td>
                 <td>

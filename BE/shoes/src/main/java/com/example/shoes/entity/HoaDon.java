@@ -2,6 +2,7 @@ package com.example.shoes.entity;
 
 import com.example.shoes.entity.base.CrudByAt;
 import com.example.shoes.enums.TrangThai;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -20,8 +21,10 @@ public class HoaDon extends CrudByAt {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
+
     @Column(name = "ma")
     private String ma;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_khach_hang")
     private KhachHang idKhachHang;
@@ -33,6 +36,7 @@ public class HoaDon extends CrudByAt {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_phieu_giam_gia")
     private PhieuGiamGia idPhieuGiamGia;
+
     @Column(name = "so_dien_thoai")
     private String soDienThoai;
 

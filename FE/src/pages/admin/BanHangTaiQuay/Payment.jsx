@@ -20,6 +20,8 @@ export default function PaymentResult() {
     }, 1000); // Đợi 1 giây để đảm bảo ExportPDF đã render
   };
 
+ const  check =  localStorage.getItem("check")
+
   useEffect(() => {
     async function checkPaymentStatus() {
       try {
@@ -28,17 +30,17 @@ export default function PaymentResult() {
             vnp_Amount: params.get("vnp_Amount"),
             vnp_BankCode: params.get("vnp_BankCode"),
             vnp_OrderInfo: params.get("vnp_OrderInfo"),
-            vnp_ResponseCode: params.get("vnp_ResponseCode"),
-          },
+            vnp_ResponseCode: params.get("vnp_ResponseCode")
+          }
         });
 
         if (response.data) {
           await axios.post(`http://localhost:8080/api/hoadon/thanh-toan/tc-vnpay/${id}`, {
-            phuongThucThanhToan: "VNPAY",
+            phuongThucThanhToan: check,
             tienKhachDua: 0
           });
 
-           // navigate("/admin/banhangoff");
+          // navigate("/admin/banhangoff");
           toast.success("Thành công ");
           handleGeneratePDF();
 
@@ -50,6 +52,7 @@ export default function PaymentResult() {
         console.error("Error:", error);
       }
     }
+
     checkPaymentStatus();
 
   }, [location.search, navigate]);

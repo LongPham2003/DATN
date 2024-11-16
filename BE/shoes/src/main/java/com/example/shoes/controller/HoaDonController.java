@@ -1,6 +1,9 @@
 package com.example.shoes.controller;
 
+import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
+import com.example.shoes.dto.payment.PaymentRequest;
+import com.example.shoes.entity.HoaDon;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.service.HoaDonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,27 @@ import java.util.List;
 public class HoaDonController {
     @Autowired
     private HoaDonService hoaDonService;
+
+
+    @GetMapping("/getall")
+    public ApiResponse<PhanTrangResponse<HoaDonResponse>> getAllHoaDon(
+            @RequestParam(value = "keyword", defaultValue = "") String keyword,
+            @RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
+            @RequestParam(value = "phuongThucGiaoHang", required = false) String phuongThucGiaoHang,
+            @RequestParam(value = "trangThai", required = false) String trangThai
+
+    ) {
+        // Gọi hàm getHoaDon trong service để lấy dữ liệu phân trang
+        PhanTrangResponse<HoaDonResponse> hoaDonResponses = hoaDonService.getHoaDon(pageNumber, pageSize,keyword,phuongThucGiaoHang,trangThai);
+
+        // Tạo và trả về đối tượng ApiResponse
+        return ApiResponse.<PhanTrangResponse<HoaDonResponse>>builder()
+                .result(hoaDonResponses)
+                .build();
+    }
+
+
     @GetMapping("/getall-dathanhtoan")
     public ApiResponse<List<HoaDonResponse>> getAllDaThanhToan() {
         // Gọi hàm getAllChatLieu() để lấy danh sách các ChatLieuResponse
@@ -61,7 +85,7 @@ public class HoaDonController {
         return ApiResponse.<Integer>builder().result(id).build();
     }
     @PostMapping("/thanh-toan/tc-vnpay/{id}")
-    private ApiResponse<Void> tc(@PathVariable Integer id){
-      return ApiResponse.<Void>builder().result(hoaDonService.updateHoaDonById(id)).build();
+    private ApiResponse<Void> tc(@PathVariable Integer id, @RequestBody PaymentRequest paymentRequest){
+      return ApiResponse.<Void>builder().result(hoaDonService.updateHoaDonById(id,paymentRequest)).build();
     }
 }

@@ -56,6 +56,7 @@ export default function ThemDeGiay({ closeModel }) {
           Thêm
         </button>
       </div>
+      {error && <p className="mb-4 text-sm text-red-500">{error}</p>}
     </>
   );
 }
