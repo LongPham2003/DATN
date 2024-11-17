@@ -1,5 +1,6 @@
 package com.example.shoes.repository;
 
+import com.example.shoes.entity.HinhAnh;
 import com.example.shoes.entity.SanPham;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -46,4 +47,6 @@ public interface SanPhamRepo extends JpaRepository<SanPham, Integer> {
             "LIMIT 3",
             nativeQuery = true)
     List<Object[]> findTop3SanPhamBanChayTrongThangHienTai();
+
+
 }

@@ -2,13 +2,16 @@ package com.example.shoes.service.impl;
 
 
 import com.example.shoes.dto.PhanTrangResponse;
+import com.example.shoes.dto.hinhanh.response.HinhAnhResponse;
 import com.example.shoes.dto.sanpham.request.SanPhamRequest;
 import com.example.shoes.dto.sanpham.response.SanPhamBanChayResponse;
 import com.example.shoes.dto.sanpham.response.SanPhamResponse;
+import com.example.shoes.entity.HinhAnh;
 import com.example.shoes.entity.Loai;
 import com.example.shoes.entity.SanPham;
 import com.example.shoes.exception.AppException;
 import com.example.shoes.exception.ErrorCode;
+import com.example.shoes.repository.HinhAnhRepo;
 import com.example.shoes.repository.LoaiRepo;
 import com.example.shoes.repository.SanPhamChiTietRepo;
 import com.example.shoes.repository.SanPhamRepo;
@@ -32,7 +35,6 @@ public class SanPhamServiceImpl implements SanPhamService {
     private LoaiRepo loaiRepo;
     @Autowired
     private SanPhamChiTietRepo sanPhamChiTietRepo;
-
     private SanPhamResponse convertToSanPhamResponse(SanPham sanPham) {
         SanPhamResponse response = new SanPhamResponse();
         response.setId(sanPham.getId());
@@ -176,6 +178,4 @@ public class SanPhamServiceImpl implements SanPhamService {
                 })
                 .collect(Collectors.toList());
     }
-
-
 }

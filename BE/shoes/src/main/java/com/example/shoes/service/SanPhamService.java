@@ -16,4 +16,5 @@ public interface SanPhamService {
     void updateTheoTrangThai(Integer id);
     List<String> getAlltenSP();
     List<SanPhamBanChayResponse> getTop3SanPhamBanChayTheoThang();
+
 }
