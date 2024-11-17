@@ -39,7 +39,6 @@ export default function SanPhamBanTaiQuay({
   const getallSPCTBH = async () => {
     const params = {};
 
-    // Only add parameters if they have values
     if (maSanPham) params.maSanPham = maSanPham;
     if (selectedIdMauSac) params.idMauSac = selectedIdMauSac;
     if (selectedIdKichThuoc) params.idkichThuoc = selectedIdKichThuoc;
