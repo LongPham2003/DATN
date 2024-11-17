@@ -88,21 +88,18 @@ public class SanPhamChiTietController {
                 .build();
     }
 
+
     @GetMapping("/getallSPCTBH")
-    public ApiResponse<Page<SPCTBanHangResponse>> getAllSPCTBH(
-            @RequestParam(required = false) String maSanPham,
-            @RequestParam(required = false) Integer idMauSac,
-            @RequestParam(required = false) Integer idkichThuoc,
-            @RequestParam(required = false) Integer idChatLieu,
-            @RequestParam(required = false) Integer idThuongHieu,
-            @RequestParam(required = false) Integer idDeGiay,
-            @RequestParam(defaultValue = "0") int page, // Trang hiện tại (mặc định là 0)
-            @RequestParam(defaultValue = "9") int size // Số phần tử mỗi trang (mặc định là 9)
-    ) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<SPCTBanHangResponse> listSPCT = sanPhamChiTietService.getAllTrangThaitrue(maSanPham, idMauSac, idkichThuoc, idChatLieu, idThuongHieu, idDeGiay, pageable);
-        return ApiResponse.<Page<SPCTBanHangResponse>>builder().result(listSPCT).build();
+    public ApiResponse<List<SPCTBanHangResponse>> getAllSPCTBH(@RequestParam(required = false) String maSanPham,
+                                                               @RequestParam(required = false) Integer idMauSac,
+                                                               @RequestParam(required = false) Integer idkichThuoc,
+                                                               @RequestParam(required = false) Integer idChatLieu,
+                                                               @RequestParam(required = false) Integer idThuongHieu,
+                                                               @RequestParam(required = false) Integer idDeGiay) {
+        List<SPCTBanHangResponse> listSPCT = sanPhamChiTietService.getAllTrangThaitrue(maSanPham, idMauSac, idkichThuoc, idChatLieu, idThuongHieu, idDeGiay);
+        return ApiResponse.<List<SPCTBanHangResponse>>builder().result(listSPCT).build();
     }
+
 
 
     @GetMapping("/getspctdetail/{idspct}")

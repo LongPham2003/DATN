@@ -1,5 +1,6 @@
 package com.example.shoes.repository;
 
+import com.example.shoes.dto.thongke.response.BieuDoNgayTrongTuan;
 import com.example.shoes.dto.thongke.response.DoanhThu;
 import com.example.shoes.dto.thongke.response.SanPhamBanChay;
 import org.springframework.data.jpa.repository.Query;
@@ -10,7 +11,28 @@ import java.util.List;
 
 @Repository
 public interface ThongKeRepo extends HoaDonRepo{
-
+    // Ngay tuy chinh
+    @Query(value = """
+SELECT 
+    (SELECT SUM(hd.tong_tien) 
+     FROM hoa_don hd 
+     WHERE hd.trang_thai = 'DA_THANH_TOAN' 
+       AND DATE(hd.update_at) = :date) AS tongTien,
+    COUNT(DISTINCT hd.id_khach_hang) AS tongKhachHang,
+    SUM(COALESCE(hdct.so_luong, 0)) AS sanPhamBanDuoc,
+    COUNT(DISTINCT CASE WHEN hd.id_khach_hang IS NULL THEN hd.id END) AS khachLe,
+    COUNT(CASE WHEN hd.trang_thai = 'DA_THANH_TOAN' THEN hd.id END) AS donThanhCong,
+    COUNT(CASE WHEN hd.trang_thai = 'HUY_DON' THEN hd.id END) AS donHuy,
+    COALESCE(SUM(hd.tien_duoc_giam), 0) AS tongTienGiam,
+    COUNT(CASE WHEN hd.trang_thai = 'DA_THANH_TOAN' AND hd.id_phieu_giam_gia IS NOT NULL THEN hd.id END) AS tongDonApDungPhieuGiamGia
+FROM 
+    hoa_don hd 
+LEFT JOIN 
+    hoa_don_chi_tiet hdct ON hd.id = hdct.id_hoa_don
+WHERE 
+    DATE(hd.update_at) = :date;
+""", nativeQuery = true)
+    DoanhThu ngayTuyChinh(@Param("date") String date);
     //Ngay hom nay
     @Query(value = """
         SELECT COALESCE((SELECT SUM(hd.tong_tien)
@@ -370,5 +392,34 @@ ORDER BY
 LIMIT 3;
 """, nativeQuery = true)
     List<SanPhamBanChay> khoangNgay(@Param("startdate") String startdate, @Param("enddate") String enddate);
+
+    // Bieu do
+    // SP ban duoc va doan so 1 tuan
+    @Query(value = """
+
+            SELECT\s
+    weekdays.ngayTrongTuan,
+    COALESCE(SUM(CASE WHEN hd.trang_thai = 'DA_THANH_TOAN' THEN hd.tong_tien ELSE 0 END), 0) AS tongTien,
+    COALESCE(SUM(COALESCE(hdct.so_luong, 0)), 0) AS sanPhamBanDuoc
+FROM\s
+    (SELECT 'Monday' AS ngayTrongTuan UNION ALL
+     SELECT 'Tuesday' UNION ALL
+     SELECT 'Wednesday' UNION ALL
+     SELECT 'Thursday' UNION ALL
+     SELECT 'Friday' UNION ALL
+     SELECT 'Saturday' UNION ALL
+     SELECT 'Sunday') AS weekdays
+LEFT JOIN\s
+    hoa_don hd ON DAYNAME(hd.update_at) = weekdays.ngayTrongTuan AND YEAR(hd.update_at) = YEAR(CURDATE())
+LEFT JOIN\s
+    hoa_don_chi_tiet hdct ON hd.id = hdct.id_hoa_don
+GROUP BY\s
+    weekdays.ngayTrongTuan
+ORDER BY\s
+    FIELD(weekdays.ngayTrongTuan, 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
+
+""", nativeQuery = true)
+    List<BieuDoNgayTrongTuan> cacNgayTrongTuan();
+
 
 }

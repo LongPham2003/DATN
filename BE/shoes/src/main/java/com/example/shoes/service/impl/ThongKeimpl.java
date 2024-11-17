@@ -1,6 +1,7 @@
 package com.example.shoes.service.impl;
 
 
+import com.example.shoes.dto.thongke.response.BieuDoNgayTrongTuan;
 import com.example.shoes.dto.thongke.response.DoanhThu;
 import com.example.shoes.dto.thongke.response.SanPhamBanChay;
 import com.example.shoes.repository.ThongKeRepo;
@@ -14,6 +15,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ThongKeimpl implements ThongKeService {
     private  final  ThongKeRepo thongKeRepo;
+
+
+    @Override
+    public DoanhThu ngayTuyChinh(String date) {
+        return thongKeRepo.ngayTuyChinh(date);
+    }
+
     @Override
     public DoanhThu doanhThuHomNay() {
         return thongKeRepo.doanhThuHomNay();
@@ -57,5 +65,10 @@ public class ThongKeimpl implements ThongKeService {
     @Override
     public List<SanPhamBanChay> khoangNgay(String startdate, String enddate) {
         return thongKeRepo.khoangNgay(startdate, enddate);
+    }
+
+    @Override
+    public List<BieuDoNgayTrongTuan> cacNgayTrongTuan() {
+        return thongKeRepo.cacNgayTrongTuan();
     }
 }

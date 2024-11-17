@@ -3,8 +3,10 @@ package com.example.shoes.service;
 import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.sanpham.request.SanPhamRequest;
 import com.example.shoes.dto.sanpham.response.SanPhamBanChayResponse;
+import com.example.shoes.dto.sanpham.response.SanPhamClient;
 import com.example.shoes.dto.sanpham.response.SanPhamResponse;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface SanPhamService {
@@ -16,4 +18,6 @@ public interface SanPhamService {
     void updateTheoTrangThai(Integer id);
     List<String> getAlltenSP();
     List<SanPhamBanChayResponse> getTop3SanPhamBanChayTheoThang();
+
+    List<SanPhamClient> sanPhamClient(Integer idLoai, Integer kichThuoc,Integer idMauSac, BigDecimal donGiaMin, BigDecimal donGiaMax);
 }

@@ -1,6 +1,7 @@
 package com.example.shoes.controller;
 
 
+import com.example.shoes.dto.thongke.response.BieuDoNgayTrongTuan;
 import com.example.shoes.dto.thongke.response.DoanhThu;
 import com.example.shoes.dto.thongke.response.SanPhamBanChay;
 import com.example.shoes.service.ThongKeService;
@@ -17,6 +18,11 @@ import java.util.List;
 @RequestMapping("/api/thongke")
 public class ThongKeController {
     private final ThongKeService thongkeService;
+
+    @GetMapping("/ngay-tuy-chinh")
+    public  DoanhThu ngayTuyChinh( @RequestParam("date") String date){
+        return thongkeService.ngayTuyChinh(date);
+    }
 
     @GetMapping("/ngay-hom-nay")
     public DoanhThu ngayHomNay() {
@@ -63,5 +69,10 @@ public class ThongKeController {
             @RequestParam("startDate") String startDate,
             @RequestParam("endDate") String endDate) {
         return thongkeService.khoangNgay(startDate, endDate);
+    }
+
+    @GetMapping("/bieudo/cacngaytrongtuan")
+    public  List<BieuDoNgayTrongTuan> cacNgayTrongTuan() {
+        return thongkeService.cacNgayTrongTuan();
     }
 }

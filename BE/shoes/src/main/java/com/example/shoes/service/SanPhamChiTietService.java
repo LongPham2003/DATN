@@ -17,13 +17,8 @@ public interface SanPhamChiTietService {
     SanPhamChiTietResponse getById(Integer id);
     SanPhamChiTietResponse create(SanPhamChiTietRequest request);
     SanPhamChiTietResponse update(Integer id, SanPhamChiTietRequest request);
-    Page<SPCTBanHangResponse> getAllTrangThaitrue(String maSanPham,
-                                                  Integer idMauSac,
-                                                  Integer idkichThuoc,
-                                                  Integer idChatLieu,
-                                                  Integer idThuongHieu,
-                                                  Integer idDeGiay,
-                                                  Pageable pageable);
+    List<SPCTBanHangResponse> getAllTrangThaitrue(String maSanPham,Integer idMauSac,Integer idkichThuoc,Integer idChatLieu,Integer idThuongHieu,Integer idDeGiay);
+
     void updateTheoTrangThai(Integer id);
     List<SanPhamChiTietResponse> findByIdSanPhamAndTrangThaiTrue( Integer idSanPham);
     SanPhamChiTietDetailResponse getSPCTDetail(Integer idSPCT);
