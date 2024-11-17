@@ -20,9 +20,11 @@ import "react-toastify/dist/ReactToastify.css";
 import { ShoppingCartIcon } from "@heroicons/react/16/solid";
 import { ExportPDF, generatePDF } from "../XuatFilePDF/ExportPDF";
 import { getAllSPCTBH } from "./SanPhamService";
+
 import ThemMauSac from "../SanPham/ProductDetail/ThemMauSac.jsx";
 import ThanhToanCKTM from "./ThanhToanCKTM.jsx";
 import ThemKH from "./ThemKH.jsx";
+
 
 export default function BanHangTaiQuay() {
   const [hoaDonFalse, setHoaDonFalse] = useState([]);
@@ -30,6 +32,7 @@ export default function BanHangTaiQuay() {
   const [openThanhToan, setOpenThanhToan] = useState(false);
   const [SPCTChuaThanhToan, setSPCTChuaThanhToan] = useState([]);
   const [selectedHoaDonId, setSelectedHoaDonId] = useState(null); // State lưu trữ id hóa đơn được chọn
+
 
   // chon giao hang
   const [phiGiaoHang, setPhiGiaoHang] = useState("");
@@ -55,6 +58,7 @@ export default function BanHangTaiQuay() {
   const closeModalThemKH = async () => {
     setOpenThemKH(false);
   };
+
 
   const [danhSachPhieuGiamGia, setDanhSachPhieuGiamGia] = useState([]);
   const [tongTien, setTongTien] = useState(0);
@@ -310,9 +314,11 @@ export default function BanHangTaiQuay() {
             soLuong: newQuantity,
           },
         );
+
         await Promise.all([
           LayChiTietSanPham(),
           LayThongTinThanhToanCuaHoaDon(),
+
         ]);
         toast.success("Cập nhật thành công");
       } else {
@@ -322,6 +328,7 @@ export default function BanHangTaiQuay() {
       console.log(error);
       toast.error("Cập nhật thất bại");
     }
+    getAllSPBH();
   };
 
   //Giam so luong mua di 1
@@ -339,9 +346,12 @@ export default function BanHangTaiQuay() {
             soLuong: newQuantity,
           },
         );
+
+        getAllSPBH();
         await Promise.all([
           LayChiTietSanPham(), // Cập nhật giỏ hàng sau khi thêm sản phẩm
           LayThongTinThanhToanCuaHoaDon(), // Cập nhật thông tin hóa đơn mới, bao gồm tổng tiền
+
           // LaySoLuongTonCuaSPCT(),
         ]);
         toast.success("Cập nhật thành công");
@@ -355,7 +365,7 @@ export default function BanHangTaiQuay() {
   //Huy Hoa Don
   const huyHoaDon = async () => {
     try {
-      await axios.delete(ApiHuyHoaDon);
+      await axios.put(ApiHuyHoaDon);
       toast.success("Hủy hóa đơn thành công");
       LayDanhSachHoaDonChuaThanhToan();
     } catch (error) {
@@ -508,6 +518,7 @@ export default function BanHangTaiQuay() {
       Promise.all([
         LayChiTietSanPham(selectedHoaDonId),
         LayThongTinThanhToanCuaHoaDon(selectedHoaDonId),
+
         LayMaHoaDon(),
         // LayIdLonNhat(),
       ]);
@@ -557,7 +568,6 @@ export default function BanHangTaiQuay() {
 
       if (response.data) {
         window.location.href = response.data;
-        localStorage.setItem("check", "VNPAY");
       }
     } catch (error) {
       console.error("Lỗi khi gọi API:", error);
@@ -656,7 +666,9 @@ export default function BanHangTaiQuay() {
                             {SPCT.tenSanPham} <br />
                             {SPCT.maSPCT} [{SPCT.kichThuoc} - {SPCT.mauSac}]
                             <br />
-                            {SPCT.donGia}
+
+                            {formatTien(SPCT.donGia)}
+
                           </td>
 
                           <td className="text-center">
@@ -715,7 +727,9 @@ export default function BanHangTaiQuay() {
                             </div>
                           </td>
 
-                          <td>{SPCT.donGia * SPCT.soLuong}</td>
+
+                          <td>{formatTien(SPCT.donGia * SPCT.soLuong)}</td>
+
                           <td>
                             <Popconfirm
                               title="Delete the task"
@@ -729,7 +743,9 @@ export default function BanHangTaiQuay() {
                             >
                               <Button type="primary" danger>
                                 <TrashIcon className="h-5 w-5 text-white" />
+
                                 Xóa
+
                               </Button>
                             </Popconfirm>
                           </td>
@@ -842,16 +858,18 @@ export default function BanHangTaiQuay() {
               </div>
 
               <div className="ml-7">
-                <div className="my-2 flex">
+                <div className="my-2">
                   <Button
-                    style={{ height: "50px", width: "220px" }}
+                    style={{ height: "50px", width: "450px" }}
                     className="ml-[10px] border-2 border-green-500 text-lg font-medium text-green-500"
                     onClick={openthanhToan}
                   >
                     Tiền mặt
                   </Button>
+                </div>
+                <div className="my-2">
                   <Button
-                    style={{ height: "50px", width: "220px" }}
+                    style={{ height: "50px", width: "450px" }}
                     className="ml-[10px] border-2 border-yellow-500 text-lg font-medium text-yellow-500"
                     onClick={handlePaymentClick}
                   >
@@ -861,16 +879,7 @@ export default function BanHangTaiQuay() {
                 <div className="my-2">
                   <Button
                     style={{ height: "50px", width: "450px" }}
-                    className="ml-[10px] border-2 border-orange-600 text-lg font-medium text-orange-700"
-                    onClick={openModalThanhToanCKTM}
-                  >
-                    Tiền mặt & Chuyển khoản
-                  </Button>
-                </div>
-                <div className="my-2">
-                  <Button
-                    style={{ height: "50px", width: "450px" }}
-                    className="ml-[10px] border-2 border-red-700 text-lg font-medium text-red-700"
+                    className="ml-[10px] border-2 border-red-500 text-lg font-medium text-red-500"
                     onClick={huyHoaDon}
                   >
                     Hủy
@@ -881,6 +890,7 @@ export default function BanHangTaiQuay() {
             <hr />
             <div className="mx-3 mt-2">
               <div>
+
                 <span className="text-xl font-semibold">Khách hàng:</span>
                 <button
                   className="ml-[10px] w-[60px] border-2 border-blue-400 text-lg font-medium text-blue-400"
@@ -894,6 +904,7 @@ export default function BanHangTaiQuay() {
                 >
                   X
                 </button>
+
               </div>
               <div>
                 {tenKhachHang && (
@@ -941,7 +952,6 @@ export default function BanHangTaiQuay() {
         <SanPhamBanTaiQuay
           id={selectedHoaDonId}
           onProductAdded={closeModalAndReloadCart}
-          thayDoiSoLuong={upDateSoLuongMua}
         />
       </Modal>
 
@@ -993,6 +1003,7 @@ export default function BanHangTaiQuay() {
         </div>
       </Modal>
 
+
       {openThanhToanCKTM && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="flex h-[200px] w-[600px] justify-between rounded-lg bg-white p-8">
@@ -1031,6 +1042,7 @@ export default function BanHangTaiQuay() {
           </div>
         </div>
       )}
+
 
       <ToastContainer
         position="top-right"

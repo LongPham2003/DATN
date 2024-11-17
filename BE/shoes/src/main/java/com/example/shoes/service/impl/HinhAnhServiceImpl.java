@@ -112,6 +112,13 @@ public class HinhAnhServiceImpl implements HinhAnhService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<HinhAnhResponse> getTop5ImagesBySanPhamId(Integer idSanPham) {
+        List<HinhAnh> hinhAnhs = hinhAnhRepo.findTop5ImagesBySanPhamId(idSanPham);
+        return hinhAnhs.stream()
+                .map(this::convert) // Sử dụng hàm convert hiện tại
+                .collect(Collectors.toList());
+    }
 
 
     private HinhAnhResponse convert(HinhAnh hinhAnh) {

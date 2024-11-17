@@ -12,5 +12,5 @@ public class GioHangChiTietResponse {
     private Integer idGioHang;
     private Integer idSanPhamChiTiet;
     private Integer soLuong;
-    private BigDecimal donGia;
+    private String donGia;
 }

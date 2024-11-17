@@ -3,6 +3,8 @@ package com.example.shoes.service.impl;
 
 import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.sanpham.request.SanPhamRequest;
+import com.example.shoes.dto.sanpham.response.SanPhamBanChayResponse;
+import com.example.shoes.dto.sanpham.response.SanPhamClient;
 import com.example.shoes.dto.sanpham.response.SanPhamResponse;
 import com.example.shoes.entity.Loai;
 import com.example.shoes.entity.SanPham;
@@ -19,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -159,5 +162,27 @@ public class SanPhamServiceImpl implements SanPhamService {
     public List<String> getAlltenSP() {
         return sanPhamRepo.findAll().stream().map(SanPham::getTenSanPham).collect(Collectors.toList());
     }
+
+    @Override
+    public List<SanPhamBanChayResponse> getTop3SanPhamBanChayTheoThang() {
+        List<Object[]> results = sanPhamRepo.findTop3SanPhamBanChayTrongThangHienTai();
+
+        return results.stream()
+                .map(row -> {
+                    SanPhamBanChayResponse response = new SanPhamBanChayResponse();
+                    response.setIdSP(((Number) row[0]).intValue()); // id sản phẩm
+                    response.setMaSanPham((String) row[1]); // mã sản phẩm
+                    response.setTenSanPham((String) row[2]); // tên sản phẩm
+                    response.setTongSoLuongDaBan(((Number) row[3]).intValue()); // tổng số lượng
+                    return response;
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<SanPhamClient> sanPhamClient(Integer idLoai, Integer kichThuoc, Integer idMauSac, BigDecimal donGiaMin, BigDecimal donGiaMax) {
+        return sanPhamRepo.sanPhamClient(idLoai,kichThuoc,idMauSac,donGiaMin,donGiaMax);
+    }
+
 
 }
