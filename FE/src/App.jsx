@@ -37,7 +37,12 @@ import SanPham from "./pages/client/SanPham/SanPham.jsx";
 import LienHe from "./pages/client/LienHe/LienHe.jsx";
 import TrangChu from "./pages/client/TrangChu/TrangChu.jsx";
 import GioHang from "./pages/client/GioHang/GioHang.jsx";
+
+import DC from "./pages/admin/KhachHang/DC.jsx";
+
+
 import ChiTietSanPham from "./pages/client/ChiTietSanPham/ChiTietSanPham.jsx";
+
 function App() {
   return (
     <>

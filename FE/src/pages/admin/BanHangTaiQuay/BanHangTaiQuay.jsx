@@ -8,7 +8,7 @@ import {
   Popconfirm,
   InputNumber,
 } from "antd";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import SanPhamBanTaiQuay, { getAllSPBH } from "./SanPhamBanHang";
 import axios from "../../../api/axiosConfig";
 import { Bounce, toast, ToastContainer } from "react-toastify";
@@ -21,12 +21,44 @@ import { ShoppingCartIcon } from "@heroicons/react/16/solid";
 import { ExportPDF, generatePDF } from "../XuatFilePDF/ExportPDF";
 import { getAllSPCTBH } from "./SanPhamService";
 
+import ThemMauSac from "../SanPham/ProductDetail/ThemMauSac.jsx";
+import ThanhToanCKTM from "./ThanhToanCKTM.jsx";
+import ThemKH from "./ThemKH.jsx";
+
+
 export default function BanHangTaiQuay() {
   const [hoaDonFalse, setHoaDonFalse] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [openThanhToan, setOpenThanhToan] = useState(false);
   const [SPCTChuaThanhToan, setSPCTChuaThanhToan] = useState([]);
   const [selectedHoaDonId, setSelectedHoaDonId] = useState(null); // State lưu trữ id hóa đơn được chọn
+
+
+  // chon giao hang
+  const [phiGiaoHang, setPhiGiaoHang] = useState("");
+  const [giaoHang, setGiaoHang] = useState(false);
+  const [ngayDuKien, setNgayDuKien] = useState(null);
+
+  // model thanh toán 50 50
+  const [openThanhToanCKTM, setOpenThanhToanCKTM] = useState(false);
+
+  const openModalThanhToanCKTM = () => {
+    setOpenThanhToanCKTM(true);
+  };
+  const closeModalThanhToanCKTM = async () => {
+    setOpenThanhToanCKTM(false);
+  };
+
+  // model thêm khách hàng
+  const [openThemKH, setOpenThemKH] = useState(false);
+
+  const openModalThemKH = () => {
+    setOpenThemKH(true);
+  };
+  const closeModalThemKH = async () => {
+    setOpenThemKH(false);
+  };
+
 
   const [danhSachPhieuGiamGia, setDanhSachPhieuGiamGia] = useState([]);
   const [tongTien, setTongTien] = useState(0);
@@ -400,7 +432,7 @@ export default function BanHangTaiQuay() {
   const XoaKhachHangKhoiHoaDon = async () => {
     try {
       await axios.post(`${ApiXoaKhachHangKhoiHoaDon}/${idKhachHang}`);
-      LayThongTinThanhToanCuaHoaDon();
+      await LayThongTinThanhToanCuaHoaDon();
       toast.success("Thanh cong");
       setDisableSelectKhachHang(false);
     } catch (error) {
@@ -575,6 +607,7 @@ export default function BanHangTaiQuay() {
                 label: tab.ma, // Tên tab
                 key: tab.id, // Khóa của tab
               }))}
+              onClick={() => setGiaoHang(false)}
             />
           </div>
 
@@ -633,7 +666,9 @@ export default function BanHangTaiQuay() {
                             {SPCT.tenSanPham} <br />
                             {SPCT.maSPCT} [{SPCT.kichThuoc} - {SPCT.mauSac}]
                             <br />
+
                             {formatTien(SPCT.donGia)}
+
                           </td>
 
                           <td className="text-center">
@@ -692,7 +727,9 @@ export default function BanHangTaiQuay() {
                             </div>
                           </td>
 
+
                           <td>{formatTien(SPCT.donGia * SPCT.soLuong)}</td>
+
                           <td>
                             <Popconfirm
                               title="Delete the task"
@@ -805,11 +842,14 @@ export default function BanHangTaiQuay() {
                 <div>{tienDuocGiam}</div>
               </div>
 
-              <div className="my-4 flex gap-4">
-                <div>Giao hàng</div>
-                <div>
-                  <Switch />
+              <div className="my-4 flex justify-between gap-4">
+                <div className="flex gap-3">
+                  <div>Giao hàng</div>
+                  <div>
+                    <Switch onClick={() => setGiaoHang(!giaoHang)} />
+                  </div>
                 </div>
+                <div>{giaoHang && <div>{phiGiaoHang}</div>}</div>
               </div>
 
               <div className="my-4 flex items-center justify-between">
@@ -849,60 +889,22 @@ export default function BanHangTaiQuay() {
             </div>
             <hr />
             <div className="mx-3 mt-2">
-              <span className="text-xl font-semibold">Khach hang</span>
               <div>
-                <span className="">Chọn khách hàng:&nbsp;</span>
-                <div className="flex gap-2">
-                  <Select
-                    showSearch
-                    placeholder="Chọn khách hàng"
-                    className="w-[300px]"
-                    optionLabelProp="label" // Chỉ hiển thị 'label' sau khi chọn
-                    value={idKhachHang}
-                    onClick={ThemKhachHang}
-                    disabled={disableSelctKhachHang}
-                    options={[
-                      { label: "Chọn khách hàng", value: "" }, // Option rỗng
-                      ...danhSachKhachHang.map((kh) => ({
-                        label: `${kh.hoTen}`, // Hiển thị tên khách hàng sau khi chọn
-                        value: kh.id,
-                        description: (
-                          <>
-                            <div
-                              onMouseDown={() => {
-                                setIdKhachHangDangChon(kh.id);
-                              }}
-                            >
-                              <span>tên: {kh.hoTen}</span> <br />
-                              <span>SĐT: {kh.sdt}</span>
-                              <br />
-                              <span>
-                                Địa chỉ:{" "}
-                                <DiaCHiMacDinhKhachHang idKhachHang={kh.id} />
-                              </span>
-                              <br />
-                              <hr />
-                            </div>
-                          </>
-                        ),
-                      })),
-                    ]}
-                    fieldNames={{ label: "description", value: "value" }} // Hiển thị thông tin chi tiết khi mở dropdown
-                    filterOption={
-                      (input, option) =>
-                        option.label.toLowerCase().includes(input.toLowerCase()) // Tìm kiếm theo tên  (label)
-                    }
-                  />
 
-                  <Button
-                    color="danger"
-                    variant="solid"
-                    className="ml-2 flex h-[35px] items-center justify-center" // Đặt chiều cao cho nút bằng với <Select />
-                    onClick={XoaKhachHangKhoiHoaDon}
-                  >
-                    <XMarkIcon className="h-5 w-5" />
-                  </Button>
-                </div>
+                <span className="text-xl font-semibold">Khách hàng:</span>
+                <button
+                  className="ml-[10px] w-[60px] border-2 border-blue-400 text-lg font-medium text-blue-400"
+                  onClick={openModalThemKH}
+                >
+                  Chọn
+                </button>
+                <button
+                  className="ml-[10px] w-[60px] border-2 border-red-400 text-lg font-medium text-red-400"
+                  onClick={XoaKhachHangKhoiHoaDon}
+                >
+                  X
+                </button>
+
               </div>
               <div>
                 {tenKhachHang && (
@@ -921,13 +923,18 @@ export default function BanHangTaiQuay() {
                 )}
                 {idKhachHang && (
                   <div className="my-1">
-                    <span className="text-lg font-medium">Địa chỉ: </span>
                     <span>
-                      <DiaCHiMacDinhKhachHang idKhachHang={idKhachHang} />
+                      <DiaCHiMacDinhKhachHang
+                        idKhachHang={idKhachHang}
+                        giaoHang={giaoHang}
+                        setPhiGiaoHang={setPhiGiaoHang}
+                        setNgayDuKien={setNgayDuKien}
+                      />
                     </span>
                   </div>
                 )}
               </div>
+              {giaoHang && <div>Ngày giao hàng dự kiến:{ngayDuKien}</div>}
             </div>
           </div>
         </div>
@@ -995,6 +1002,47 @@ export default function BanHangTaiQuay() {
           {error && <p className="text-red-500">{error}</p>}
         </div>
       </Modal>
+
+
+      {openThanhToanCKTM && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="flex h-[200px] w-[600px] justify-between rounded-lg bg-white p-8">
+            <div className="">
+              <ThanhToanCKTM
+                closeModel={closeModalThanhToanCKTM}
+                maHoaDon={selectedHoaDonId}
+                tienPhaiThanhToan={formatCurrencyToNumber(tienPhaiThanhToan)}
+              />
+            </div>
+            <button
+              onClick={closeModalThanhToanCKTM}
+              className="h-10 rounded bg-red-500 px-4 text-white hover:bg-red-600"
+            >
+              X
+            </button>
+          </div>
+        </div>
+      )}
+
+      {openThemKH && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="flex h-[90%] w-[80%] justify-between rounded-lg bg-white p-8">
+            <div className="">
+              <ThemKH
+                idHoaDon={selectedHoaDonId}
+                onadd={LayThongTinThanhToanCuaHoaDon}
+              />
+            </div>
+            <button
+              onClick={closeModalThemKH}
+              className="h-10 rounded bg-red-500 px-4 text-white hover:bg-red-600"
+            >
+              X
+            </button>
+          </div>
+        </div>
+      )}
+
 
       <ToastContainer
         position="top-right"
