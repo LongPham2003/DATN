@@ -9,6 +9,9 @@ import com.example.shoes.dto.hoadonchitiet.request.HoaDonChiTietRequest;
 import com.example.shoes.dto.payment.PaymentRequest;
 
 
+import com.example.shoes.entity.HoaDon;
+
+
 import java.time.LocalDate;
 import java.util.List;
 

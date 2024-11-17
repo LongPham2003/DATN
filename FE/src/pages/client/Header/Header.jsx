@@ -4,8 +4,6 @@ import Search from "antd/es/input/Search";
 import { Link } from "react-router-dom";
 
 export default function Header() {
-
-  
   return (
     <>
       <header className="fixed left-0 right-0 top-0 z-50 bg-white shadow-md">
@@ -74,10 +72,10 @@ export default function Header() {
 
           <nav className="flex space-x-8 text-2xl font-bold text-black">
             <Link
-              to="/TrangChu"
+              to="/"
               className="flex items-center rounded px-4 py-2 font-bold text-black transition duration-700 ease-in-out hover:scale-110 hover:text-orange-500 hover:underline"
             >
-              Home
+              Trang chủ
             </Link>
             <Link
               to="/SanPham"

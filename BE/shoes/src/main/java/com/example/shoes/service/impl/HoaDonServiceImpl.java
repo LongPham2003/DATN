@@ -1,7 +1,9 @@
 package com.example.shoes.service.impl;
 
 import com.example.shoes.dto.BaoCaoThongKeResponse;
+
 import com.example.shoes.dto.PhanTrangResponse;
+
 import com.example.shoes.dto.hoadon.request.HoaDonRequest;
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
 import com.example.shoes.dto.hoadon.response.HoaDonTheoIDResponse;
@@ -910,6 +912,7 @@ public class HoaDonServiceImpl implements HoaDonService {
         return hoaDonRepo.idHoaDon();
     }
 
+
     @Override
     public Void updateHoaDonById(Integer idHoaDon, PaymentRequest paymentRequest) {
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon).get();
@@ -933,6 +936,7 @@ public class HoaDonServiceImpl implements HoaDonService {
         lichSuHoaDonRepo.save(lichSuHoaDon);
         return null;
     }
+
 
 
 
@@ -997,7 +1001,9 @@ public class HoaDonServiceImpl implements HoaDonService {
         hoaDonResponse.setMa(hoaDon.getMa());
         hoaDonResponse.setTenNhanVien(hoaDon.getIdNhanVien() != null ? hoaDon.getIdNhanVien().getHoTen() : null);
         hoaDonResponse.setTenKhachHang(hoaDon.getIdKhachHang() != null ? hoaDon.getIdKhachHang().getHoTen() : "Khách lẻ");
+
         hoaDonResponse.setSoDienThoai(hoaDon.getIdKhachHang() !=null ? hoaDon.getIdKhachHang().getSdt():"Không có");
+
         hoaDonResponse.setDiaChiGiaoHang(hoaDon.getDiaChiGiaoHang());
         // Định dạng và lưu trữ giá trị tiền
         hoaDonResponse.setTongTien(formatCurrency(hoaDon.getTongTien()));
