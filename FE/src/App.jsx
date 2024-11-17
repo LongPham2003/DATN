@@ -36,7 +36,6 @@ import SanPham from "./pages/client/SanPham/SanPham.jsx";
 import LienHe from "./pages/client/LienHe/LienHe.jsx";
 import TrangChu from "./pages/client/TrangChu/TrangChu.jsx";
 import GioHang from "./pages/client/GioHang/GioHang.jsx";
-import DC from "./pages/admin/KhachHang/DC.jsx";
 
 function App() {
   return (
@@ -203,17 +202,6 @@ function App() {
             </>
           }
         />
-          <Route
-            path="dc"
-            element={
-              <>
-                <Helmet>
-                  <title>Thống kê</title>
-                </Helmet>
-                <DC/>
-              </>
-            }
-          />
         {/* roter thong ke */}
         <Route
           path="thongke"
