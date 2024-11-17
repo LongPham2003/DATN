@@ -217,8 +217,9 @@ const ChiTietPhieuGiamGia = () => {
                 required
               >
                 <option value="">Chọn trạng thái</option>
-                <option value="true">Còn</option>
-                <option value="false">Hết</option>
+                <option value="Sắp Hoạt Động">Sắp Hoạt Động</option>
+                <option value="Hoạt Động">Hoạt Động</option>
+                <option value="Ngừng Hoạt Động">Ngừng Hoạt Động</option>
               </select>
             </div>
             <div className="w-full p-2 sm:w-1/2">

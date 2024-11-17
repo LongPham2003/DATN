@@ -4,7 +4,6 @@ package com.example.shoes.service.impl;
 import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.sanpham.request.SanPhamRequest;
 import com.example.shoes.dto.sanpham.response.SanPhamBanChayResponse;
-import com.example.shoes.dto.sanpham.response.SanPhamClient;
 import com.example.shoes.dto.sanpham.response.SanPhamResponse;
 import com.example.shoes.entity.Loai;
 import com.example.shoes.entity.SanPham;
@@ -21,7 +20,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;

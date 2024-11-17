@@ -33,7 +33,6 @@ import BanHangTaiQuay from "./pages/admin/BanHangTaiQuay/BanHangTaiQuay";
 import HomePage from "./pages/client/Home/homePage.jsx";
 import PaymentResult from "./pages/admin/BanHangTaiQuay/Payment.jsx";
 import DanhSachHoaDon from "./pages/admin/QuanLiHoaDon/DanhSachHoaDon.jsx";
-
 import SanPham from "./pages/client/SanPham/SanPham.jsx";
 import LienHe from "./pages/client/LienHe/LienHe.jsx";
 import TrangChu from "./pages/client/TrangChu/TrangChu.jsx";

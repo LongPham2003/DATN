@@ -19,9 +19,7 @@ import DiaCHiMacDinhKhachHang from "./DiaChiMacDinhKhachHang";
 import "react-toastify/dist/ReactToastify.css";
 import { ShoppingCartIcon } from "@heroicons/react/16/solid";
 import { ExportPDF, generatePDF } from "../XuatFilePDF/ExportPDF";
-
 import { getAllSPCTBH } from "./SanPhamService";
-
 
 export default function BanHangTaiQuay() {
   const [hoaDonFalse, setHoaDonFalse] = useState([]);
@@ -54,9 +52,7 @@ export default function BanHangTaiQuay() {
   let ApiLayHoaDonChuaThanhToan = `http://localhost:8080/api/hoadon/getall-chuathanhtoan`; // Danh Sach Hoa DOn CHo
   let ApiLaySanPhamOHoaDon = `http://localhost:8080/api/hoadonchitiet/SPCTbyidHD`; // Gio Hang
   let ApiUpdateSoLuongSPTrongHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/update`; //Update So Luong San Pham trong gio hang
-
   let ApiLaySoLuongTonCuaSPCT = `http://localhost:8080/api/sanphamchitiet`; // Lấy số lượng tồn  để valid
-
   let ApiLayThongTinThanhToanTheoIdHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/gettheoid`; // Lay các thông tin tiền , voucher, khách hàng của hóa đơn
   let ApiLayPhieuGiamGia = `http://localhost:8080/api/phieugiamgia/trang-thai-true`; // Danh Sach Phiếu Giam giá
   let ApiHuyHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/delete/${selectedHoaDonId}`; // Hủy Hóa đơn
@@ -87,7 +83,6 @@ export default function BanHangTaiQuay() {
         const hd = await axios.get(
           `${ApiLayThongTinHoaDon}/${hoaDonList[0].id}`,
         );
-
         // setMaHD(hd.data.result.ma);
       }
 
@@ -103,7 +98,6 @@ export default function BanHangTaiQuay() {
       const hd = await axios.get(`${ApiLayThongTinHoaDon}/${selectedHoaDonId}`);
 
       setMaHD(hd.data.result.ma);
-
     } catch (error) {
       console.log("Lấy hóa đơn lỗi:", error);
     }
@@ -184,9 +178,7 @@ export default function BanHangTaiQuay() {
       await LayChiTietSanPham(); // Cập nhật giỏ hàng sau khi thêm sản phẩm
       await LayThongTinThanhToanCuaHoaDon(); // Cập nhật thông tin hóa đơn mới, bao gồm tổng tiền
     } catch (error) {
-
       console.error("Error:", error);
-
       toast.error("Có lỗi xẩy ra");
     }
   };
@@ -290,8 +282,8 @@ export default function BanHangTaiQuay() {
             soLuong: newQuantity,
           },
         );
-        await Promise.all([
 
+        await Promise.all([
           LayChiTietSanPham(),
           LayThongTinThanhToanCuaHoaDon(),
 
@@ -304,13 +296,12 @@ export default function BanHangTaiQuay() {
       console.log(error);
       toast.error("Cập nhật thất bại");
     }
+    getAllSPBH();
   };
-
 
   //Giam so luong mua di 1
   const decrement = async (idSpct, newQuantity) => {
     if (newQuantity > 0) {
-
       setThayDoiSoLuongMua(newQuantity);
       setIdSPCTDangChon(idSpct); // Cập nhật id của sản phẩm đang chọn
       // await LaySoLuongTonCuaSPCT(); // Gọi hàm lấy số lượng tồn của sản phẩm sau khi cập nhật id
@@ -323,12 +314,13 @@ export default function BanHangTaiQuay() {
             soLuong: newQuantity,
           },
         );
+
+        getAllSPBH();
         await Promise.all([
           LayChiTietSanPham(), // Cập nhật giỏ hàng sau khi thêm sản phẩm
           LayThongTinThanhToanCuaHoaDon(), // Cập nhật thông tin hóa đơn mới, bao gồm tổng tiền
 
           // LaySoLuongTonCuaSPCT(),
-
         ]);
         toast.success("Cập nhật thành công");
       } catch (error) {
@@ -423,6 +415,7 @@ export default function BanHangTaiQuay() {
       tienPhaiThanhToan.replace(/[.VNĐ]/g, "").trim(),
     );
 
+    console.log(tienPhaiThanhToanNum);
 
     setTienKhachDua(value);
 
@@ -438,7 +431,6 @@ export default function BanHangTaiQuay() {
   };
 
   //Thanh toan
-
   const thanhToanTienMat = async () => {
     try {
       // Thực hiện gọi API thanh toán và lấy phản hồi
@@ -446,7 +438,6 @@ export default function BanHangTaiQuay() {
         phuongThucThanhToan: "Tiền mặt",
         tienKhachDua: tienKhachDua,
       });
-
 
       // Lưu selectedHoaDonId vào state tạm thời
       setTempHoaDonId(selectedHoaDonId); // Lưu ID hóa đơn được chọn vào state tạm thời
@@ -458,13 +449,11 @@ export default function BanHangTaiQuay() {
       await LayDanhSachHoaDonChuaThanhToan();
       closethanhToan();
 
-
+      // Gọi hàm lấy ID lớn nhất sau khi thanh toán đã hoàn tất
+      // await LayIdLonNhat(); // Gọi hàm này sau khi thanh toán thành công
       // Gọi hàm tạo PDF với ID hóa đơn
       setTimeout(() => {
         handleGeneratePDF();
-        setTimeout(() => {
-          window.location.reload();
-        }, 900);
       }, 900);
 
       // Xóa ID tạm thời sau 1 phút
@@ -477,7 +466,6 @@ export default function BanHangTaiQuay() {
       console.log(error);
     }
   };
-
   const handleGeneratePDF = () => {
     generatePDF();
   };
@@ -501,7 +489,6 @@ export default function BanHangTaiQuay() {
 
         LayMaHoaDon(),
         // LayIdLonNhat(),
-
       ]);
 
       // Tìm hóa đơn trong `hoaDonFalse` có `id` khớp với `selectedHoaDonId`
@@ -523,16 +510,15 @@ export default function BanHangTaiQuay() {
     }
   }, [selectedHoaDonId, hoaDonFalse]);
 
+  // useEffect(() => {
+  //   if (idLonNhat) {
+  //     handleGeneratePDF(); // Gọi hàm tạo PDF khi idLonNhat đã được cập nhật
+  //   }
+  // }, [idLonNhat]);
 
   // hàm format lại định dạng khi gửi về be
   const formatCurrencyToNumber = (value) => {
     return parseInt(value.replace(/[^\d]/g, ""));
-  };
-  const formatTien = (number) => {
-    const roundedNumber = Math.round(Number(number));
-    // Format the number with thousands separators
-    return `${roundedNumber.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} VNĐ`;
-
   };
 
   // thanh toán vnpay
@@ -555,7 +541,6 @@ export default function BanHangTaiQuay() {
       console.error("Lỗi khi gọi API:", error);
     }
   };
-
 
   return (
     <>
@@ -884,9 +869,7 @@ export default function BanHangTaiQuay() {
                         description: (
                           <>
                             <div
-
                               onMouseDown={() => {
-
                                 setIdKhachHangDangChon(kh.id);
                               }}
                             >
@@ -962,7 +945,6 @@ export default function BanHangTaiQuay() {
         <SanPhamBanTaiQuay
           id={selectedHoaDonId}
           onProductAdded={closeModalAndReloadCart}
-          thayDoiSoLuong={upDateSoLuongMua}
         />
       </Modal>
 

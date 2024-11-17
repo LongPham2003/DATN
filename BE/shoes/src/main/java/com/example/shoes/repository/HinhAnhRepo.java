@@ -17,4 +17,18 @@ public interface HinhAnhRepo extends JpaRepository<HinhAnh, Integer> {
     List<HinhAnh> findTopByIdSanPhamChiTiet_IdOrderByIdAsc(@Param("idSanPhamChiTiet") Integer idSanPhamChiTiet, Pageable pageable);
     @Query("SELECT h FROM HinhAnh h WHERE h.idSanPhamChiTiet.id = :idSanPhamChiTiet ")
     Optional<List<HinhAnh>> findAllHinhAnhTheoIDSPCT(@Param("idSanPhamChiTiet") Integer idSanPhamChiTiet);
+//   lay ra 5 hinh anh theo id san pham
+        @Query(value = """
+        SELECT ha.* 
+        FROM hinh_anh ha
+        JOIN san_pham_chi_tiet spct ON ha.id_san_pham_chi_tiet = spct.id
+        JOIN san_pham sp ON spct.id_san_pham = sp.id
+        WHERE sp.id = :idSanPham
+        AND ha.trang_thai = true
+        ORDER BY ha.id ASC
+        LIMIT 5
+    """, nativeQuery = true)
+        List<HinhAnh> findTop5ImagesBySanPhamId(@Param("idSanPham") Integer idSanPham);
+
+
 }

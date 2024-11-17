@@ -62,5 +62,5 @@ public class PhieuGiamGia extends CrudByAt {
     private LocalDateTime ngayKetThuc;
 
     @Column(name = "trang_thai")
-    private Boolean trangThai;
+    private String trangThai;
 }
