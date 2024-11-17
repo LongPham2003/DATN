@@ -930,6 +930,8 @@ public class HoaDonServiceImpl implements HoaDonService {
         lichSuHoaDon.setThoiGian(LocalDate.now());
         lichSuHoaDon.setNguoiThucHien(nhanVien.getHoTen());
         lichSuHoaDonRepo.save(lichSuHoaDon);
+
+        capNhatTrangThaiHoaDon(hoaDon);
         return null;
     }
 
