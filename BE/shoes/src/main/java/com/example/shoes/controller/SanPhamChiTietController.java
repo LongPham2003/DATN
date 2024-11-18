@@ -140,12 +140,5 @@ public class SanPhamChiTietController {
                 .result(response)
                 .build();
     }
-    @GetMapping("/loc2")
-    public ApiResponse<List<SanPhamChiTietResponse>> getKichThuocAndMauSacByTen(@RequestBody SanPhamChiTietRequest request
-            ) {
-        List<SanPhamChiTietResponse> response = sanPhamChiTietService.KichThuocAndMauSac(request);
-        return ApiResponse.<List<SanPhamChiTietResponse>>builder()
-                .result(response)
-                .build();
-    }
+
 }

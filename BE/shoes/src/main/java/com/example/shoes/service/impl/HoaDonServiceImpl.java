@@ -276,6 +276,11 @@ public class HoaDonServiceImpl implements HoaDonService {
             chiTiet.setTrangThai(TrangThai.HUY_DON);
             hoaDonChiTietRepo.save(chiTiet);
         }
+        hoaDon.setTongTien(BigDecimal.ZERO);
+        hoaDon.setTienDuocGiam(BigDecimal.ZERO);
+        hoaDon.setTienPhaiThanhToan(BigDecimal.ZERO);
+        hoaDon.setTienKhachDua(BigDecimal.ZERO);
+        hoaDon.setTienThua(BigDecimal.ZERO);
         hoaDon.setTrangThai(TrangThai.HUY_DON);
         // Xóa hóa đơn
         hoaDonRepo.save(hoaDon);

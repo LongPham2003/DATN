@@ -30,5 +30,4 @@ public interface SanPhamChiTietService {
     List<String> getKichThuocBySanPhamId(Integer idSanPham);
     List<String> getMauSacBySanPhamId(Integer idSanPham);
     List<SanPhamChiTietResponse> getKichThuocAndMauSacByTen(Integer idSanPham,Integer idKichThuoc, Integer idMauSac);
-    List<SanPhamChiTietResponse> KichThuocAndMauSac(SanPhamChiTietRequest sanPhamChiTietRequest);
 }

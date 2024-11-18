@@ -253,21 +253,6 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public List<SanPhamChiTietResponse> KichThuocAndMauSac(SanPhamChiTietRequest sanPhamChiTietRequest) {
-        // Gọi repository và truyền các giá trị từ DTO
-        List<SanPhamChiTiet> entities = sanPhamChiTietRepo.findSanPhamChiTiet(
-                sanPhamChiTietRequest.getIdSanPham(),
-                sanPhamChiTietRequest.getIdKichThuoc(),
-                sanPhamChiTietRequest.getIdMauSac()
-        );
-
-        // Chuyển đổi kết quả sang DTO response nếu cần
-        return entities.stream()
-                .map(this::converToResponse)
-                .toList();
-    }
-
     // Phương thức chuyển đổi BigDecimal sang định dạng tiền tệ Việt Nam
     private String formatCurrency(BigDecimal amount) {
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
