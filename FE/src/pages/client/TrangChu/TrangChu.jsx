@@ -9,7 +9,6 @@ import { Avatar, Card } from "antd";
 import Meta from "antd/es/card/Meta";
 import Carousel from "../Carousel/Carousel";
 import CacSanPham from "./CacSanPham";
-import SnaPhamBanChay from "./SnaPhamBanChay";
 import TinTuc from "./TinTuc";
 
 export default function TrangChu() {
@@ -18,7 +17,7 @@ export default function TrangChu() {
       <div className="container">
         <Carousel />
         {/* San Pham ban chay */}
-        <SnaPhamBanChay />
+        {/* <SnaPhamBanChay /> */}
 
         <div className="flex justify-center text-3xl font-bold">
           <span>------- Các Sản Phẩm khác -------</span>

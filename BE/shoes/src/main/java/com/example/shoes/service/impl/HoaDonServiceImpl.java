@@ -1,7 +1,9 @@
 package com.example.shoes.service.impl;
 
 import com.example.shoes.dto.BaoCaoThongKeResponse;
+
 import com.example.shoes.dto.PhanTrangResponse;
+
 import com.example.shoes.dto.hoadon.request.HoaDonRequest;
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
 import com.example.shoes.dto.hoadon.response.HoaDonTheoIDResponse;
@@ -274,6 +276,11 @@ public class HoaDonServiceImpl implements HoaDonService {
             chiTiet.setTrangThai(TrangThai.HUY_DON);
             hoaDonChiTietRepo.save(chiTiet);
         }
+        hoaDon.setTongTien(BigDecimal.ZERO);
+        hoaDon.setTienDuocGiam(BigDecimal.ZERO);
+        hoaDon.setTienPhaiThanhToan(BigDecimal.ZERO);
+        hoaDon.setTienKhachDua(BigDecimal.ZERO);
+        hoaDon.setTienThua(BigDecimal.ZERO);
         hoaDon.setTrangThai(TrangThai.HUY_DON);
         // Xóa hóa đơn
         hoaDonRepo.save(hoaDon);
@@ -872,6 +879,7 @@ public class HoaDonServiceImpl implements HoaDonService {
         return response;
     }
 
+
     //    xuat hoa don
     @Transactional
     public String xuatHoaDon(Integer idHoaDon) {
@@ -936,9 +944,6 @@ public class HoaDonServiceImpl implements HoaDonService {
         return null;
     }
 
-
-
-
     private HoaDonTheoIDResponse convert(HoaDon hoaDon){
         HoaDonTheoIDResponse response = new HoaDonTheoIDResponse();
         response.setTongTien(formatCurrency(hoaDon.getTongTien()));
@@ -946,7 +951,6 @@ public class HoaDonServiceImpl implements HoaDonService {
         response.setTienPhaiThanhToan(formatCurrency(hoaDon.getTienPhaiThanhToan()));
         return response;
     }
-
     //add khách hàng vào hóa đơn
     @Override
     public HoaDonResponse addKhachHangHoaDon(Integer idHoaDon, Integer idKhachHang) {
@@ -994,14 +998,15 @@ public class HoaDonServiceImpl implements HoaDonService {
         }
     }
 
-
     private HoaDonResponse converToHoaDonResponse(HoaDon hoaDon) {
         HoaDonResponse hoaDonResponse = new HoaDonResponse();
         hoaDonResponse.setId(hoaDon.getId());
         hoaDonResponse.setMa(hoaDon.getMa());
         hoaDonResponse.setTenNhanVien(hoaDon.getIdNhanVien() != null ? hoaDon.getIdNhanVien().getHoTen() : null);
         hoaDonResponse.setTenKhachHang(hoaDon.getIdKhachHang() != null ? hoaDon.getIdKhachHang().getHoTen() : "Khách lẻ");
+
         hoaDonResponse.setSoDienThoai(hoaDon.getIdKhachHang() !=null ? hoaDon.getIdKhachHang().getSdt():"Không có");
+
         hoaDonResponse.setDiaChiGiaoHang(hoaDon.getDiaChiGiaoHang());
         // Định dạng và lưu trữ giá trị tiền
         hoaDonResponse.setTongTien(formatCurrency(hoaDon.getTongTien()));

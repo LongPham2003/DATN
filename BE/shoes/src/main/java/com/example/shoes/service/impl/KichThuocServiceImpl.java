@@ -117,6 +117,16 @@ public class KichThuocServiceImpl implements KichThuocService {
     }
 
     @Override
+    public List<KichThuocResponse> getKichThuocByidSP(Integer idSP) {
+        List<KichThuoc> list =kichThuocRepo.getKichThuocByIdSP(idSP);
+
+        // Chuyển đổi từ ChatLieu sang ChatLieuResponse
+        return list.stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<String> getAllTenKichThuoc() {
         return kichThuocRepo.findAll().stream().map(KichThuoc::getKichThuoc).collect(Collectors.toList());
     }

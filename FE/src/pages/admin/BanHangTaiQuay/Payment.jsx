@@ -20,30 +20,35 @@ export default function PaymentResult() {
     }, 1000); // Đợi 1 giây để đảm bảo ExportPDF đã render
   };
 
- const  check =  localStorage.getItem("check")
+  const check = localStorage.getItem("check");
 
   useEffect(() => {
     async function checkPaymentStatus() {
       try {
-        const response = await axios.get("http://localhost:8080/api/paymentvnpay/payment-return", {
-          params: {
-            vnp_Amount: params.get("vnp_Amount"),
-            vnp_BankCode: params.get("vnp_BankCode"),
-            vnp_OrderInfo: params.get("vnp_OrderInfo"),
-            vnp_ResponseCode: params.get("vnp_ResponseCode")
-          }
-        });
+        const response = await axios.get(
+          "http://localhost:8080/api/paymentvnpay/payment-return",
+          {
+            params: {
+              vnp_Amount: params.get("vnp_Amount"),
+              vnp_BankCode: params.get("vnp_BankCode"),
+              vnp_OrderInfo: params.get("vnp_OrderInfo"),
+              vnp_ResponseCode: params.get("vnp_ResponseCode"),
+            },
+          },
+        );
 
         if (response.data) {
-          await axios.post(`http://localhost:8080/api/hoadon/thanh-toan/tc-vnpay/${id}`, {
-            phuongThucThanhToan: check,
-            tienKhachDua: 0
-          });
+          await axios.post(
+            `http://localhost:8080/api/hoadon/thanh-toan/tc-vnpay/${id}`,
+            {
+              phuongThucThanhToan: check,
+              tienKhachDua: 0,
+            },
+          );
 
           // navigate("/admin/banhangoff");
           toast.success("Thành công ");
           handleGeneratePDF();
-
         } else {
           setTimeout(() => navigate("/admin/banhangoff"), 500);
           toast.error("Thất bại");
@@ -54,7 +59,6 @@ export default function PaymentResult() {
     }
 
     checkPaymentStatus();
-
   }, [location.search, navigate]);
 
   return (
@@ -72,7 +76,6 @@ export default function PaymentResult() {
         theme="light"
         transition={Bounce}
       />
-
       {/* Hiển thị ExportPDF tạm thời khi showPDF là true */}
       {showPDF && <ExportPDF idHoaDon={id} />}
     </div>

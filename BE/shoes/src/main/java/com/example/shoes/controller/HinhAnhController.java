@@ -73,4 +73,13 @@ public class HinhAnhController {
                 .result(hinhAnhResponses)
                 .build();
     }
+
+    @GetMapping("/san-pham/{idSanPham}/top5")
+    public ApiResponse<List<HinhAnhResponse>> getTop5ImagesBySanPhamId(@PathVariable Integer idSanPham) {
+        List<HinhAnhResponse> hinhAnhResponses = hinhAnhService.getTop5ImagesBySanPhamId(idSanPham);
+        return ApiResponse.<List<HinhAnhResponse>>builder()
+                .result(hinhAnhResponses)
+                .build();
+    }
+
 }

@@ -37,6 +37,8 @@ import LienHe from "./pages/client/LienHe/LienHe.jsx";
 import TrangChu from "./pages/client/TrangChu/TrangChu.jsx";
 import GioHang from "./pages/client/GioHang/GioHang.jsx";
 
+import ChiTietSanPham from "./pages/client/ChiTietSanPham/ChiTietSanPham.jsx";
+
 function App() {
   return (
     <>
@@ -300,6 +302,18 @@ function App() {
                 </>
               }
             />
+            {/* roter voucher */}
+            {/* <Route
+              path="voucher"
+              element={
+                <>
+                  <Helmet>
+                    <title>Voucher</title>
+                  </Helmet>
+                  <Voucher />
+                </>
+              }
+            /> */}
             {/* roter san pham */}
             <Route
               path="sanpham"

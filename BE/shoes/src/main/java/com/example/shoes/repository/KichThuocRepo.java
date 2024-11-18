@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 
 import java.util.List;
@@ -30,5 +31,14 @@ public interface KichThuocRepo extends JpaRepository<KichThuoc, Integer> {
     // lấy tat ca danh sach sp co trang thai true
     @Query("SELECT kt FROM KichThuoc  kt WHERE kt.trangThai = true")
     List<KichThuoc> getAllTrangThaiTrue();
+//    lay ra danh sach kich thuoc theo id san pham
+    @Query("""
+                SELECT kt 
+                FROM KichThuoc kt 
+                JOIN SanPhamChiTiet spct ON spct.idKichThuoc.id = kt.id 
+                WHERE spct.idSanPham.id = :idSanPham
+            """)
+    List<KichThuoc> getKichThuocByIdSP(@Param("idSanPham") Integer idSanPham);
+
 }
 

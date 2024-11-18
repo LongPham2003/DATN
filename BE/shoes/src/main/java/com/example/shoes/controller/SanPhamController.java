@@ -3,6 +3,8 @@ package com.example.shoes.controller;
 
 import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.sanpham.request.SanPhamRequest;
+import com.example.shoes.dto.sanpham.response.SanPhamBanChayResponse;
+import com.example.shoes.dto.sanpham.response.SanPhamClient;
 import com.example.shoes.dto.sanpham.response.SanPhamResponse;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.service.SanPhamService;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -86,4 +89,23 @@ public class SanPhamController {
                 .message("Update thành công")
                 .build();
     }
+
+    @GetMapping("/top3-ban-chay")
+    public ApiResponse<List<SanPhamBanChayResponse>> getTop3SanPhamBanChay() {
+        // Lấy danh sách sản phẩm
+        List<SanPhamBanChayResponse> top3SanPham = sanPhamService.getTop3SanPhamBanChay();
+        // Trả về response với ApiResponse
+        return ApiResponse.<List<SanPhamBanChayResponse>>builder()
+                .result(top3SanPham)
+                .build();
+    }
+
+    @GetMapping("/trangchu")
+    public List<SanPhamClient> sanPhamClient(@RequestParam(value = "idLoai", required = false) Integer idLoai,
+                                             @RequestParam(value = "idKichThuoc", required = false) Integer idKichThuoc,
+                                             @RequestParam(value = "idMauSac", required = false)  Integer idMauSac,
+                                             @RequestParam(value = "donGiaMin", required = false)  BigDecimal donGiaMin,
+                                             @RequestParam(value = "donGiaMax", required = false)  BigDecimal donGiaMax) {
+        return sanPhamService.sanPhamClient(idLoai, idKichThuoc, idMauSac, donGiaMin, donGiaMax);}
+
 }

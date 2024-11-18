@@ -1,29 +1,97 @@
-import {
-  EditOutlined,
-  EllipsisOutlined,
-  SettingOutlined,
-} from "@ant-design/icons";
-import { Avatar, Button, Card, Dropdown, Menu, Select } from "antd";
+import { Button, Card, Radio } from "antd";
 import Meta from "antd/es/card/Meta";
 import axios from "./../../../api/axiosConfig";
 import { useState } from "react";
 import { useEffect } from "react";
+import LayANhTheoIdSPCT from "./../../admin/SanPham/Product/LayANhTheoIDSP";
+import { Link } from "react-router-dom";
 
 export default function CacSanPham() {
-  const [selectedMauSac, setSelectedMauSac] = useState(null);
-  const [selectedMauSacName, setSelectedMauSacName] = useState(null);
   const [listMauSac, setListMauSac] = useState([]);
+  const [listKichThuoc, setListKichThuoc] = useState([]);
+  const [listLoai, setListLoai] = useState([]);
+  const [listSanPham, setListSanPham] = useState([]);
+  const [selectedIdMauSac, setSelectedIdMauSac] = useState(null);
+  const [selectedIdLoai, setSelectedIdLoai] = useState(null);
+  const [selectedIdKichThuoc, setSelectedIdKichThuoc] = useState(null);
+
+  const [donGiaMin, setMinGia] = useState(null);
+  const [donGiaMax, setMaxGia] = useState(null);
 
   let ApiMauSac = `http://localhost:8080/api/mausac/getall`;
+  let ApiLoai = `http://localhost:8080/api/loai/getall`;
+  let ApiKichThuoc = `http://localhost:8080/api/kichthuoc/getall`;
+
+  let ApiSanPhamBanHang = `http://localhost:8080/api/sanpham/trangchu`;
 
   const LayThuocTinh = async () => {
-    const MauSac = await axios.get(ApiMauSac);
-    setListMauSac(MauSac.data.result);
+    try {
+      const [MauSac, Loai, KichThuoc] = await Promise.all([
+        axios.get(ApiMauSac),
+        axios.get(ApiLoai),
+        axios.get(ApiKichThuoc),
+      ]);
+      setListMauSac(MauSac.data.result);
+      setListLoai(Loai.data.result);
+      setListKichThuoc(KichThuoc.data.result);
+    } catch (error) {
+      console.error("Lỗi khi lấy dữ liệu:", error);
+    }
+  };
+  const LaySanPham = async () => {
+    try {
+      const params = {};
+
+      // Thêm các tham số vào params nếu không null
+      if (selectedIdMauSac) params.idMauSac = selectedIdMauSac;
+      if (selectedIdLoai) params.idLoai = selectedIdLoai;
+      if (selectedIdKichThuoc) params.idKichThuoc = selectedIdKichThuoc;
+      if (donGiaMin !== null) params.donGiaMin = donGiaMin;
+      if (donGiaMax !== null) params.donGiaMax = donGiaMax;
+
+      // Tạo URL đầy đủ để log
+      const queryString = new URLSearchParams(params).toString();
+      const fullUrl = queryString
+        ? `${ApiSanPhamBanHang}?${queryString}`
+        : ApiSanPhamBanHang;
+
+      // Log ra URL
+      console.log("Generated URL:", fullUrl);
+
+      // Gọi API
+      const sanPham = await axios.get(ApiSanPhamBanHang, { params });
+      setListSanPham(sanPham.data);
+      console.log("Fetched products:", sanPham.data);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  };
+
+  const handleRadioChange = (e) => {
+    if (e.target.checked) {
+      // Tách chuỗi value để lấy giá trị min và max
+      const [min, max] = e.target.value.split("-").map(Number);
+      setMinGia(min);
+      setMaxGia(max);
+      console.log(min);
+      console.log(max);
+    } else {
+      // Reset giá trị khi bỏ chọn
+      setMinGia(null);
+      setMaxGia(null);
+    }
   };
 
   useEffect(() => {
     LayThuocTinh();
-  }, []);
+    LaySanPham();
+  }, [
+    selectedIdKichThuoc,
+    selectedIdLoai,
+    selectedIdMauSac,
+    donGiaMin,
+    donGiaMax,
+  ]);
 
   return (
     <>
@@ -32,11 +100,9 @@ export default function CacSanPham() {
           <span className="text-3xl font-semibold">Bộ Lọc</span>
         </div>
         <div className="col-span-3 col-start-1 col-end-3 h-auto">
-       
-         
           <div className="my-2">
             <Card
-              title="Loại"
+              title="Loại giày"
               style={{
                 width: 340,
               }}
@@ -47,46 +113,22 @@ export default function CacSanPham() {
               }}
             >
               <div className="grid grid-cols-3">
-                <p className="m-1 flex h-9 w-20 items-center justify-center rounded-lg bg-red-200">
-                  a
-                </p>
-                <p className="m-1 flex h-9 w-20 items-center justify-center rounded-lg bg-red-200">
-                  b
-                </p>
-                <p className="m-1 flex h-9 w-20 items-center justify-center rounded-lg bg-red-200">
-                  c
-                </p>
-                <p className="m-1 flex h-9 w-20 items-center justify-center rounded-lg bg-red-200">
-                  c
-                </p>
-              </div>
-            </Card>
-          </div>
-          <div className="my-2">
-            <Card
-              title="Thương Hiệu"
-              style={{
-                width: 340,
-              }}
-              headStyle={{
-                backgroundColor: "#f0f0f0",
-                color: "black",
-                fontSize: "20px",
-              }}
-            >
-              <div className="grid grid-cols-3">
-                <p className="m-1 flex h-9 w-20 items-center justify-center rounded-lg bg-red-200">
-                  a
-                </p>
-                <p className="m-1 flex h-9 w-20 items-center justify-center rounded-lg bg-red-200">
-                  b
-                </p>
-                <p className="m-1 flex h-9 w-20 items-center justify-center rounded-lg bg-red-200">
-                  c
-                </p>
-                <p className="m-1 flex h-9 w-20 items-center justify-center rounded-lg bg-red-200">
-                  c
-                </p>
+                {listLoai.map((th) => (
+                  <Button
+                    className={`m-2 ${selectedIdLoai === th.id ? "bg-blue-500" : ""}`}
+                    key={th.id}
+                    onClick={() => {
+                      if (selectedIdLoai !== th.id) {
+                        setSelectedIdLoai(th.id);
+                        console.log(th.id);
+                      } else {
+                        setSelectedIdLoai(null);
+                      }
+                    }}
+                  >
+                    {th.ten}
+                  </Button>
+                ))}
               </div>
             </Card>
           </div>
@@ -103,16 +145,16 @@ export default function CacSanPham() {
               }}
             >
               <div className="grid grid-cols-3">
-            
                 {listMauSac.map((ms) => (
                   <Button
-                    className={`m-2 ${selectedMauSac === ms.id ? 'bg-blue-500' : ''}`}
+                    className={`m-2 ${selectedIdMauSac === ms.id ? "bg-blue-500" : ""}`}
+                    key={ms.id}
                     onClick={() => {
-                      if (selectedMauSac !== ms.id) {
-                        setSelectedMauSac(ms.id);
+                      if (selectedIdMauSac !== ms.id) {
+                        setSelectedIdMauSac(ms.id);
                         console.log(ms.id);
                       } else {
-                        setSelectedMauSac(null);
+                        setSelectedIdMauSac(null);
                       }
                     }}
                   >
@@ -135,46 +177,22 @@ export default function CacSanPham() {
               }}
             >
               <div className="grid grid-cols-3">
-                <p className="m-1 flex h-9 w-20 items-center justify-center rounded-lg bg-red-200">
-                  a
-                </p>
-                <p className="m-1 flex h-9 w-20 items-center justify-center rounded-lg bg-red-200">
-                  b
-                </p>
-                <p className="m-1 flex h-9 w-20 items-center justify-center rounded-lg bg-red-200">
-                  c
-                </p>
-                <p className="m-1 flex h-9 w-20 items-center justify-center rounded-lg bg-red-200">
-                  c
-                </p>
-              </div>
-            </Card>
-          </div>
-          <div className="my-2">
-            <Card
-              title="Đế Giày"
-              style={{
-                width: 340,
-              }}
-              headStyle={{
-                backgroundColor: "#f0f0f0",
-                color: "black",
-                fontSize: "20px",
-              }}
-            >
-              <div className="grid grid-cols-3">
-                <p className="m-1 flex h-9 w-20 items-center justify-center rounded-lg bg-red-200">
-                  a
-                </p>
-                <p className="m-1 flex h-9 w-20 items-center justify-center rounded-lg bg-red-200">
-                  b
-                </p>
-                <p className="m-1 flex h-9 w-20 items-center justify-center rounded-lg bg-red-200">
-                  c
-                </p>
-                <p className="m-1 flex h-9 w-20 items-center justify-center rounded-lg bg-red-200">
-                  c
-                </p>
+                {listKichThuoc.map((sz) => (
+                  <Button
+                    className={`m-2 ${selectedIdKichThuoc === sz.id ? "bg-blue-500" : ""}`}
+                    key={sz.id}
+                    onClick={() => {
+                      if (selectedIdKichThuoc !== sz.id) {
+                        setSelectedIdKichThuoc(sz.id);
+                        console.log(sz.id);
+                      } else {
+                        setSelectedIdKichThuoc(null);
+                      }
+                    }}
+                  >
+                    {sz.kichThuoc}
+                  </Button>
+                ))}
               </div>
             </Card>
           </div>
@@ -190,107 +208,87 @@ export default function CacSanPham() {
                 fontSize: "20px",
               }}
             >
-              <div className="grid grid-cols-3">
-                <p className="m-1 flex h-9 w-20 items-center justify-center rounded-lg bg-red-200">
-                  a
-                </p>
-                <p className="m-1 flex h-9 w-20 items-center justify-center rounded-lg bg-red-200">
-                  b
-                </p>
-                <p className="m-1 flex h-9 w-20 items-center justify-center rounded-lg bg-red-200">
-                  c
-                </p>
-                <p className="m-1 flex h-9 w-20 items-center justify-center rounded-lg bg-red-200">
-                  c
-                </p>
+              <div className="grid grid-cols-1">
+                <div className="mb-2 text-lg font-semibold">
+                  <Radio.Group onChange={handleRadioChange}>
+                    <div className="mb-2 text-lg font-semibold">
+                      <Radio
+                        style={{ transform: "scale(1.3)", marginLeft: "8px" }}
+                        value="0-999999999"
+                      >
+                        Tất cả
+                      </Radio>
+                    </div>
+                    <div className="mb-2 text-lg font-semibold">
+                      <Radio
+                        style={{ transform: "scale(1.3)", marginLeft: "14px" }}
+                        value="0-5000000"
+                      >
+                        0đ - 500.000đ
+                      </Radio>
+                    </div>
+                    <div className="mb-2 text-lg font-semibold">
+                      <Radio
+                        style={{ transform: "scale(1.3)", marginLeft: "21px" }}
+                        value="500001-1000000"
+                      >
+                        500.000đ - 1.000.000đ
+                      </Radio>
+                    </div>
+                    <div className="mb-2 text-lg font-semibold">
+                      <Radio
+                        style={{ transform: "scale(1.3)", marginLeft: "22px" }}
+                        value="1000001-1500000"
+                      >
+                        1.000.000đ - 1.500.000đ
+                      </Radio>
+                    </div>
+                    <div className="text-lg font-semibold">
+                      <Radio
+                        style={{ transform: "scale(1.3)", marginLeft: "13px" }}
+                        value="1500001-9999999"
+                      >
+                        Từ 1.500.000đ
+                      </Radio>
+                    </div>
+                  </Radio.Group>
+                </div>
               </div>
             </Card>
           </div>
         </div>
 
-        <div className="col-span-9 col-start-4 col-end-12 h-auto">
-          <div className="flex justify-between gap-6">
-            <Card
-              hoverable
-              style={{
-                width: 300,
-              }}
-              className="col-start-2"
-              cover={
-                <img
-                  alt="example"
-                  src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                  className="transition-transform duration-300 ease-in-out hover:scale-110"
-                />
-              }
-              actions={[
-                <SettingOutlined key="setting" />,
-                <EditOutlined key="edit" />,
-                <EllipsisOutlined key="ellipsis" />,
-              ]}
-            >
-              <Meta
-                avatar={
-                  <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=8" />
+        <div className="col-span-9 col-start-4 col-end-12 flex justify-between">
+          <div className="grid w-full grid-cols-3 gap-8">
+            {listSanPham.map((spct, index) => (
+              <Card
+                key={index}
+                hoverable
+                className="h-[330px]"
+                cover={
+                  <Link to={`/chitiet/${spct.idSP}`}>
+                    <div className="transition-transform duration-300 hover:scale-110">
+                      <LayANhTheoIdSPCT
+                        id={spct.idSPCT}
+                        className="h-[200px] w-auto justify-center object-cover"
+                      />
+                    </div>
+                  </Link>
                 }
-                title="Card title"
-                description="This is the description"
-              />
-            </Card>
-            <Card
-              hoverable
-              style={{
-                width: 300,
-              }}
-              className="col-start-2"
-              cover={
-                <img
-                  alt="example"
-                  src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                  className="transition-transform duration-300 ease-in-out hover:scale-110"
+                actions={[
+                  <div>
+                    <Link>
+                      <button className="text-base">Mua ngay</button>
+                    </Link>
+                  </div>,
+                ]}
+              >
+                <Meta
+                  title={spct.tenThuongHieu + " - " + spct.tenSanPham}
+                  className="text-lg"
                 />
-              }
-              actions={[
-                <SettingOutlined key="setting" />,
-                <EditOutlined key="edit" />,
-                <EllipsisOutlined key="ellipsis" />,
-              ]}
-            >
-              <Meta
-                avatar={
-                  <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=8" />
-                }
-                title="Card title"
-                description="This is the description"
-              />
-            </Card>
-            <Card
-              hoverable
-              style={{
-                width: 300,
-              }}
-              className="col-start-2"
-              cover={
-                <img
-                  alt="example"
-                  src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                  className="transition-transform duration-300 ease-in-out hover:scale-110"
-                />
-              }
-              actions={[
-                <SettingOutlined key="setting" />,
-                <EditOutlined key="edit" />,
-                <EllipsisOutlined key="ellipsis" />,
-              ]}
-            >
-              <Meta
-                avatar={
-                  <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=8" />
-                }
-                title="Card title"
-                description="This is the description"
-              />
-            </Card>
+              </Card>
+            ))}
           </div>
         </div>
       </div>
