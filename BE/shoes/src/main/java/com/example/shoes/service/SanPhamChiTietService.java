@@ -28,4 +28,5 @@ public interface SanPhamChiTietService {
     List<SanPhamChiTietResponse> findByIdSanPhamAndTrangThaiTrue( Integer idSanPham);
     SanPhamChiTietDetailResponse getSPCTDetail(Integer idSPCT);
     List<SanPhamChiTietResponse> getKichThuocAndMauSacByTen(Integer idSanPham,Integer idKichThuoc, Integer idMauSac);
+    List<SanPhamChiTietResponse>findTop3SanPhamMoiNhat();
 }

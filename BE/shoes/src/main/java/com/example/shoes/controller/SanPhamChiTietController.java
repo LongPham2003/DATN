@@ -125,5 +125,13 @@ public class SanPhamChiTietController {
                 .result(response)
                 .build();
     }
+    @GetMapping("/top3sanphammoinhat")
+    public ApiResponse<List<SanPhamChiTietResponse>> top3SanPhamMoiNhat() {
+        List<SanPhamChiTietResponse> responses = sanPhamChiTietService.findTop3SanPhamMoiNhat();
+        // Trả về API response
+        return ApiResponse.<List<SanPhamChiTietResponse>>builder()
+                .result(responses)
+                .build();
+    }
 
 }

@@ -87,10 +87,11 @@ public class SanPhamController {
                 .message("Update thành công")
                 .build();
     }
+
     @GetMapping("/top3-ban-chay")
-    public ApiResponse<List<SanPhamBanChayResponse>> getTop3SanPhamBanChayTheoThang() {
-        // Lấy danh sách sản phẩm bán chạy theo tháng và năm
-        List<SanPhamBanChayResponse> top3SanPham = sanPhamService.getTop3SanPhamBanChayTheoThang();
+    public ApiResponse<List<SanPhamBanChayResponse>> getTop3SanPhamBanChay() {
+        // Lấy danh sách sản phẩm
+        List<SanPhamBanChayResponse> top3SanPham = sanPhamService.getTop3SanPhamBanChay();
         // Trả về response với ApiResponse
         return ApiResponse.<List<SanPhamBanChayResponse>>builder()
                 .result(top3SanPham)

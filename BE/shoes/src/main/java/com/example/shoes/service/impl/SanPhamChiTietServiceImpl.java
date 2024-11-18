@@ -243,6 +243,14 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<SanPhamChiTietResponse> findTop3SanPhamMoiNhat() {
+        List<SanPhamChiTiet> sanPhamChiTietList = sanPhamChiTietRepo.findTop3SanPhamMoiNhat();
+        return sanPhamChiTietList.stream()
+                .map(this::converToResponse) // Sử dụng phương thức convertToResponse để chuyển đổi
+                .collect(Collectors.toList());
+    }
+
     // Phương thức chuyển đổi BigDecimal sang định dạng tiền tệ Việt Nam
     private String formatCurrency(BigDecimal amount) {
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));

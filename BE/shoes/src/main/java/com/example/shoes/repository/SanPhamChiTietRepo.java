@@ -86,6 +86,13 @@ List<SanPhamChiTiet> findSanPhamChiTiet(
         @Param("idSanPham") Integer idSanPham,
         @Param("idKichThuoc") Integer idKichThuoc,
         @Param("idMauSac") Integer idMauSac);
-
+//lay ra top 3 san pham moi nhat
+    @Query(value = "SELECT spct.* " +
+            "FROM san_pham_chi_tiet spct " +
+            "JOIN san_pham sp ON spct.id_san_pham = sp.id " +
+            "ORDER BY sp.ngay_tao DESC " +  // Sắp xếp theo ngày tạo của sản phẩm (SanPham)
+            "LIMIT 3",
+            nativeQuery = true)
+    List<SanPhamChiTiet> findTop3SanPhamMoiNhat();
 }
 

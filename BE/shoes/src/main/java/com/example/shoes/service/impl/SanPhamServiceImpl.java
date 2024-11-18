@@ -23,8 +23,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Service
@@ -164,18 +167,42 @@ public class SanPhamServiceImpl implements SanPhamService {
     }
 
     @Override
-    public List<SanPhamBanChayResponse> getTop3SanPhamBanChayTheoThang() {
-        List<Object[]> results = sanPhamRepo.findTop3SanPhamBanChayTrongThangHienTai();
+    public List<SanPhamBanChayResponse> getTop3SanPhamBanChay() {
+        List<Object[]> results = sanPhamRepo.findTop3SanPhamBanChay();
 
         return results.stream()
                 .map(row -> {
                     SanPhamBanChayResponse response = new SanPhamBanChayResponse();
                     response.setIdSP(((Number) row[0]).intValue()); // id sản phẩm
-                    response.setMaSanPham((String) row[1]); // mã sản phẩm
-                    response.setTenSanPham((String) row[2]); // tên sản phẩm
-                    response.setTongSoLuongDaBan(((Number) row[3]).intValue()); // tổng số lượng
+                    // Định dạng donGia
+                    BigDecimal donGia = (BigDecimal) row[1]; // lấy giá trị donGia từ kết quả truy vấn
+                    response.setDonGia(formatCurrency(donGia)); // định dạng tiền tệ và set vào response
+                    response.setMaSanPham((String) row[2]); // mã sản phẩm
+                    response.setTenSanPham((String) row[3]); // tên sản phẩm
+                    response.setTongSoLuongDaBan(((Number) row[4]).intValue()); // tổng số lượng
+
+
+
                     return response;
                 })
                 .collect(Collectors.toList());
+    }
+    // Phương thức chuyển đổi BigDecimal sang định dạng tiền tệ Việt Nam
+    private String formatCurrency(Object value) {
+        if (value == null) return "0 VNĐ"; // Trả về "0 VNĐ" nếu giá trị là null
+
+        if (value instanceof Number) {
+            // Chuyển đổi value thành BigDecimal để đảm bảo độ chính xác khi định dạng tiền tệ
+            BigDecimal amount = new BigDecimal(((Number) value).toString());
+
+            // Sử dụng NumberFormat để định dạng tiền tệ Việt Nam
+            NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+            String formatted = currencyFormat.format(amount);
+
+            // Loại bỏ ký hiệu ₫ và thêm VNĐ
+            return formatted.replace("₫", "").trim() + " VNĐ";
+        } else {
+            throw new IllegalArgumentException("Provided value is not a number: " + value);
+        }
     }
 }
