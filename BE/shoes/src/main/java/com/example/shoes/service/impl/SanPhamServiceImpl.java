@@ -5,6 +5,7 @@ import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.hinhanh.response.HinhAnhResponse;
 import com.example.shoes.dto.sanpham.request.SanPhamRequest;
 import com.example.shoes.dto.sanpham.response.SanPhamBanChayResponse;
+import com.example.shoes.dto.sanpham.response.SanPhamClient;
 import com.example.shoes.dto.sanpham.response.SanPhamResponse;
 import com.example.shoes.entity.HinhAnh;
 import com.example.shoes.entity.Loai;
@@ -27,6 +28,7 @@ import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Service
@@ -166,7 +168,7 @@ public class SanPhamServiceImpl implements SanPhamService {
     }
 
     @Override
-    public List<SanPhamBanChayResponse> getTop3SanPhamBanChayTheoThang() {
+    public List<SanPhamBanChayResponse> getTop3SanPhamBanChay() {
         List<Object[]> results = sanPhamRepo.findTop3SanPhamBanChayTrongThangHienTai();
 
         return results.stream()

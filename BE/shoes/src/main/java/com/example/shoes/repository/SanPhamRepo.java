@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface SanPhamRepo extends JpaRepository<SanPham, Integer> {
@@ -49,5 +50,34 @@ public interface SanPhamRepo extends JpaRepository<SanPham, Integer> {
             nativeQuery = true)
     List<Object[]> findTop3SanPhamBanChayTrongThangHienTai();
 
-
+    @Query(value = """
+  SELECT
+                                      sp.id AS idSP,
+                                      sp.ten_san_pham AS tenSanPham ,
+                                      th.ten AS tenThuongHieu,
+                                      (SELECT spct.id
+                                       FROM san_pham_chi_tiet spct
+                                       WHERE spct.id_san_pham = sp.id
+                                       ORDER BY spct.id LIMIT 1) AS idSPCT,
+                                      (SELECT spct.don_gia
+                                       FROM san_pham_chi_tiet spct
+                                       WHERE spct.id_san_pham = sp.id
+                                       ORDER BY spct.id LIMIT 1) AS donGia
+                                  
+    FROM san_pham sp
+    JOIN san_pham_chi_tiet spct ON sp.id = spct.id_san_pham
+    JOIN thuong_hieu th ON spct.id_thuong_hieu = th.id
+    WHERE sp.trang_thai = 1
+      AND (:idLoai IS NULL OR sp.id_loai = :idLoai)
+      AND (:idKichThuoc IS NULL OR spct.id_kich_thuoc = :idKichThuoc)
+      AND (:idMauSac IS NULL OR spct.id_mau_sac = :idMauSac)
+         AND (:donGiaMin IS NULL OR :donGiaMax IS NULL OR spct.don_gia BETWEEN :donGiaMin AND :donGiaMax)
+    GROUP BY sp.id, th.id, sp.ten_san_pham
+    ORDER BY sp.id;
+""", nativeQuery = true)
+    List<SanPhamClient> sanPhamClient(@Param("idLoai") Integer idLoai,
+                                      @Param("idKichThuoc") Integer idKichThuoc,
+                                      @Param("idMauSac") Integer idMauSac,
+                                      @Param("donGiaMin") BigDecimal donGiaMin,
+                                      @Param("donGiaMax") BigDecimal donGiaMax);
 }

@@ -19,8 +19,6 @@ import DiaCHiMacDinhKhachHang from "./DiaChiMacDinhKhachHang";
 import "react-toastify/dist/ReactToastify.css";
 import { ShoppingCartIcon } from "@heroicons/react/16/solid";
 import { ExportPDF, generatePDF } from "../XuatFilePDF/ExportPDF";
-import { getAllSPCTBH } from "./SanPhamService";
-import ThemMauSac from "../SanPham/ProductDetail/ThemMauSac.jsx";
 import ThanhToanCKTM from "./ThanhToanCKTM.jsx";
 import ThemKH from "./ThemKH.jsx";
 
