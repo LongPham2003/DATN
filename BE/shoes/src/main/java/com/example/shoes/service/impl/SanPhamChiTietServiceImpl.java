@@ -238,16 +238,6 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     }
 
     @Override
-    public List<String> getKichThuocBySanPhamId(Integer idSanPham) {
-        return sanPhamChiTietRepo.findTenKichThuocBySanPhamId(idSanPham);
-    }
-
-    @Override
-    public List<String> getMauSacBySanPhamId(Integer idSanPham) {
-        return sanPhamChiTietRepo.findTenMauSacBySanPhamId(idSanPham);
-    }
-
-    @Override
     public List<SanPhamChiTietResponse> getKichThuocAndMauSacByTen(Integer idSanPham,Integer idKichThuoc, Integer idMauSac) {
         // Gọi phương thức trong repository
       List<SanPhamChiTiet> sanPhamChiTietList = sanPhamChiTietRepo.findSanPhamChiTiet(idSanPham,idKichThuoc,idMauSac);
@@ -257,18 +247,11 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     }
 
     @Override
-    public List<SanPhamChiTietResponse> KichThuocAndMauSac(SanPhamChiTietRequest sanPhamChiTietRequest) {
-        // Gọi repository và truyền các giá trị từ DTO
-        List<SanPhamChiTiet> entities = sanPhamChiTietRepo.findSanPhamChiTiet(
-                sanPhamChiTietRequest.getIdSanPham(),
-                sanPhamChiTietRequest.getIdKichThuoc(),
-                sanPhamChiTietRequest.getIdMauSac()
-        );
-
-        // Chuyển đổi kết quả sang DTO response nếu cần
-        return entities.stream()
-                .map(this::converToResponse)
-                .toList();
+    public List<SanPhamChiTietResponse> findTop3SanPhamMoiNhat() {
+        List<SanPhamChiTiet> sanPhamChiTietList = sanPhamChiTietRepo.findTop3SanPhamMoiNhat();
+        return sanPhamChiTietList.stream()
+                .map(this::converToResponse) // Sử dụng phương thức convertToResponse để chuyển đổi
+                .collect(Collectors.toList());
     }
 
     // Phương thức chuyển đổi BigDecimal sang định dạng tiền tệ Việt Nam

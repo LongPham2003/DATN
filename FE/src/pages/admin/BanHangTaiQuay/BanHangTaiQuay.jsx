@@ -476,9 +476,6 @@ export default function BanHangTaiQuay() {
       // Gọi hàm tạo PDF với ID hóa đơn
       setTimeout(() => {
         handleGeneratePDF();
-        setTimeout(() => {
-          window.location.reload();
-        }, 900);
       }, 900);
 
       // Xóa ID tạm thời sau 1 phút
@@ -781,7 +778,7 @@ export default function BanHangTaiQuay() {
                         description: (
                           <>
                             <div
-                              onMouseUp={() =>
+                              onMouseEnter={() =>
                                 setIdPhieuGiamGiaDangChon(pgg.id)
                               }
                             >

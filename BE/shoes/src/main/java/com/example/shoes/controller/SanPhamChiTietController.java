@@ -108,21 +108,6 @@ public class SanPhamChiTietController {
         return ApiResponse.<SanPhamChiTietDetailResponse>builder().result(response).build();
     }
 
-    @GetMapping("/{idSanPham}/kich-thuoc")
-    public ApiResponse<List<String>> getKichThuoc(@PathVariable("idSanPham") Integer idSanPham) {
-        List<String> kichThuoc = sanPhamChiTietService.getKichThuocBySanPhamId(idSanPham);
-        return ApiResponse.<List<String>>builder()
-                .result(kichThuoc)
-                .build();
-    }
-
-    @GetMapping("/{idSanPham}/mau-sac")
-    public ApiResponse<List<String>> getMauSac(@PathVariable("idSanPham") Integer idSanPham) {
-        List<String> mauSac = sanPhamChiTietService.getMauSacBySanPhamId(idSanPham);
-        return ApiResponse.<List<String>>builder()
-                .result(mauSac)
-                .build();
-    }
     @GetMapping("/loc")
     public ApiResponse<List<SanPhamChiTietResponse>> getKichThuocAndMauSacByTen(
             @RequestParam(value = "idSanPham", required = true) Integer idSanPham, // đảm bảo tham số là bắt buộc
@@ -137,12 +122,13 @@ public class SanPhamChiTietController {
                 .result(response)
                 .build();
     }
-    @GetMapping("/loc2")
-    public ApiResponse<List<SanPhamChiTietResponse>> getKichThuocAndMauSacByTen(@RequestBody SanPhamChiTietRequest request
-            ) {
-        List<SanPhamChiTietResponse> response = sanPhamChiTietService.KichThuocAndMauSac(request);
+    @GetMapping("/top3sanphammoinhat")
+    public ApiResponse<List<SanPhamChiTietResponse>> top3SanPhamMoiNhat() {
+        List<SanPhamChiTietResponse> responses = sanPhamChiTietService.findTop3SanPhamMoiNhat();
+        // Trả về API response
         return ApiResponse.<List<SanPhamChiTietResponse>>builder()
-                .result(response)
+                .result(responses)
                 .build();
     }
+
 }

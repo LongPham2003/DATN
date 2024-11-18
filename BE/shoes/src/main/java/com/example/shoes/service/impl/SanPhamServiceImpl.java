@@ -2,14 +2,16 @@ package com.example.shoes.service.impl;
 
 
 import com.example.shoes.dto.PhanTrangResponse;
+import com.example.shoes.dto.hinhanh.response.HinhAnhResponse;
 import com.example.shoes.dto.sanpham.request.SanPhamRequest;
 import com.example.shoes.dto.sanpham.response.SanPhamBanChayResponse;
-import com.example.shoes.dto.sanpham.response.SanPhamClient;
 import com.example.shoes.dto.sanpham.response.SanPhamResponse;
+import com.example.shoes.entity.HinhAnh;
 import com.example.shoes.entity.Loai;
 import com.example.shoes.entity.SanPham;
 import com.example.shoes.exception.AppException;
 import com.example.shoes.exception.ErrorCode;
+import com.example.shoes.repository.HinhAnhRepo;
 import com.example.shoes.repository.LoaiRepo;
 import com.example.shoes.repository.SanPhamChiTietRepo;
 import com.example.shoes.repository.SanPhamRepo;
@@ -22,6 +24,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,7 +37,6 @@ public class SanPhamServiceImpl implements SanPhamService {
     private LoaiRepo loaiRepo;
     @Autowired
     private SanPhamChiTietRepo sanPhamChiTietRepo;
-
     private SanPhamResponse convertToSanPhamResponse(SanPham sanPham) {
         SanPhamResponse response = new SanPhamResponse();
         response.setId(sanPham.getId());
@@ -185,4 +187,22 @@ public class SanPhamServiceImpl implements SanPhamService {
     }
 
 
+    // Phương thức chuyển đổi BigDecimal sang định dạng tiền tệ Việt Nam
+    private String formatCurrency(Object value) {
+        if (value == null) return "0 VNĐ"; // Trả về "0 VNĐ" nếu giá trị là null
+
+        if (value instanceof Number) {
+            // Chuyển đổi value thành BigDecimal để đảm bảo độ chính xác khi định dạng tiền tệ
+            BigDecimal amount = new BigDecimal(((Number) value).toString());
+
+            // Sử dụng NumberFormat để định dạng tiền tệ Việt Nam
+            NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+            String formatted = currencyFormat.format(amount);
+
+            // Loại bỏ ký hiệu ₫ và thêm VNĐ
+            return formatted.replace("₫", "").trim() + " VNĐ";
+        } else {
+            throw new IllegalArgumentException("Provided value is not a number: " + value);
+        }
+    }
 }

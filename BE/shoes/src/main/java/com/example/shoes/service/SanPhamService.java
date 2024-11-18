@@ -17,7 +17,7 @@ public interface SanPhamService {
     List<SanPhamResponse> getAll();
     void updateTheoTrangThai(Integer id);
     List<String> getAlltenSP();
-    List<SanPhamBanChayResponse> getTop3SanPhamBanChayTheoThang();
+    List<SanPhamBanChayResponse> getTop3SanPhamBanChay();
 
     List<SanPhamClient> sanPhamClient(Integer idLoai, Integer kichThuoc,Integer idMauSac, BigDecimal donGiaMin, BigDecimal donGiaMax);
 }

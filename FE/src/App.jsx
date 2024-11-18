@@ -6,7 +6,6 @@ import DeGiay from "./pages/admin/ThuocTinhSP/DeGiay/DeGiay";
 import KichThuoc from "./pages/admin/ThuocTinhSP/KichThuoc/KichThuoc";
 import LoaiGiay from "./pages/admin/ThuocTinhSP/LoaiGiay/LoaiGiay";
 import MauSac from "./pages/admin/ThuocTinhSP/MauSac/MauSac";
-// import Voucher from "./pages/admin/Voucher/Voucher";
 import ThuongHieu from "./pages/admin/ThuocTinhSP/ThuongHieu/ThuongHieu";
 import ListProduct from "./pages/admin/SanPham/Product/ListProduct";
 
@@ -37,7 +36,6 @@ import SanPham from "./pages/client/SanPham/SanPham.jsx";
 import LienHe from "./pages/client/LienHe/LienHe.jsx";
 import TrangChu from "./pages/client/TrangChu/TrangChu.jsx";
 import GioHang from "./pages/client/GioHang/GioHang.jsx";
-
 import DC from "./pages/admin/KhachHang/DC.jsx";
 
 
@@ -46,128 +44,117 @@ import ChiTietSanPham from "./pages/client/ChiTietSanPham/ChiTietSanPham.jsx";
 function App() {
   return (
     <>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<HomePage />}>
-            <Route
-              path="SanPham"
-              element={
-                <>
-                  <Helmet>
-                    <title>Sản Phẩm</title>
-                  </Helmet>
-                  <SanPham />
-                </>
-              }
-            />
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<HomePage />}>
+          <Route
+            path="SanPham"
+            element={
+              <>
+                <Helmet>
+                  <title>Sản Phẩm</title>
+                </Helmet>
+                <SanPham />
+              </>
+            }
+          />
 
-            <Route
-              path="LienHe"
-              element={
-                <>
-                  <Helmet>
-                    <title>Liên Hệ</title>
-                  </Helmet>
-                  <LienHe />
-                </>
-              }
-            />
-            <Route
-              path=""
-              element={
-                <>
-                  <Helmet>
-                    <title>Trang Chủ</title>
-                  </Helmet>
-                  <TrangChu />
-                </>
-              }
-            />
-            <Route
-              path="/chitiet/:id"
-              element={
-                <>
-                  <Helmet>
-                    <title>Sản Phẩm</title>
-                  </Helmet>
-                  <ChiTietSanPham />
-                </>
-              }
-            />
-            <Route
-              path="GioHang"
-              element={
-                <>
-                  <Helmet>
-                    <title>Giỏ hàng</title>
-                  </Helmet>
-                  <GioHang />
-                </>
-              }
-            />
-          </Route>
           <Route
-            path="/403"
-            element={
-              <>
-                <Forbidden403 />
-              </>
-            }
-          />
-          <Route
-            path="*" // tất cả đường dẫn không hợp lệ
-            element={
-              <>
-                <NotFound404 />
-              </>
-            }
-          />
-          {/* router login */}
-          <Route
-            path="/login"
+            path="LienHe"
             element={
               <>
                 <Helmet>
-                  <title>Đăng nhập</title>
+                  <title>Liên Hệ</title>
                 </Helmet>
-                <Login />
+                <LienHe />
               </>
             }
           />
           <Route
-            path="/doimatkhau"
+            path="TrangChu"
             element={
               <>
                 <Helmet>
-                  <title>Đổi mật khẩu</title>
+                  <title>Trang Chủ</title>
                 </Helmet>
-                <DoiMatKhau />
+                <TrangChu />
               </>
             }
           />
           <Route
-            path="/SignUp"
+            path="GioHang"
             element={
               <>
                 <Helmet>
-                  <title>Đăng ký</title>
+                  <title>Giỏ hàng</title>
                 </Helmet>
-                <SignUp />
+                <GioHang />
               </>
             }
           />
-          <Route
-            path="/resetpass"
-            element={
-              <>
-                <Helmet>
-                  <title>Reset pass</title>
-                </Helmet>
-                <ResetPass />
-              </>
-            }
-          />
-          {/* roter dashboard */}
+        </Route>
+        <Route
+          path="/403"
+          element={
+            <>
+              <Forbidden403 />
+            </>
+          }
+        />
+        <Route
+          path="*" // tất cả đường dẫn không hợp lệ
+          element={
+            <>
+              <NotFound404 />
+            </>
+          }
+        />
+        {/* router login */}
+        <Route
+          path="/login"
+          element={
+            <>
+              <Helmet>
+                <title>Đăng nhập</title>
+              </Helmet>
+              <Login />
+            </>
+          }
+        />
+        <Route
+          path="/doimatkhau"
+          element={
+            <>
+              <Helmet>
+                <title>Đổi mật khẩu</title>
+              </Helmet>
+              <DoiMatKhau />
+            </>
+          }
+        />
+        <Route
+          path="/SignUp"
+          element={
+            <>
+              <Helmet>
+                <title>Đăng ký</title>
+              </Helmet>
+              <SignUp />
+            </>
+          }
+        />
+        <Route
+          path="/resetpass"
+          element={
+            <>
+              <Helmet>
+                <title>Reset pass</title>
+              </Helmet>
+              <ResetPass />
+            </>
+          }
+        />
+        {/* roter dashboard */}
 
           <Route path="/admin" element={<Dashboard />}>
             <Route
