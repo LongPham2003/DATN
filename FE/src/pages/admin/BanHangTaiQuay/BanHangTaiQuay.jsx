@@ -194,7 +194,9 @@ export default function BanHangTaiQuay() {
       const khachHang = await axios.get(ApiLayTatCaKhachHang);
       setDanhSachKhachHang(khachHang.data.result);
       // console.log(khachHang.data.result.diaChi[0].diaChiChiTiet);
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const XoaSPKhoiGioHang = async (idSPCT) => {
@@ -892,7 +894,7 @@ export default function BanHangTaiQuay() {
                   className="ml-[10px] w-[60px] border-2 border-red-400 text-lg font-medium text-red-400"
                   onClick={XoaKhachHangKhoiHoaDon}
                 >
-                  X
+                  Xóa
                 </button>
               </div>
               <div>

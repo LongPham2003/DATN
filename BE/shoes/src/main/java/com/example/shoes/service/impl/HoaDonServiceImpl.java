@@ -932,6 +932,7 @@ public class HoaDonServiceImpl implements HoaDonService {
         lichSuHoaDonRepo.save(lichSuHoaDon);
 
         capNhatTrangThaiHoaDon(hoaDon);
+
         return null;
     }
 

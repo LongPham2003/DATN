@@ -94,7 +94,7 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
         phieuGiamGia.setHinhThucGiam(request.getHinhThucGiam());
         if(request.getHinhThucGiam().equals("%")){
             if(request.getMucGiam().compareTo(BigDecimal.valueOf(100))>0 ||request.getMucGiam().compareTo(BigDecimal.ZERO)<=0){
-                throw  new AppException(ErrorCode.VALID_PHIEU_GIAM_GIA_MUC_GIAM);
+                throw  new AppException(ErrorCode.VALID_PHIEU_GIAM_GIA_MUC_GIAM_PT);
             }
         }
         if(request.getHinhThucGiam().equals("VND")){
@@ -173,7 +173,7 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
         return phieuGiamGiaResponse;
     }
 
-    @Scheduled(cron = "0 0 * * *  ?") // mỗi giờ chạy 1 lần
+    @Scheduled(cron = "0 * * * *  ?") // mỗi phút chạy 1 lần
     public void checkAndUpdateVoucherStatus() {
         // Lấy tất cả các voucher còn active
         System.out.println("long");

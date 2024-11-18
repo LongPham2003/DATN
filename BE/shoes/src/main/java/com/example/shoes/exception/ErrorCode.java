@@ -41,6 +41,7 @@ public enum ErrorCode {
     INVALID_QUANTITY_VOUCHER(1002,"Số lượng không  còn .",HttpStatus.BAD_REQUEST),
     VOUCHER_NOT_IN_BILL(1002,"voucher chưa có trong hóa đơn .",HttpStatus.BAD_REQUEST),
     VALID_PHIEU_GIAM_GIA(1002,"Ngày kết thúc phải sau ngày bắt đầu.",HttpStatus.BAD_REQUEST),
+    VALID_PHIEU_GIAM_GIA_MUC_GIAM_PT(1002,"Mức giảm không hợp lệ phải từ 0 -> 100",HttpStatus.BAD_REQUEST),
     VALID_PHIEU_GIAM_GIA_MUC_GIAM(1002,"Mức giảm không hợp lệ",HttpStatus.BAD_REQUEST),
     VALID_PHIEU_GIAM_GIA_DK_GIAM(1002,"Điều kiện giảm không hợp lệ",HttpStatus.BAD_REQUEST),
     BILL_NOT_FOUND_h(1005,"du lieu không đung",HttpStatus.NOT_FOUND),
