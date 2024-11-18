@@ -106,7 +106,7 @@ export default function DanhSachNhanVien() {
           />
         </div>
         <div className="mb-6 w-[50%] rounded bg-white p-4 shadow">
-          <h2 className="mb-2 text-xl font-semibold">Trạng Thái Nhân Viên</h2>
+          <h2 className="mb-2 text-xl font-semibold">Trạng Thái Khách Hàng</h2>
           <select
             name="trangThai"
             id="trangThai"
@@ -156,8 +156,10 @@ export default function DanhSachNhanVien() {
                   <td className="border-b px-4 py-2">{item.gioiTinh}</td>
                   <td className="mx-auto flex justify-center border-b px-4 py-2 text-center">
                     <button
-                      className={`px-4 py-2 rounded border-2 ${
-                        item.trangThai ? "border-green-400 text-green-400" : "border-red-600 text-red-600"
+                      className={`rounded border-2 px-4 py-2 ${
+                        item.trangThai
+                          ? "border-green-400 text-green-400"
+                          : "border-red-600 text-red-600"
                       }`}
                     >
                       {item.trangThai ? "Hoạt Động" : "Ngừng Hoạt Động"}
