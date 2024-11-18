@@ -17,10 +17,8 @@ export default function ChiTietSanPham() {
             <AnhSP id={idInt} />
           </div>
           {/* Thong tin SP */}
-          <div className="w-1/2 bg-slate-100">
+          <div className="w-1/2">
             <ChonSizeVSMauSac id={idInt} />
-            <hr className="my-5" />
-            <ThongTinKhac id={idInt} />
           </div>
         </div>
       </div>

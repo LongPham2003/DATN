@@ -56,7 +56,7 @@ export default function CacSanPham() {
         : ApiSanPhamBanHang;
 
       // Log ra URL
-      console.log("Generated URL:", fullUrl);
+      // console.log("Generated URL:", fullUrl);
 
       // Gọi API
       const sanPham = await axios.get(ApiSanPhamBanHang, { params });
@@ -82,6 +82,12 @@ export default function CacSanPham() {
     }
   };
 
+  function formatTien(value) {
+    if (typeof value !== "number" || isNaN(value)) {
+      return "0 VNĐ"; // Giá trị mặc định nếu `value` không hợp lệ
+    }
+    return value.toLocaleString("vi-VN") + " VNĐ";
+  }
   useEffect(() => {
     LayThuocTinh();
     LaySanPham();
@@ -285,6 +291,11 @@ export default function CacSanPham() {
               >
                 <Meta
                   title={spct.tenThuongHieu + " - " + spct.tenSanPham}
+                  description={
+                    <div className="text-red-500">
+                      {formatTien(spct.donGia)}
+                    </div>
+                  }
                   className="text-lg"
                 />
               </Card>
