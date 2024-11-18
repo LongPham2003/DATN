@@ -144,6 +144,11 @@ public class KhachHangServiceImpl implements KhachHangService {
     }
 
     @Override
+    public Optional<KhachHang> timTheoEmail(String email) {
+        return khachHangRepo.findByEmail(email);
+    }
+
+    @Override
     public KhachHang update(Integer id, KhachHangRequest request) {
         Optional<KhachHang> khachHangOptional = khachHangRepo.findById(id);
 
