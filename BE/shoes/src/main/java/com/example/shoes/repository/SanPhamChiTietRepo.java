@@ -76,29 +76,7 @@ public interface SanPhamChiTietRepo extends JpaRepository<SanPhamChiTiet, Intege
 
     @Query("SELECT s.ma FROM SanPhamChiTiet s ORDER BY s.ma DESC LIMIT 1")
     String findMaxMaSanPhamChiTiet();
-    @Query(value = """
-        SELECT 
-            DISTINCT kt.kich_thuoc AS tenKichThuoc
-        FROM 
-            san_pham_chi_tiet spct
-        JOIN 
-            kich_thuoc kt ON spct.id_kich_thuoc = kt.id
-        WHERE 
-            spct.id_san_pham = :idSanPham
-        """, nativeQuery = true)
-    List<String> findTenKichThuocBySanPhamId(@Param("idSanPham") Integer idSanPham);
 
-    @Query(value = """
-            SELECT 
-                DISTINCT ms.ten AS tenMauSac
-            FROM 
-                san_pham_chi_tiet spct
-            JOIN 
-                mau_sac ms ON spct.id_mau_sac = ms.id
-            WHERE 
-                spct.id_san_pham = :idSanPham
-            """, nativeQuery = true)
-    List<String> findTenMauSacBySanPhamId(@Param("idSanPham") Integer idSanPham);
 //loc kich thuoc và mau sac theo ten
 @Query("SELECT spct FROM SanPhamChiTiet spct " +
         "WHERE spct.idSanPham.id = :idSanPham " +

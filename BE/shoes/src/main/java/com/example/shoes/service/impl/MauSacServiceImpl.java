@@ -120,6 +120,17 @@ public class MauSacServiceImpl implements MauSacService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<MauSacResponse> getMauSacByidSP(Integer idSanPham) {
+        // Lấy tất cả các ChatLieu từ repository
+        List<MauSac> list =mauSacRepo.getMauSacByIdSP(idSanPham);
+
+        // Chuyển đổi từ ChatLieu sang ChatLieuResponse
+        return list.stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
+    }
+
     // Phương thức chuyển đổi Mausac thành MauSacResponse
     private MauSacResponse convertToResponse(MauSac mauSac) {
         MauSacResponse mauSacResponse = new MauSacResponse();

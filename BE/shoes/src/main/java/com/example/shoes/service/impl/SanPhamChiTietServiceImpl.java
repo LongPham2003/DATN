@@ -235,16 +235,6 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     }
 
     @Override
-    public List<String> getKichThuocBySanPhamId(Integer idSanPham) {
-        return sanPhamChiTietRepo.findTenKichThuocBySanPhamId(idSanPham);
-    }
-
-    @Override
-    public List<String> getMauSacBySanPhamId(Integer idSanPham) {
-        return sanPhamChiTietRepo.findTenMauSacBySanPhamId(idSanPham);
-    }
-
-    @Override
     public List<SanPhamChiTietResponse> getKichThuocAndMauSacByTen(Integer idSanPham,Integer idKichThuoc, Integer idMauSac) {
         // Gọi phương thức trong repository
       List<SanPhamChiTiet> sanPhamChiTietList = sanPhamChiTietRepo.findSanPhamChiTiet(idSanPham,idKichThuoc,idMauSac);

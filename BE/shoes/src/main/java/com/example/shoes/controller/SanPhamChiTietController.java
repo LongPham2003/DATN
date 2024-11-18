@@ -111,21 +111,6 @@ public class SanPhamChiTietController {
         return ApiResponse.<SanPhamChiTietDetailResponse>builder().result(response).build();
     }
 
-    @GetMapping("/{idSanPham}/kich-thuoc")
-    public ApiResponse<List<String>> getKichThuoc(@PathVariable("idSanPham") Integer idSanPham) {
-        List<String> kichThuoc = sanPhamChiTietService.getKichThuocBySanPhamId(idSanPham);
-        return ApiResponse.<List<String>>builder()
-                .result(kichThuoc)
-                .build();
-    }
-
-    @GetMapping("/{idSanPham}/mau-sac")
-    public ApiResponse<List<String>> getMauSac(@PathVariable("idSanPham") Integer idSanPham) {
-        List<String> mauSac = sanPhamChiTietService.getMauSacBySanPhamId(idSanPham);
-        return ApiResponse.<List<String>>builder()
-                .result(mauSac)
-                .build();
-    }
     @GetMapping("/loc")
     public ApiResponse<List<SanPhamChiTietResponse>> getKichThuocAndMauSacByTen(
             @RequestParam(value = "idSanPham", required = true) Integer idSanPham, // đảm bảo tham số là bắt buộc

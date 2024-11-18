@@ -23,10 +23,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-
-import java.util.List;
-
-
 @RestController
 @RequestMapping("/api/mausac")
 public class MauSacController {
@@ -103,6 +99,15 @@ public class MauSacController {
         List<MauSacResponse> list = mausacService.getAll();
 
         // Tạo đối tượng ApiResponse để trả về danh sách ChatLieuResponse
+        return ApiResponse.<List<MauSacResponse>>builder()
+                .result(list)
+                .build();
+    }
+    @GetMapping("/mausactheoidsp/{idsp}")
+    public ApiResponse<List<MauSacResponse>> getMauSacByidSP(@PathVariable("idsp") Integer idSanPham) {
+        // Gọi hàm getKichThuocByidSP() để lấy danh sách KichThuocResponse
+        List<MauSacResponse> list = mausacService.getMauSacByidSP(idSanPham);
+        // Tạo đối tượng ApiResponse để trả về danh sách KichThuocResponse
         return ApiResponse.<List<MauSacResponse>>builder()
                 .result(list)
                 .build();
