@@ -1,5 +1,6 @@
 package com.example.shoes.repository;
 
+import com.example.shoes.dto.sanphamchitiet.response.KichThuocMauSacResponse;
 import com.example.shoes.dto.sanphamchitiet.response.SanPhamChiTietDetailResponse;
 import com.example.shoes.entity.KichThuoc;
 import com.example.shoes.entity.SanPham;
@@ -16,6 +17,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 public interface SanPhamChiTietRepo extends JpaRepository<SanPhamChiTiet, Integer> {
 
@@ -73,5 +75,23 @@ public interface SanPhamChiTietRepo extends JpaRepository<SanPhamChiTiet, Intege
 
     @Query("SELECT s.ma FROM SanPhamChiTiet s ORDER BY s.ma DESC LIMIT 1")
     String findMaxMaSanPhamChiTiet();
+
+//loc kich thuoc và mau sac theo ten
+@Query("SELECT spct FROM SanPhamChiTiet spct " +
+        "WHERE spct.idSanPham.id = :idSanPham " +
+        "AND (:idKichThuoc IS NULL OR spct.idKichThuoc .id =:idKichThuoc) " +
+        "AND (:idMauSac IS NULL OR spct.idMauSac .id = :idMauSac)")
+List<SanPhamChiTiet> findSanPhamChiTiet(
+        @Param("idSanPham") Integer idSanPham,
+        @Param("idKichThuoc") Integer idKichThuoc,
+        @Param("idMauSac") Integer idMauSac);
+//lay ra top 3 san pham moi nhat
+    @Query(value = "SELECT spct.* " +
+            "FROM san_pham_chi_tiet spct " +
+            "JOIN san_pham sp ON spct.id_san_pham = sp.id " +
+            "ORDER BY sp.ngay_tao DESC " +  // Sắp xếp theo ngày tạo của sản phẩm (SanPham)
+            "LIMIT 3",
+            nativeQuery = true)
+    List<SanPhamChiTiet> findTop3SanPhamMoiNhat();
 }
 

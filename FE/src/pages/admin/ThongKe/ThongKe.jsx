@@ -3,7 +3,7 @@ import axios from "./../../../api/axiosConfig";
 import { useEffect, useState } from "react";
 import DoanhThu from "./component/DoanhThu";
 import SanPhamBanChay from "./component/SanPhamBanChay";
-import RevenueChart from "./component/BieuDO";
+import RevenueChart from "./component/BieuDo";
 
 export default function ThongKe() {
   return (
@@ -21,7 +21,6 @@ export default function ThongKe() {
             <SanPhamBanChay />
           </div>
           <div className="w-1/2">
-            bieu do
             <div>
               <RevenueChart />
             </div>

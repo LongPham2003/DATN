@@ -36,26 +36,36 @@ export default function ListPhieuGiamGia() {
   };
 
   useEffect(() => {
-    axios
-      .get("http://localhost:8080/api/phieugiamgia/list", {
-        params: {
-          pageNumber: trangHienTai,
-          tenVoucher: tenVoucher,
-          trangThai: trangThai !== null ? trangThai : undefined, // Nếu trangThai là null, không gửi tham số
-          ngayBatDau: ngayBatDau,
-          ngayKetThuc: ngayKetThuc
-        }
-      })
-      .then(async (res) => {
-        const data = res.data;
-        setNhanVien(data.result.result);
-        setTongSoTrang(data.result.totalPages);
-      })
-      .catch((error) => {
-        console.error("Lỗi" + error);
-      });
-  }, [trangHienTai, tenVoucher, added, trangThai, ngayBatDau, ngayKetThuc]);
+    const fetchData = () => {
+      axios
+        .get("http://localhost:8080/api/phieugiamgia/list", {
+          params: {
+            pageNumber: trangHienTai,
+            tenVoucher: tenVoucher,
+            trangThai: trangThai !== null ? trangThai : undefined,
+            ngayBatDau: ngayBatDau,
+            ngayKetThuc: ngayKetThuc,
+          },
+        })
+        .then(async (res) => {
+          const data = res.data;
+          setNhanVien(data.result.result);
+          setTongSoTrang(data.result.totalPages);
+        })
+        .catch((error) => {
+          console.error("Lỗi" + error);
+        });
+    };
 
+    // Gọi API ngay lập tức khi component render
+    fetchData();
+
+    // Thiết lập interval để gọi API mỗi phút
+    const intervalId = setInterval(fetchData, 60000);
+
+    // Dọn dẹp interval khi component unmount
+    return () => clearInterval(intervalId);
+  }, [trangHienTai, tenVoucher, added, trangThai, ngayBatDau, ngayKetThuc]);
   return (
     <div className="p-4">
       <h1 className="mb-4 text-2xl font-bold">Quản Lý Phiếu Giảm Giá</h1>
@@ -85,14 +95,15 @@ export default function ListPhieuGiamGia() {
               id="trangThai"
               className="w-full rounded border border-gray-300 p-2"
               onChange={(e) => {
-                const value =
-                  e.target.value === "" ? null : e.target.value === "true";
-                setTrangThai(value);
+                e.target.value === ""
+                  ? setTrangThai(null)
+                  : setTrangThai(e.target.value);
               }}
             >
               <option value="">Tất cả</option>
-              <option value="true">Hoạt động</option>
-              <option value="false">Không hoạt động</option>
+              <option value="Hoạt Động">Hoạt động</option>
+              <option value="Ngừng Hoạt Động">Không hoạt động</option>
+              <option value="Sắp Hoạt Động">Sắp hoạt động</option>
             </select>
           </div>
         </div>
@@ -119,7 +130,7 @@ export default function ListPhieuGiamGia() {
         </div>
       </div>
 
-      {/* Danh sách nhân viên */}
+      {/* Danh sách  */}
       <div className="rounded bg-white p-4 shadow">
         <div className="flex justify-between">
           <h2 className="mb-4 text-xl font-semibold">
@@ -171,56 +182,60 @@ export default function ListPhieuGiamGia() {
         <div className="overflow-x-auto">
           <table className="min-w-full border border-gray-300 bg-white">
             <thead>
-            <tr className="bg-gray-100">
-              <th className="border-b px-4 py-2 text-[12px]">STT</th>
-              <th className="border-b px-4 py-2 text-[12px]">Tên Phiếu</th>
-              <th className="border-b px-4 py-2 text-[12px]">
-                Điều Kiện Giảm
-              </th>
-              <th className="border-b px-4 py-2 text-[12px]">Hình Thức</th>
-              <th className="border-b px-4 py-2 text-[12px]">Mức Giảm</th>
-              <th className="border-b px-4 py-2 text-[12px]">Giảm Tối Đa</th>
-              <th className="border-b px-4 py-2 text-[12px]">Số Lượng</th>
-              <th className="border-b px-4 py-2 text-[12px]">Ngày Bắt Đầu</th>
-              <th className="border-b px-4 py-2 text-[12px]">
-                Ngày Kết Thúc
-              </th>
-              <th className="border-b px-4 py-2 text-[12px]">Trạng Thái</th>
-              <th className="border-b px-4 py-2 text-[12px]">Hành Động</th>
-            </tr>
+              <tr className="bg-gray-100">
+                <th className="border-b px-4 py-2 text-[12px]">STT</th>
+                <th className="border-b px-4 py-2 text-[12px]">Tên Phiếu</th>
+                <th className="border-b px-4 py-2 text-[12px]">
+                  Điều Kiện Giảm
+                </th>
+                <th className="border-b px-4 py-2 text-[12px]">Hình Thức</th>
+                <th className="border-b px-4 py-2 text-[12px]">Mức Giảm</th>
+                <th className="border-b px-4 py-2 text-[12px]">Giảm Tối Đa</th>
+                <th className="border-b px-4 py-2 text-[12px]">Số Lượng</th>
+                <th className="border-b px-4 py-2 text-[12px]">Ngày Bắt Đầu</th>
+                <th className="border-b px-4 py-2 text-[12px]">
+                  Ngày Kết Thúc
+                </th>
+                <th className="border-b px-4 py-2 text-[12px]">Trạng Thái</th>
+                <th className="border-b px-4 py-2 text-[12px]">Hành Động</th>
+              </tr>
             </thead>
             <tbody className="text-center">
-            {nhanvien.map((item, index) => (
-              <tr key={index}>
-                <td className="border-b px-4 py-2">
-                  {index + 1 + (trangHienTai - 1) * pageSize}
-                </td>
-                <td className="border-b px-4 py-2">{item.tenVoucher}</td>
-                <td className="border-b px-4 py-2">{item.dieuKienGiamGia}</td>
-                <td className="border-b px-4 py-2">{item.hinhThucGiam}</td>
-                <td className="border-b px-4 py-2">{item.mucGiam}</td>
-                <td className="border-b px-4 py-2">{item.giamToiDa}</td>
-                <td className="border-b px-4 py-2">{item.soLuong}</td>
-                <td className="border-b px-4 py-2">{item.ngayBatDau}</td>
-                <td className="border-b px-4 py-2">{item.ngayKetThuc}</td>
-                <td className="mx-auto flex justify-center border-b px-4 py-2 text-center">
-                  <button
-                    className={`px-4 py-2 rounded border-2 ${
-                      item.trangThai ? "border-green-400 text-green-400" : "border-red-600 text-red-600"
-                    }`}
-                  >
-                    {item.trangThai ? "Còn" : "Hết"}
-                  </button>
-                </td>
-                <td>
-                  <button className="rounded bg-blue-500 px-2 py-1 text-white">
-                    <Link to={`/admin/phieugiamgia/${item.id}`}>
-                      Chi Tiết
-                    </Link>
-                  </button>
-                </td>
-              </tr>
-            ))}
+              {nhanvien.map((item, index) => (
+                <tr key={index}>
+                  <td className="border-b px-4 py-2">
+                    {index + 1 + (trangHienTai - 1) * pageSize}
+                  </td>
+                  <td className="border-b px-4 py-2">{item.tenVoucher}</td>
+                  <td className="border-b px-4 py-2">{item.dieuKienGiamGia}</td>
+                  <td className="border-b px-4 py-2">{item.hinhThucGiam}</td>
+                  <td className="border-b px-4 py-2">{item.mucGiam}</td>
+                  <td className="border-b px-4 py-2">{item.giamToiDa}</td>
+                  <td className="border-b px-4 py-2">{item.soLuong}</td>
+                  <td className="border-b px-4 py-2">{item.ngayBatDau}</td>
+                  <td className="border-b px-4 py-2">{item.ngayKetThuc}</td>
+                  <td className="mx-auto flex justify-center border-b px-4 py-2 text-center">
+                    <button
+                      className={`rounded border-2 px-4 py-2 ${
+                        item.trangThai === "Hoạt Động"
+                          ? "border-green-400 text-green-400"
+                          : item.trangThai === "Ngừng Hoạt Động"
+                            ? "border-red-600 text-red-600"
+                            : "border-yellow-600 text-yellow-600"
+                      }`}
+                    >
+                      {item.trangThai}
+                    </button>
+                  </td>
+                  <td>
+                    <button className="rounded bg-blue-500 px-2 py-1 text-white">
+                      <Link to={`/admin/phieugiamgia/${item.id}`}>
+                        Chi Tiết
+                      </Link>
+                    </button>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>

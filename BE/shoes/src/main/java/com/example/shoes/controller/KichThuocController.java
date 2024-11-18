@@ -107,4 +107,13 @@ public class KichThuocController {
                 .result(list)
                 .build();
     }
+    @GetMapping("/kichthuoctheoidsp/{idsp}")
+    public ApiResponse<List<KichThuocResponse>> getKichThuocByidSP(@PathVariable("idsp") Integer idSanPham) {
+        // Gọi hàm getKichThuocByidSP() để lấy danh sách KichThuocResponse
+        List<KichThuocResponse> list = kichThuocService.getKichThuocByidSP(idSanPham);
+        // Tạo đối tượng ApiResponse để trả về danh sách KichThuocResponse
+        return ApiResponse.<List<KichThuocResponse>>builder()
+                .result(list)
+                .build();
+    }
 }

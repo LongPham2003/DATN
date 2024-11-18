@@ -1,7 +1,5 @@
 package com.example.shoes.dto.sanphamchitiet.request;
 
-
-import com.example.shoes.entity.SanPhamChiTiet;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

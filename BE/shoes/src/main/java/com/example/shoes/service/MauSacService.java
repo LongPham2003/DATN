@@ -15,4 +15,5 @@ public interface MauSacService {
     List<MauSacResponse> search(String ten, Boolean trangThai);
     List<String> getAllTenMauSac();
     List<MauSacResponse> getAll();
+    List<MauSacResponse>getMauSacByidSP(Integer idSanPham);
 }

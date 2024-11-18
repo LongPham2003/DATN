@@ -8,6 +8,7 @@ import com.example.shoes.dto.hoadon.request.HoaDonRequest;
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
 import com.example.shoes.dto.hoadon.response.HoaDonTheoIDResponse;
 import com.example.shoes.dto.hoadonchitiet.request.HoaDonChiTietRequest;
+import com.example.shoes.dto.payment.PaymentRequest;
 import com.example.shoes.dto.phuongthucthanhtoan.request.PhuongThucThanhToanRequest;
 import com.example.shoes.dto.vnpay.response.TransactionStatus;
 import com.example.shoes.entity.*;
@@ -275,6 +276,11 @@ public class HoaDonServiceImpl implements HoaDonService {
             chiTiet.setTrangThai(TrangThai.HUY_DON);
             hoaDonChiTietRepo.save(chiTiet);
         }
+        hoaDon.setTongTien(BigDecimal.ZERO);
+        hoaDon.setTienDuocGiam(BigDecimal.ZERO);
+        hoaDon.setTienPhaiThanhToan(BigDecimal.ZERO);
+        hoaDon.setTienKhachDua(BigDecimal.ZERO);
+        hoaDon.setTienThua(BigDecimal.ZERO);
         hoaDon.setTrangThai(TrangThai.HUY_DON);
         // Xóa hóa đơn
         hoaDonRepo.save(hoaDon);
@@ -873,6 +879,7 @@ public class HoaDonServiceImpl implements HoaDonService {
         return response;
     }
 
+
     //    xuat hoa don
     @Transactional
     public String xuatHoaDon(Integer idHoaDon) {
@@ -910,19 +917,32 @@ public class HoaDonServiceImpl implements HoaDonService {
         return hoaDonRepo.idHoaDon();
     }
 
-
     @Override
-    public Void updateHoaDonById(Integer idHoaDon) {
+    public Void updateHoaDonById(Integer idHoaDon, PaymentRequest paymentRequest) {
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon).get();
         hoaDon.setTrangThai(TrangThai.DA_THANH_TOAN);
-        hoaDon.setPhuongThucThanhToan("VNPAY");
+        hoaDon.setPhuongThucThanhToan(paymentRequest.getPhuongThucThanhToan());
         hoaDonRepo.save(hoaDon);
+
+        PhuongThucThanhToan phuongThucThanhToan = new PhuongThucThanhToan();
+        phuongThucThanhToan.setIdHoaDon(hoaDon);
+        phuongThucThanhToan.setTenPhuongThuc(hoaDon.getPhuongThucThanhToan());
+        phuongThucThanhToan.setGhiChu("VNPAY " + hoaDon.getId() + " số tiền: " + hoaDon.getTienPhaiThanhToan());
+        phuongThucThanhToanRepo.save(phuongThucThanhToan);
+
+        NhanVien nhanVien = getCurrentNhanVien();
+
+        LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
+        lichSuHoaDon.setIdHoaDon(hoaDon);
+        lichSuHoaDon.setMoTa("Thanh toán thành công " + "id hóa đon:" + hoaDon.getId() + "so tien :" + hoaDon.getTienPhaiThanhToan());
+        lichSuHoaDon.setThoiGian(LocalDate.now());
+        lichSuHoaDon.setNguoiThucHien(nhanVien.getHoTen());
+        lichSuHoaDonRepo.save(lichSuHoaDon);
+
+        capNhatTrangThaiHoaDon(hoaDon);
+
         return null;
     }
-
-
-
-
 
     private HoaDonTheoIDResponse convert(HoaDon hoaDon){
         HoaDonTheoIDResponse response = new HoaDonTheoIDResponse();
@@ -931,7 +951,6 @@ public class HoaDonServiceImpl implements HoaDonService {
         response.setTienPhaiThanhToan(formatCurrency(hoaDon.getTienPhaiThanhToan()));
         return response;
     }
-
     //add khách hàng vào hóa đơn
     @Override
     public HoaDonResponse addKhachHangHoaDon(Integer idHoaDon, Integer idKhachHang) {
@@ -978,7 +997,6 @@ public class HoaDonServiceImpl implements HoaDonService {
             throw new IllegalArgumentException("Provided value is not a number: " + value);
         }
     }
-
 
     private HoaDonResponse converToHoaDonResponse(HoaDon hoaDon) {
         HoaDonResponse hoaDonResponse = new HoaDonResponse();

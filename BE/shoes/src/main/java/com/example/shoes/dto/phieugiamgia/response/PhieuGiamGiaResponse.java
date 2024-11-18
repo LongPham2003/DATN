@@ -35,7 +35,7 @@ public class PhieuGiamGiaResponse {
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm[:ss]")
     private LocalDateTime ngayKetThuc;
 
-    private Boolean trangThai;
+    private String trangThai;
 
     private String hinhThucGiam;
 

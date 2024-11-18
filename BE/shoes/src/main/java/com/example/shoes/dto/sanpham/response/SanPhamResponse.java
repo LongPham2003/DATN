@@ -18,4 +18,5 @@ public class SanPhamResponse {
     private String moTa;
     private Boolean trangThai;
     private Integer soLuongTon;
+
 }

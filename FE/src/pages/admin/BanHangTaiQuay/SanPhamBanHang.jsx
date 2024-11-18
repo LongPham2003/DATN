@@ -39,7 +39,6 @@ export default function SanPhamBanTaiQuay({
   const getallSPCTBH = async () => {
     const params = {};
 
-    // Only add parameters if they have values
     if (maSanPham) params.maSanPham = maSanPham;
     if (selectedIdMauSac) params.idMauSac = selectedIdMauSac;
     if (selectedIdKichThuoc) params.idkichThuoc = selectedIdKichThuoc;
@@ -80,8 +79,8 @@ export default function SanPhamBanTaiQuay({
       getallSPCTBH();
       setModalVisible(false);
     } catch (error) {
-      // console.log(error);
-      toast.error("Bạn chưa chọn hóa đơn", {
+      console.log(error);
+      toast.error(error.message || "Thêm mới thất bại", {
         position: "top-right",
         autoClose: 600,
         hideProgressBar: false,
@@ -116,7 +115,6 @@ export default function SanPhamBanTaiQuay({
     setIdSPCT(id);
     setModalVisible(true);
   };
-
   const handleQuantityChange = (event) => {
     const value = event.target.value; // Lấy giá trị từ event
 

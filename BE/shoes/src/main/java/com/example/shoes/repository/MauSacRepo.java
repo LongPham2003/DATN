@@ -1,17 +1,11 @@
 package com.example.shoes.repository;
-
-
-import com.example.shoes.entity.KichThuoc;
 import com.example.shoes.entity.MauSac;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-
 import org.springframework.data.jpa.repository.Query;
-
+import org.springframework.data.repository.query.Param;
 import java.util.List;
-
 
 public interface MauSacRepo extends JpaRepository<MauSac, Integer> {
     // Phương thức tìm kiếm  theo tên (không phân biệt chữ hoa thường)
@@ -30,4 +24,12 @@ public interface MauSacRepo extends JpaRepository<MauSac, Integer> {
     // lấy tat ca danh sach sp co trang thai true
     @Query("SELECT ms FROM MauSac  ms WHERE ms.trangThai = true")
     List<MauSac> getAllTrangThaiTrue();
+//   lay ra danh sach mau sac theo id san pham
+    @Query("""
+                SELECT ms 
+                FROM MauSac ms
+                JOIN SanPhamChiTiet spct ON spct.idMauSac.id = ms.id 
+                WHERE spct.idSanPham.id = :idSanPham
+            """)
+    List<MauSac> getMauSacByIdSP(@Param("idSanPham") Integer idSanPham);
 }

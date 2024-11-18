@@ -1,11 +1,15 @@
+import { Button, DatePicker } from "antd";
 import axios from "../../../../api/axiosConfig";
 import { useEffect, useState } from "react";
+
 export default function DoanhThu() {
   const [theoNgay, setTheoNgay] = useState();
+  const [selectedDate, setSelectedDate] = useState(null);
   const [theoTuan, setTheoTuan] = useState();
   const [theoThang, setTheoThang] = useState();
   const [theoNam, setTheoNam] = useState();
 
+  const ApiNgayTuyChinh = `http://localhost:8080/api/thongke/ngay-tuy-chinh`;
   const ApiTheoNgay = `http://localhost:8080/api/thongke/ngay-hom-nay`;
   const ApiTheoTuan = `http://localhost:8080/api/thongke/tuan`;
   const ApiTheoThang = `http://localhost:8080/api/thongke/thang`;
@@ -24,6 +28,7 @@ export default function DoanhThu() {
       setTheoTuan(tuan.data);
       setTheoThang(thang.data);
       setTheoNam(nam.data);
+      setSelectedDate("")
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -32,11 +37,32 @@ export default function DoanhThu() {
     return `${number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} VNĐ`;
   };
 
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+    if (date) {
+      const formattedDate = date.toISOString().split('T')[0];
+      fetchData(formattedDate);
+    }
+  };
+
+  const fetchData = async (date) => {
+    try {
+      const response = await axios.get(`${ApiNgayTuyChinh}?date=${date}`);
+      setTheoNgay(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   useEffect(() => {
     DoanhThu();
   }, []);
   return (
     <>
+      <div className="mb-4 ml-10 flex gap-3">
+        <DatePicker className="border-blue-600" onChange={handleDateChange} value={selectedDate}/>
+        <Button className="border-blue-600" onClick={DoanhThu}>Hôm nay</Button>
+      </div>
       <div className="mx-10 flex h-auto gap-6">
         <div className="w-1/2">
           {/* Theoo Ngay */}

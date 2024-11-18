@@ -2,6 +2,7 @@ package com.example.shoes.service.impl;
 
 import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.sanphamchitiet.request.SanPhamChiTietRequest;
+import com.example.shoes.dto.sanphamchitiet.response.KichThuocMauSacResponse;
 import com.example.shoes.dto.sanphamchitiet.response.SPCTBanHangResponse;
 import com.example.shoes.dto.sanphamchitiet.response.SanPhamChiTietDetailResponse;
 import com.example.shoes.dto.sanphamchitiet.response.SanPhamChiTietResponse;
@@ -33,6 +34,7 @@ import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 @Service
@@ -196,6 +198,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         return converToResponse(updatedSpct);
     }
 
+
     @Override
     public List<SPCTBanHangResponse> getAllTrangThaitrue(String maSanPham,Integer idMauSac,Integer idkichThuoc,Integer idChatLieu,Integer idThuongHieu,Integer idDeGiay) {
         List<SanPhamChiTiet> list = sanPhamChiTietRepo.getAllTrangThaiTrue(maSanPham, idMauSac, idkichThuoc, idChatLieu, idThuongHieu, idDeGiay);
@@ -203,6 +206,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
                 .map(this::converToBHResponse)
                 .collect(Collectors.toList());
     }
+
 
     @Override
     public void updateTheoTrangThai(Integer id) {
@@ -232,11 +236,35 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         SanPhamChiTiet spct = sanPhamChiTietRepo.getSPCTDetail(idSPCT);
         return converToDetailResponse(spct);
     }
+
+    @Override
+    public List<SanPhamChiTietResponse> getKichThuocAndMauSacByTen(Integer idSanPham,Integer idKichThuoc, Integer idMauSac) {
+        // Gọi phương thức trong repository
+      List<SanPhamChiTiet> sanPhamChiTietList = sanPhamChiTietRepo.findSanPhamChiTiet(idSanPham,idKichThuoc,idMauSac);
+        return sanPhamChiTietList.stream()
+                .map(this::converToResponse) // Sử dụng phương thức convertToResponse để chuyển đổi
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<SanPhamChiTietResponse> findTop3SanPhamMoiNhat() {
+        List<SanPhamChiTiet> sanPhamChiTietList = sanPhamChiTietRepo.findTop3SanPhamMoiNhat();
+        return sanPhamChiTietList.stream()
+                .map(this::converToResponse) // Sử dụng phương thức convertToResponse để chuyển đổi
+                .collect(Collectors.toList());
+    }
+
     // Phương thức chuyển đổi BigDecimal sang định dạng tiền tệ Việt Nam
     private String formatCurrency(BigDecimal amount) {
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         String formatted = currencyFormat.format(amount);
         return formatted.replace("₫", "").trim()+"VNĐ"; // Loại bỏ ký hiệu ₫ và thêm VNĐ
+    }
+    private KichThuocMauSacResponse convertoSPCTResponse(SanPhamChiTiet sanPhamChiTiet){
+        KichThuocMauSacResponse kichThuocMauSacResponse=new KichThuocMauSacResponse();
+        kichThuocMauSacResponse.setTenKichThuoc(sanPhamChiTiet.getIdKichThuoc().getKichThuoc());
+        kichThuocMauSacResponse.setTenMauSac(sanPhamChiTiet.getIdMauSac().getTen());
+        return kichThuocMauSacResponse;
     }
 //convert SPCTBH
     private SPCTBanHangResponse converToBHResponse(SanPhamChiTiet sanPhamChiTiet) {

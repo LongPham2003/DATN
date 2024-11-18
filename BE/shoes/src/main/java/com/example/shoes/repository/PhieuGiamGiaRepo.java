@@ -20,10 +20,10 @@ public interface PhieuGiamGiaRepo extends JpaRepository<PhieuGiamGia, Integer> {
 
     List<PhieuGiamGia> findByTenVoucherContainingIgnoreCase(String tenVoucher);
 
-    @Query("select pgg from PhieuGiamGia  pgg where pgg.trangThai = true")
+    @Query("select pgg from PhieuGiamGia  pgg where pgg.trangThai = 'Hoạt Động'")
     List<PhieuGiamGia> getAllByTrangThaiTrue();
 
-    List<PhieuGiamGia> findByTrangThai(Boolean trangThai);
+    List<PhieuGiamGia> findByTrangThai(String trangThai);
 
     @Query("SELECT p FROM PhieuGiamGia p WHERE "
             + "(:tenVoucher IS NULL OR LOWER(p.tenVoucher) LIKE LOWER(CONCAT('%', :tenVoucher, '%'))) "
@@ -34,7 +34,7 @@ public interface PhieuGiamGiaRepo extends JpaRepository<PhieuGiamGia, Integer> {
     Page<PhieuGiamGia> searchPhieuGiamGia(
             Pageable pageable,
             @Param("tenVoucher") String tenVoucher,
-            @Param("trangThai") Boolean trangThai,
+            @Param("trangThai") String trangThai,
             @Param("ngayBatDau") LocalDateTime ngayBatDau,
             @Param("ngayKetThuc") LocalDateTime ngayKetThuc);
 }

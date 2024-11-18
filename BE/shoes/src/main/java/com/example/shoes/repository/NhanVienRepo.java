@@ -13,7 +13,7 @@ import java.util.Optional;
 @Repository
 public interface NhanVienRepo extends JpaRepository<NhanVien, Integer> {
     @Query(value = "select nv  from NhanVien nv where" +
-            " (nv.ma like %:keyword% or nv.hoTen like %:keyword% or nv.diaChi like %:keyword or nv.email like %:keyword%)" +
+            " (nv.ma like %:keyword% or nv.hoTen like %:keyword% or nv.sdt like %:keyword% or nv.diaChi like %:keyword or nv.email like %:keyword%)" +
             "  and (:trangThai is null or  nv.trangThai = :trangThai) order by nv.id desc")
     Page<NhanVien> getNhanVien(Pageable pageable, String keyword,Boolean trangThai);
 

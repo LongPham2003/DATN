@@ -58,12 +58,21 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
                 throw  new AppException(ErrorCode.VALID_PHIEU_GIAM_GIA_MUC_GIAM);
             }
         }
+
         phieuGiamGia.setMucGiam(request.getMucGiam());
         phieuGiamGia.setGiamToiDa(request.getGiamToiDa());
         phieuGiamGia.setSoLuong(request.getSoLuong());
         phieuGiamGia.setNgayBatDau(request.getNgayBatDau());
         phieuGiamGia.setNgayKetThuc(request.getNgayKetThuc());
-        phieuGiamGia.setTrangThai(request.getTrangThai());
+
+        if (phieuGiamGia.getNgayBatDau().isAfter(LocalDateTime.now())) {
+            // Cập nhật trạng thái voucher thành hết hạn
+            phieuGiamGia.setTrangThai("Sắp Hoạt Động");
+        }else {
+            phieuGiamGia.setTrangThai("Hoạt Động");
+        }
+
+
         PhieuGiamGia saved = phieuGiamGiaRepo.save(phieuGiamGia);
         return convertToResponse(saved);
     }
@@ -85,7 +94,7 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
         phieuGiamGia.setHinhThucGiam(request.getHinhThucGiam());
         if(request.getHinhThucGiam().equals("%")){
             if(request.getMucGiam().compareTo(BigDecimal.valueOf(100))>0 ||request.getMucGiam().compareTo(BigDecimal.ZERO)<=0){
-                throw  new AppException(ErrorCode.VALID_PHIEU_GIAM_GIA_MUC_GIAM);
+                throw  new AppException(ErrorCode.VALID_PHIEU_GIAM_GIA_MUC_GIAM_PT);
             }
         }
         if(request.getHinhThucGiam().equals("VND")){
@@ -107,7 +116,7 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
     public PhieuGiamGiaResponse delete(Integer id, PhieuGiamGiaRequest request) {
         PhieuGiamGia phieuGiamGia = phieuGiamGiaRepo.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.VOUCHER_NOT_FOUND));
-        phieuGiamGia.setTrangThai(false);
+        phieuGiamGia.setTrangThai("Ngừng Hoạt Động");
         PhieuGiamGia updated = phieuGiamGiaRepo.save(phieuGiamGia);
         return convertToResponse(updated);
     }
@@ -119,7 +128,7 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
     }
 
     @Override
-    public PhanTrangResponse<PhieuGiamGiaResponse> getPhieuGiamGia(int pageNumber, int pageSize, String keyword,String tenVoucher, Boolean trangThai, LocalDateTime ngayBatDau, LocalDateTime ngayKetThuc) {
+    public PhanTrangResponse<PhieuGiamGiaResponse> getPhieuGiamGia(int pageNumber, int pageSize, String keyword,String tenVoucher, String trangThai, LocalDateTime ngayBatDau, LocalDateTime ngayKetThuc) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
         Page<PhieuGiamGia> page = phieuGiamGiaRepo.searchPhieuGiamGia(pageable, tenVoucher, trangThai, ngayBatDau, ngayKetThuc);
         List<PhieuGiamGia> phieuGiamGias = page.getContent();
@@ -164,21 +173,29 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
         return phieuGiamGiaResponse;
     }
 
-    @Scheduled(cron = "0 0 * * *  ?") // mỗi giờ chạy 1 lần
+    @Scheduled(cron = "0 * * * *  ?") // mỗi phút chạy 1 lần
     public void checkAndUpdateVoucherStatus() {
         // Lấy tất cả các voucher còn active
-        List<PhieuGiamGia> phieuGiamGias = phieuGiamGiaRepo.findByTrangThai(true);
+        System.out.println("long");
+        List<PhieuGiamGia> phieuGiamGias = phieuGiamGiaRepo.findAll();
 
         LocalDateTime today = LocalDateTime.now();
-
-        for (PhieuGiamGia pgg : phieuGiamGias ) {
-            // Kiểm tra nếu ngày kết thúc của voucher đã qua
+        for (PhieuGiamGia pgg : phieuGiamGias) {
+            // Kiểm tra nếu ngày kết thúc của voucher đã qua (voucher hết hạn)
             if (pgg.getNgayKetThuc().isBefore(today)) {
-                // Cập nhật trạng thái voucher thành hết hạn
-                pgg.setTrangThai(false);
-                phieuGiamGiaRepo.save(pgg);
-
+                pgg.setTrangThai("Ngừng Hoạt Động");
             }
+            // Kiểm tra nếu ngày bắt đầu của voucher chưa đến
+            else if (pgg.getNgayBatDau().isAfter(today)) {
+                pgg.setTrangThai("Sắp Hoạt Động");
+            }
+            // Nếu không, voucher đang "Hoạt Động"
+            else {
+                pgg.setTrangThai("Hoạt Động");
+            }
+            phieuGiamGiaRepo.save(pgg);
+
+
         }
     }
 

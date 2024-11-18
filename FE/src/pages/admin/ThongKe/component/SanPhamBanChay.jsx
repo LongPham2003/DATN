@@ -73,17 +73,20 @@ export default function SanPhamBanChay() {
     const startDate = dateStrings[0] ? new Date(dateStrings[0]) : null;
     const endDate = dateStrings[1] ? new Date(dateStrings[1]) : null;
 
-    // Log the selected dates for verification
-    console.log("Start Date:", startDate);
-    console.log("End Date:", endDate);
-
     // Kiểm tra xem startDate và endDate có hợp lệ không
     if (startDate && endDate && !isNaN(startDate) && !isNaN(endDate)) {
       setTimeout(() => {
         // Chuyển đổi lại thành chuỗi ISO để truyền vào URL
         const startDateString = startDate.toISOString().split("T")[0]; // Chỉ lấy phần ngày
         const endDateString = endDate.toISOString().split("T")[0]; // Chỉ lấy phần ngày
-        LaySP("khoangngay", startDateString, endDateString); // Gọi hàm với tham số "khoangngay" và các ngày
+        
+        // Kiểm tra nếu ngày bắt đầu và ngày kết thúc là cùng một ngày
+        if (startDateString === endDateString) {
+          // Nếu cùng ngày, gọi API với tham số "homNay"
+          LaySP("homNay");
+        } else {
+          LaySP("khoangngay", startDateString, endDateString); // Gọi hàm với tham số "khoangngay" và các ngày
+        }
       }, 500); // Thời gian chờ 500ms
     }
   };

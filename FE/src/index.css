@@ -2,8 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
-html, body {
+html,
+body {
   overflow: auto;
 }
 
+.carousel .thumbs-wrapper {
+  display: flex;
+  justify-content: center; /* Căn giữa wrapper của thumbnails */
+}
 
+.carousel .thumbs {
+  display: flex;
+  justify-content: center; /* Căn giữa các ảnh nhỏ bên trong */
+  text-align: center;
+  width: auto; /* Đảm bảo các thumbnails có kích thước tự động */
+}
+
+.carousel .thumb {
+  margin: 5px; /* Khoảng cách giữa các thumbnails */
+  max-width: 80px; /* Đặt kích thước tối đa cho thumbnails nếu cần */
+  max-height: 80px;
+}
+.carousel .thumb {
+  display: flex;
+  justify-content: center; /* Căn giữa theo chiều ngang */
+  align-items: center; /* Căn giữa theo chiều dọc */
+  width: auto; /* Đảm bảo thumbnail có chiều rộng đầy đủ */
+  height: auto; /* Đảm bảo thumbnail có chiều cao đầy đủ */
+}
+
+.carousel .thumb img {
+  max-width: auto; /* Đảm bảo hình ảnh không vượt quá chiều rộng của thumbnail */
+  max-height: auto; /* Đảm bảo hình ảnh không vượt quá chiều cao của thumbnail */
+  object-fit: contain; /* Đảm bảo hình ảnh giữ đúng tỷ lệ trong ô */
+}
