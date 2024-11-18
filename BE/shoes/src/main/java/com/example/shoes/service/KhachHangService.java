@@ -6,6 +6,7 @@ import com.example.shoes.dto.khachhang.response.KhachHangResponse;
 import com.example.shoes.entity.KhachHang;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface KhachHangService {
     PhanTrangResponse<KhachHang> getKhachHang(int pageNumber, int pageSize, String keyword,Boolean trangThai);
@@ -13,5 +14,5 @@ public interface KhachHangService {
     KhachHang add(KhachHangRequest request);
     KhachHang update(Integer id,KhachHangRequest request);
     KhachHang getById(Integer id);
-
+    Optional<KhachHang> timTheoEmail(String email);
 }
