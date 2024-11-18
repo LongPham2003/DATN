@@ -46,6 +46,9 @@ public enum ErrorCode {
     VALID_PHIEU_GIAM_GIA_DK_GIAM(1002,"Điều kiện giảm không hợp lệ",HttpStatus.BAD_REQUEST),
     BILL_NOT_FOUND_h(1005,"du lieu không đung",HttpStatus.NOT_FOUND),
     INSUFFICIENT_PAYMENT(1002,"Số tiền khách đưa không đủ để thanh toán.",HttpStatus.BAD_REQUEST),
+    CART_DETAIL_NOT_FOUND(1005,"khong tim thay gio hang chi tiet",HttpStatus.NOT_FOUND),
+    EMPTY_CART(1005,"chua co san pham trong gio hang",HttpStatus.NOT_FOUND),
+    ITEM_NOT_FOUND_IN_CART(1005,"hãy mua sắm",HttpStatus.NOT_FOUND),
     ;
     private int code;
     private String message;
