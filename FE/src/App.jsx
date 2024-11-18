@@ -6,7 +6,7 @@ import DeGiay from "./pages/admin/ThuocTinhSP/DeGiay/DeGiay";
 import KichThuoc from "./pages/admin/ThuocTinhSP/KichThuoc/KichThuoc";
 import LoaiGiay from "./pages/admin/ThuocTinhSP/LoaiGiay/LoaiGiay";
 import MauSac from "./pages/admin/ThuocTinhSP/MauSac/MauSac";
-import Voucher from "./pages/admin/Voucher/Voucher";
+// import Voucher from "./pages/admin/Voucher/Voucher";
 import ThuongHieu from "./pages/admin/ThuocTinhSP/ThuongHieu/ThuongHieu";
 import ListProduct from "./pages/admin/SanPham/Product/ListProduct";
 
@@ -318,7 +318,7 @@ function App() {
               }
             />
             {/* roter voucher */}
-            <Route
+            {/* <Route
               path="voucher"
               element={
                 <>
@@ -328,7 +328,7 @@ function App() {
                   <Voucher />
                 </>
               }
-            />
+            /> */}
             {/* roter san pham */}
             <Route
               path="sanpham"

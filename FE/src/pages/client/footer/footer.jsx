@@ -5,7 +5,7 @@ export default function Footer() {
         <div className="container mx-auto flex justify-between">
           <div className="flex flex-col items-center">
             <img
-              src="./logo/logopng.png"
+              src="../../../../logo/logopng.png"
               alt="Bee Shoes"
               className="w-[150px]"
             />

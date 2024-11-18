@@ -912,7 +912,6 @@ public class HoaDonServiceImpl implements HoaDonService {
         return hoaDonRepo.idHoaDon();
     }
 
-
     @Override
     public Void updateHoaDonById(Integer idHoaDon, PaymentRequest paymentRequest) {
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon).get();
@@ -934,13 +933,8 @@ public class HoaDonServiceImpl implements HoaDonService {
         lichSuHoaDon.setThoiGian(LocalDate.now());
         lichSuHoaDon.setNguoiThucHien(nhanVien.getHoTen());
         lichSuHoaDonRepo.save(lichSuHoaDon);
-
-        capNhatTrangThaiHoaDon(hoaDon);
         return null;
     }
-
-
-
 
     private HoaDonTheoIDResponse convert(HoaDon hoaDon){
         HoaDonTheoIDResponse response = new HoaDonTheoIDResponse();
