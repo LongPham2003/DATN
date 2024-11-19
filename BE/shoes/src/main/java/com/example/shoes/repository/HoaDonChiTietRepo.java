@@ -4,6 +4,7 @@ import com.example.shoes.dto.hoadonchitiet.response.HoaDonChiTietBHRespose;
 import com.example.shoes.entity.HoaDon;
 import com.example.shoes.entity.HoaDonChiTiet;
 import com.example.shoes.entity.SanPhamChiTiet;
+import com.example.shoes.enums.TrangThai;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -29,5 +30,8 @@ public interface HoaDonChiTietRepo extends JpaRepository<HoaDonChiTiet, Integer>
     @Transactional
     @Query("DELETE FROM HoaDonChiTiet h WHERE h.idHoaDon.id = :idHoaDon AND h.idSpct.id = :idSpct")
     void deleteByIdHoaDonAndIdSpct(@Param("idHoaDon") Integer idHoaDon, @Param("idSpct") Integer idSpct);
+
+    List<HoaDonChiTiet> findByIdSpctAndTrangThaiIn(SanPhamChiTiet sanPhamChiTiet, List<TrangThai> trangThaiList);
+
 
 }

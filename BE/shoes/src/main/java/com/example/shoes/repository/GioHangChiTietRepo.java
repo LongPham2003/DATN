@@ -26,5 +26,9 @@ public interface GioHangChiTietRepo extends JpaRepository<GioHangChiTiet, Intege
             Integer khachHangId,
             Integer sanPhamChiTietId);
     List<GioHangChiTiet> findByIdGioHang(GioHang idGioHang);
+    // Đếm số lượng sản phẩm chi tiết trong giỏ hàng
+    @Query("SELECT COUNT(g) FROM GioHangChiTiet g WHERE g.idGioHang.id = :idGioHang")
+    Integer countByGioHangId(@Param("idGioHang") Integer idGioHang);
+    List<GioHangChiTiet> findByIdSanPhamChiTiet(SanPhamChiTiet sanPhamChiTiet);
 }
 

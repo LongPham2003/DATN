@@ -76,6 +76,18 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
         return khachHangRepo.findByEmail(username)
                 .orElseThrow(() -> new AppException(ErrorCode.STAFF)); // Xử lý nếu không tìm thấy nhân viên
     }
+    public void capNhatSoSanPham(Integer idGioHang) {
+        GioHang gioHang = gioHangRepo.findById(idGioHang)
+                .orElseThrow(() -> new AppException(ErrorCode.CART_NOT_FOUND));
+
+        // Đếm số sản phẩm trong giỏ hàng
+        int soSanPham = (int) gioHangChiTietRepo.countByGioHangId(idGioHang);
+        // Cập nhật số sản phẩm
+        gioHang.setTongSoLuong(soSanPham);
+
+        // Lưu lại giỏ hàng
+        gioHangRepo.save(gioHang);
+    }
     @Override
     @Transactional
     public GioHangChiTietResponse themVaoGioHangChiTiet(Integer idSPCT,GioHangChiTietRequest request) {
@@ -119,14 +131,10 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
             gioHangChiTiet.setSoLuong(request.getSoLuong());
             gioHangChiTiet.setDonGia(sanPhamChiTiet.getDonGia());
         }
-
         // Lưu chi tiết giỏ hàng
         gioHangChiTietRepo.save(gioHangChiTiet);
-
-        // Cập nhật tổng số lượng trong giỏ hàng
-        gioHang.setTongSoLuong(gioHang.getTongSoLuong() + request.getSoLuong());
-        gioHangRepo.save(gioHang);
-
+// Cập nhật số sản phẩm trong giỏ hàng
+        capNhatSoSanPham(gioHang.getId());
         // Chuyển đổi thành DTO phản hồi và trả về
         return convertToGioHangChiTietResponse(gioHangChiTiet);
     }
@@ -156,7 +164,8 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
 
     // Lưu chi tiết giỏ hàng
     gioHangChiTietRepo.save(gioHangChiTiet);
-
+// Cập nhật số sản phẩm trong giỏ hàng
+        capNhatSoSanPham(gioHang.getId());
     // Trả về phản hồi
     return convertToGioHangChiTietResponse(gioHangChiTiet);
     }
@@ -191,8 +200,6 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
         // Duyệt qua từng sản phẩm chi tiết và xóa
         for (GioHangChiTiet chiTiet : danhSachChiTiet) {
             if (chiTiet.getIdSanPhamChiTiet().getId().equals(gioHangChiTiet.getIdSanPhamChiTiet().getId())) {
-                // Cập nhật tổng số lượng trong giỏ hàng
-                gioHang.setTongSoLuong(gioHang.getTongSoLuong() - chiTiet.getSoLuong());
 
                 // Xóa sản phẩm chi tiết khỏi giỏ hàng chi tiết
                 gioHangChiTietRepo.delete(chiTiet);
@@ -201,7 +208,8 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
 
         // Lưu lại giỏ hàng với tổng số lượng mới
         gioHangRepo.save(gioHang);
-
+        // Cập nhật số sản phẩm trong giỏ hàng
+        capNhatSoSanPham(gioHang.getId());
         // Trả về phản hồi đã xóa
         return convertToGioHangChiTietResponse(gioHangChiTiet);
     }
