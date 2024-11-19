@@ -12,7 +12,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface GioHangChiTietRepo extends JpaRepository<GioHangChiTiet, Integer> {
-    Optional<GioHangChiTiet> findByIdGioHangAndIdSanPhamChiTiet(GioHang gioHang, SanPhamChiTiet sanPhamChiTiet);
+    @Query("SELECT g FROM GioHangChiTiet g WHERE g.idGioHang = :gioHang AND g.idSanPhamChiTiet = :sanPhamChiTiet")
+    Optional<GioHangChiTiet> findByGioHangAndSanPhamChiTiet(
+            @Param("gioHang") GioHang gioHang,
+            @Param("sanPhamChiTiet") SanPhamChiTiet sanPhamChiTiet
+    );
     @Query("SELECT ghct FROM GioHangChiTiet ghct " +
             "JOIN ghct.idGioHang gh " +
             "JOIN gh.idKhachHang kh " +
@@ -21,5 +25,6 @@ public interface GioHangChiTietRepo extends JpaRepository<GioHangChiTiet, Intege
     Optional<GioHangChiTiet> findByIdGioHang_IdKhachHang_IdAndIdSanPhamChiTiet_Id(
             Integer khachHangId,
             Integer sanPhamChiTietId);
+    List<GioHangChiTiet> findByIdGioHang(GioHang idGioHang);
 }
 

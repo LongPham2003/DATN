@@ -25,7 +25,7 @@ public class GioHangController {
     private GioHangChiTietService gioHangChiTietService;
     @Autowired
     private GioHangChiTietService hangChiTietService;
-//    request co soLuong
+//    request co soLuong va lay idspct
     @PostMapping("/themvaogiohangchitiet/{idSPCT}")
     public ApiResponse<GioHangChiTietResponse> themVaoGioHangChiTiet(@PathVariable("idSPCT")Integer idSPCT,@RequestBody GioHangChiTietRequest request) {
         GioHangChiTietResponse response = gioHangChiTietService.themVaoGioHangChiTiet(idSPCT,request);
@@ -34,11 +34,14 @@ public class GioHangController {
                 .message("Thêm sản phẩm vào giỏ hàng thành công")
                 .build();
     }
-    // Cập nhật chi tiết giỏ hàng
-    @PutMapping("/capnhatgiohangchitiet/{id}")
-    public ApiResponse<GioHangChiTietResponse> capNhatGioHangChiTiet(@PathVariable Integer id,
+    // Cập nhật chi tiết giỏ hàng lấy id gio hang va  requet {
+    //  "idSanPhamChiTiet": 3,
+    //  "soLuong": 10
+    //}
+    @PutMapping("/capnhatgiohangchitiet/{idGH}")
+    public ApiResponse<GioHangChiTietResponse> capNhatGioHangChiTiet(@PathVariable("idGH") Integer idGH,
                                                                      @RequestBody GioHangChiTietRequest request) {
-        GioHangChiTietResponse response = gioHangChiTietService.updateGioHangChiTiet(id, request);
+        GioHangChiTietResponse response = gioHangChiTietService.updateGioHangChiTiet(idGH, request);
         return ApiResponse.<GioHangChiTietResponse>builder()
                 .result(response)
                 .message("Cập nhật sản phẩm trong giỏ hàng thành công")
@@ -54,10 +57,10 @@ public class GioHangController {
                 .build();
     }
 
-    // Xóa chi tiết giỏ hàng
-    @DeleteMapping("/xoagiohangchitiet/{id}")
-    public ApiResponse<GioHangChiTietResponse> xoaGioHangChiTiet(@PathVariable Integer id) {
-        GioHangChiTietResponse response = gioHangChiTietService.deleteGioHangChiTiet(id);
+    // Xóa chi tiết giỏ hàng theo id gio hang chi tiet
+    @DeleteMapping("/xoagiohangchitiet/{idGHCT}")
+    public ApiResponse<GioHangChiTietResponse> xoaGioHangChiTiet(@PathVariable("idGHCT") Integer idGHCT) {
+        GioHangChiTietResponse response = gioHangChiTietService.deleteGioHangChiTiet(idGHCT);
         return ApiResponse.<GioHangChiTietResponse>builder()
                 .result(response)
                 .message("Xóa sản phẩm khỏi giỏ hàng thành công")
@@ -73,24 +76,5 @@ public class GioHangController {
                 .message("Lấy tất cả chi tiết giỏ hàng thành công")
                 .build();
     }
-    // Endpoint mua ngay một sản phẩm
-    @PostMapping("/muanay/{idSPCT}")
-    public ApiResponse<HoaDonResponse> muaNgay(@PathVariable Integer idSPCT,
-                                               @RequestBody HoaDonChiTietRequest chiTietRequest) {
-        HoaDonResponse response = hangChiTietService.muaNgay(idSPCT, chiTietRequest);
-        return ApiResponse.<HoaDonResponse>builder()
-                .result(response)
-                .build();
-    }
-    @PostMapping("/muahangtugiohangchitiet")
-    public ApiResponse<HoaDonResponse> muahangtugiohangchitiet(
-            @RequestBody List<HoaDonChiTietRequest> chiTietRequests) { // Chấp nhận danh sách yêu cầu chi tiết
 
-        // Gọi service để xử lý việc mua hàng
-        HoaDonResponse response = hangChiTietService.muaHangTuGioHangChiTiet(chiTietRequests);
-
-        return ApiResponse.<HoaDonResponse>builder()
-                .result(response)
-                .build();
-    }
 }

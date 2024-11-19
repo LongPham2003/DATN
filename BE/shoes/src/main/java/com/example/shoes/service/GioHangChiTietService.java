@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface GioHangChiTietService {
     GioHangChiTietResponse themVaoGioHangChiTiet(Integer idSPCT,GioHangChiTietRequest request);
-    GioHangChiTietResponse updateGioHangChiTiet(Integer id, GioHangChiTietRequest request);
+    GioHangChiTietResponse updateGioHangChiTiet(Integer idGH, GioHangChiTietRequest request);
     GioHangChiTietResponse findByid(Integer id);
     GioHangChiTietResponse deleteGioHangChiTiet(Integer idgiohangchitiet);
     List<GioHangChiTietResponse> getAllGioHangChiTiet();
