@@ -48,15 +48,6 @@ public class GioHangController {
                 .build();
     }
 
-    // Lấy chi tiết giỏ hàng theo ID
-    @GetMapping("/laygiohangchitiet/{id}")
-    public ApiResponse<GioHangChiTietResponse> layGioHangChiTiet(@PathVariable Integer id) {
-        GioHangChiTietResponse response = gioHangChiTietService.findByid(id);
-        return ApiResponse.<GioHangChiTietResponse>builder()
-                .result(response)
-                .build();
-    }
-
     // Xóa chi tiết giỏ hàng theo id gio hang chi tiet
     @DeleteMapping("/xoagiohangchitiet/{idGHCT}")
     public ApiResponse<GioHangChiTietResponse> xoaGioHangChiTiet(@PathVariable("idGHCT") Integer idGHCT) {
@@ -67,7 +58,7 @@ public class GioHangController {
                 .build();
     }
 
-    // Lấy tất cả chi tiết giỏ hàng
+    // Lấy tất cả chi tiết giỏ hàng theo id khach hang
     @GetMapping("/laytatcagiohangchitiet")
     public ApiResponse<List<GioHangChiTietResponse>> layTatCaGioHangChiTiet() {
         List<GioHangChiTietResponse> responseList = gioHangChiTietService.getAllGioHangChiTiet();
