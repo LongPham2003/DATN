@@ -12,7 +12,6 @@ import com.example.shoes.entity.GioHangChiTiet;
 import com.example.shoes.entity.HoaDon;
 import com.example.shoes.entity.HoaDonChiTiet;
 import com.example.shoes.entity.KhachHang;
-import com.example.shoes.entity.LichSuHoaDon;
 import com.example.shoes.entity.NhanVien;
 import com.example.shoes.entity.PhuongThucThanhToan;
 import com.example.shoes.entity.SanPhamChiTiet;
