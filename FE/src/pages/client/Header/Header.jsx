@@ -20,8 +20,8 @@ export default function Header() {
       <header className="fixed left-0 right-0 top-0 z-50 bg-white shadow-md">
         <div className="flex h-[45px] justify-end space-x-4 bg-gray-800 p-2 text-sm text-white">
           {role !== "ROLE_KHACHHANG" && (
-            <a
-              href="#"
+            <Link
+              to="/admin/thongke"
               className="flex items-center space-x-1 hover:text-gray-400"
             >
               <svg
@@ -39,7 +39,7 @@ export default function Header() {
                 />
               </svg>
               <span>Quan li cua hang</span>
-            </a>
+            </Link>
           )}
           <a
             href="#"

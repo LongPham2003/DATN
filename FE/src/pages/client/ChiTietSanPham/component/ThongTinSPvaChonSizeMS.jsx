@@ -17,6 +17,8 @@ export default function ChonSizeVSMauSac({ id }) {
   const [ThuongHieu, setThuongHieu] = useState(null);
   const [DeGiay, setDeGiay] = useState(null);
   const [ChatLieu, setChatLieu] = useState(null);
+  const [soLuongMua, setSoLuongMua] = useState(1);
+  const [Disable, setDisable] = useState(false);
 
   const ApiLayDanhSachSizeCuaSP = `http://localhost:8080/api/kichthuoc/kichthuoctheoidsp/${id}`;
   const ApiLayDanhMauSacCuaSP = `http://localhost:8080/api/mausac/mausactheoidsp/${id}`;
@@ -57,10 +59,15 @@ export default function ChonSizeVSMauSac({ id }) {
         setIdSPCT(data[0].id); // Lấy `id` của phần tử đầu tiên
         setDonGia(data[0].donGia);
         setChatLieu(data[0].chatLieu);
-        setSoLuongTon(data[0].soLuong);
         setDeGiay(data[0].deGiay);
         setThuongHieu(data[0].thuongHieu);
         setMa(data[0].ma);
+
+        const slt = data[0].soLuong;
+        setSoLuongTon(slt);
+
+        // Disable nút nếu không còn hàng
+        setDisable(slt === 0);
       } else {
         setIdSPCT(null); // Không tìm thấy `id`
         setDonGia(null);
@@ -143,15 +150,35 @@ export default function ChonSizeVSMauSac({ id }) {
           defaultValue={1}
           size="large"
           className="mx-2 w-[200px]"
+          onChange={(value) => {
+            setSoLuongMua(value);
+            console.log(value);
+          }}
         />
       </div>
       <div className="flex gap-2">
-        <button className="h-[50px] w-[250px] rounded bg-blue-500 px-4 py-2 text-xl text-white hover:bg-blue-600">
-          Thêm vào giỏ hàng
-        </button>
-        <button className="h-[50px] w-[250px] rounded bg-orange-500 px-4 py-2 text-xl text-white hover:bg-orange-600">
-          Mua ngay
-        </button>
+        <div className="flex gap-2">
+          {SoLuongTon === 0 ? (
+            <span className="text-xl font-bold text-red-500">
+              Sản phẩm đã hết hàng
+            </span>
+          ) : (
+            <>
+              <button
+                className="h-[50px] w-[250px] rounded bg-blue-500 px-4 py-2 text-xl text-white hover:bg-blue-600"
+                onClick={() => console.log("Thêm vào giỏ hàng")}
+              >
+                Thêm vào giỏ hàng
+              </button>
+              <button
+                className="h-[50px] w-[250px] rounded bg-orange-500 px-4 py-2 text-xl text-white hover:bg-orange-600"
+                onClick={() => console.log("Mua ngay")}
+              >
+                Mua ngay
+              </button>
+            </>
+          )}
+        </div>
       </div>
       <hr className="my-4" />
       <div className="grid grid-cols-3 gap-4">
