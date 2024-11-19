@@ -4,6 +4,7 @@ import com.example.shoes.dto.BaoCaoThongKeResponse;
 
 import com.example.shoes.dto.PhanTrangResponse;
 
+import com.example.shoes.dto.hoadon.request.DatHangRequest;
 import com.example.shoes.dto.hoadon.request.HoaDonRequest;
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
 import com.example.shoes.dto.hoadon.response.HoaDonTheoIDResponse;
@@ -722,6 +723,19 @@ public class HoaDonServiceImpl implements HoaDonService {
         phanTrangResponse.setResult(hoaDonPage.getContent().stream().map(this::converToHoaDonResponse).toList());
 
         return phanTrangResponse;
+    }
+
+    @Override
+    public Void updateTrangThaiHoaDonById(Integer idHoaDon, DatHangRequest datHangRequest) {
+        HoaDon hoaDon = hoaDonRepo.findById(idHoaDon).get();
+        hoaDon.setTrangThai(TrangThai.CHO_XAC_NHAN_DON);
+        hoaDon.setPhuongThucGiaoHang("Giao Hàng");
+        hoaDon.setPhiVanChuyen(datHangRequest.getPhiVanChuyen());
+        hoaDon.setDiaChiGiaoHang(datHangRequest.getDiaChiChiTiet());
+        hoaDon.setNgayDuKien(datHangRequest.getNgayDuKien());
+        hoaDonRepo.save(hoaDon);
+
+        return null;
     }
 
     @Override

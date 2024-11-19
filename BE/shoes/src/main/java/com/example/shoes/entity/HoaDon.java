@@ -10,6 +10,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -46,6 +47,9 @@ public class HoaDon extends CrudByAt {
     @Column(name = "tong_tien")
     private BigDecimal tongTien;
 
+    @Column(name = "phi_van_chuyen")
+    private BigDecimal phiVanChuyen;
+
     @Column(name = "tien_duoc_giam")
     private BigDecimal tienDuocGiam;
 
@@ -64,6 +68,8 @@ public class HoaDon extends CrudByAt {
     @Column(name = "phuong_thuc_giao_hang")
     private String phuongThucGiaoHang;
 
+    @Column(name = "ngay_du_kien")
+    private Date ngayDuKien;
 
     @Column(name = "ngay_tao")
     private LocalDate ngayTao;

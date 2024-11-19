@@ -87,7 +87,7 @@ public interface HoaDonRepo extends JpaRepository<HoaDon, Integer> {
 
 
     // lấy hóa dơn theo ma phan trang loc
-    @Query( value = "select  hd.id ,hd.create_at,hd.create_by,hd.update_at,hd.update_by ,hd.dia_chi_giao_hang, " +
+    @Query( value = "select  hd.id ,hd.create_at,hd.create_by,hd.update_at,hd.update_by ,hd.dia_chi_giao_hang ,hd.phi_van_chuyen, " +
             "hd.ma,hd.ngay_sua ,hd.ngay_tao ,hd.phuong_thuc_giao_hang , hd.phuong_thuc_thanh_toan , hd.so_dien_thoai ," +
             "hd.tien_duoc_giam ,hd.tien_phai_thanh_toan ,hd.tong_tien,hd.id_khach_hang,hd.id_nhan_vien ,hd.id_phieu_giam_gia ," +
             "hd.tien_khach_dua ,hd.tien_thua ,hd.trang_thai " +

@@ -2,6 +2,7 @@ package com.example.shoes.service;
 
 import com.example.shoes.dto.BaoCaoThongKeResponse;
 import com.example.shoes.dto.PhanTrangResponse;
+import com.example.shoes.dto.hoadon.request.DatHangRequest;
 import com.example.shoes.dto.hoadon.request.HoaDonRequest;
 
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
@@ -43,4 +44,5 @@ public interface HoaDonService {
  Void updateHoaDonById(Integer idHoaDon , PaymentRequest paymentRequest);
 
  PhanTrangResponse<HoaDonResponse> getHoaDon(int pageNumber,int pageSize,String keyword,String phuongThucGiaoHang,String trangThai);
+ Void updateTrangThaiHoaDonById(Integer idHoaDon, DatHangRequest datHangRequest);
 }
