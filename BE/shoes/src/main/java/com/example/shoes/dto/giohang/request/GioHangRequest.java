@@ -7,5 +7,5 @@ import lombok.Setter;
 @Getter
 public class GioHangRequest {
     private Integer idKhachHang;
-    private Integer tongSoLuong;
+    private Integer soLuong;
 }

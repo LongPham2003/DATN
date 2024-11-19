@@ -48,7 +48,7 @@ public class SecurityConfiguration {
     private final String[] PUBLIC_ENDPOINTS = {"/auth/signup", "/auth/login",
 
             "/auth/resetpass", "/auth/doimatkhau", "/api/paymentvnpay/**", "/api/paymentvnpay/payment-infor",
-            "/banhangonline/**"
+            "/banhangonline/**","/api/giohang/**"
     };
 
     private final String[] NHANVIEN_ENDPOINTS = {

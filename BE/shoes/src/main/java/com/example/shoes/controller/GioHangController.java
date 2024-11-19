@@ -18,15 +18,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-
 @RestController
-@RequestMapping("/banhangonline")
-public class BanHangOnlineController {
+@RequestMapping("/api/giohang")
+public class GioHangController {
     @Autowired
     private GioHangChiTietService gioHangChiTietService;
     @Autowired
     private GioHangChiTietService hangChiTietService;
-
+//    request co soLuong
+    @PostMapping("/themvaogiohangchitiet/{idSPCT}")
+    public ApiResponse<GioHangChiTietResponse> themVaoGioHangChiTiet(@PathVariable("idSPCT")Integer idSPCT,@RequestBody GioHangChiTietRequest request) {
+        GioHangChiTietResponse response = gioHangChiTietService.themVaoGioHangChiTiet(idSPCT,request);
+        return ApiResponse.<GioHangChiTietResponse>builder()
+                .result(response)
+                .message("Thêm sản phẩm vào giỏ hàng thành công")
+                .build();
+    }
     // Cập nhật chi tiết giỏ hàng
     @PutMapping("/capnhatgiohangchitiet/{id}")
     public ApiResponse<GioHangChiTietResponse> capNhatGioHangChiTiet(@PathVariable Integer id,
@@ -82,13 +89,6 @@ public class BanHangOnlineController {
         // Gọi service để xử lý việc mua hàng
         HoaDonResponse response = hangChiTietService.muaHangTuGioHangChiTiet(chiTietRequests);
 
-        return ApiResponse.<HoaDonResponse>builder()
-                .result(response)
-                .build();
-    }
-    @PostMapping("/nhanvienxacnhan/{idHoaDon}")
-    public ApiResponse<HoaDonResponse> nhanVienXacNhan(@PathVariable Integer idHoaDon) {
-        HoaDonResponse response = hangChiTietService.nhanVienXacNhan(idHoaDon);
         return ApiResponse.<HoaDonResponse>builder()
                 .result(response)
                 .build();
