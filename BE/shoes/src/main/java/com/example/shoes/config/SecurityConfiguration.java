@@ -48,14 +48,14 @@ public class SecurityConfiguration {
     private final String[] PUBLIC_ENDPOINTS = {"/auth/signup", "/auth/login",
 
             "/auth/resetpass", "/auth/doimatkhau", "/api/paymentvnpay/**", "/api/paymentvnpay/payment-infor",
-            "/banhangonline/**","/api/giohang/**"
+            "/banhangonline/**","/api/sanpham/SPClient", "/api/kichthuoc/**", "/api/mausac/**",
+            "/api/thuonghieu/**", "/api/degiay/**", "/api/hinhanh/**", "/api/khachhang/**",
+            "/api/loai/**", "/api/phieugiamgia/**",  "/api/chatlieu/**",
+            "/api/sanphamchitiet/**"
     };
 
     private final String[] NHANVIEN_ENDPOINTS = {
-            "/api/chatlieu/**",
-            "/api/sanpham/**", "/api/sanphamchitiet/**", "/api/kichthuoc/**", "/api/mausac/**",
-            "/api/thuonghieu/**", "/api/degiay/**", "/api/hinhanh/**", "/api/khachhang/**",
-            "/api/loai/**", "/api/phieugiamgia/**", "/banhangtaiquay/**", "/api/hoadonchitiet/**", "/api/paymentvnpay/**",
+           "/banhangtaiquay/**", "/api/hoadonchitiet/**", "/api/paymentvnpay/**",
             "/api/paymentvnpay/payment-infor","/banhangonline/**",
     };
 

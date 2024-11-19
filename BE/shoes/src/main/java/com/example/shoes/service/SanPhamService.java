@@ -18,6 +18,6 @@ public interface SanPhamService {
     void updateTheoTrangThai(Integer id);
     List<String> getAlltenSP();
     List<SanPhamBanChayResponse> getTop3SanPhamBanChay();
-
+    SanPhamClient sanPhamTrangChiTietClient(Integer idSP);
     List<SanPhamClient> sanPhamClient(Integer idLoai, Integer kichThuoc,Integer idMauSac, BigDecimal donGiaMin, BigDecimal donGiaMax);
 }
