@@ -12,4 +12,5 @@ public interface GioHangRepo extends JpaRepository<GioHang, Integer> {
 
     // Phương thức để tìm giỏ hàng theo khách hàng
     Optional<GioHang> findByIdKhachHang(KhachHang khachHang);
+    Optional<GioHang> findByIdKhachHang_Id(Integer idKhachHang); // Tìm giỏ hàng theo idKhachHang
 }

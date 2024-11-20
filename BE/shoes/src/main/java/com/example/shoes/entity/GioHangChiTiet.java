@@ -21,6 +21,7 @@ public class GioHangChiTiet {
     @JoinColumn(name = "id_gio_hang")
     private GioHang idGioHang;
 
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_san_pham_chi_tiet")
     private SanPhamChiTiet idSanPhamChiTiet;

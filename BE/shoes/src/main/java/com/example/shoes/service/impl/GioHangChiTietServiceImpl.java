@@ -33,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -75,6 +76,18 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
         // Tìm nhân viên từ tên đăng nhập
         return khachHangRepo.findByEmail(username)
                 .orElseThrow(() -> new AppException(ErrorCode.STAFF)); // Xử lý nếu không tìm thấy nhân viên
+    }
+    public void capNhatSoSanPham(Integer idGioHang) {
+        GioHang gioHang = gioHangRepo.findById(idGioHang)
+                .orElseThrow(() -> new AppException(ErrorCode.CART_NOT_FOUND));
+
+        // Đếm số sản phẩm trong giỏ hàng
+        int soSanPham = (int) gioHangChiTietRepo.countByGioHangId(idGioHang);
+        // Cập nhật số sản phẩm
+        gioHang.setTongSoLuong(soSanPham);
+
+        // Lưu lại giỏ hàng
+        gioHangRepo.save(gioHang);
     }
     @Override
     @Transactional
@@ -121,15 +134,13 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
         }
 
         // Lưu chi tiết giỏ hàng
-     gioHangChiTietRepo.save(gioHangChiTiet);
-
-        // Cập nhật tổng số lượng trong giỏ hàng
-        gioHang.setTongSoLuong(gioHang.getTongSoLuong() + request.getSoLuong());
-        gioHangRepo.save(gioHang);
-
+        gioHangChiTietRepo.save(gioHangChiTiet);
+// Cập nhật số sản phẩm trong giỏ hàng
+        capNhatSoSanPham(gioHang.getId());
         // Chuyển đổi thành DTO phản hồi và trả về
         return convertToGioHangChiTietResponse(gioHangChiTiet);
     }
+
     @Override
     public GioHangChiTietResponse updateGioHangChiTiet(Integer idGH, GioHangChiTietRequest request) {
 //       // Tìm giỏ hàng theo ID
@@ -155,7 +166,8 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
 
     // Lưu chi tiết giỏ hàng
     gioHangChiTietRepo.save(gioHangChiTiet);
-
+// Cập nhật số sản phẩm trong giỏ hàng
+        capNhatSoSanPham(gioHang.getId());
     // Trả về phản hồi
     return convertToGioHangChiTietResponse(gioHangChiTiet);
     }
@@ -200,15 +212,38 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
 
         // Lưu lại giỏ hàng với tổng số lượng mới
         gioHangRepo.save(gioHang);
-
+        // Cập nhật số sản phẩm trong giỏ hàng
+        capNhatSoSanPham(gioHang.getId());
         // Trả về phản hồi đã xóa
         return convertToGioHangChiTietResponse(gioHangChiTiet);
     }
+    private Integer getCurrentKhachHangId() {
+        // Lấy thông tin người dùng hiện tại
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName(); // Tên đăng nhập
+
+        // Tìm khách hàng từ tên đăng nhập (email)
+        KhachHang khachHang = khachHangRepo.findByEmail(username)
+                .orElseThrow(() -> new AppException(ErrorCode.CUSTOMER_NOT_FOUND)); // Nếu không tìm thấy khách hàng, ném lỗi
+
+        // Trả về id của khách hàng
+        return khachHang.getId();
+    }
+
 
     @Override
     public List<GioHangChiTietResponse> getAllGioHangChiTiet() {
-        // Lấy tất cả chi tiết giỏ hàng và chuyển đổi thành danh sách phản hồi
-        List<GioHangChiTiet> gioHangChiTietList = gioHangChiTietRepo.findAll();
+        // Lấy ID khách hàng của người dùng hiện tại
+        Integer idKhachHang = getCurrentKhachHangId(); // Cách lấy ID khách hàng từ người dùng đăng nhập
+
+        // Tìm giỏ hàng của khách hàng
+        GioHang gioHang = gioHangRepo.findByIdKhachHang_Id(idKhachHang)
+                .orElseThrow(() -> new AppException(ErrorCode.CART_NOT_FOUND));
+ System.out.println(gioHang);
+        // Lấy danh sách giỏ hàng chi tiết của giỏ hàng này
+        List<GioHangChiTiet> gioHangChiTietList = gioHangChiTietRepo.findByIdGioHang(gioHang.getId());
+
+        // Chuyển đổi danh sách giỏ hàng chi tiết thành danh sách phản hồi
         return gioHangChiTietList.stream()
                 .map(this::convertToGioHangChiTietResponse)
                 .toList();

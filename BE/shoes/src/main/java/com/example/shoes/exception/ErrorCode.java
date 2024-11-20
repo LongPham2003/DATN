@@ -50,6 +50,7 @@ public enum ErrorCode {
     EMPTY_CART(1005,"chua co san pham trong gio hang",HttpStatus.NOT_FOUND),
     ITEM_NOT_FOUND_IN_CART(1005,"hãy mua sắm",HttpStatus.NOT_FOUND),
     CART_NOT_FOUND(1005,"khong tim thay gio hang ",HttpStatus.NOT_FOUND),
+    CUSTOMER_NOT_FOUND(1005,"khong tim khach hang tren he thong  ",HttpStatus.NOT_FOUND),
     ;
     private int code;
     private String message;
