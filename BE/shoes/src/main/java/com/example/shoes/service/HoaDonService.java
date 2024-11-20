@@ -37,9 +37,6 @@ public interface HoaDonService {
  BaoCaoThongKeResponse layBaoCaoTaiChinhTongQuat();
 
  Integer idHoaDon();
-
-
-
  Void updateHoaDonById(Integer idHoaDon , PaymentRequest paymentRequest);
 
  PhanTrangResponse<HoaDonResponse> getHoaDon(int pageNumber,int pageSize,String keyword,String phuongThucGiaoHang,String trangThai);

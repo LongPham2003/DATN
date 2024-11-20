@@ -1,9 +1,12 @@
 package com.example.shoes.dto.hoadon.request;
 
+import com.example.shoes.dto.hoadonchitiet.request.HoaDonChiTietRequest;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Setter
@@ -19,5 +22,6 @@ public class HoaDonRequest {
     private String diaChiGiaoHang;
     private String phuongThucThanhToan;
     private String phuongThucGiaoHang;
+    private List<HoaDonChiTietRequest> chiTietSanPhams = new ArrayList<>(); // Khởi tạo danh sách rỗng
 
 }
