@@ -20,7 +20,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/banhangonline")
+@RequestMapping("/api/banhangonline")
 public class BanHangOnlineController {
     @Autowired
     private GioHangChiTietService gioHangChiTietService;

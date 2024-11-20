@@ -78,6 +78,12 @@ public class GioHangController {
                 .result(response)
                 .build();
     }
+//    request { "idPhieuGiamGia":11,
+//    "chiTietSanPhams": [
+//        { "idSpct": 11, "soLuong": 2 },
+//        { "idSpct": 12, "soLuong": 3 }
+//    ]
+//} phieu giam gia apcung dc ko ap cung dc
     @PostMapping("/dat-hang")
     public ApiResponse<HoaDonResponse> datHang(@RequestBody  HoaDonRequest hoaDonRequest) {
         HoaDonResponse response = gioHangChiTietService.datHang(hoaDonRequest);
