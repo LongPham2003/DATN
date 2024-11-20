@@ -1,7 +1,9 @@
 package com.example.shoes.controller;
 
+import com.example.shoes.dto.giohang.response.GioHangResponse;
 import com.example.shoes.dto.giohangchitiet.request.GioHangChiTietRequest;
 import com.example.shoes.dto.giohangchitiet.response.GioHangChiTietResponse;
+import com.example.shoes.dto.hoadon.request.HoaDonRequest;
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
 import com.example.shoes.dto.hoadonchitiet.request.HoaDonChiTietRequest;
 import com.example.shoes.exception.ApiResponse;
@@ -65,6 +67,28 @@ public class GioHangController {
         return ApiResponse.<List<GioHangChiTietResponse>>builder()
                 .result(responseList)
                 .message("Lấy tất cả chi tiết giỏ hàng thành công")
+                .build();
+    }
+
+//    Lay ra tong san pham cua nguoi dung khi dang nhap he thong
+    @GetMapping("/tongsanphamnguoidung")
+    public ApiResponse<GioHangResponse> hienThiGioHangNguoiĐangĐangNhapHeThong() {
+        GioHangResponse response = gioHangChiTietService.layGioHangTheoIdKhachHang();
+        return ApiResponse.<GioHangResponse>builder()
+                .result(response)
+                .build();
+    }
+//    request { "idPhieuGiamGia":11,
+//    "chiTietSanPhams": [
+//        { "idSpct": 11, "soLuong": 2 },
+//        { "idSpct": 12, "soLuong": 3 }
+//    ]
+//} phieu giam gia apcung dc ko ap cung dc
+    @PostMapping("/dat-hang")
+    public ApiResponse<HoaDonResponse> datHang(@RequestBody  HoaDonRequest hoaDonRequest) {
+        HoaDonResponse response = gioHangChiTietService.datHang(hoaDonRequest);
+        return ApiResponse.<HoaDonResponse>builder()
+                .result(response)
                 .build();
     }
 
