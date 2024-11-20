@@ -121,7 +121,7 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
         }
 
         // Lưu chi tiết giỏ hàng
-        gioHangChiTietRepo.save(gioHangChiTiet);
+     gioHangChiTietRepo.save(gioHangChiTiet);
 
         // Cập nhật tổng số lượng trong giỏ hàng
         gioHang.setTongSoLuong(gioHang.getTongSoLuong() + request.getSoLuong());
@@ -130,7 +130,6 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
         // Chuyển đổi thành DTO phản hồi và trả về
         return convertToGioHangChiTietResponse(gioHangChiTiet);
     }
-
     @Override
     public GioHangChiTietResponse updateGioHangChiTiet(Integer idGH, GioHangChiTietRequest request) {
 //       // Tìm giỏ hàng theo ID
