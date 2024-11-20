@@ -30,7 +30,7 @@ export default function BanHangTaiQuay() {
   const [selectedHoaDonId, setSelectedHoaDonId] = useState(null); // State lưu trữ id hóa đơn được chọn
 
   // chon giao hang
-  const [phiGiaoHang, setPhiGiaoHang] = useState("");
+  const [phiGiaoHang, setPhiGiaoHang] = useState(0);
   const [giaoHang, setGiaoHang] = useState(false);
   const [ngayDuKien, setNgayDuKien] = useState(null);
 
@@ -399,23 +399,23 @@ export default function BanHangTaiQuay() {
     }
   };
 
-  const addKhachHangVaoHoaDon = async () => {
-    try {
-      await axios.post(`${ApiThemKhachHangVaoHoaDon}/${idKhachHang}`);
-      toast.success("Thêm khach hàng thành công");
-      LayThongTinThanhToanCuaHoaDon();
-    } catch (error) {
-      console.log(error);
-      toast.error("Co loi xay ra!");
-    }
-  };
+  // const addKhachHangVaoHoaDon = async () => {
+  //   try {
+  //     await axios.post(`${ApiThemKhachHangVaoHoaDon}/${idKhachHang}`);
+  //     toast.success("Thêm khach hàng thành công");
+  //     LayThongTinThanhToanCuaHoaDon();
+  //   } catch (error) {
+  //     console.log(error);
+  //     toast.error("Co loi xay ra!");
+  //   }
+  // };
 
-  const ThemKhachHang = async () => {
-    if (idKhachHang) {
-      await addKhachHangVaoHoaDon();
-      setDisableSelectKhachHang(true); // Disable Select sau khi gọi hàm
-    }
-  };
+  // const ThemKhachHang = async () => {
+  //   if (idKhachHang) {
+  //     await addKhachHangVaoHoaDon();
+  //     setDisableSelectKhachHang(true); // Disable Select sau khi gọi hàm
+  //   }
+  // };
 
   const XoaKhachHangKhoiHoaDon = async () => {
     try {
@@ -423,9 +423,12 @@ export default function BanHangTaiQuay() {
       await LayThongTinThanhToanCuaHoaDon();
       toast.success("Thanh cong");
       setDisableSelectKhachHang(false);
+      setGiaoHang(false);
+      setPhiGiaoHang(0);
+      setNgayDuKien(null);
     } catch (error) {
       console.log(error);
-      toast.error("Co Loi Xay Ra");
+      toast.error("Không có khách hàng");
     }
   };
 
@@ -569,6 +572,38 @@ export default function BanHangTaiQuay() {
     }
   };
 
+  // khách đặt giao hàng ở tại quầy
+  const handleDatHang = async () => {
+    Modal.confirm({
+      title: "Xác nhận cập nhật",
+      content: "Bạn có chắc chắn muốn đặt hàng này không?",
+      onOk() {
+        // Nếu người dùng xác nhận, gửi yêu cầu cập nhật
+        axios
+          .post(
+            `http://localhost:8080/api/hoadon/dathang/${selectedHoaDonId}`,
+            {
+              phiVanChuyen: phiGiaoHang,
+              diaChiChiTiet: diaChiGiaoHang,
+              ngayDuKien: ngayDuKien,
+            },
+          )
+          .then((response) => {
+            console.log("Cập nhật thành công 111:", response.data);
+            setError("");
+            toast.success("Cập nhật thành công");
+            LayDanhSachHoaDonChuaThanhToan();
+            setGiaoHang(false);
+          })
+          .catch((error) => {
+            setError(error.response.data.message);
+          });
+      },
+      onCancel() {
+        // Nếu người dùng hủy, có thể không cần làm gì cả
+      },
+    });
+  };
   return (
     <>
       <div className="mx-2 flex max-h-screen overflow-y-hidden font-mono">
@@ -840,7 +875,10 @@ export default function BanHangTaiQuay() {
                 <div className="flex gap-3">
                   <div>Giao hàng</div>
                   <div>
-                    <Switch onClick={() => setGiaoHang(!giaoHang)} />
+                    <Switch
+                      value={giaoHang}
+                      onClick={() => setGiaoHang(!giaoHang)}
+                    />
                   </div>
                 </div>
                 <div>{giaoHang && <div>{phiGiaoHang}</div>}</div>
@@ -851,90 +889,118 @@ export default function BanHangTaiQuay() {
                 <div className="text-red-500">{tienPhaiThanhToan} VND</div>
               </div>
 
-              <div className="ml-7">
-                <div className="my-2 flex">
-                  <Button
-                    style={{ height: "50px", width: "220px" }}
-                    className="ml-[10px] border-2 border-green-500 text-lg font-medium text-green-500"
-                    onClick={openthanhToan}
+              <div className="mx-3 mt-2">
+                <div>
+                  <span className="text-xl font-semibold">Khách hàng:</span>
+                  <button
+                    className="ml-[10px] w-[60px] border-2 border-blue-400 text-lg font-medium text-blue-400"
+                    onClick={openModalThemKH}
                   >
-                    Tiền mặt
-                  </Button>
-                  <Button
-                    style={{ height: "50px", width: "220px" }}
-                    className="ml-[10px] border-2 border-yellow-500 text-lg font-medium text-yellow-500"
-                    onClick={handlePaymentClick}
+                    Chọn
+                  </button>
+                  <button
+                    className="ml-[10px] w-[60px] border-2 border-red-400 text-lg font-medium text-red-400"
+                    onClick={XoaKhachHangKhoiHoaDon}
                   >
-                    Chuyển khoản
-                  </Button>
+                    Xóa
+                  </button>
                 </div>
-                <div className="my-2">
-                  <Button
-                    style={{ height: "50px", width: "450px" }}
-                    className="ml-[10px] border-2 border-orange-600 text-lg font-medium text-orange-700"
-                    onClick={openModalThanhToanCKTM}
-                  >
-                    Tiền mặt & Chuyển khoản
-                  </Button>
+                <div className="my-3">
+                  {tenKhachHang && (
+                    <div className="my-1">
+                      <span className="text-lg font-medium">
+                        Tên khách hàng:{" "}
+                      </span>
+                      <span>{tenKhachHang}</span>
+                    </div>
+                  )}
+                  {soDienThoai && (
+                    <div className="my-1">
+                      <span className="text-lg font-medium">
+                        Số điện thoại:{" "}
+                      </span>
+                      <span>{soDienThoai}</span>
+                    </div>
+                  )}
+                  {idKhachHang && (
+                    <div className="my-1">
+                      <span>
+                        <DiaCHiMacDinhKhachHang
+                          idKhachHang={idKhachHang}
+                          giaoHang={giaoHang}
+                          setPhiGiaoHang={setPhiGiaoHang}
+                          setNgayDuKien={setNgayDuKien}
+                          setdiaChiGiaoHang={setdiaChiGiaoHang}
+                        />
+                      </span>
+                    </div>
+                  )}
                 </div>
-                <div className="my-2">
-                  <Button
-                    style={{ height: "50px", width: "450px" }}
-                    className="ml-[10px] border-2 border-red-700 text-lg font-medium text-red-700"
-                    onClick={huyHoaDon}
-                  >
-                    Hủy
-                  </Button>
-                </div>
+                {giaoHang && (
+                  <div>
+                    <div className="mx-3 flex items-center gap-4">
+                      {" "}
+                      <img
+                        className="w-[60px]"
+                        src="https://cdn.haitrieu.com/wp-content/uploads/2022/05/Logo-GHN-Orange.png"
+                        alt=""
+                      />
+                      <div>Ngày giao hàng dự kiến:{ngayDuKien}</div>
+                    </div>
+                    <div className="flex justify-center">
+                      {" "}
+                      <button
+                        onClick={handleDatHang}
+                        style={{ height: "50px", width: "220px" }}
+                        className="ml-[10px] border-2 border-green-500 text-lg font-medium text-green-500"
+                      >
+                        Đặt hàng
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
+
+              {!giaoHang && (
+                <div className="ml-7">
+                  <div className="my-2 flex">
+                    <Button
+                      style={{ height: "50px", width: "220px" }}
+                      className="ml-[10px] border-2 border-green-500 text-lg font-medium text-green-500"
+                      onClick={openthanhToan}
+                    >
+                      Tiền mặt
+                    </Button>
+                    <Button
+                      style={{ height: "50px", width: "220px" }}
+                      className="ml-[10px] border-2 border-yellow-500 text-lg font-medium text-yellow-500"
+                      onClick={handlePaymentClick}
+                    >
+                      Chuyển khoản
+                    </Button>
+                  </div>
+                  <div className="my-2">
+                    <Button
+                      style={{ height: "50px", width: "450px" }}
+                      className="ml-[10px] border-2 border-orange-600 text-lg font-medium text-orange-700"
+                      onClick={openModalThanhToanCKTM}
+                    >
+                      Tiền mặt & Chuyển khoản
+                    </Button>
+                  </div>
+                  <div className="my-2">
+                    <Button
+                      style={{ height: "50px", width: "450px" }}
+                      className="ml-[10px] border-2 border-red-700 text-lg font-medium text-red-700"
+                      onClick={huyHoaDon}
+                    >
+                      Hủy
+                    </Button>
+                  </div>
+                </div>
+              )}
             </div>
             <hr />
-            <div className="mx-3 mt-2">
-              <div>
-                <span className="text-xl font-semibold">Khách hàng:</span>
-                <button
-                  className="ml-[10px] w-[60px] border-2 border-blue-400 text-lg font-medium text-blue-400"
-                  onClick={openModalThemKH}
-                >
-                  Chọn
-                </button>
-                <button
-                  className="ml-[10px] w-[60px] border-2 border-red-400 text-lg font-medium text-red-400"
-                  onClick={XoaKhachHangKhoiHoaDon}
-                >
-                  Xóa
-                </button>
-              </div>
-              <div>
-                {tenKhachHang && (
-                  <div className="my-1">
-                    <span className="text-lg font-medium">
-                      Tên khách hàng:{" "}
-                    </span>
-                    <span>{tenKhachHang}</span>
-                  </div>
-                )}
-                {soDienThoai && (
-                  <div className="my-1">
-                    <span className="text-lg font-medium">Số điện thoại: </span>
-                    <span>{soDienThoai}</span>
-                  </div>
-                )}
-                {idKhachHang && (
-                  <div className="my-1">
-                    <span>
-                      <DiaCHiMacDinhKhachHang
-                        idKhachHang={idKhachHang}
-                        giaoHang={giaoHang}
-                        setPhiGiaoHang={setPhiGiaoHang}
-                        setNgayDuKien={setNgayDuKien}
-                      />
-                    </span>
-                  </div>
-                )}
-              </div>
-              {giaoHang && <div>Ngày giao hàng dự kiến:{ngayDuKien}</div>}
-            </div>
           </div>
         </div>
       </div>
