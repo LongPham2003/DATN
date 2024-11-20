@@ -534,6 +534,19 @@ export default function BanHangTaiQuay() {
     return parseInt(value.replace(/[^\d]/g, ""));
   };
 
+  //Them VND
+  function formatTien(value) {
+    // Loại bỏ dấu phân cách thập phân và chuyển thành số
+    const parsedValue = parseFloat(value.toString().replace(",", "."));
+
+    // Kiểm tra nếu không phải số hợp lệ
+    if (isNaN(parsedValue)) {
+      return "0 VNĐ"; // Giá trị mặc định nếu `value` không hợp lệ
+    }
+
+    // Định dạng số và thêm đơn vị VNĐ
+    return parsedValue.toLocaleString("vi-VN") + " VNĐ";
+  }
   // thanh toán vnpay
   const handlePaymentClick = async () => {
     try {
@@ -648,7 +661,8 @@ export default function BanHangTaiQuay() {
                             {SPCT.tenSanPham} <br />
                             {SPCT.maSPCT} [{SPCT.kichThuoc} - {SPCT.mauSac}]
                             <br />
-                            {SPCT.donGia}
+                            {formatTien(SPCT.donGia)}
+                            {/* {SPCT.donGia} */}
                           </td>
 
                           <td className="text-center">
@@ -707,13 +721,13 @@ export default function BanHangTaiQuay() {
                             </div>
                           </td>
 
-                          <td>{SPCT.donGia * SPCT.soLuong}</td>
+                          <td>{formatTien(SPCT.donGia * SPCT.soLuong)}</td>
                           <td>
                             <Popconfirm
-                              title="Delete the task"
-                              description="Are you sure to delete this task?"
-                              okText="Yes"
-                              cancelText="No"
+                              title="Xóa khỏi giỏ hàng"
+                              description="Bạn có chắc cahwns không?"
+                              okText="Có"
+                              cancelText="Hủy"
                               onConfirm={(e) => {
                                 e.preventDefault();
                                 XoaSPKhoiGioHang(SPCT.idSpct);
