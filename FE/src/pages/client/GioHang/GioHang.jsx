@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import ThongTinSPCT from "./component/ThongTinSPCT";
 import LayANhTheoIDSp from "./../../admin/SanPham/Product/LayANhTheoIDSP";
 import { toast, ToastContainer, Zoom } from "react-toastify";
+import { Link } from "react-router-dom";
 
 export default function GioHang() {
   const [ListSPCT, setListSPCT] = useState([]);
@@ -155,7 +156,7 @@ export default function GioHang() {
       setSanPhamChon([]);
     } else {
       // Nếu chưa checked "Tất cả", chọn tất cả sản phẩm
-      const allIds = ListSPCT.map((spct) => spct.idSanPhamChiTiet); // Lấy tất cả ID sản phẩm
+      const allIds = ListSPCT.map((spct) => spct.id); // Lấy tất cả ID sản phẩm
       setSanPhamChon(allIds);
     }
     // Đảo trạng thái checkbox "Tất cả"
@@ -180,7 +181,7 @@ export default function GioHang() {
   // useEffect để tính tổng tiền dựa trên danh sách sản phẩm được chọn
   useEffect(() => {
     const tong = ListSPCT.reduce((total, spct) => {
-      if (sanPhamChon.includes(spct.idSanPhamChiTiet)) {
+      if (sanPhamChon.includes(spct.id)) {
         // Nếu sản phẩm được chọn, cộng giá trị vào tổng
         return total + formatCurrencyToNumber(spct.donGia) * spct.soLuong;
       }
@@ -232,8 +233,8 @@ export default function GioHang() {
                 >
                   <div className="flex w-10 items-center justify-center">
                     <Checkbox
-                      checked={sanPhamChon.includes(spct.idSanPhamChiTiet)}
-                      onChange={() => toggleSanPham(spct.idSanPhamChiTiet)}
+                      checked={sanPhamChon.includes(spct.id)}
+                      onChange={() => toggleSanPham(spct.id)}
                     />
                   </div>
                   {/* Anh san pham */}
@@ -398,9 +399,11 @@ export default function GioHang() {
                 />
                 {/* Nut thanh toan */}
                 <div className="mt-3">
-                  <button className="h-16 w-full rounded-lg border bg-orange-600 text-2xl font-semibold text-white transition duration-300 ease-in-out hover:bg-black">
-                    Tiep tuc mua hang
-                  </button>
+                  <Link to="/dathang">
+                    <button className="h-16 w-full rounded-lg border bg-orange-600 text-2xl font-semibold text-white transition duration-300 ease-in-out hover:bg-black">
+                      Tiep tuc mua hang
+                    </button>
+                  </Link>
                 </div>
               </div>
             </div>

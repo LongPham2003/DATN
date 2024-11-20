@@ -204,12 +204,25 @@ export default function ChonSizeVSMauSac({ id }) {
       </div>
       <hr className="my-4" />
       <div className="grid grid-cols-3 gap-4">
-        {Ma !== null && <div>Ma: {Ma}</div>}
-        {ThuongHieu !== null && <div>Thuong hieu: {ThuongHieu}</div>}
-        {ChatLieu !== null && <div>Chat lieu: {ChatLieu}</div>}
-        {DeGiay !== null && <div>De giay: {DeGiay}</div>}
-        {SoLuongTon !== null && <div>So luong con: {SoLuongTon}</div>}
+        {idSize && idMauSac ? (
+          Ma !== null ||
+          ThuongHieu !== null ||
+          ChatLieu !== null ||
+          DeGiay !== null ||
+          SoLuongTon !== null ? (
+            <>
+              {Ma !== null && <div>Ma: {Ma}</div>}
+              {ThuongHieu !== null && <div>Thuong hieu: {ThuongHieu}</div>}
+              {ChatLieu !== null && <div>Chat lieu: {ChatLieu}</div>}
+              {DeGiay !== null && <div>De giay: {DeGiay}</div>}
+              {SoLuongTon !== null && <div>So luong con: {SoLuongTon}</div>}
+            </>
+          ) : (
+            <div className="font-bold text-red-500">Không có sản phẩm này</div>
+          )
+        ) : null}
       </div>
+
       <ToastContainer
         position="top-center"
         autoClose={1000}
