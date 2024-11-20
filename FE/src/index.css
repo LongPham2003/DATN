@@ -37,3 +37,8 @@ body {
   max-height: auto; /* Đảm bảo hình ảnh không vượt quá chiều cao của thumbnail */
   object-fit: contain; /* Đảm bảo hình ảnh giữ đúng tỷ lệ trong ô */
 }
+
+/* Vô hiệu hóa hover hiển thị nội dung */
+/* .ant-select-item-option-content {
+  pointer-events: none;
+} */

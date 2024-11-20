@@ -19,8 +19,6 @@ import DiaCHiMacDinhKhachHang from "./DiaChiMacDinhKhachHang";
 import "react-toastify/dist/ReactToastify.css";
 import { ShoppingCartIcon } from "@heroicons/react/16/solid";
 import { ExportPDF, generatePDF } from "../XuatFilePDF/ExportPDF";
-import { getAllSPCTBH } from "./SanPhamService";
-import ThemMauSac from "../SanPham/ProductDetail/ThemMauSac.jsx";
 import ThanhToanCKTM from "./ThanhToanCKTM.jsx";
 import ThemKH from "./ThemKH.jsx";
 
@@ -63,7 +61,6 @@ export default function BanHangTaiQuay() {
   const [tenKhachHang, setTenKhachHang] = useState(null);
   const [idKhachHang, setIdKhachHangDangChon] = useState();
   const [soDienThoai, setsoDienThoai] = useState(null);
-  const [diaChiGiaoHang, setdiaChiGiaoHang] = useState("");
   const [thaydoiSoLuongMua, setThayDoiSoLuongMua] = useState(0);
   const [idSPCTDangChon, setIdSPCTDangChon] = useState();
   const [soLuongTonCuaSPCT, setSoLuongTonCuaSPCT] = useState(0);
@@ -111,10 +108,7 @@ export default function BanHangTaiQuay() {
         const hd = await axios.get(
           `${ApiLayThongTinHoaDon}/${hoaDonList[0].id}`,
         );
-        // setMaHD(hd.data.result.ma);
       }
-
-      // console.log(hd.data.result.ma);
     } catch (error) {
       console.log("Lấy hóa đơn lỗi:", error);
     }
@@ -376,7 +370,9 @@ export default function BanHangTaiQuay() {
       LayThongTinThanhToanCuaHoaDon();
     } catch (error) {
       console.log(error);
-      toast.error("Có lỗi xảy ra");
+      setIsSelectDisabled(false);
+      idPhieuGiamGiaDangChon();
+      toast.error("Đơn hàng k đủ điều kiện ");
     }
   };
 
@@ -532,12 +528,6 @@ export default function BanHangTaiQuay() {
       }
     }
   }, [selectedHoaDonId, hoaDonFalse]);
-
-  // useEffect(() => {
-  //   if (idLonNhat) {
-  //     handleGeneratePDF(); // Gọi hàm tạo PDF khi idLonNhat đã được cập nhật
-  //   }
-  // }, [idLonNhat]);
 
   // hàm format lại định dạng khi gửi về be
   const formatCurrencyToNumber = (value) => {
@@ -787,7 +777,11 @@ export default function BanHangTaiQuay() {
                               <span>tên: {pgg.tenVoucher}</span> <br />
                               <span>
                                 Mức giảm: {pgg.mucGiam} {pgg.hinhThucGiam}
-                              </span>{" "}
+                              </span>
+                              <br />
+                              <span>
+                                Hóa đơn tối thiểu:{pgg.dieuKienGiamGia}
+                              </span>
                               <br />
                               <span>Giảm tối đa: {pgg.giamToiDa} VNĐ</span>
                               <br />
@@ -1035,8 +1029,8 @@ export default function BanHangTaiQuay() {
       )}
 
       <ToastContainer
-        position="top-right"
-        autoClose={1000}
+        position="top-center"
+        autoClose={2000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick

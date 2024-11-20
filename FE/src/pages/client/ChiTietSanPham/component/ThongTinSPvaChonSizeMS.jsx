@@ -1,7 +1,8 @@
 import { Button, InputNumber } from "antd";
-import axios from "axios";
+import axios from "./../../../../api/axiosConfig";
 import { useEffect, useState } from "react";
 import ThongTinKhac from "./CacThongTinKhac";
+import { Bounce, toast, ToastContainer, Zoom } from "react-toastify";
 
 export default function ChonSizeVSMauSac({ id }) {
   const [listSize, setListSize] = useState([]);
@@ -25,6 +26,8 @@ export default function ChonSizeVSMauSac({ id }) {
   const ApiLocLaySPCT = `http://localhost:8080/api/sanphamchitiet/loc?idSanPham=${id}`;
 
   const ApiLaySp = `http://localhost:8080/api/sanpham/SPClient?idSP=${id}`;
+
+  const ApiThemSPCTVaoGioHang = `http://localhost:8080/api/giohang/themvaogiohangchitiet/${idSPCT}`;
 
   const LayData = async () => {
     try {
@@ -99,6 +102,27 @@ export default function ChonSizeVSMauSac({ id }) {
     }
   }, [idSize, idMauSac]);
 
+  const [error, setError] = useState(""); // Biến lưu trạng thái lỗi
+
+  const handleChange = (value) => {
+    if (value <= SoLuongTon) {
+      setSoLuongMua(value); // Cập nhật số lượng mua
+      setError(""); // Xóa lỗi nếu hợp lệ
+    } else if (SoLuongTon !== null) {
+      setError(`Số lượng mua không được vượt quá ${SoLuongTon}.`);
+    }
+  };
+
+  const themSpVaoGioHang = async () => {
+    try {
+      await axios.post(ApiThemSPCTVaoGioHang, { soLuong: soLuongMua });
+      toast.success("Them Thanh cong");
+    } catch (error) {
+      console.log(error);
+      toast.error("Bạn chưa chọn sản phẩm hoặc số lượng bạn cần mua");
+    }
+  };
+
   return (
     <>
       <span className="text-[60px] font-normal">
@@ -147,14 +171,12 @@ export default function ChonSizeVSMauSac({ id }) {
         <br />
         <InputNumber
           min={1}
-          defaultValue={1}
+          value={soLuongMua} // Sử dụng `value` để đồng bộ với `soLuongMua`
           size="large"
           className="mx-2 w-[200px]"
-          onChange={(value) => {
-            setSoLuongMua(value);
-            console.log(value);
-          }}
+          onChange={handleChange} // Giữ logic xử lý thay đổi
         />
+        {error && <p style={{ color: "red", marginTop: "5px" }}>{error}</p>}
       </div>
       <div className="flex gap-2">
         <div className="flex gap-2">
@@ -166,7 +188,7 @@ export default function ChonSizeVSMauSac({ id }) {
             <>
               <button
                 className="h-[50px] w-[250px] rounded bg-blue-500 px-4 py-2 text-xl text-white hover:bg-blue-600"
-                onClick={() => console.log("Thêm vào giỏ hàng")}
+                onClick={themSpVaoGioHang}
               >
                 Thêm vào giỏ hàng
               </button>
@@ -188,6 +210,11 @@ export default function ChonSizeVSMauSac({ id }) {
         {DeGiay !== null && <div>De giay: {DeGiay}</div>}
         {SoLuongTon !== null && <div>So luong con: {SoLuongTon}</div>}
       </div>
+      <ToastContainer
+        position="top-center"
+        autoClose={1000}
+        transition={Zoom}
+      />
     </>
   );
 }
