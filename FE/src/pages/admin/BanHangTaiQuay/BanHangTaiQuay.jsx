@@ -21,6 +21,7 @@ import { ShoppingCartIcon } from "@heroicons/react/16/solid";
 import { ExportPDF, generatePDF } from "../XuatFilePDF/ExportPDF";
 import ThanhToanCKTM from "./ThanhToanCKTM.jsx";
 import ThemKH from "./ThemKH.jsx";
+import { each } from "lodash";
 
 export default function BanHangTaiQuay() {
   const [hoaDonFalse, setHoaDonFalse] = useState([]);
@@ -28,7 +29,7 @@ export default function BanHangTaiQuay() {
   const [openThanhToan, setOpenThanhToan] = useState(false);
   const [SPCTChuaThanhToan, setSPCTChuaThanhToan] = useState([]);
   const [selectedHoaDonId, setSelectedHoaDonId] = useState(null); // State lưu trữ id hóa đơn được chọn
-
+  const [diaChiGiaoHang, setdiaChiGiaoHang] = useState("");
   // chon giao hang
   const [phiGiaoHang, setPhiGiaoHang] = useState(0);
   const [giaoHang, setGiaoHang] = useState(false);
@@ -244,47 +245,56 @@ export default function BanHangTaiQuay() {
   };
 
   const upDateSoLuongMua = async () => {
+    // Gửi yêu cầu lấy số lượng tồn kho của sản phẩm cụ thể
     const responseSoLuongTon = await axios.get(
       `${ApiLaySoLuongTonCuaSPCT}/${idSPCTDangChon}`,
     );
-    const SLT = responseSoLuongTon.data.result.soLuong;
-    const previousQuantity = thaydoiSoLuongMua; // Store the previous quantity
+    const SLT = responseSoLuongTon.data.result.soLuong; // Lưu số lượng tồn từ phản hồi API
+    const previousQuantity = thaydoiSoLuongMua; // Lưu số lượng hiện tại trước khi cập nhật
+
     try {
-      // Check if the quantity to update exceeds the available stock
+      // Kiểm tra nếu số lượng muốn cập nhật vượt quá số lượng tồn
       if (thaydoiSoLuongMua > SLT) {
-        console.log(SLT);
+        console.log(SLT); // Log số lượng tồn để debug
         toast.error(
           `Số lượng tồn của sản phẩm còn ${SLT} sản phẩm. Không thể cập nhật!`,
         );
-        return; // Exit the function if the condition is met
+        return; // Thoát khỏi hàm nếu điều kiện không thỏa mãn
       }
 
+      // Gửi yêu cầu cập nhật số lượng sản phẩm trong hóa đơn
       await axios.put(`${ApiUpdateSoLuongSPTrongHoaDon}/${selectedHoaDonId}`, {
         idSpct: idSPCTDangChon,
         soLuong: thaydoiSoLuongMua,
       });
 
-      // Check if SLT is -1 after the update
+      // Sau khi cập nhật, kiểm tra lại số lượng tồn của sản phẩm
       const updatedResponseSoLuongTon = await axios.get(
         `${ApiLaySoLuongTonCuaSPCT}/${idSPCTDangChon}`,
       );
       const updatedSLT = updatedResponseSoLuongTon.data.result.soLuong;
+
+      // Nếu số lượng tồn cập nhật là -1, nghĩa là cập nhật không thành công
       if (updatedSLT === -1) {
         toast.error("Cập nhật không thành công, số lượng tồn không hợp lệ!");
-        setThayDoiSoLuongMua(previousQuantity); // Restore previous quantity
-        return; // Exit the function if SLT is -1
+        setThayDoiSoLuongMua(previousQuantity); // Khôi phục lại số lượng trước đó
+        return; // Thoát khỏi hàm nếu điều kiện không hợp lệ
       }
 
+      // Thực hiện đồng thời các thao tác cập nhật thông tin liên quan
       await Promise.all([
-        LayChiTietSanPham(), // Cập nhật giỏ hàng sau khi thêm sản phẩm
+        LayChiTietSanPham(), // Cập nhật lại danh sách sản phẩm trong giỏ hàng
         LayThongTinThanhToanCuaHoaDon(), // Cập nhật thông tin hóa đơn mới, bao gồm tổng tiền
-        LaySoLuongTonCuaSPCT(),
+        LaySoLuongTonCuaSPCT(), // Lấy lại số lượng tồn kho của sản phẩm cụ thể
       ]);
+
+      // Thông báo thành công
       toast.success("Cập nhật thành công");
     } catch (error) {
+      // Log lỗi nếu có và khôi phục lại số lượng trước đó
       console.log(error);
-      setThayDoiSoLuongMua(previousQuantity); // Restore previous quantity on error
-      toast.error("Cập nhật thất bại");
+      setThayDoiSoLuongMua(previousQuantity); // Khôi phục số lượng nếu gặp lỗi
+      toast.error("Cập nhật thất bại"); // Hiển thị thông báo lỗi
     }
   };
 
@@ -726,9 +736,9 @@ export default function BanHangTaiQuay() {
                                     setThayDoiSoLuongMua(SPCT.soLuong);
                                     // LaySoLuongTonCuaSPCT();
                                   }}
-                                  onChange={(event) => {
+                                  onChange={(e) => {
                                     setThayDoiSoLuongMua(
-                                      Number(event.target.value),
+                                      Number(e.target.value),
                                     );
                                   }}
                                   onKeyDown={(e) => {
