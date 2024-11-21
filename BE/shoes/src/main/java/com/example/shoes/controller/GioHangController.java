@@ -49,6 +49,14 @@ public class GioHangController {
                 .message("Cập nhật sản phẩm trong giỏ hàng thành công")
                 .build();
     }
+//    lấy gio hang chi tiet theo id gio hang chi tiet
+    @GetMapping("/laygiohangchitiettheoid/{idGHCT}")
+    public ApiResponse<GioHangChiTietResponse> layGioHangChiTietTheoId(@PathVariable("idGHCT") Integer idGHCT) {
+        GioHangChiTietResponse response = gioHangChiTietService.findByid(idGHCT);
+        return ApiResponse.<GioHangChiTietResponse>builder()
+                .result(response)
+                .build();
+    }
 
     // Xóa chi tiết giỏ hàng theo id gio hang chi tiet
     @DeleteMapping("/xoagiohangchitiet/{idGHCT}")
