@@ -29,7 +29,7 @@ public class HoaDonController {
 
     ) {
         // Gọi hàm getHoaDon trong service để lấy dữ liệu phân trang
-        PhanTrangResponse<HoaDonResponse> hoaDonResponses = hoaDonService.getHoaDon(pageNumber, pageSize,keyword,phuongThucGiaoHang,trangThai);
+        PhanTrangResponse<HoaDonResponse> hoaDonResponses = hoaDonService.getHoaDon(pageNumber, pageSize, keyword, phuongThucGiaoHang, trangThai);
 
         // Tạo và trả về đối tượng ApiResponse
         return ApiResponse.<PhanTrangResponse<HoaDonResponse>>builder()
@@ -47,6 +47,7 @@ public class HoaDonController {
                 .result(hoaDonResponses)
                 .build();
     }
+
     @GetMapping("/getall-chuathanhtoan")
     public ApiResponse<List<HoaDonResponse>> getAllChuaThanhToan() {
         // Gọi hàm getAllChatLieu() để lấy danh sách các ChatLieuResponse
@@ -64,7 +65,7 @@ public class HoaDonController {
     ) {
 
         return ApiResponse.<HoaDonResponse>builder()
-                .result(hoaDonService.addKhachHangHoaDon(idHoaDon,idKhachHang))
+                .result(hoaDonService.addKhachHangHoaDon(idHoaDon, idKhachHang))
                 .build();
     }
 
@@ -73,7 +74,7 @@ public class HoaDonController {
             @PathVariable("idHoaDon") Integer idHoaDon,
             @PathVariable("idKhachHang") Integer idKhachHang
     ) {
-        HoaDonResponse hoaDonResponse = hoaDonService.xoaKhachHangHoaDon(idHoaDon,idKhachHang);
+        HoaDonResponse hoaDonResponse = hoaDonService.xoaKhachHangHoaDon(idHoaDon, idKhachHang);
 
         return ApiResponse.<HoaDonResponse>builder()
                 .result(hoaDonResponse)
@@ -86,14 +87,31 @@ public class HoaDonController {
         return ApiResponse.<Integer>builder().result(id).build();
     }
 
+    @GetMapping("/{id}")
+    public ApiResponse<HoaDonResponse> HoaDonDetailById(@PathVariable("id") Integer id) {
+        return ApiResponse.<HoaDonResponse>builder().result(hoaDonService.findByid(id)).build();
+    }
+
     @PostMapping("/thanh-toan/tc-vnpay/{id}")
-    private ApiResponse<Void> tc(@PathVariable Integer id, @RequestBody PaymentRequest paymentRequest){
-      return ApiResponse.<Void>builder().result(hoaDonService.updateHoaDonById(id,paymentRequest)).build();
+    private ApiResponse<Void> tc(@PathVariable Integer id, @RequestBody PaymentRequest paymentRequest) {
+        return ApiResponse.<Void>builder().result(hoaDonService.updateHoaDonById(id, paymentRequest)).build();
     }
 
     @PostMapping("/dathang/{id}")
-    private ApiResponse<Void> dathang(@PathVariable Integer id, @RequestBody DatHangRequest request){
-        return ApiResponse.<Void>builder().result(hoaDonService.updateTrangThaiHoaDonById(id,request)).build();
+    private ApiResponse<Void> dathang(@PathVariable Integer id, @RequestBody DatHangRequest request) {
+        return ApiResponse.<Void>builder().result(hoaDonService.updateTrangThaiHoaDonById(id, request)).build();
+    }
+    @PostMapping("/chogiaohang/{id}")
+    private ApiResponse<Void> updateChoGiaoHang(@PathVariable Integer id,@RequestBody String moTa) {
+        return ApiResponse.<Void>builder().result(hoaDonService.updateTrangThaiHoaDonByIdChoVanChuyen(id,moTa)).build();
+    }
+    @PostMapping("/danggiao/{id}")
+    private ApiResponse<Void> updateDangGiao(@PathVariable Integer id,@RequestBody String moTa) {
+        return ApiResponse.<Void>builder().result(hoaDonService.updateTrangThaiHoaDonByIdGiaoHang(id,moTa)).build();
+    }
+    @PostMapping("/hoanthanh/{id}")
+    private ApiResponse<Void> updateHoanThanh(@PathVariable Integer id,@RequestBody String moTa) {
+        return ApiResponse.<Void>builder().result(hoaDonService.updateTrangThaiHoaDonByIdThanhCong(id,moTa)).build();
     }
 
 }

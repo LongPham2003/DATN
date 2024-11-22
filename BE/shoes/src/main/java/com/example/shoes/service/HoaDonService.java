@@ -12,6 +12,7 @@ import com.example.shoes.dto.payment.PaymentRequest;
 import com.example.shoes.dto.phuongthucthanhtoan.request.PhuongThucThanhToanRequest;
 
 import com.example.shoes.entity.HoaDon;
+import com.example.shoes.enums.TrangThai;
 
 
 import java.time.LocalDate;
@@ -42,7 +43,9 @@ public interface HoaDonService {
 
 
  Void updateHoaDonById(Integer idHoaDon , PaymentRequest paymentRequest);
-
+ Void updateTrangThaiHoaDonByIdChoVanChuyen(Integer idHoaDon,String moTa );
+ Void updateTrangThaiHoaDonByIdGiaoHang(Integer idHoaDon ,String moTa);
+ Void updateTrangThaiHoaDonByIdThanhCong(Integer idHoaDon,String moTa );
  PhanTrangResponse<HoaDonResponse> getHoaDon(int pageNumber,int pageSize,String keyword,String phuongThucGiaoHang,String trangThai);
  Void updateTrangThaiHoaDonById(Integer idHoaDon, DatHangRequest datHangRequest);
 }
