@@ -38,7 +38,12 @@ import TrangChu from "./pages/client/TrangChu/TrangChu.jsx";
 import GioHang from "./pages/client/GioHang/GioHang.jsx";
 
 import ChiTietSanPham from "./pages/client/ChiTietSanPham/ChiTietSanPham.jsx";
+<<<<<<< HEAD
 import HoaDonChiTiet from "./pages/admin/QuanLiHoaDon/HoaDonChiTiet.jsx";
+=======
+import ThongTinCaNhan from "./pages/client/ThongTinCaNhan/ThongTinCaNhan.jsx";
+import DatHang from "./pages/client/DatHang/DatHang.jsx";
+>>>>>>> origin/hoanh
 
 function App() {
   return (
@@ -57,7 +62,6 @@ function App() {
                 </>
               }
             />
-
             <Route
               path="LienHe"
               element={
@@ -79,6 +83,17 @@ function App() {
                   <TrangChu />
                 </>
               }
+            />{" "}
+            <Route
+              path="/chitiet/:id"
+              element={
+                <>
+                  <Helmet>
+                    <title>Sản Phẩm</title>
+                  </Helmet>
+                  <ChiTietSanPham />
+                </>
+              }
             />
             <Route
               path="GioHang"
@@ -88,6 +103,28 @@ function App() {
                     <title>Giỏ hàng</title>
                   </Helmet>
                   <GioHang />
+                </>
+              }
+            />
+            <Route
+              path="dathang"
+              element={
+                <>
+                  <Helmet>
+                    <title>Đặt hàng</title>
+                  </Helmet>
+                  <DatHang />
+                </>
+              }
+            />
+            <Route
+              path="thongtin"
+              element={
+                <>
+                  <Helmet>
+                    <title>Thông tin cá nhân</title>
+                  </Helmet>
+                  <ThongTinCaNhan />
                 </>
               }
             />

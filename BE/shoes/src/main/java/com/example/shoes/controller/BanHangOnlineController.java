@@ -20,20 +20,13 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/banhangonline")
+@RequestMapping("/api/banhangonline")
 public class BanHangOnlineController {
     @Autowired
     private GioHangChiTietService gioHangChiTietService;
     @Autowired
     private GioHangChiTietService hangChiTietService;
-    @PostMapping("/themvaogiohangchitiet")
-    public ApiResponse<GioHangChiTietResponse> themVaoGioHangChiTiet(@RequestBody GioHangChiTietRequest request) {
-        GioHangChiTietResponse response = gioHangChiTietService.themVaoGioHangChiTiet(request);
-        return ApiResponse.<GioHangChiTietResponse>builder()
-                        .result(response)
-                        .message("Thêm sản phẩm vào giỏ hàng thành công")
-                        .build();
-    }
+
     // Cập nhật chi tiết giỏ hàng
     @PutMapping("/capnhatgiohangchitiet/{id}")
     public ApiResponse<GioHangChiTietResponse> capNhatGioHangChiTiet(@PathVariable Integer id,

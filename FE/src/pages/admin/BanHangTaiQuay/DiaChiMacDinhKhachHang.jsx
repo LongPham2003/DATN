@@ -37,7 +37,7 @@ export default function DiaCHiMacDinhKhachHang({
         console.log(error);
       });
   }, [ApiLayDiaChi, idKhachHang]);
-  console.log(diaChi);
+  // console.log(diaChi);
 
   // Lấy danh sách tỉnh/thành phố
   useEffect(() => {

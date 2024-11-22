@@ -108,4 +108,9 @@ public class SanPhamController {
                                              @RequestParam(value = "donGiaMax", required = false)  BigDecimal donGiaMax) {
         return sanPhamService.sanPhamClient(idLoai, idKichThuoc, idMauSac, donGiaMin, donGiaMax);}
 
+    @GetMapping("/SPClient")
+    public SanPhamClient sanPhamTrangChiTietClient(@RequestParam(value = "idSP") Integer idSP){
+        return sanPhamService.sanPhamTrangChiTietClient(idSP);
+    }
+
 }

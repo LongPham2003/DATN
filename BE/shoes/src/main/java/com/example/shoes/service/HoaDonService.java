@@ -36,9 +36,6 @@ public interface HoaDonService {
  HoaDonResponse xoaKhachHangHoaDon(Integer idHoaDon, Integer idKhachHang);
 
  Integer idHoaDon();
-
-
-
  Void updateHoaDonById(Integer idHoaDon , PaymentRequest paymentRequest);
  Void updateTrangThaiHoaDonByIdChoVanChuyen(Integer idHoaDon, GhiChu moTa );
  Void updateTrangThaiHoaDonByIdGiaoHang(Integer idHoaDon ,GhiChu moTa);

@@ -81,4 +81,27 @@ public interface SanPhamRepo extends JpaRepository<SanPham, Integer> {
                                       @Param("idMauSac") Integer idMauSac,
                                       @Param("donGiaMin") BigDecimal donGiaMin,
                                       @Param("donGiaMax") BigDecimal donGiaMax);
+
+
+@Query(value = """
+    SELECT
+                                          sp.id AS idSP,
+                                          sp.ten_san_pham AS tenSanPham ,
+                                          th.ten AS tenThuongHieu,
+                                          (SELECT spct.id
+                                           FROM san_pham_chi_tiet spct
+                                           WHERE spct.id_san_pham = sp.id
+                                           ORDER BY spct.id LIMIT 1) AS idSPCT,
+                                          (SELECT spct.don_gia
+                                           FROM san_pham_chi_tiet spct
+                                           WHERE spct.id_san_pham = sp.id
+                                           ORDER BY spct.id LIMIT 1) AS donGia
+        FROM san_pham sp
+        JOIN san_pham_chi_tiet spct ON sp.id = spct.id_san_pham
+        JOIN thuong_hieu th ON spct.id_thuong_hieu = th.id
+        WHERE sp.trang_thai = 1 and sp.id= :idSP
+        GROUP BY sp.id, th.id, sp.ten_san_pham
+        ORDER BY sp.id;
+""", nativeQuery = true)
+    SanPhamClient sanPhamTrangChiTietClient(@Param("idSP") Integer idSP);
 }
