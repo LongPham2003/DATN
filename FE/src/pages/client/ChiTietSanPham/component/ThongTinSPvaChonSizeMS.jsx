@@ -3,6 +3,7 @@ import axios from "./../../../../api/axiosConfig";
 import { useEffect, useState } from "react";
 import ThongTinKhac from "./CacThongTinKhac";
 import { Bounce, toast, ToastContainer, Zoom } from "react-toastify";
+import Header from "../../Header/Header";
 
 export default function ChonSizeVSMauSac({ id }) {
   const [listSize, setListSize] = useState([]);
@@ -116,7 +117,7 @@ export default function ChonSizeVSMauSac({ id }) {
   const themSpVaoGioHang = async () => {
     try {
       await axios.post(ApiThemSPCTVaoGioHang, { soLuong: soLuongMua });
-      toast.success("Them Thanh cong");
+      toast.success("Thêm thành công");
     } catch (error) {
       console.log(error);
       toast.error("Bạn chưa chọn sản phẩm hoặc số lượng bạn cần mua");
@@ -222,7 +223,6 @@ export default function ChonSizeVSMauSac({ id }) {
           )
         ) : null}
       </div>
-
       <ToastContainer
         position="top-center"
         autoClose={1000}

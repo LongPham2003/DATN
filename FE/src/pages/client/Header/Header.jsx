@@ -4,6 +4,7 @@ import Search from "antd/es/input/Search";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import ChonSizeVSMauSac from "../ChiTietSanPham/component/ThongTinSPvaChonSizeMS";
 
 export default function Header() {
   const [tenKH, setTenKH] = useState("");
@@ -26,6 +27,10 @@ export default function Header() {
     const role = localStorage.getItem("userRole");
     setTenKH(ten);
     setrole(role);
+    layTongSoSP();
+  }, []);
+
+  useEffect(() => {
     layTongSoSP();
   }, []);
 

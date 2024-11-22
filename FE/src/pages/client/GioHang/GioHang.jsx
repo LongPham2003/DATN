@@ -182,12 +182,11 @@ export default function GioHang() {
   useEffect(() => {
     const tong = ListSPCT.reduce((total, spct) => {
       if (sanPhamChon.includes(spct.id)) {
-        // Nếu sản phẩm được chọn, cộng giá trị vào tổng
         return total + formatCurrencyToNumber(spct.donGia) * spct.soLuong;
       }
-      return total; // Nếu không, giữ nguyên tổng
+      return total;
     }, 0);
-    setTongTien(tong); // Cập nhật tổng tiền
+    setTongTien(tong);
   }, [sanPhamChon, ListSPCT]);
 
   // useEffect để lưu sản phẩm được chọn vào localStorage
@@ -400,7 +399,10 @@ export default function GioHang() {
                 {/* Nut thanh toan */}
                 <div className="mt-3">
                   <Link to="/dathang">
-                    <button className="h-16 w-full rounded-lg border bg-orange-600 text-2xl font-semibold text-white transition duration-300 ease-in-out hover:bg-black">
+                    <button
+                      disabled={tongTien === 0}
+                      className={`h-16 w-full rounded-lg border text-2xl font-semibold text-white transition duration-300 ease-in-out ${tongTien === 0 ? "cursor-not-allowed bg-gray-400" : "bg-orange-600 hover:bg-black"}`}
+                    >
                       Tiep tuc mua hang
                     </button>
                   </Link>

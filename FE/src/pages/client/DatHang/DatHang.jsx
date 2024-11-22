@@ -6,9 +6,11 @@ import DiaChiMacDinhKhachHang from "./../../admin/BanHangTaiQuay/DiaChiMacDinhKh
 import ThongTinSPCT from "./../GioHang/component/ThongTinSPCT";
 import LayANhTheoIDSP from "./../../admin/SanPham/Product/LayANhTheoIDSP";
 import DiaCHiMacDinhKhachHang from "./../../admin/BanHangTaiQuay/DiaChiMacDinhKhachHang";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export default function DatHang() {
+  const navigate = useNavigate();
   const [listIdGHCT, setListIdGHCT] = useState([]);
   const [email, setemail] = useState("");
   const [khachHang, setKhachHang] = useState({});
@@ -81,35 +83,23 @@ export default function DatHang() {
   const DatHang = async (e) => {
     e.preventDefault();
     try {
-      // listSP.map((sp) => {
-      //   let newHDCT = {
-      //     chiTietSanPhams: [
-      //       {
-      //         idSpct: sp.idSanPhamChiTiet,
-      //         soLuong: sp.soLuong,
-      //       },
-      //     ],
+      const chiTietSanPhams = listSP.map((item) => ({
+        idSpct: item.idSanPhamChiTiet,
+        soLuong: item.soLuong,
+      }));
 
-      //     idPhieuGiamGia: idPGGDangChon || null,
-      //   };
-      //   return ;
-      // });
-
-      const res = await axios.post(`${ApiDatHangonLine}`, {
-        chiTietSanPhams: [
-          {
-            idSpct: listSP.idSanPhamChiTiet,
-            soLuong: listSP.soLuong,
-          },
-        ],
-
+      await axios.post(ApiDatHangonLine, {
+        chiTietSanPhams,
         idPhieuGiamGia: idPGGDangChon || null,
       });
-
-      toast.success("thanh cong");
+      localStorage.removeItem("sanPhamChon");
+      setTimeout(() => {
+        navigate("/trangchu");
+      }, 1000);
+      toast.success("Đặt hàng thành công");
     } catch (error) {
-      console.log(error);
-      toast.error("loi");
+      console.error("Lỗi khi đặt hàng:", error);
+      toast.error("Có lỗi xảy ra khi đặt hàng");
     }
   };
 
@@ -160,15 +150,15 @@ export default function DatHang() {
 
   const tinhTienDuocGiam = () => {
     if (!phieuGiamGiaDangChon || !tongTien) {
-      console.log("Không có phiếu giảm giá hoặc tổng tiền là 0");
+      // console.log("Không có phiếu giảm giá hoặc tổng tiền là 0");
       return 0;
     }
 
     const { hinhThucGiam, mucGiam, dieuKienGiamGia, giamToiDa } =
       phieuGiamGiaDangChon;
 
-    console.log("Phiếu giảm giá đang chọn:", phieuGiamGiaDangChon);
-    console.log("Tổng tiền hiện tại:", tongTien);
+    // console.log("Phiếu giảm giá đang chọn:", phieuGiamGiaDangChon);
+    // console.log("Tổng tiền hiện tại:", tongTien);
 
     // Kiểm tra điều kiện hóa đơn tối thiểu
     const dieuKienGiamGiaValue = formatCurrencyToNumber(dieuKienGiamGia);
@@ -392,6 +382,7 @@ export default function DatHang() {
           </div>
         </div>
       </div>
+      <ToastContainer position="top-center" hideProgressBar />
     </>
   );
 }
