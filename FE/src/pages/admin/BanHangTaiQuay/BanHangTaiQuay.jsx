@@ -19,10 +19,9 @@ import DiaCHiMacDinhKhachHang from "./DiaChiMacDinhKhachHang";
 import "react-toastify/dist/ReactToastify.css";
 import { ShoppingCartIcon } from "@heroicons/react/16/solid";
 import { ExportPDF, generatePDF } from "../XuatFilePDF/ExportPDF";
-import { getAllSPCTBH } from "./SanPhamService";
-import ThemMauSac from "../SanPham/ProductDetail/ThemMauSac.jsx";
 import ThanhToanCKTM from "./ThanhToanCKTM.jsx";
 import ThemKH from "./ThemKH.jsx";
+import { each } from "lodash";
 
 export default function BanHangTaiQuay() {
   const [hoaDonFalse, setHoaDonFalse] = useState([]);
@@ -30,9 +29,9 @@ export default function BanHangTaiQuay() {
   const [openThanhToan, setOpenThanhToan] = useState(false);
   const [SPCTChuaThanhToan, setSPCTChuaThanhToan] = useState([]);
   const [selectedHoaDonId, setSelectedHoaDonId] = useState(null); // State lưu trữ id hóa đơn được chọn
-
+  const [diaChiGiaoHang, setdiaChiGiaoHang] = useState("");
   // chon giao hang
-  const [phiGiaoHang, setPhiGiaoHang] = useState("");
+  const [phiGiaoHang, setPhiGiaoHang] = useState(0);
   const [giaoHang, setGiaoHang] = useState(false);
   const [ngayDuKien, setNgayDuKien] = useState(null);
 
@@ -63,7 +62,6 @@ export default function BanHangTaiQuay() {
   const [tenKhachHang, setTenKhachHang] = useState(null);
   const [idKhachHang, setIdKhachHangDangChon] = useState();
   const [soDienThoai, setsoDienThoai] = useState(null);
-  const [diaChiGiaoHang, setdiaChiGiaoHang] = useState("");
   const [thaydoiSoLuongMua, setThayDoiSoLuongMua] = useState(0);
   const [idSPCTDangChon, setIdSPCTDangChon] = useState();
   const [soLuongTonCuaSPCT, setSoLuongTonCuaSPCT] = useState(0);
@@ -111,10 +109,7 @@ export default function BanHangTaiQuay() {
         const hd = await axios.get(
           `${ApiLayThongTinHoaDon}/${hoaDonList[0].id}`,
         );
-        // setMaHD(hd.data.result.ma);
       }
-
-      // console.log(hd.data.result.ma);
     } catch (error) {
       console.log("Lấy hóa đơn lỗi:", error);
     }
@@ -250,47 +245,56 @@ export default function BanHangTaiQuay() {
   };
 
   const upDateSoLuongMua = async () => {
+    // Gửi yêu cầu lấy số lượng tồn kho của sản phẩm cụ thể
     const responseSoLuongTon = await axios.get(
       `${ApiLaySoLuongTonCuaSPCT}/${idSPCTDangChon}`,
     );
-    const SLT = responseSoLuongTon.data.result.soLuong;
-    const previousQuantity = thaydoiSoLuongMua; // Store the previous quantity
+    const SLT = responseSoLuongTon.data.result.soLuong; // Lưu số lượng tồn từ phản hồi API
+    const previousQuantity = thaydoiSoLuongMua; // Lưu số lượng hiện tại trước khi cập nhật
+
     try {
-      // Check if the quantity to update exceeds the available stock
+      // Kiểm tra nếu số lượng muốn cập nhật vượt quá số lượng tồn
       if (thaydoiSoLuongMua > SLT) {
-        console.log(SLT);
+        console.log(SLT); // Log số lượng tồn để debug
         toast.error(
           `Số lượng tồn của sản phẩm còn ${SLT} sản phẩm. Không thể cập nhật!`,
         );
-        return; // Exit the function if the condition is met
+        return; // Thoát khỏi hàm nếu điều kiện không thỏa mãn
       }
 
+      // Gửi yêu cầu cập nhật số lượng sản phẩm trong hóa đơn
       await axios.put(`${ApiUpdateSoLuongSPTrongHoaDon}/${selectedHoaDonId}`, {
         idSpct: idSPCTDangChon,
         soLuong: thaydoiSoLuongMua,
       });
 
-      // Check if SLT is -1 after the update
+      // Sau khi cập nhật, kiểm tra lại số lượng tồn của sản phẩm
       const updatedResponseSoLuongTon = await axios.get(
         `${ApiLaySoLuongTonCuaSPCT}/${idSPCTDangChon}`,
       );
       const updatedSLT = updatedResponseSoLuongTon.data.result.soLuong;
+
+      // Nếu số lượng tồn cập nhật là -1, nghĩa là cập nhật không thành công
       if (updatedSLT === -1) {
         toast.error("Cập nhật không thành công, số lượng tồn không hợp lệ!");
-        setThayDoiSoLuongMua(previousQuantity); // Restore previous quantity
-        return; // Exit the function if SLT is -1
+        setThayDoiSoLuongMua(previousQuantity); // Khôi phục lại số lượng trước đó
+        return; // Thoát khỏi hàm nếu điều kiện không hợp lệ
       }
 
+      // Thực hiện đồng thời các thao tác cập nhật thông tin liên quan
       await Promise.all([
-        LayChiTietSanPham(), // Cập nhật giỏ hàng sau khi thêm sản phẩm
+        LayChiTietSanPham(), // Cập nhật lại danh sách sản phẩm trong giỏ hàng
         LayThongTinThanhToanCuaHoaDon(), // Cập nhật thông tin hóa đơn mới, bao gồm tổng tiền
-        LaySoLuongTonCuaSPCT(),
+        LaySoLuongTonCuaSPCT(), // Lấy lại số lượng tồn kho của sản phẩm cụ thể
       ]);
+
+      // Thông báo thành công
       toast.success("Cập nhật thành công");
     } catch (error) {
+      // Log lỗi nếu có và khôi phục lại số lượng trước đó
       console.log(error);
-      setThayDoiSoLuongMua(previousQuantity); // Restore previous quantity on error
-      toast.error("Cập nhật thất bại");
+      setThayDoiSoLuongMua(previousQuantity); // Khôi phục số lượng nếu gặp lỗi
+      toast.error("Cập nhật thất bại"); // Hiển thị thông báo lỗi
     }
   };
 
@@ -376,7 +380,9 @@ export default function BanHangTaiQuay() {
       LayThongTinThanhToanCuaHoaDon();
     } catch (error) {
       console.log(error);
-      toast.error("Có lỗi xảy ra");
+      setIsSelectDisabled(false);
+      idPhieuGiamGiaDangChon();
+      toast.error("Đơn hàng k đủ điều kiện ");
     }
   };
 
@@ -403,23 +409,23 @@ export default function BanHangTaiQuay() {
     }
   };
 
-  const addKhachHangVaoHoaDon = async () => {
-    try {
-      await axios.post(`${ApiThemKhachHangVaoHoaDon}/${idKhachHang}`);
-      toast.success("Thêm khach hàng thành công");
-      LayThongTinThanhToanCuaHoaDon();
-    } catch (error) {
-      console.log(error);
-      toast.error("Co loi xay ra!");
-    }
-  };
+  // const addKhachHangVaoHoaDon = async () => {
+  //   try {
+  //     await axios.post(`${ApiThemKhachHangVaoHoaDon}/${idKhachHang}`);
+  //     toast.success("Thêm khach hàng thành công");
+  //     LayThongTinThanhToanCuaHoaDon();
+  //   } catch (error) {
+  //     console.log(error);
+  //     toast.error("Co loi xay ra!");
+  //   }
+  // };
 
-  const ThemKhachHang = async () => {
-    if (idKhachHang) {
-      await addKhachHangVaoHoaDon();
-      setDisableSelectKhachHang(true); // Disable Select sau khi gọi hàm
-    }
-  };
+  // const ThemKhachHang = async () => {
+  //   if (idKhachHang) {
+  //     await addKhachHangVaoHoaDon();
+  //     setDisableSelectKhachHang(true); // Disable Select sau khi gọi hàm
+  //   }
+  // };
 
   const XoaKhachHangKhoiHoaDon = async () => {
     try {
@@ -427,9 +433,12 @@ export default function BanHangTaiQuay() {
       await LayThongTinThanhToanCuaHoaDon();
       toast.success("Thanh cong");
       setDisableSelectKhachHang(false);
+      setGiaoHang(false);
+      setPhiGiaoHang(0);
+      setNgayDuKien(null);
     } catch (error) {
       console.log(error);
-      toast.error("Co Loi Xay Ra");
+      toast.error("Không có khách hàng");
     }
   };
 
@@ -533,17 +542,24 @@ export default function BanHangTaiQuay() {
     }
   }, [selectedHoaDonId, hoaDonFalse]);
 
-  // useEffect(() => {
-  //   if (idLonNhat) {
-  //     handleGeneratePDF(); // Gọi hàm tạo PDF khi idLonNhat đã được cập nhật
-  //   }
-  // }, [idLonNhat]);
-
   // hàm format lại định dạng khi gửi về be
   const formatCurrencyToNumber = (value) => {
     return parseInt(value.replace(/[^\d]/g, ""));
   };
 
+  //Them VND
+  function formatTien(value) {
+    // Loại bỏ dấu phân cách thập phân và chuyển thành số
+    const parsedValue = parseFloat(value.toString().replace(",", "."));
+
+    // Kiểm tra nếu không phải số hợp lệ
+    if (isNaN(parsedValue)) {
+      return "0 VNĐ"; // Giá trị mặc định nếu `value` không hợp lệ
+    }
+
+    // Định dạng số và thêm đơn vị VNĐ
+    return parsedValue.toLocaleString("vi-VN") + " VNĐ";
+  }
   // thanh toán vnpay
   const handlePaymentClick = async () => {
     try {
@@ -566,6 +582,38 @@ export default function BanHangTaiQuay() {
     }
   };
 
+  // khách đặt giao hàng ở tại quầy
+  const handleDatHang = async () => {
+    Modal.confirm({
+      title: "Xác nhận cập nhật",
+      content: "Bạn có chắc chắn muốn đặt hàng này không?",
+      onOk() {
+        // Nếu người dùng xác nhận, gửi yêu cầu cập nhật
+        axios
+          .post(
+            `http://localhost:8080/api/hoadon/dathang/${selectedHoaDonId}`,
+            {
+              phiVanChuyen: phiGiaoHang,
+              diaChiChiTiet: diaChiGiaoHang,
+              ngayDuKien: ngayDuKien,
+            },
+          )
+          .then((response) => {
+            console.log("Cập nhật thành công 111:", response.data);
+            setError("");
+            toast.success("Cập nhật thành công");
+            LayDanhSachHoaDonChuaThanhToan();
+            setGiaoHang(false);
+          })
+          .catch((error) => {
+            setError(error.response.data.message);
+          });
+      },
+      onCancel() {
+        // Nếu người dùng hủy, có thể không cần làm gì cả
+      },
+    });
+  };
   return (
     <>
       <div className="mx-2 flex max-h-screen overflow-y-hidden font-mono">
@@ -658,7 +706,8 @@ export default function BanHangTaiQuay() {
                             {SPCT.tenSanPham} <br />
                             {SPCT.maSPCT} [{SPCT.kichThuoc} - {SPCT.mauSac}]
                             <br />
-                            {SPCT.donGia}
+                            {formatTien(SPCT.donGia)}
+                            {/* {SPCT.donGia} */}
                           </td>
 
                           <td className="text-center">
@@ -687,9 +736,9 @@ export default function BanHangTaiQuay() {
                                     setThayDoiSoLuongMua(SPCT.soLuong);
                                     // LaySoLuongTonCuaSPCT();
                                   }}
-                                  onChange={(event) => {
+                                  onChange={(e) => {
                                     setThayDoiSoLuongMua(
-                                      Number(event.target.value),
+                                      Number(e.target.value),
                                     );
                                   }}
                                   onKeyDown={(e) => {
@@ -717,13 +766,13 @@ export default function BanHangTaiQuay() {
                             </div>
                           </td>
 
-                          <td>{SPCT.donGia * SPCT.soLuong}</td>
+                          <td>{formatTien(SPCT.donGia * SPCT.soLuong)}</td>
                           <td>
                             <Popconfirm
-                              title="Delete the task"
-                              description="Are you sure to delete this task?"
-                              okText="Yes"
-                              cancelText="No"
+                              title="Xóa khỏi giỏ hàng"
+                              description="Bạn có chắc cahwns không?"
+                              okText="Có"
+                              cancelText="Hủy"
                               onConfirm={(e) => {
                                 e.preventDefault();
                                 XoaSPKhoiGioHang(SPCT.idSpct);
@@ -787,7 +836,11 @@ export default function BanHangTaiQuay() {
                               <span>tên: {pgg.tenVoucher}</span> <br />
                               <span>
                                 Mức giảm: {pgg.mucGiam} {pgg.hinhThucGiam}
-                              </span>{" "}
+                              </span>
+                              <br />
+                              <span>
+                                Hóa đơn tối thiểu:{pgg.dieuKienGiamGia}
+                              </span>
                               <br />
                               <span>Giảm tối đa: {pgg.giamToiDa} VNĐ</span>
                               <br />
@@ -832,7 +885,10 @@ export default function BanHangTaiQuay() {
                 <div className="flex gap-3">
                   <div>Giao hàng</div>
                   <div>
-                    <Switch onClick={() => setGiaoHang(!giaoHang)} />
+                    <Switch
+                      value={giaoHang}
+                      onClick={() => setGiaoHang(!giaoHang)}
+                    />
                   </div>
                 </div>
                 <div>{giaoHang && <div>{phiGiaoHang}</div>}</div>
@@ -843,90 +899,118 @@ export default function BanHangTaiQuay() {
                 <div className="text-red-500">{tienPhaiThanhToan} VND</div>
               </div>
 
-              <div className="ml-7">
-                <div className="my-2 flex">
-                  <Button
-                    style={{ height: "50px", width: "220px" }}
-                    className="ml-[10px] border-2 border-green-500 text-lg font-medium text-green-500"
-                    onClick={openthanhToan}
+              <div className="mx-3 mt-2">
+                <div>
+                  <span className="text-xl font-semibold">Khách hàng:</span>
+                  <button
+                    className="ml-[10px] w-[60px] border-2 border-blue-400 text-lg font-medium text-blue-400"
+                    onClick={openModalThemKH}
                   >
-                    Tiền mặt
-                  </Button>
-                  <Button
-                    style={{ height: "50px", width: "220px" }}
-                    className="ml-[10px] border-2 border-yellow-500 text-lg font-medium text-yellow-500"
-                    onClick={handlePaymentClick}
+                    Chọn
+                  </button>
+                  <button
+                    className="ml-[10px] w-[60px] border-2 border-red-400 text-lg font-medium text-red-400"
+                    onClick={XoaKhachHangKhoiHoaDon}
                   >
-                    Chuyển khoản
-                  </Button>
+                    Xóa
+                  </button>
                 </div>
-                <div className="my-2">
-                  <Button
-                    style={{ height: "50px", width: "450px" }}
-                    className="ml-[10px] border-2 border-orange-600 text-lg font-medium text-orange-700"
-                    onClick={openModalThanhToanCKTM}
-                  >
-                    Tiền mặt & Chuyển khoản
-                  </Button>
+                <div className="my-3">
+                  {tenKhachHang && (
+                    <div className="my-1">
+                      <span className="text-lg font-medium">
+                        Tên khách hàng:{" "}
+                      </span>
+                      <span>{tenKhachHang}</span>
+                    </div>
+                  )}
+                  {soDienThoai && (
+                    <div className="my-1">
+                      <span className="text-lg font-medium">
+                        Số điện thoại:{" "}
+                      </span>
+                      <span>{soDienThoai}</span>
+                    </div>
+                  )}
+                  {idKhachHang && (
+                    <div className="my-1">
+                      <span>
+                        <DiaCHiMacDinhKhachHang
+                          idKhachHang={idKhachHang}
+                          giaoHang={giaoHang}
+                          setPhiGiaoHang={setPhiGiaoHang}
+                          setNgayDuKien={setNgayDuKien}
+                          setdiaChiGiaoHang={setdiaChiGiaoHang}
+                        />
+                      </span>
+                    </div>
+                  )}
                 </div>
-                <div className="my-2">
-                  <Button
-                    style={{ height: "50px", width: "450px" }}
-                    className="ml-[10px] border-2 border-red-700 text-lg font-medium text-red-700"
-                    onClick={huyHoaDon}
-                  >
-                    Hủy
-                  </Button>
-                </div>
+                {giaoHang && (
+                  <div>
+                    <div className="mx-3 flex items-center gap-4">
+                      {" "}
+                      <img
+                        className="w-[60px]"
+                        src="https://cdn.haitrieu.com/wp-content/uploads/2022/05/Logo-GHN-Orange.png"
+                        alt=""
+                      />
+                      <div>Ngày giao hàng dự kiến:{ngayDuKien}</div>
+                    </div>
+                    <div className="flex justify-center">
+                      {" "}
+                      <button
+                        onClick={handleDatHang}
+                        style={{ height: "50px", width: "220px" }}
+                        className="ml-[10px] border-2 border-green-500 text-lg font-medium text-green-500"
+                      >
+                        Đặt hàng
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
+
+              {!giaoHang && (
+                <div className="ml-7">
+                  <div className="my-2 flex">
+                    <Button
+                      style={{ height: "50px", width: "220px" }}
+                      className="ml-[10px] border-2 border-green-500 text-lg font-medium text-green-500"
+                      onClick={openthanhToan}
+                    >
+                      Tiền mặt
+                    </Button>
+                    <Button
+                      style={{ height: "50px", width: "220px" }}
+                      className="ml-[10px] border-2 border-yellow-500 text-lg font-medium text-yellow-500"
+                      onClick={handlePaymentClick}
+                    >
+                      Chuyển khoản
+                    </Button>
+                  </div>
+                  <div className="my-2">
+                    <Button
+                      style={{ height: "50px", width: "450px" }}
+                      className="ml-[10px] border-2 border-orange-600 text-lg font-medium text-orange-700"
+                      onClick={openModalThanhToanCKTM}
+                    >
+                      Tiền mặt & Chuyển khoản
+                    </Button>
+                  </div>
+                  <div className="my-2">
+                    <Button
+                      style={{ height: "50px", width: "450px" }}
+                      className="ml-[10px] border-2 border-red-700 text-lg font-medium text-red-700"
+                      onClick={huyHoaDon}
+                    >
+                      Hủy
+                    </Button>
+                  </div>
+                </div>
+              )}
             </div>
             <hr />
-            <div className="mx-3 mt-2">
-              <div>
-                <span className="text-xl font-semibold">Khách hàng:</span>
-                <button
-                  className="ml-[10px] w-[60px] border-2 border-blue-400 text-lg font-medium text-blue-400"
-                  onClick={openModalThemKH}
-                >
-                  Chọn
-                </button>
-                <button
-                  className="ml-[10px] w-[60px] border-2 border-red-400 text-lg font-medium text-red-400"
-                  onClick={XoaKhachHangKhoiHoaDon}
-                >
-                  Xóa
-                </button>
-              </div>
-              <div>
-                {tenKhachHang && (
-                  <div className="my-1">
-                    <span className="text-lg font-medium">
-                      Tên khách hàng:{" "}
-                    </span>
-                    <span>{tenKhachHang}</span>
-                  </div>
-                )}
-                {soDienThoai && (
-                  <div className="my-1">
-                    <span className="text-lg font-medium">Số điện thoại: </span>
-                    <span>{soDienThoai}</span>
-                  </div>
-                )}
-                {idKhachHang && (
-                  <div className="my-1">
-                    <span>
-                      <DiaCHiMacDinhKhachHang
-                        idKhachHang={idKhachHang}
-                        giaoHang={giaoHang}
-                        setPhiGiaoHang={setPhiGiaoHang}
-                        setNgayDuKien={setNgayDuKien}
-                      />
-                    </span>
-                  </div>
-                )}
-              </div>
-              {giaoHang && <div>Ngày giao hàng dự kiến:{ngayDuKien}</div>}
-            </div>
           </div>
         </div>
       </div>
@@ -1035,8 +1119,8 @@ export default function BanHangTaiQuay() {
       )}
 
       <ToastContainer
-        position="top-right"
-        autoClose={1000}
+        position="top-center"
+        autoClose={2000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick

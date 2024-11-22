@@ -141,6 +141,7 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
             gioHangChiTiet.setSoLuong(request.getSoLuong());
             gioHangChiTiet.setDonGia(sanPhamChiTiet.getDonGia());
         }
+
         // Lưu chi tiết giỏ hàng
         gioHangChiTietRepo.save(gioHangChiTiet);
 // Cập nhật số sản phẩm trong giỏ hàng
@@ -210,6 +211,8 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
         // Duyệt qua từng sản phẩm chi tiết và xóa
         for (GioHangChiTiet chiTiet : danhSachChiTiet) {
             if (chiTiet.getIdSanPhamChiTiet().getId().equals(gioHangChiTiet.getIdSanPhamChiTiet().getId())) {
+                // Cập nhật tổng số lượng trong giỏ hàng
+                gioHang.setTongSoLuong(gioHang.getTongSoLuong() - chiTiet.getSoLuong());
 
                 // Xóa sản phẩm chi tiết khỏi giỏ hàng chi tiết
                 gioHangChiTietRepo.delete(chiTiet);

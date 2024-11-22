@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -7,15 +8,20 @@ export default function DiaCHiMacDinhKhachHang({
   giaoHang,
   setPhiGiaoHang,
   setNgayDuKien,
+  setdiaChiGiaoHang,
 }) {
   const [diaChi, setDiaChi] = useState([]);
   const [TP, setTP] = useState([]);
   const [QH, setQH] = useState([]);
   const [xa, setXa] = useState([]);
   const [idTP, setIdTP] = useState("");
+  const [tenTP, setTenTP] = useState("");
   const [idQH, setIdQH] = useState("");
+  const [tenQH, setTenQH] = useState("");
   const [idXa, setIdXa] = useState("");
+  const [tenXa, setTenXA] = useState("");
   const [soNha, setSoNha] = useState("");
+  const [diaChiGiaoHang, setDiaChiGiaoHang] = useState("");
 
   const ApiLayDiaChi = `http://localhost:8080/diachi/diachimacdinh/${idKhachHang}`;
 
@@ -31,7 +37,7 @@ export default function DiaCHiMacDinhKhachHang({
         console.log(error);
       });
   }, [ApiLayDiaChi, idKhachHang]);
-  console.log(diaChi);
+  // console.log(diaChi);
 
   // Lấy danh sách tỉnh/thành phố
   useEffect(() => {
@@ -59,7 +65,6 @@ export default function DiaCHiMacDinhKhachHang({
         console.log(error);
       });
   }, [diaChi?.tinhThanhPho]);
-
   // Lấy danh sách quận/huyện dựa trên idTP
   useEffect(() => {
     if (idTP !== undefined) {
@@ -123,6 +128,7 @@ export default function DiaCHiMacDinhKhachHang({
   // phí ship
   useEffect(() => {
     if (
+      giaoHang === true &&
       idTP !== undefined &&
       idQH !== undefined &&
       idXa !== undefined &&
@@ -161,11 +167,12 @@ export default function DiaCHiMacDinhKhachHang({
           console.log(error);
         });
     }
-  }, [idQH, idTP, idXa, setPhiGiaoHang, setNgayDuKien]);
+  }, [idQH, idTP, idXa, setPhiGiaoHang, giaoHang]);
 
   // thoi gian dự kiến giao hàng
   useEffect(() => {
     if (
+      giaoHang === true &&
       idTP !== undefined &&
       idQH !== undefined &&
       idXa !== undefined &&
@@ -203,40 +210,67 @@ export default function DiaCHiMacDinhKhachHang({
           console.log(error);
         });
     }
-  }, [idQH, idTP, idXa, setNgayDuKien]);
+  }, [idQH, idTP, idXa, setNgayDuKien, giaoHang]);
 
-  // Xử lý khi thay đổi tỉnh/thành phố
+  // Khi thay đổi tỉnh/thành phố
   const handleChangeTP = (event) => {
     const selectedTP = event.target.value;
     setIdTP(selectedTP);
-    setQH([]); // Xóa danh sách quận/huyện
-    setXa([]); // Xóa danh sách xã/phường
-    setIdQH(""); // Xóa giá trị quận/huyện
-    setIdXa(""); // Xóa giá trị xã/phường
+    const tenTP = TP.find((tp) => tp.ProvinceID === idTP)?.ProvinceName || "";
+    setTenTP(tenTP);
+    console.log(tenTP);
+    if (selectedTP !== idTP) {
+      setIdQH(""); // Xóa quận/huyện chỉ khi tỉnh thay đổi
+      setXa([]); // Xóa xã/phường
+      setIdXa(""); // Xóa xã/phường
+    }
   };
 
-  // Xử lý khi thay đổi quận/huyện
+  // Khi thay đổi quận/huyện
   const handleChangeQH = (event) => {
     const selectedQH = event.target.value;
     setIdQH(selectedQH);
-    setXa([]); // Xóa danh sách xã/phường
-    setIdXa(""); // Xóa giá trị xã/phường
+    const tenQH = QH.find((qh) => qh.DistrictID === idQH)?.DistrictName || "";
+    setTenQH(tenQH);
+    console.log(tenQH);
+    if (selectedQH !== idQH) {
+      setXa([]); // Xóa xã/phường khi quận/huyện thay đổi
+      setIdXa(""); // Xóa xã/phường
+    }
   };
 
-  // Xử lý khi thay đổi xã/phường
+  // Khi thay đổi xã/phường
   const handleChangeXa = (event) => {
-    setIdXa(event.target.value);
+    setIdXa(event.target.value); // Cập nhật mã xã
+    const tenXa = xa.find((x) => x.WardCode === idXa)?.WardName || "";
+    setTenXA(tenXa);
+    console.log(tenXa);
   };
 
   const handleSoNhaChange = (event) => {
     setSoNha(event.target.value); // Cập nhật giá trị khi người dùng nhập
   };
 
+  useEffect(() => {
+    // Tạo địa chỉ giao hàng hoàn chỉnh khi các trường thay đổi
+    const tenTP = TP.find((tp) => tp.ProvinceID === idTP)?.ProvinceName || "";
+    const tenQH = QH.find((qh) => qh.DistrictID === idQH)?.DistrictName || "";
+    const tenXa = xa.find((x) => x.WardCode === idXa)?.WardName || "";
+
+    // Cập nhật địa chỉ giao hàng
+    const diaChiHoanChinh = `${soNha} - ${tenXa} - ${tenQH} - ${tenTP}`;
+
+    setDiaChiGiaoHang(diaChiHoanChinh); // Cập nhật địa chỉ giao hàng trong state
+    setdiaChiGiaoHang(diaChiHoanChinh); // Cập nhật địa chỉ giao hàng trong props (nếu cần)
+
+    console.log(diaChiHoanChinh);
+  }, [idTP, idQH, idXa, soNha, TP, QH, xa, setdiaChiGiaoHang]);
+
   return (
     <>
       {giaoHang && (
-        <div>
-          <span className="text-lg font-medium">Địa chỉ: </span>
+        <div className="font-medium">
+          <span className="text-lg font-bold">Địa chỉ: </span>
           <div className="flex">
             <div className="w-full p-2 sm:w-1/2">
               <label className="mb-1 block">Tỉnh/Thành Phố:</label>
@@ -301,6 +335,15 @@ export default function DiaCHiMacDinhKhachHang({
                 className="w-full rounded border p-2"
               />
             </div>
+          </div>
+          <div className="w-full p-2">
+            <label className="mb-1 block">Địa chỉ giao hàng:</label>
+            <input
+              type="text"
+              value={diaChiGiaoHang}
+              readOnly
+              className="w-full rounded border bg-gray-100 p-2"
+            />
           </div>
         </div>
       )}

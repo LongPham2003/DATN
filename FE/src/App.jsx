@@ -39,6 +39,7 @@ import GioHang from "./pages/client/GioHang/GioHang.jsx";
 
 import ChiTietSanPham from "./pages/client/ChiTietSanPham/ChiTietSanPham.jsx";
 import ThongTinCaNhan from "./pages/client/ThongTinCaNhan/ThongTinCaNhan.jsx";
+import DatHang from "./pages/client/DatHang/DatHang.jsx";
 
 function App() {
   return (
@@ -98,6 +99,17 @@ function App() {
                     <title>Giỏ hàng</title>
                   </Helmet>
                   <GioHang />
+                </>
+              }
+            />
+            <Route
+              path="dathang"
+              element={
+                <>
+                  <Helmet>
+                    <title>Đặt hàng</title>
+                  </Helmet>
+                  <DatHang />
                 </>
               }
             />

@@ -1,7 +1,8 @@
 import { Button, InputNumber } from "antd";
-import axios from "axios";
+import axios from "./../../../../api/axiosConfig";
 import { useEffect, useState } from "react";
 import ThongTinKhac from "./CacThongTinKhac";
+import { Bounce, toast, ToastContainer, Zoom } from "react-toastify";
 
 export default function ChonSizeVSMauSac({ id }) {
   const [listSize, setListSize] = useState([]);
@@ -17,12 +18,16 @@ export default function ChonSizeVSMauSac({ id }) {
   const [ThuongHieu, setThuongHieu] = useState(null);
   const [DeGiay, setDeGiay] = useState(null);
   const [ChatLieu, setChatLieu] = useState(null);
+  const [soLuongMua, setSoLuongMua] = useState(1);
+  const [Disable, setDisable] = useState(false);
 
   const ApiLayDanhSachSizeCuaSP = `http://localhost:8080/api/kichthuoc/kichthuoctheoidsp/${id}`;
   const ApiLayDanhMauSacCuaSP = `http://localhost:8080/api/mausac/mausactheoidsp/${id}`;
   const ApiLocLaySPCT = `http://localhost:8080/api/sanphamchitiet/loc?idSanPham=${id}`;
 
   const ApiLaySp = `http://localhost:8080/api/sanpham/SPClient?idSP=${id}`;
+
+  const ApiThemSPCTVaoGioHang = `http://localhost:8080/api/giohang/themvaogiohangchitiet/${idSPCT}`;
 
   const LayData = async () => {
     try {
@@ -57,10 +62,15 @@ export default function ChonSizeVSMauSac({ id }) {
         setIdSPCT(data[0].id); // Lấy `id` của phần tử đầu tiên
         setDonGia(data[0].donGia);
         setChatLieu(data[0].chatLieu);
-        setSoLuongTon(data[0].soLuong);
         setDeGiay(data[0].deGiay);
         setThuongHieu(data[0].thuongHieu);
         setMa(data[0].ma);
+
+        const slt = data[0].soLuong;
+        setSoLuongTon(slt);
+
+        // Disable nút nếu không còn hàng
+        setDisable(slt === 0);
       } else {
         setIdSPCT(null); // Không tìm thấy `id`
         setDonGia(null);
@@ -91,6 +101,27 @@ export default function ChonSizeVSMauSac({ id }) {
       timSPCT();
     }
   }, [idSize, idMauSac]);
+
+  const [error, setError] = useState(""); // Biến lưu trạng thái lỗi
+
+  const handleChange = (value) => {
+    if (value <= SoLuongTon) {
+      setSoLuongMua(value); // Cập nhật số lượng mua
+      setError(""); // Xóa lỗi nếu hợp lệ
+    } else if (SoLuongTon !== null) {
+      setError(`Số lượng mua không được vượt quá ${SoLuongTon}.`);
+    }
+  };
+
+  const themSpVaoGioHang = async () => {
+    try {
+      await axios.post(ApiThemSPCTVaoGioHang, { soLuong: soLuongMua });
+      toast.success("Them Thanh cong");
+    } catch (error) {
+      console.log(error);
+      toast.error("Bạn chưa chọn sản phẩm hoặc số lượng bạn cần mua");
+    }
+  };
 
   return (
     <>
@@ -140,27 +171,63 @@ export default function ChonSizeVSMauSac({ id }) {
         <br />
         <InputNumber
           min={1}
-          defaultValue={1}
+          value={soLuongMua} // Sử dụng `value` để đồng bộ với `soLuongMua`
           size="large"
           className="mx-2 w-[200px]"
+          onChange={handleChange} // Giữ logic xử lý thay đổi
         />
+        {error && <p style={{ color: "red", marginTop: "5px" }}>{error}</p>}
       </div>
       <div className="flex gap-2">
-        <button className="h-[50px] w-[250px] rounded bg-blue-500 px-4 py-2 text-xl text-white hover:bg-blue-600">
-          Thêm vào giỏ hàng
-        </button>
-        <button className="h-[50px] w-[250px] rounded bg-orange-500 px-4 py-2 text-xl text-white hover:bg-orange-600">
-          Mua ngay
-        </button>
+        <div className="flex gap-2">
+          {SoLuongTon === 0 ? (
+            <span className="text-xl font-bold text-red-500">
+              Sản phẩm đã hết hàng
+            </span>
+          ) : (
+            <>
+              <button
+                className="h-[50px] w-[250px] rounded bg-blue-500 px-4 py-2 text-xl text-white hover:bg-blue-600"
+                onClick={themSpVaoGioHang}
+              >
+                Thêm vào giỏ hàng
+              </button>
+              <button
+                className="h-[50px] w-[250px] rounded bg-orange-500 px-4 py-2 text-xl text-white hover:bg-orange-600"
+                onClick={() => console.log("Mua ngay")}
+              >
+                Mua ngay
+              </button>
+            </>
+          )}
+        </div>
       </div>
       <hr className="my-4" />
       <div className="grid grid-cols-3 gap-4">
-        {Ma !== null && <div>Ma: {Ma}</div>}
-        {ThuongHieu !== null && <div>Thuong hieu: {ThuongHieu}</div>}
-        {ChatLieu !== null && <div>Chat lieu: {ChatLieu}</div>}
-        {DeGiay !== null && <div>De giay: {DeGiay}</div>}
-        {SoLuongTon !== null && <div>So luong con: {SoLuongTon}</div>}
+        {idSize && idMauSac ? (
+          Ma !== null ||
+          ThuongHieu !== null ||
+          ChatLieu !== null ||
+          DeGiay !== null ||
+          SoLuongTon !== null ? (
+            <>
+              {Ma !== null && <div>Ma: {Ma}</div>}
+              {ThuongHieu !== null && <div>Thuong hieu: {ThuongHieu}</div>}
+              {ChatLieu !== null && <div>Chat lieu: {ChatLieu}</div>}
+              {DeGiay !== null && <div>De giay: {DeGiay}</div>}
+              {SoLuongTon !== null && <div>So luong con: {SoLuongTon}</div>}
+            </>
+          ) : (
+            <div className="font-bold text-red-500">Không có sản phẩm này</div>
+          )
+        ) : null}
       </div>
+
+      <ToastContainer
+        position="top-center"
+        autoClose={1000}
+        transition={Zoom}
+      />
     </>
   );
 }
