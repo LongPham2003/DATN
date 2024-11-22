@@ -573,7 +573,7 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
         // Lưu hóa đơn ban đầu
         HoaDon savedHoaDon = hoaDonRepo.save(hoaDon);
 
-        // Thêm sản phẩm chi tiết vào hóa đơn
+        // Thêm sản phẩm chi tiết vào hóa đơn chi tiet
         themSanPhamChiTietVaoHoaDon(savedHoaDon, hoaDonRequest.getChiTietSanPhams());
 
         // Kiểm tra và áp dụng phiếu giảm giá nếu có
