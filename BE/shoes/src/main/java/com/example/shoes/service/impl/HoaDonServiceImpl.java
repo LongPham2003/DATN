@@ -5,6 +5,7 @@ import com.example.shoes.dto.BaoCaoThongKeResponse;
 import com.example.shoes.dto.PhanTrangResponse;
 
 import com.example.shoes.dto.hoadon.request.DatHangRequest;
+import com.example.shoes.dto.hoadon.request.GhiChu;
 import com.example.shoes.dto.hoadon.request.HoaDonRequest;
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
 import com.example.shoes.dto.hoadon.response.HoaDonTheoIDResponse;
@@ -137,7 +138,6 @@ public class HoaDonServiceImpl implements HoaDonService {
         hoaDon.setMa(maHoaDon);
         hoaDon.setIdNhanVien(nhanVien);
         hoaDon.setPhuongThucGiaoHang("tại quầy ");
-        hoaDon.setNgayTao(LocalDate.now());
         hoaDon.setTrangThai(TrangThai.CHO_XAC_NHAN); // Chưa thanh toán
 
         // Khởi tạo tổng tiền, tiền được giảm và tiền phải trả bằng 0
@@ -746,6 +746,8 @@ public class HoaDonServiceImpl implements HoaDonService {
         hoaDon.setPhiVanChuyen(datHangRequest.getPhiVanChuyen());
         hoaDon.setDiaChiGiaoHang(datHangRequest.getDiaChiChiTiet());
         hoaDon.setNgayDuKien(datHangRequest.getNgayDuKien());
+        hoaDon.setSoDienThoai(datHangRequest.getSoDienThoai());
+        hoaDon.setTenKhachHang(datHangRequest.getTenKhachHang());
         LichSuHoaDon lichSuHoaDonXacNhan = new LichSuHoaDon();
         lichSuHoaDonXacNhan.setIdHoaDon(hoaDon);
         lichSuHoaDonXacNhan.setTrangThai(TrangThai.DA_XAC_NHAN);
@@ -830,29 +832,7 @@ public class HoaDonServiceImpl implements HoaDonService {
         return response;
     }
 
-    @Override
-    public List<BaoCaoThongKeResponse> layBaoCaoTaiChinhTheoNgay(LocalDate startDate, LocalDate endDate) {
-        List<Object[]> results = hoaDonRepo.layBaoCaoTaiChinhTheoNgay(startDate, endDate);
-        return convertToResponse(results);
-    }
 
-    @Override
-    public List<BaoCaoThongKeResponse> layBaoCaoTaiChinhTheoThang(LocalDate startDate, LocalDate endDate) {
-        List<Object[]> results = hoaDonRepo.layBaoCaoTaiChinhTheoThang(startDate, endDate);
-        return convertToResponse(results);
-    }
-
-    @Override
-    public List<BaoCaoThongKeResponse> layBaoCaoTaiChinhTheoNam(LocalDate startDate, LocalDate endDate) {
-        List<Object[]> results = hoaDonRepo.layBaoCaoTaiChinhTheoNam(startDate, endDate);
-        return convertToResponse(results);
-    }
-
-    @Override
-    public BaoCaoThongKeResponse layBaoCaoTaiChinhTongQuat() {
-        List<Object[]> results = hoaDonRepo.layBaoCaoTaiChinhTongQuoc();
-        return convertToSingleResponse(results);
-    }
 
     private List<BaoCaoThongKeResponse> convertToResponse(List<Object[]> results) {
         List<BaoCaoThongKeResponse> responses = new ArrayList<>();
@@ -922,7 +902,6 @@ public class HoaDonServiceImpl implements HoaDonService {
         StringBuilder builder = new StringBuilder();
         builder.append("HÓA ĐƠN\n");
         builder.append("Mã hóa đơn: ").append(hoaDon.getMa()).append("\n");
-        builder.append("Ngày tạo: ").append(hoaDon.getNgayTao()).append("\n");
         // builder.append("Khách hàng:
         // ").append(hoaDon.getIdKhachHang().getHoTen()).append("\n");
         // builder.append("Số điện thoại:
@@ -983,42 +962,42 @@ public class HoaDonServiceImpl implements HoaDonService {
     }
 
     @Override
-    public Void updateTrangThaiHoaDonByIdChoVanChuyen(Integer idHoaDon,String moTa) {
+    public Void updateTrangThaiHoaDonByIdChoVanChuyen(Integer idHoaDon, GhiChu moTa) {
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon).get();
         hoaDon.setTrangThai(TrangThai.CHO_GIAO_HANG);
         hoaDonRepo.save(hoaDon);
         LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
         lichSuHoaDon.setIdHoaDon(hoaDon);
         lichSuHoaDon.setTrangThai(TrangThai.CHO_GIAO_HANG);
-        lichSuHoaDon.setMoTa(moTa);
+        lichSuHoaDon.setMoTa(moTa.getGhiChu());
         lichSuHoaDonRepo.save(lichSuHoaDon);
         HoaDonChiTiet hoaDonChiTiet = hoaDonChiTietRepo.findById(idHoaDon).get();
         hoaDonChiTiet.setTrangThai(TrangThai.CHO_GIAO_HANG);
         return null;
     }
     @Override
-    public Void updateTrangThaiHoaDonByIdGiaoHang(Integer idHoaDon,String moTa) {
+    public Void updateTrangThaiHoaDonByIdGiaoHang(Integer idHoaDon,GhiChu moTa) {
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon).get();
         hoaDon.setTrangThai(TrangThai.DANG_GIAO);
         hoaDonRepo.save(hoaDon);
         LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
         lichSuHoaDon.setIdHoaDon(hoaDon);
         lichSuHoaDon.setTrangThai(TrangThai.DANG_GIAO);
-        lichSuHoaDon.setMoTa(moTa);
+        lichSuHoaDon.setMoTa(moTa.getGhiChu());
         lichSuHoaDonRepo.save(lichSuHoaDon);
         HoaDonChiTiet hoaDonChiTiet = hoaDonChiTietRepo.findById(idHoaDon).get();
         hoaDonChiTiet.setTrangThai(TrangThai.DANG_GIAO);
         return null;
     }
     @Override
-    public Void updateTrangThaiHoaDonByIdThanhCong(Integer idHoaDon,String moTa) {
+    public Void updateTrangThaiHoaDonByIdThanhCong(Integer idHoaDon,GhiChu moTa) {
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon).get();
         hoaDon.setTrangThai(TrangThai.HOAN_THANH);
         hoaDonRepo.save(hoaDon);
         LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
         lichSuHoaDon.setIdHoaDon(hoaDon);
         lichSuHoaDon.setTrangThai(TrangThai.HOAN_THANH);
-        lichSuHoaDon.setMoTa(moTa);
+        lichSuHoaDon.setMoTa(moTa.getGhiChu());
         lichSuHoaDonRepo.save(lichSuHoaDon);
         HoaDonChiTiet hoaDonChiTiet = hoaDonChiTietRepo.findById(idHoaDon).get();
         hoaDonChiTiet.setTrangThai(TrangThai.HOAN_THANH);
@@ -1103,8 +1082,9 @@ public class HoaDonServiceImpl implements HoaDonService {
         hoaDonResponse.setTienThua(formatCurrency(hoaDon.getTienThua()));
         hoaDonResponse.setPhuongThucThanhToan(hoaDon.getPhuongThucThanhToan());
         hoaDonResponse.setPhuongThucGiaoHang(hoaDon.getPhuongThucGiaoHang());
-        hoaDonResponse.setNgayTao(hoaDon.getNgayTao());
+        hoaDonResponse.setNgayTao(hoaDon.getCreatedAt());
         hoaDonResponse.setTrangThai(hoaDon.getTrangThai().getMoTa());
+        hoaDonResponse.setTienShip(formatCurrency(hoaDon.getPhiVanChuyen()));
         return hoaDonResponse;
     }
 }

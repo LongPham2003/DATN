@@ -390,6 +390,20 @@ export default function BanHangTaiQuay() {
     }
   };
 
+  //Them VND
+  function formatTien(value) {
+    // Loại bỏ dấu phân cách thập phân và chuyển thành số
+    const parsedValue = parseFloat(value.toString().replace(",", "."));
+
+    // Kiểm tra nếu không phải số hợp lệ
+    if (isNaN(parsedValue)) {
+      return "0 VNĐ"; // Giá trị mặc định nếu `value` không hợp lệ
+    }
+
+    // Định dạng số và thêm đơn vị VNĐ
+    return parsedValue.toLocaleString("vi-VN") + " VNĐ";
+  }
+
   //Xoa Phieu Giam Gia
   const XoaPhieuGiamGiaKhoiHoaDon = async () => {
     console.log("ID phiếu giảm giá đang chọn:", idPhieuGiamGiaDangChon);
@@ -593,6 +607,8 @@ export default function BanHangTaiQuay() {
               phiVanChuyen: phiGiaoHang,
               diaChiChiTiet: diaChiGiaoHang,
               ngayDuKien: ngayDuKien,
+              soDienThoai: soDienThoai,
+              tenKhachHang: tenKhachHang,
               tienPhaiThanhToan:
                 formatCurrencyToNumber(tienPhaiThanhToan) + phiGiaoHang,
             },

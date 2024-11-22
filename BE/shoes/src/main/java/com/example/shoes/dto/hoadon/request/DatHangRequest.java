@@ -12,6 +12,10 @@ import java.util.Date;
 public class DatHangRequest {
     private BigDecimal phiVanChuyen;
 
+    private String soDienThoai;
+
+    private String tenKhachHang;
+
     private String tinhThanhPho;
 
     private String huyenQuan;

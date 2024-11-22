@@ -71,11 +71,8 @@ public class HoaDon extends CrudByAt {
     @Column(name = "ngay_du_kien")
     private Date ngayDuKien;
 
-    @Column(name = "ngay_tao")
-    private LocalDate ngayTao;
-
-    @Column(name = "ngay_sua")
-    private LocalDate ngaySua;
+    @Column(name = "ten_khach_hang")
+    private String tenKhachHang;
 
     @Column(name = "trang_thai")
     @Enumerated(EnumType.STRING)

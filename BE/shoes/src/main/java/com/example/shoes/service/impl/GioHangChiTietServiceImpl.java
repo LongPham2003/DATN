@@ -241,7 +241,6 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
         hoaDon.setSoDienThoai(khachHang.getSdt());
         hoaDon.setDiaChiGiaoHang(diaChi.getDiaChiChiTiet());
         hoaDon.setPhuongThucGiaoHang("giao hang nhanh");
-        hoaDon.setNgayTao(LocalDate.now());
         hoaDon.setTrangThai(TrangThai.CHO_XAC_NHAN); // Chưa thanh toán
         // Khởi tạo tổng tiền, tiền được giảm và tiền phải trả bằng 0
         hoaDon.setTongTien(BigDecimal.ZERO);
@@ -294,7 +293,6 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
         hoaDon.setSoDienThoai(khachHang.getSdt());
         hoaDon.setDiaChiGiaoHang(diaChi.getDiaChiChiTiet());
         hoaDon.setPhuongThucGiaoHang("giao hàng nhanh");
-        hoaDon.setNgayTao(LocalDate.now());
         hoaDon.setTrangThai(TrangThai.CHO_XAC_NHAN);
         hoaDon.setTongTien(BigDecimal.ZERO);
         hoaDon.setTienDuocGiam(BigDecimal.ZERO);
@@ -527,7 +525,6 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
         hoaDonResponse.setTienThua(formatCurrency(hoaDon.getTienThua()));
         hoaDonResponse.setPhuongThucThanhToan(hoaDon.getPhuongThucThanhToan());
         hoaDonResponse.setPhuongThucGiaoHang(hoaDon.getPhuongThucGiaoHang());
-        hoaDonResponse.setNgayTao(hoaDon.getNgayTao());
         hoaDonResponse.setTrangThai(hoaDon.getTrangThai().getMoTa());
         return hoaDonResponse;
     }
