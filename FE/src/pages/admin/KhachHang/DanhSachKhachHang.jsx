@@ -49,6 +49,11 @@ export default function DanhSachNhanVien() {
       });
   }, [trangHienTai, keyword, trangThai, added, navigate]);
 
+  const handleLamMoi = () => {
+    setKeyword("");
+    setTrangThai("");
+  };
+
   return (
     <div className="p-4">
       <h1 className="mb-4 text-2xl font-bold">Quản Lý Khách Hàng</h1>
@@ -103,6 +108,7 @@ export default function DanhSachNhanVien() {
             placeholder="Nhập tên hoặc mã khách hàng..."
             className="w-full rounded border border-gray-300 p-2"
             onChange={(event) => setKeyword(event.target.value)}
+            value={keyword}
           />
         </div>
         <div className="mb-6 w-[50%] rounded bg-white p-4 shadow">
@@ -111,6 +117,7 @@ export default function DanhSachNhanVien() {
             name="trangThai"
             id="trangThai"
             className="w-full rounded border border-gray-300 p-2"
+            value={trangThai}
             onChange={(e) => {
               const value =
                 e.target.value === "" ? null : e.target.value === "true";
@@ -123,6 +130,12 @@ export default function DanhSachNhanVien() {
           </select>
         </div>
       </div>
+      <button
+        onClick={handleLamMoi}
+        className="mx-auto flex rounded bg-blue-500 px-2 py-1 text-white"
+      >
+        Làm mới
+      </button>
 
       {/* Danh sách  */}
       <div className="rounded bg-white p-4 shadow">

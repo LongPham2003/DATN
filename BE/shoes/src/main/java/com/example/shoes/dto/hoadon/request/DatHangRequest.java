@@ -10,7 +10,7 @@ import java.util.Date;
 @Getter
 @Setter
 public class DatHangRequest {
-   private BigDecimal phiVanChuyen;
+    private BigDecimal phiVanChuyen;
 
     private String tinhThanhPho;
 
@@ -22,8 +22,11 @@ public class DatHangRequest {
 
     private String soNhaDuongThonXom;
 
-    private String   diaChiChiTiet;
+    private String diaChiChiTiet;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private Date ngayDuKien;
+
+    private BigDecimal tienPhaiThanhToan;
 
 }
