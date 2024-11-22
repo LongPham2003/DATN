@@ -725,6 +725,7 @@ public class HoaDonServiceImpl implements HoaDonService {
         return phanTrangResponse;
     }
 
+    //dat hanfg tai quay
     @Override
     public Void updateTrangThaiHoaDonById(Integer idHoaDon, DatHangRequest datHangRequest) {
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon).get();

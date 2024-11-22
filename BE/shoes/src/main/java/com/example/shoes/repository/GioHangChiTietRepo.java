@@ -34,5 +34,10 @@ public interface GioHangChiTietRepo extends JpaRepository<GioHangChiTiet, Intege
 
     @Query("SELECT g FROM GioHangChiTiet g WHERE g.idGioHang.id = :idGioHang")
     List<GioHangChiTiet> findByIdGioHang(@Param("idGioHang") Integer idGioHang);
+
+    @Query(value = """
+    SELECT * FROM datn.gio_hang_chi_tiet where id= :idGHCT
+""" , nativeQuery = true)
+    GioHangChiTiet findByIdGHCT(@Param("idGHCT") Integer idGHCT);
 }
 

@@ -227,6 +227,12 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
         return convertToGioHangChiTietResponse(gioHangChiTiet);
     }
 
+    @Override
+    public GioHangChiTietResponse fibindIdGHCT(Integer idGHCT) {
+        GioHangChiTiet ghct = gioHangChiTietRepo.findByIdGHCT(idGHCT);
+        return convertToGioHangChiTietResponse(ghct);
+    }
+
     private Integer getCurrentKhachHangId() {
         // Lấy thông tin người dùng hiện tại
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

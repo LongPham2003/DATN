@@ -91,5 +91,18 @@ public class GioHangController {
                 .result(response)
                 .build();
     }
+    // Lấy chi tiết giỏ hàng theo ID
+    @GetMapping("/laygiohangchitiet/{id}")
+    public ApiResponse<GioHangChiTietResponse> layGioHangChiTiet(@PathVariable Integer id) {
+        GioHangChiTietResponse response = gioHangChiTietService.findByid(id);
+        return ApiResponse.<GioHangChiTietResponse>builder()
+                .result(response)
+                .build();
+    }
+
+//    @GetMapping("/findById/{idHDCT}")
+//    public ApiResponse<GioHangResponse> findById(@PathVariable("idHDCT") Integer idHDCT) {
+//        GioHangChiTietResponse res = gioHangChiTietService.fibindIdGHCT(idHDCT);
+//    }
 
 }

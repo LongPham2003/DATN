@@ -6,6 +6,7 @@ import com.example.shoes.dto.giohangchitiet.response.GioHangChiTietResponse;
 import com.example.shoes.dto.hoadon.request.HoaDonRequest;
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
 import com.example.shoes.dto.hoadonchitiet.request.HoaDonChiTietRequest;
+import com.example.shoes.entity.GioHangChiTiet;
 
 import java.util.List;
 
@@ -14,6 +15,7 @@ public interface GioHangChiTietService {
     GioHangChiTietResponse updateGioHangChiTiet(Integer idGH, GioHangChiTietRequest request);
     GioHangChiTietResponse findByid(Integer id);
     GioHangChiTietResponse deleteGioHangChiTiet(Integer idgiohangchitiet);
+    GioHangChiTietResponse fibindIdGHCT(Integer idGHCT);
     List<GioHangChiTietResponse> getAllGioHangChiTiet();
     HoaDonResponse muaNgay(Integer idSPCT, HoaDonChiTietRequest chiTietRequest);
     HoaDonResponse muaHangTuGioHangChiTiet(List<HoaDonChiTietRequest> chiTietRequests);
@@ -21,4 +23,5 @@ public interface GioHangChiTietService {
     HoaDonResponse datHang( HoaDonRequest hoaDonRequest);
     HoaDonResponse nhanVienXacNhan(Integer idHoaDon);
     GioHangResponse layGioHangTheoIdKhachHang();
+
 }
