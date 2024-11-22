@@ -11,6 +11,8 @@ import {
 import { Modal } from "antd";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import ThongTinHoaDon from "./ThongTinHoaDon";
+import ThongTinKhachHang from "./ThongTinKhachHang";
 const HoaDonChiTiet = () => {
   const { id } = useParams();
   const [hoaDon, setHoaDon] = useState([]);
@@ -113,7 +115,7 @@ const HoaDonChiTiet = () => {
       onOk() {
         axios
           .post(`http://localhost:8080/api/hoadon/chogiaohang/${id}`, {
-            moTa: ghiChu,
+            ghiChu: ghiChu,
           })
           .then((response) => {
             console.log("Cập nhật thành công:", response.data);
@@ -141,7 +143,7 @@ const HoaDonChiTiet = () => {
       onOk() {
         axios
           .post(`http://localhost:8080/api/hoadon/danggiao/${id}`, {
-            moTa: ghiChu,
+            ghiChu: ghiChu,
           })
           .then((response) => {
             console.log("Cập nhật thành công:", response.data);
@@ -169,7 +171,7 @@ const HoaDonChiTiet = () => {
       onOk() {
         axios
           .post(`http://localhost:8080/api/hoadon/hoanthanh/${id}`, {
-            moTa: ghiChu,
+            ghiChu: ghiChu,
           })
           .then((response) => {
             console.log("Cập nhật thành công:", response.data);
@@ -190,7 +192,7 @@ const HoaDonChiTiet = () => {
   };
 
   return (
-    <div className="py-3">
+    <div className="mx-3 py-3">
       <Timeline minEvents={5} placeholder>
         {lichSuHoaDon.map((item, index) => (
           <TimelineEvent
@@ -204,7 +206,8 @@ const HoaDonChiTiet = () => {
                     ? FaCar
                     : item.trangThai === "DANG_GIAO"
                       ? FaTruck
-                      : item.trangThai === "HOAN_THANH"
+                      : item.trangThai === "HOAN_THANH" ||
+                          item.trangThai === "DA_THANH_TOAN"
                         ? FaCheckCircle
                         : ""
             }
@@ -217,7 +220,8 @@ const HoaDonChiTiet = () => {
                     ? "#9999CC"
                     : item.trangThai === "DANG_GIAO"
                       ? "#6699FF"
-                      : item.trangThai === "HOAN_THANH"
+                      : item.trangThai === "HOAN_THANH" ||
+                          item.trangThai === "DA_THANH_TOAN"
                         ? "#99FF00"
                         : ""
             }
@@ -231,7 +235,8 @@ const HoaDonChiTiet = () => {
                     ? "Chờ giao hàng"
                     : item.trangThai === "DANG_GIAO"
                       ? "Đang giao hàng"
-                      : item.trangThai === "HOAN_THANH"
+                      : item.trangThai === "HOAN_THANH" ||
+                          item.trangThai === "DA_THANH_TOAN"
                         ? "Hoàn thành"
                         : ""
             }
@@ -287,7 +292,7 @@ const HoaDonChiTiet = () => {
       </div>
       {OpenModelLSHD && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="flex h-[420px] w-[400px] justify-between rounded-lg bg-white p-8">
+          <div className="flex h-[525px] w-[400px] justify-between rounded-lg bg-white p-8">
             <div className="font-bold">
               <h3 className="mb-3">Lịch sử hóa đơn</h3>
 
@@ -314,10 +319,14 @@ const HoaDonChiTiet = () => {
                     <span>{formatDate(item.createAt)}</span>
                   </div>
                   <div className="flex">
+                    <h4>Ghi chú:</h4>
+                    <h4>{item.moTa}</h4>
+                  </div>
+                  <div className="flex">
                     <h4>Người thực hiện : </h4>
                     <span> {item.createBy}</span>
                   </div>
-                  <hr />
+                  <hr className="border-orange-400" />
                 </div>
               ))}
             </div>
@@ -423,6 +432,16 @@ const HoaDonChiTiet = () => {
       <hr className="my-2" />
       <div className="my-3">
         <h2 className="text-[20px] font-bold">Lịch sử thanh toán</h2>
+      </div>
+      <div className="my-3">
+        <ThongTinHoaDon
+          hoaDon={hoaDon}
+          hoaDonChiTiet={hoaDonChiTiet}
+        ></ThongTinHoaDon>
+      </div>
+      <hr className="border-s-pink-700" />
+      <div className="my-3">
+        <ThongTinKhachHang hoaDon={hoaDon}></ThongTinKhachHang>
       </div>
     </div>
   );
