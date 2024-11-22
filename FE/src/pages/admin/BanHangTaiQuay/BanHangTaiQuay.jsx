@@ -169,6 +169,7 @@ export default function BanHangTaiQuay() {
       console.log("Lấy chi tiết sản phẩm lỗi:", error);
     }
   };
+
   // Lấy số lượng tồn của sản phẩm
   const LaySoLuongTonCuaSPCT = async () => {
     const responseSoLuongTon = await axios.get(
@@ -380,9 +381,10 @@ export default function BanHangTaiQuay() {
       LayThongTinThanhToanCuaHoaDon();
     } catch (error) {
       console.log(error);
-      setIsSelectDisabled(false);
-      idPhieuGiamGiaDangChon();
+
       toast.error("Đơn hàng k đủ điều kiện ");
+      setIsSelectDisabled(false);
+      idPhieuGiamGiaDangChon(null);
     }
   };
 
@@ -831,6 +833,9 @@ export default function BanHangTaiQuay() {
                             <div
                               onMouseEnter={() =>
                                 setIdPhieuGiamGiaDangChon(pgg.id)
+                              }
+                              onMouseLeave={() =>
+                                setIdPhieuGiamGiaDangChon(null)
                               }
                             >
                               <span>tên: {pgg.tenVoucher}</span> <br />
