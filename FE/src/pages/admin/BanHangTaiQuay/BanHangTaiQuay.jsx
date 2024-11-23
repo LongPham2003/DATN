@@ -24,7 +24,6 @@ import ThemMauSac from "../SanPham/ProductDetail/ThemMauSac.jsx";
 import ThanhToanCKTM from "./ThanhToanCKTM.jsx";
 import ThemKH from "./ThemKH.jsx";
 import { useNavigate } from "react-router-dom";
-import { each } from "lodash";
 
 export default function BanHangTaiQuay() {
   const [hoaDonFalse, setHoaDonFalse] = useState([]);
@@ -35,7 +34,6 @@ export default function BanHangTaiQuay() {
 
   const navigate = useNavigate();
 
-  const [diaChiGiaoHang, setdiaChiGiaoHang] = useState("");
   // chon giao hang
   const [phiGiaoHang, setPhiGiaoHang] = useState(0);
   const [giaoHang, setGiaoHang] = useState(false);
@@ -382,6 +380,8 @@ export default function BanHangTaiQuay() {
     } catch (error) {
       console.log(error);
       toast.error("Có lỗi xảy ra");
+      setIsSelectDisabled(false);
+      idPhieuGiamGiaDangChon(null);
     }
   };
 
@@ -391,6 +391,20 @@ export default function BanHangTaiQuay() {
       setIsSelectDisabled(true); // Disable Select sau khi gọi hàm
     }
   };
+
+  //Them VND
+  function formatTien(value) {
+    // Loại bỏ dấu phân cách thập phân và chuyển thành số
+    const parsedValue = parseFloat(value.toString().replace(",", "."));
+
+    // Kiểm tra nếu không phải số hợp lệ
+    if (isNaN(parsedValue)) {
+      return "0 VNĐ"; // Giá trị mặc định nếu `value` không hợp lệ
+    }
+
+    // Định dạng số và thêm đơn vị VNĐ
+    return parsedValue.toLocaleString("vi-VN") + " VNĐ";
+  }
 
   //Xoa Phieu Giam Gia
   const XoaPhieuGiamGiaKhoiHoaDon = async () => {
@@ -549,7 +563,14 @@ export default function BanHangTaiQuay() {
 
   // hàm format lại định dạng khi gửi về be
   const formatCurrencyToNumber = (value) => {
-    return parseInt(value.replace(/[^\d]/g, ""));
+    // Đảm bảo giá trị là chuỗi trước khi sử dụng replace
+    const stringValue = String(value);
+
+    // Loại bỏ tất cả các ký tự không phải là số
+    const formattedValue = stringValue.replace(/[^\d]/g, "");
+
+    // Chuyển chuỗi thành số và trả về kết quả
+    return parseInt(formattedValue, 10);
   };
 
   // thanh toán vnpay
@@ -588,6 +609,10 @@ export default function BanHangTaiQuay() {
               phiVanChuyen: phiGiaoHang,
               diaChiChiTiet: diaChiGiaoHang,
               ngayDuKien: ngayDuKien,
+              soDienThoai: soDienThoai,
+              tenKhachHang: tenKhachHang,
+              tienPhaiThanhToan:
+                formatCurrencyToNumber(tienPhaiThanhToan) + phiGiaoHang,
             },
           )
           .then((response) => {
@@ -596,6 +621,7 @@ export default function BanHangTaiQuay() {
             toast.success("Cập nhật thành công");
             LayDanhSachHoaDonChuaThanhToan();
             setGiaoHang(false);
+            navigate(0);
           })
           .catch((error) => {
             setError(error.response.data.message);
@@ -606,6 +632,7 @@ export default function BanHangTaiQuay() {
       },
     });
   };
+
   return (
     <>
       <div className="mx-2 flex max-h-screen overflow-y-hidden font-mono">
@@ -874,7 +901,10 @@ export default function BanHangTaiQuay() {
                   <div>
                     <Switch
                       value={giaoHang}
-                      onClick={() => setGiaoHang(!giaoHang)}
+                      onClick={() => {
+                        setGiaoHang(!giaoHang);
+                        setPhiGiaoHang(0);
+                      }}
                     />
                   </div>
                 </div>
@@ -883,7 +913,9 @@ export default function BanHangTaiQuay() {
 
               <div className="my-4 flex items-center justify-between">
                 <div>Thành tiền</div>
-                <div className="text-red-500">{tienPhaiThanhToan} VND</div>
+                <div className="text-red-500">
+                  {formatCurrencyToNumber(tienPhaiThanhToan) + phiGiaoHang} VNĐ
+                </div>
               </div>
 
               <div className="mx-3 mt-2">

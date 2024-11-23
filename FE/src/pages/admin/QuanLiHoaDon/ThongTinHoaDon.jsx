@@ -81,7 +81,7 @@ const ThongTinHoaDon = ({ hoaDon, hoaDonChiTiet }) => {
         <h3 className="text-[20px] font-bold">Sản phẩm</h3>
 
         <table className="min-w-full text-center text-sm font-light">
-          <thead className="sticky top-0 bg-blue-700 text-xl font-medium text-white">
+          <thead className="top-0 bg-blue-700 text-xl font-medium text-white">
             <tr>
               <th className="w-10 px-6 py-4">STT</th>
               <th className="w-[130px] px-6 py-4">Ảnh</th>

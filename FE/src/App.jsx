@@ -38,12 +38,9 @@ import TrangChu from "./pages/client/TrangChu/TrangChu.jsx";
 import GioHang from "./pages/client/GioHang/GioHang.jsx";
 
 import ChiTietSanPham from "./pages/client/ChiTietSanPham/ChiTietSanPham.jsx";
-<<<<<<< HEAD
 import HoaDonChiTiet from "./pages/admin/QuanLiHoaDon/HoaDonChiTiet.jsx";
-=======
 import ThongTinCaNhan from "./pages/client/ThongTinCaNhan/ThongTinCaNhan.jsx";
 import DatHang from "./pages/client/DatHang/DatHang.jsx";
->>>>>>> origin/hoanh
 
 function App() {
   return (

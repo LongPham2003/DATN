@@ -6,13 +6,15 @@ import {
   FaCheck,
   FaCheckCircle,
   FaHourglassStart,
+  FaStackOverflow,
   FaTruck,
 } from "react-icons/fa";
 import { Modal } from "antd";
 import { useParams } from "react-router-dom";
-import { toast } from "react-toastify";
+import { Bounce, toast, ToastContainer } from "react-toastify";
 import ThongTinHoaDon from "./ThongTinHoaDon";
 import ThongTinKhachHang from "./ThongTinKhachHang";
+import XacNhanThanhToan from "./XacNhanThanhToan";
 const HoaDonChiTiet = () => {
   const { id } = useParams();
   const [hoaDon, setHoaDon] = useState([]);
@@ -25,9 +27,19 @@ const HoaDonChiTiet = () => {
   const openModalLSHD = () => {
     setOpenModelLSHD(true);
   };
-  const closeModalBrand = async () => {
+  const closeModalLSHD = async () => {
     setOpenModelLSHD(false);
   };
+
+  // model xác nhận thanh toán
+  const [OpenModelXNTT, setOpenModelXNTT] = useState(false);
+  const openModalXNTT = () => {
+    setOpenModelXNTT(true);
+  };
+  const closeModalXNTT = async () => {
+    setOpenModelXNTT(false);
+  };
+
   // model update chờ giao
   const [OpenModelChoGiao, setOpenModelChoGiao] = useState(false);
   const openModalChoGiao = () => {
@@ -92,6 +104,13 @@ const HoaDonChiTiet = () => {
     fillHoaDonChiTiet();
     fillLichSuHoaDon();
   }, [id]);
+
+  const thanhToan = lichSuHoaDon.filter(
+    (item) => item.trangThai === "DA_THANH_TOAN",
+  );
+
+  console.log(thanhToan);
+  console.log(lichSuHoaDon);
 
   const formatDate = (dateTimeString) => {
     const date = new Date(dateTimeString);
@@ -182,7 +201,8 @@ const HoaDonChiTiet = () => {
             fillLichSuHoaDon();
           })
           .catch((error) => {
-            console.error("Lỗi khi cập nhật:", error);
+            closeModalHT();
+            toast.error(error.response.data.message); // Hiển thị thông báo từ server
           });
       },
       onCancel() {
@@ -193,7 +213,7 @@ const HoaDonChiTiet = () => {
 
   return (
     <div className="mx-3 py-3">
-      <Timeline minEvents={5} placeholder>
+      <Timeline minEvents={6} placeholder>
         {lichSuHoaDon.map((item, index) => (
           <TimelineEvent
             key={index}
@@ -206,10 +226,11 @@ const HoaDonChiTiet = () => {
                     ? FaCar
                     : item.trangThai === "DANG_GIAO"
                       ? FaTruck
-                      : item.trangThai === "HOAN_THANH" ||
-                          item.trangThai === "DA_THANH_TOAN"
-                        ? FaCheckCircle
-                        : ""
+                      : item.trangThai === "DA_THANH_TOAN"
+                        ? FaStackOverflow
+                        : item.trangThai === "HOAN_THANH"
+                          ? FaCheckCircle
+                          : ""
             }
             color={
               item.trangThai === "CHO_XAC_NHAN"
@@ -220,10 +241,11 @@ const HoaDonChiTiet = () => {
                     ? "#9999CC"
                     : item.trangThai === "DANG_GIAO"
                       ? "#6699FF"
-                      : item.trangThai === "HOAN_THANH" ||
-                          item.trangThai === "DA_THANH_TOAN"
+                      : item.trangThai === "DA_THANH_TOAN"
                         ? "#99FF00"
-                        : ""
+                        : item.trangThai === "HOAN_THANH"
+                          ? "#99FF00"
+                          : ""
             }
             subtitle={formatDate(item.createAt)}
             title={
@@ -235,10 +257,11 @@ const HoaDonChiTiet = () => {
                     ? "Chờ giao hàng"
                     : item.trangThai === "DANG_GIAO"
                       ? "Đang giao hàng"
-                      : item.trangThai === "HOAN_THANH" ||
-                          item.trangThai === "DA_THANH_TOAN"
-                        ? "Hoàn thành"
-                        : ""
+                      : item.trangThai === "DA_THANH_TOAN"
+                        ? "Đã thanh toán"
+                        : item.trangThai === "HOAN_THANH"
+                          ? "Hoàn thành"
+                          : ""
             }
           ></TimelineEvent>
         ))}
@@ -282,6 +305,14 @@ const HoaDonChiTiet = () => {
               Xuất Hóa Đơn
             </button>
           )}
+          {hoaDon.trangThai === "Đã thanh toán" && (
+            <button
+              onClick={openModalHT}
+              className="rounded bg-blue-500 px-2 py-1 text-white"
+            >
+              Hoàn thành
+            </button>
+          )}
         </div>
         <button
           className="rounded bg-blue-500 px-2 py-1 text-white"
@@ -290,9 +321,87 @@ const HoaDonChiTiet = () => {
           Lịch sử hóa đơn
         </button>
       </div>
+      <hr className="my-2" />
+      <div className="my-3">
+        <div className="flex items-center justify-between">
+          <h2 className="text-[20px] font-bold text-pink-500">
+            Lịch sử thanh toán
+          </h2>
+
+          <button
+            onClick={openModalXNTT}
+            className="rounded bg-blue-500 px-2 py-2 text-white"
+          >
+            Xác nhận thanh toán
+          </button>
+        </div>
+
+        <div>
+          <table className="min-w-full divide-y divide-gray-200 rounded-lg bg-white shadow-md">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="px-6 py-3 text-left text-sm font-medium uppercase tracking-wider text-gray-500">
+                  Số tiền
+                </th>
+                <th className="px-6 py-3 text-left text-sm font-medium uppercase tracking-wider text-gray-500">
+                  Thời gian
+                </th>
+                <th className="px-6 py-3 text-left text-sm font-medium uppercase tracking-wider text-gray-500">
+                  Nhân viên xác nhận
+                </th>
+                <th className="px-6 py-3 text-left text-sm font-medium uppercase tracking-wider text-gray-500">
+                  Ghi chú
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+              {thanhToan.map((item, index) => (
+                <tr key={index} className="hover:bg-gray-100">
+                  <td className="px-6 py-4 text-sm text-gray-700">
+                    {hoaDon.tienPhaiThanhToan}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-700">
+                    {formatDate(item.createAt)}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-700">
+                    {item.nguoiThucHien}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-blue-700">
+                    {item.moTa}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <hr />
+      <div className="my-3">
+        <ThongTinHoaDon
+          hoaDon={hoaDon}
+          hoaDonChiTiet={hoaDonChiTiet}
+        ></ThongTinHoaDon>
+      </div>
+      <hr className="border-s-pink-700" />
+      <div className="my-3">
+        <ThongTinKhachHang hoaDon={hoaDon}></ThongTinKhachHang>
+      </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
       {OpenModelLSHD && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="flex h-[525px] w-[400px] justify-between rounded-lg bg-white p-8">
+          <div className="flex h-[525px] max-h-[600px] w-[400px] justify-between overflow-y-auto rounded-lg bg-white p-8">
             <div className="font-bold">
               <h3 className="mb-3">Lịch sử hóa đơn</h3>
 
@@ -309,9 +418,11 @@ const HoaDonChiTiet = () => {
                             ? "Chờ giao hàng"
                             : item.trangThai === "DANG_GIAO"
                               ? "Đang giao hàng"
-                              : item.trangThai === "HOAN_THANH"
-                                ? "Hoàn thành"
-                                : ""}
+                              : item.trangThai === "DA_THANH_TOAN"
+                                ? "Đã thanh toán"
+                                : item.trangThai === "HOAN_THANH"
+                                  ? "Hoàn thành"
+                                  : ""}
                     </span>
                   </div>
                   <div className="flex">
@@ -331,12 +442,24 @@ const HoaDonChiTiet = () => {
               ))}
             </div>
             <button
-              onClick={closeModalBrand}
+              onClick={closeModalLSHD}
               className="h-10 rounded bg-red-500 px-4 text-white hover:bg-red-600"
             >
               X
             </button>
           </div>
+        </div>
+      )}
+      {OpenModelXNTT && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <XacNhanThanhToan
+            setGhiChu={setGhiChu}
+            closeModalXNTT={closeModalXNTT}
+            hoaDon={hoaDon}
+            loadHoaDon={fillHoaDon}
+            loadHoaDonCT={fillHoaDonChiTiet}
+            loadLSHD={fillLichSuHoaDon}
+          ></XacNhanThanhToan>
         </div>
       )}
       {OpenModelChoGiao && (
@@ -429,20 +552,6 @@ const HoaDonChiTiet = () => {
           </div>
         </div>
       )}
-      <hr className="my-2" />
-      <div className="my-3">
-        <h2 className="text-[20px] font-bold">Lịch sử thanh toán</h2>
-      </div>
-      <div className="my-3">
-        <ThongTinHoaDon
-          hoaDon={hoaDon}
-          hoaDonChiTiet={hoaDonChiTiet}
-        ></ThongTinHoaDon>
-      </div>
-      <hr className="border-s-pink-700" />
-      <div className="my-3">
-        <ThongTinKhachHang hoaDon={hoaDon}></ThongTinKhachHang>
-      </div>
     </div>
   );
 };
