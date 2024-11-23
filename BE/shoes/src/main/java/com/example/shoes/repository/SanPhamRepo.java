@@ -68,6 +68,7 @@ public interface SanPhamRepo extends JpaRepository<SanPham, Integer> {
     JOIN san_pham_chi_tiet spct ON sp.id = spct.id_san_pham
     JOIN thuong_hieu th ON spct.id_thuong_hieu = th.id
     WHERE sp.trang_thai = 1
+    AND (:tenSP IS NULL OR sp.ten_san_pham LIKE %:tenSP%)
       AND (:idLoai IS NULL OR sp.id_loai = :idLoai)
       AND (:idKichThuoc IS NULL OR spct.id_kich_thuoc = :idKichThuoc)
       AND (:idMauSac IS NULL OR spct.id_mau_sac = :idMauSac)
@@ -75,7 +76,8 @@ public interface SanPhamRepo extends JpaRepository<SanPham, Integer> {
     GROUP BY sp.id, th.id, sp.ten_san_pham
     ORDER BY sp.id;
 """, nativeQuery = true)
-    List<SanPhamClient> sanPhamClient(@Param("idLoai") Integer idLoai,
+    List<SanPhamClient> sanPhamClient(@Param("tenSP") String tenSP,
+                                        @Param("idLoai") Integer idLoai,
                                       @Param("idKichThuoc") Integer idKichThuoc,
                                       @Param("idMauSac") Integer idMauSac,
                                       @Param("donGiaMin") BigDecimal donGiaMin,
