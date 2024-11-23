@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import LayANhTheoIdSPCT from "./../../admin/SanPham/Product/LayANhTheoIDSP";
 import { Link } from "react-router-dom";
+import Search from "antd/es/transfer/search";
 
 export default function CacSanPham() {
   const [listMauSac, setListMauSac] = useState([]);
@@ -14,6 +15,7 @@ export default function CacSanPham() {
   const [selectedIdMauSac, setSelectedIdMauSac] = useState(null);
   const [selectedIdLoai, setSelectedIdLoai] = useState(null);
   const [selectedIdKichThuoc, setSelectedIdKichThuoc] = useState(null);
+  const [tenSP, setTenSP] = useState(null);
 
   const [donGiaMin, setMinGia] = useState(null);
   const [donGiaMax, setMaxGia] = useState(null);
@@ -46,6 +48,7 @@ export default function CacSanPham() {
       if (selectedIdMauSac) params.idMauSac = selectedIdMauSac;
       if (selectedIdLoai) params.idLoai = selectedIdLoai;
       if (selectedIdKichThuoc) params.idKichThuoc = selectedIdKichThuoc;
+      if (tenSP) params.tenSP = tenSP;
       if (donGiaMin !== null) params.donGiaMin = donGiaMin;
       if (donGiaMax !== null) params.donGiaMax = donGiaMax;
 
@@ -97,6 +100,7 @@ export default function CacSanPham() {
     selectedIdMauSac,
     donGiaMin,
     donGiaMax,
+    tenSP,
   ]);
 
   return (
@@ -106,6 +110,20 @@ export default function CacSanPham() {
           <span className="text-3xl font-semibold">Bộ Lọc</span>
         </div>
         <div className="col-span-3 col-start-1 col-end-3 h-auto">
+          <div className="my-2 flex">
+            <Search
+              placeholder="Nhập từ khóa tìm kiếm"
+              allowClear
+              enterButton="Tìm kiếm"
+              size="large"
+              onChange={(e) => setTenSP(e.target.value)} // Cập nhật state
+              style={{
+                width: "50%",
+                borderRadius: "8px",
+                border: "1px solid #d9d9d9",
+              }}
+            />
+          </div>
           <div className="my-2">
             <Card
               title="Loại giày"
@@ -270,7 +288,7 @@ export default function CacSanPham() {
               <Card
                 key={index}
                 hoverable
-                className="h-[330px]"
+                className="h-[360px]"
                 cover={
                   <Link to={`/chitiet/${spct.idSP}`}>
                     <div className="transition-transform duration-300 hover:scale-110">
@@ -283,8 +301,8 @@ export default function CacSanPham() {
                 }
                 actions={[
                   <div>
-                    <Link>
-                      <button className="text-base">Mua ngay</button>
+                    <Link to={`/chitiet/${spct.idSP}`}>
+                      <button className="text-base">Xem chi tiet</button>
                     </Link>
                   </div>,
                 ]}
