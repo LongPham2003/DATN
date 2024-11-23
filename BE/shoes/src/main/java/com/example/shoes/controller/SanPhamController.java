@@ -101,12 +101,13 @@ public class SanPhamController {
     }
 
     @GetMapping("/trangchu")
-    public List<SanPhamClient> sanPhamClient(@RequestParam(value = "idLoai", required = false) Integer idLoai,
+    public List<SanPhamClient> sanPhamClient(@RequestParam(value = "tenSP", required = false) String tenSP,
+                                            @RequestParam(value = "idLoai", required = false) Integer idLoai,
                                              @RequestParam(value = "idKichThuoc", required = false) Integer idKichThuoc,
                                              @RequestParam(value = "idMauSac", required = false)  Integer idMauSac,
                                              @RequestParam(value = "donGiaMin", required = false)  BigDecimal donGiaMin,
                                              @RequestParam(value = "donGiaMax", required = false)  BigDecimal donGiaMax) {
-        return sanPhamService.sanPhamClient(idLoai, idKichThuoc, idMauSac, donGiaMin, donGiaMax);}
+        return sanPhamService.sanPhamClient(tenSP, idLoai, idKichThuoc, idMauSac, donGiaMin, donGiaMax);}
 
     @GetMapping("/SPClient")
     public SanPhamClient sanPhamTrangChiTietClient(@RequestParam(value = "idSP") Integer idSP){

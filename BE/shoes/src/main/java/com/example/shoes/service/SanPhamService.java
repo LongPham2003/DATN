@@ -19,5 +19,5 @@ public interface SanPhamService {
     List<String> getAlltenSP();
     List<SanPhamBanChayResponse> getTop3SanPhamBanChay();
     SanPhamClient sanPhamTrangChiTietClient(Integer idSP);
-    List<SanPhamClient> sanPhamClient(Integer idLoai, Integer kichThuoc,Integer idMauSac, BigDecimal donGiaMin, BigDecimal donGiaMax);
+    List<SanPhamClient> sanPhamClient(String tenSP,Integer idLoai, Integer kichThuoc,Integer idMauSac, BigDecimal donGiaMin, BigDecimal donGiaMax);
 }

@@ -123,7 +123,7 @@ export default function Header() {
           </a>
         </div>
 
-        <div className="mx-9 flex h-[100px] items-center justify-between bg-white p-4">
+        <div className="justify-cen mx-9 flex h-[100px] items-center bg-white p-4">
           <div className="flex items-center space-x-4">
             <img
               src="../../../../logo/logo.jpg"
@@ -132,7 +132,7 @@ export default function Header() {
             />
           </div>
 
-          <nav className="flex space-x-8 text-2xl font-bold text-black">
+          <nav className="ml-[450px] flex space-x-8 text-2xl font-bold text-black">
             <Link
               to="/trangchu"
               className="flex items-center rounded px-4 py-2 font-bold text-black transition duration-700 ease-in-out hover:scale-110 hover:text-orange-500 hover:underline"
@@ -160,7 +160,7 @@ export default function Header() {
           </nav>
 
           {/* tìm kiếm */}
-          <div className="relative">
+          {/* <div className="relative">
             <Search
               placeholder="input search text"
               size="large"
@@ -168,7 +168,7 @@ export default function Header() {
                 width: 300,
               }}
             />
-          </div>
+          </div> */}
         </div>
       </header>
     </>

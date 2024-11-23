@@ -10,8 +10,13 @@ import Meta from "antd/es/card/Meta";
 import Carousel from "../Carousel/Carousel";
 import CacSanPham from "./CacSanPham";
 import TinTuc from "./TinTuc";
+import { useEffect } from "react";
 
 export default function TrangChu() {
+  useEffect(() => {
+    localStorage.removeItem("soLuong");
+    localStorage.removeItem("idSPCTCHon");
+  }, []);
   return (
     <>
       <div className="container">

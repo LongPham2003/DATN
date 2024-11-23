@@ -1,9 +1,9 @@
 import { Button, InputNumber } from "antd";
 import axios from "./../../../../api/axiosConfig";
 import { useEffect, useState } from "react";
-import ThongTinKhac from "./CacThongTinKhac";
 import { Bounce, toast, ToastContainer, Zoom } from "react-toastify";
 import Header from "../../Header/Header";
+import { Link } from "react-router-dom";
 
 export default function ChonSizeVSMauSac({ id }) {
   const [listSize, setListSize] = useState([]);
@@ -66,6 +66,7 @@ export default function ChonSizeVSMauSac({ id }) {
         setDeGiay(data[0].deGiay);
         setThuongHieu(data[0].thuongHieu);
         setMa(data[0].ma);
+        setIdSPCTvaoLocal(data[0].id);
 
         const slt = data[0].soLuong;
         setSoLuongTon(slt);
@@ -108,6 +109,7 @@ export default function ChonSizeVSMauSac({ id }) {
   const handleChange = (value) => {
     if (value <= SoLuongTon) {
       setSoLuongMua(value); // Cập nhật số lượng mua
+      setluuSLvaoLocal(value);
       setError(""); // Xóa lỗi nếu hợp lệ
     } else if (SoLuongTon !== null) {
       setError(`Số lượng mua không được vượt quá ${SoLuongTon}.`);
@@ -123,6 +125,16 @@ export default function ChonSizeVSMauSac({ id }) {
       toast.error("Bạn chưa chọn sản phẩm hoặc số lượng bạn cần mua");
     }
   };
+
+  const [luuSLvaoLocal, setluuSLvaoLocal] = useState(1);
+  const [IdSPCTvaoLocal, setIdSPCTvaoLocal] = useState(
+    localStorage.getItem("idSPCt") || "",
+  );
+  const muaNgay = () => {};
+  useEffect(() => {
+    localStorage.setItem("idSPCTCHon", JSON.stringify(IdSPCTvaoLocal));
+    localStorage.setItem("soLuong", JSON.stringify(luuSLvaoLocal));
+  }, [IdSPCTvaoLocal, luuSLvaoLocal]);
 
   return (
     <>
@@ -193,12 +205,14 @@ export default function ChonSizeVSMauSac({ id }) {
               >
                 Thêm vào giỏ hàng
               </button>
-              <button
-                className="h-[50px] w-[250px] rounded bg-orange-500 px-4 py-2 text-xl text-white hover:bg-orange-600"
-                onClick={() => console.log("Mua ngay")}
-              >
-                Mua ngay
-              </button>
+              <Link to="/muangay">
+                <button
+                  className="h-[50px] w-[250px] rounded bg-orange-500 px-4 py-2 text-xl text-white hover:bg-orange-600"
+                  onClick={() => console.log("Mua ngay")}
+                >
+                  Mua ngay
+                </button>
+              </Link>
             </>
           )}
         </div>

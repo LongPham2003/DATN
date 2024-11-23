@@ -1,7 +1,6 @@
 import { useParams } from "react-router-dom";
 import AnhSP from "./component/Anh";
 import ChonSizeVSMauSac from "./component/ThongTinSPvaChonSizeMS";
-import ThongTinKhac from "./component/CacThongTinKhac";
 
 export default function ChiTietSanPham() {
   const id = useParams();

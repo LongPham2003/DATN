@@ -41,6 +41,7 @@ import ChiTietSanPham from "./pages/client/ChiTietSanPham/ChiTietSanPham.jsx";
 import HoaDonChiTiet from "./pages/admin/QuanLiHoaDon/HoaDonChiTiet.jsx";
 import ThongTinCaNhan from "./pages/client/ThongTinCaNhan/ThongTinCaNhan.jsx";
 import DatHang from "./pages/client/DatHang/DatHang.jsx";
+import MuaNgay from "./pages/client/MuaNgay/MuaNgay.jsx";
 
 function App() {
   return (
@@ -111,6 +112,17 @@ function App() {
                     <title>Đặt hàng</title>
                   </Helmet>
                   <DatHang />
+                </>
+              }
+            />
+            <Route
+              path="muangay"
+              element={
+                <>
+                  <Helmet>
+                    <title>Mua ngay</title>
+                  </Helmet>
+                  <MuaNgay />
                 </>
               }
             />
