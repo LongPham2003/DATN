@@ -295,13 +295,10 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
         hoaDon.setIdKhachHang(khachHang);
         hoaDon.setSoDienThoai(khachHang.getSdt());
         hoaDon.setDiaChiGiaoHang(diaChi.getDiaChiChiTiet());
-<<<<<<< HEAD
         hoaDon.setPhuongThucGiaoHang("giao hang nhanh");
         hoaDon.setTrangThaiThanhToan(false); // Chưa thanh toán
-=======
         hoaDon.setPhuongThucGiaoHang("Giao Hàng");
         hoaDon.setTrangThaiDonHang(TrangThai.CHO_XAC_NHAN); // Chưa thanh toán
->>>>>>> 5d4b65c6f80ee4f3f5e90e99aad941f1a95c9d01
         // Khởi tạo tổng tiền, tiền được giảm và tiền phải trả bằng 0
         hoaDon.setTongTien(BigDecimal.ZERO);
         hoaDon.setTienDuocGiam(BigDecimal.ZERO);
@@ -352,14 +349,10 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
         hoaDon.setIdKhachHang(khachHang);
         hoaDon.setSoDienThoai(khachHang.getSdt());
         hoaDon.setDiaChiGiaoHang(diaChi.getDiaChiChiTiet());
-<<<<<<< HEAD
         hoaDon.setPhuongThucGiaoHang("giao hàng nhanh");
-
         hoaDon.setTrangThaiThanhToan(false);
-=======
         hoaDon.setPhuongThucGiaoHang("Giao Hàng");
         hoaDon.setTrangThaiDonHang(TrangThai.CHO_XAC_NHAN);
->>>>>>> 5d4b65c6f80ee4f3f5e90e99aad941f1a95c9d01
         hoaDon.setTongTien(BigDecimal.ZERO);
         hoaDon.setTienDuocGiam(BigDecimal.ZERO);
         hoaDon.setTienPhaiThanhToan(BigDecimal.ZERO);
@@ -428,14 +421,8 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
             throw new IllegalArgumentException("Phương thức thanh toán không hợp lệ.");
         }
 
-<<<<<<< HEAD
-     hoaDon.setPhuongThucThanhToan("Tiền mặt");
-=======
         hoaDon.setPhuongThucThanhToan("Tiền mặt");
         hoaDonRepo.save(hoaDon);
-
-
->>>>>>> 5d4b65c6f80ee4f3f5e90e99aad941f1a95c9d01
     }
 
     public BigDecimal apDungVoucher(BigDecimal tongTienDonHang, PhieuGiamGia phieuGiamGia) {
@@ -477,16 +464,22 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
         String maHoaDon = generateMaHoaDon();
         hoaDon.setMa(maHoaDon);
         hoaDon.setIdKhachHang(khachHang);
-        hoaDon.setSoDienThoai(khachHang.getSdt());
+        hoaDon.setTenKhachHang(khachHang.getHoTen());
+        // Kiểm tra số điện thoại của khách hàng
+        if (khachHang.getSdt() == null || khachHang.getSdt().isEmpty()) {
+            throw new AppException(ErrorCode.INVALID_PHONE_NUMBER);
+        }
+
+        // Kiểm tra địa chỉ giao hàng
         DiaChi diaChiMacDinh = diaChiRepo.getDiaChiByIdKhachHangAndDiaChiMacDinh(khachHang.getId());
+        if (diaChiMacDinh == null || diaChiMacDinh.getDiaChiChiTiet() == null || diaChiMacDinh.getDiaChiChiTiet().isEmpty()) {
+            throw new AppException(ErrorCode.INVALID_ADDRESS);
+        }
+
         hoaDon.setDiaChiGiaoHang(diaChiMacDinh.getDiaChiChiTiet());
-<<<<<<< HEAD
-        hoaDon.setPhuongThucGiaoHang("Giao Hang Nhanh ");
-        hoaDon.setTrangThaiDonHang(TrangThai.CHO_XAC_NHAN_DON);
-=======
         hoaDon.setPhuongThucGiaoHang("Giao Hàng");
         hoaDon.setTrangThaiDonHang(TrangThai.CHO_XAC_NHAN); // Chưa thanh toán
->>>>>>> 5d4b65c6f80ee4f3f5e90e99aad941f1a95c9d01
+        hoaDon.setTrangThaiThanhToan(false);
 
         // Khởi tạo tổng tiền, tiền được giảm và tiền phải trả bằng 0
         hoaDon.setTongTien(BigDecimal.ZERO);
@@ -560,11 +553,8 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
             hoaDonChiTiet.setIdSpct(sanPhamChiTiet);
             hoaDonChiTiet.setSoLuong(chiTietRequest.getSoLuong());
             hoaDonChiTiet.setDonGia(sanPhamChiTiet.getDonGia());
-<<<<<<< HEAD
-            hoaDonChiTiet.setTrangThai(TrangThai.CHO_XAC_NHAN_DON);
-=======
             hoaDonChiTiet.setTrangThai(TrangThai.CHO_XAC_NHAN);
->>>>>>> 5d4b65c6f80ee4f3f5e90e99aad941f1a95c9d01
+            hoaDonChiTiet.setTrangThai(TrangThai.CHO_XAC_NHAN);
 
             // Giảm số lượng tồn kho
             sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - chiTietRequest.getSoLuong());
@@ -603,11 +593,7 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon).orElseThrow(() -> new AppException(ErrorCode.BILL_NOT_FOUND));
         NhanVien nhanVien = getCurrentNhanVien();
         hoaDon.setIdNhanVien(nhanVien);
-<<<<<<< HEAD
-        if (!hoaDon.getTrangThaiDonHang().equals(TrangThai.CHO_XAC_NHAN_DON)) {
-=======
         if (!hoaDon.getTrangThaiDonHang().equals(TrangThai.CHO_XAC_NHAN)) {
->>>>>>> 5d4b65c6f80ee4f3f5e90e99aad941f1a95c9d01
             throw new AppException(ErrorCode.BILL_NOT_FOUND_h);
         }
         // Lấy danh sách chi tiết hóa đơn
@@ -618,11 +604,9 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
         hoaDonChiTietRepo.saveAll(chiTietList);
 
         // Cập nhật trạng thái thanh toán của hóa đơn
-<<<<<<< HEAD
-        hoaDon.setTrangThaiDonHang(TrangThai.DA_XAC_NHAN_DON);
-=======
         hoaDon.setTrangThaiDonHang(TrangThai.DA_XAC_NHAN);
->>>>>>> 5d4b65c6f80ee4f3f5e90e99aad941f1a95c9d01
+
+        hoaDon.setTrangThaiDonHang(TrangThai.DA_XAC_NHAN);
         hoaDonRepo.save(hoaDon);
         return converToHoaDonResponse(hoaDon);
     }
@@ -691,14 +675,12 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
         hoaDonResponse.setTienThua(formatCurrency(hoaDon.getTienThua()));
         hoaDonResponse.setPhuongThucThanhToan(hoaDon.getPhuongThucThanhToan());
         hoaDonResponse.setPhuongThucGiaoHang(hoaDon.getPhuongThucGiaoHang());
-<<<<<<< HEAD
         hoaDonResponse.setTrangThaiDonHang(hoaDon.getTrangThaiDonHang().getMoTa());
         hoaDonResponse.setTrangThaiThanhToan(hoaDon.getTrangThaiThanhToan());
-=======
         hoaDonResponse.setNgayTao(hoaDon.getCreatedAt());
-        hoaDonResponse.setTrangThai(hoaDon.getTrangThaiDonHang().getMoTa());
+        hoaDonResponse.setTrangThaiDonHang(hoaDon.getTrangThaiDonHang().getMoTa());
+        hoaDonResponse.setTrangThaiThanhToan(hoaDon.getTrangThaiThanhToan());
         hoaDonResponse.setTienShip(formatCurrency(hoaDon.getPhiVanChuyen()));
->>>>>>> 5d4b65c6f80ee4f3f5e90e99aad941f1a95c9d01
         return hoaDonResponse;
     }
 }
