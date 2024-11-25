@@ -1,9 +1,11 @@
 import { Button, InputNumber } from "antd";
+
 import axios from "./../../../../api/axiosConfig";
 import { useEffect, useState } from "react";
 import { Bounce, toast, ToastContainer, Zoom } from "react-toastify";
 import Header from "../../Header/Header";
 import { Link } from "react-router-dom";
+
 
 export default function ChonSizeVSMauSac({ id }) {
   const [listSize, setListSize] = useState([]);
@@ -19,14 +21,17 @@ export default function ChonSizeVSMauSac({ id }) {
   const [ThuongHieu, setThuongHieu] = useState(null);
   const [DeGiay, setDeGiay] = useState(null);
   const [ChatLieu, setChatLieu] = useState(null);
+
   const [soLuongMua, setSoLuongMua] = useState(1);
   const [Disable, setDisable] = useState(false);
+
 
   const ApiLayDanhSachSizeCuaSP = `http://localhost:8080/api/kichthuoc/kichthuoctheoidsp/${id}`;
   const ApiLayDanhMauSacCuaSP = `http://localhost:8080/api/mausac/mausactheoidsp/${id}`;
   const ApiLocLaySPCT = `http://localhost:8080/api/sanphamchitiet/loc?idSanPham=${id}`;
 
   const ApiLaySp = `http://localhost:8080/api/sanpham/SPClient?idSP=${id}`;
+
 
   const ApiThemSPCTVaoGioHang = `http://localhost:8080/api/giohang/themvaogiohangchitiet/${idSPCT}`;
 
@@ -63,6 +68,7 @@ export default function ChonSizeVSMauSac({ id }) {
         setIdSPCT(data[0].id); // Lấy `id` của phần tử đầu tiên
         setDonGia(data[0].donGia);
         setChatLieu(data[0].chatLieu);
+
         setDeGiay(data[0].deGiay);
         setThuongHieu(data[0].thuongHieu);
         setMa(data[0].ma);
@@ -73,6 +79,7 @@ export default function ChonSizeVSMauSac({ id }) {
 
         // Disable nút nếu không còn hàng
         setDisable(slt === 0);
+
       } else {
         setIdSPCT(null); // Không tìm thấy `id`
         setDonGia(null);
@@ -103,6 +110,7 @@ export default function ChonSizeVSMauSac({ id }) {
       timSPCT();
     }
   }, [idSize, idMauSac]);
+
 
   const [error, setError] = useState(""); // Biến lưu trạng thái lỗi
 
@@ -135,6 +143,7 @@ export default function ChonSizeVSMauSac({ id }) {
     localStorage.setItem("idSPCTCHon", JSON.stringify(IdSPCTvaoLocal));
     localStorage.setItem("soLuong", JSON.stringify(luuSLvaoLocal));
   }, [IdSPCTvaoLocal, luuSLvaoLocal]);
+
 
   return (
     <>
@@ -184,12 +193,14 @@ export default function ChonSizeVSMauSac({ id }) {
         <br />
         <InputNumber
           min={1}
+
           value={soLuongMua} // Sử dụng `value` để đồng bộ với `soLuongMua`
           size="large"
           className="mx-2 w-[200px]"
           onChange={handleChange} // Giữ logic xử lý thay đổi
         />
         {error && <p style={{ color: "red", marginTop: "5px" }}>{error}</p>}
+
       </div>
       <div className="flex gap-2">
         <div className="flex gap-2">
@@ -237,11 +248,13 @@ export default function ChonSizeVSMauSac({ id }) {
           )
         ) : null}
       </div>
+
       <ToastContainer
         position="top-center"
         autoClose={1000}
         transition={Zoom}
       />
+
     </>
   );
 }

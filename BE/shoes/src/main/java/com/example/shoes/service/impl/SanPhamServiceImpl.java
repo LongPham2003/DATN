@@ -189,8 +189,10 @@ public class SanPhamServiceImpl implements SanPhamService {
     }
 
     @Override
+
     public List<SanPhamClient> sanPhamClient(String tenSP, Integer idLoai, Integer kichThuoc, Integer idMauSac, BigDecimal donGiaMin, BigDecimal donGiaMax) {
         return sanPhamRepo.sanPhamClient(tenSP, idLoai,kichThuoc,idMauSac,donGiaMin,donGiaMax);
+
     }
 
 
