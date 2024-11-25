@@ -16,6 +16,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/api/nhanvien")
@@ -69,5 +71,10 @@ public class NhanVienController {
     public ApiResponse<NhanVien> delete(@PathVariable("id") Integer id) {
         return ApiResponse.<NhanVien>builder()
                 .result(nhanVienService.deleteNhanVien(id)).build();
+    }
+
+    @GetMapping("/email")
+    public ApiResponse<Optional<NhanVien>> findByEmail(@RequestParam("email") String email) {
+        return ApiResponse.<Optional<NhanVien>>builder().result(nhanVienService.findByEmial(email)).build();
     }
 }
