@@ -614,7 +614,6 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
 
     private void themSanPhamChiTietVaoHoaDon(HoaDon hoaDon, List<HoaDonChiTietRequest> chiTietRequests) {
         List<HoaDonChiTiet> hoaDonChiTietList = new ArrayList<>();
-        BigDecimal tongTien = hoaDon.getTongTien();
 
         for (HoaDonChiTietRequest chiTietRequest : chiTietRequests) {
             // Kiểm tra sản phẩm chi tiết
@@ -633,25 +632,27 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
             hoaDonChiTiet.setSoLuong(chiTietRequest.getSoLuong());
             hoaDonChiTiet.setDonGia(sanPhamChiTiet.getDonGia());
             hoaDonChiTiet.setTrangThai(TrangThai.CHO_XAC_NHAN_DON);
+
             // Giảm số lượng tồn kho
             sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - chiTietRequest.getSoLuong());
             sanPhamChiTietRepo.save(sanPhamChiTiet);
 
             // Thêm vào danh sách chi tiết hóa đơn
             hoaDonChiTietList.add(hoaDonChiTiet);
-            // Cập nhật tổng tiền hóa đơn
-            BigDecimal tongTien1 = hoaDon.getTongTien();
-            BigDecimal tongTienChiTiet = sanPhamChiTiet.getDonGia().multiply(BigDecimal.valueOf(chiTietRequest.getSoLuong()));
-            hoaDon.setTongTien(tongTien1.add(tongTienChiTiet));
 
-            // Tính lại tiền phải thanh toán
-            hoaDon.setTienPhaiThanhToan(hoaDon.getTongTien().subtract(hoaDon.getTienDuocGiam()));
+            // Cập nhật tổng tiền hóa đơn
+            BigDecimal tongTienChiTiet = sanPhamChiTiet.getDonGia().multiply(BigDecimal.valueOf(chiTietRequest.getSoLuong()));
+            hoaDon.setTongTien(hoaDon.getTongTien().add(tongTienChiTiet));
+
+            // Xóa sản phẩm chi tiết khỏi giỏ hàng chi tiết
+            gioHangChiTietRepo.deleteByIdSanPhamChiTiet(sanPhamChiTiet.getId());
         }
 
-        // Lưu danh sách hóa đơn chi tiết vào cơ sở dữ liệu
+        // Lưu danh sách hóa đơn chi tiết và hóa đơn
         hoaDonChiTietRepo.saveAll(hoaDonChiTietList);
         hoaDonRepo.save(hoaDon);
     }
+
 
 
     private NhanVien getCurrentNhanVien() {

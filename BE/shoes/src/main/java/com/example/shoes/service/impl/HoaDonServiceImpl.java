@@ -261,9 +261,10 @@ public class HoaDonServiceImpl implements HoaDonService {
 
         // Kiểm tra trạng thái hóa đơn
 
-        if (hoaDon.getTrangThai().equals(TrangThai.DA_THANH_TOAN)) {
-
-            throw new RuntimeException("Hóa đơn đã thanh toán, không thể hủy!");
+        // Kiểm tra trạng thái hóa đơn
+        if (!hoaDon.getTrangThai().equals(TrangThai.CHUA_THANH_TOAN) &&
+                !hoaDon.getTrangThai().equals(TrangThai.CHO_XAC_NHAN_DON)) {
+            throw new RuntimeException("Chỉ có thể xóa hóa đơn ở trạng thái CHUA THANH TOÁN hoặc CHỜ XÁC NHẬN!");
         }
 
         // Lấy danh sách chi tiết hóa đơn

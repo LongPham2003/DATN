@@ -4,7 +4,9 @@ import com.example.shoes.entity.GioHang;
 import com.example.shoes.entity.GioHangChiTiet;
 import com.example.shoes.entity.KhachHang;
 import com.example.shoes.entity.SanPhamChiTiet;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -39,5 +41,9 @@ public interface GioHangChiTietRepo extends JpaRepository<GioHangChiTiet, Intege
     SELECT * FROM datn.gio_hang_chi_tiet where id= :idGHCT
 """ , nativeQuery = true)
     GioHangChiTiet findByIdGHCT(@Param("idGHCT") Integer idGHCT);
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM GioHangChiTiet g WHERE g.idSanPhamChiTiet.id = :idSanPhamChiTiet")
+    void deleteByIdSanPhamChiTiet(@Param("idSanPhamChiTiet") Integer idSanPhamChiTiet);
 }
 
