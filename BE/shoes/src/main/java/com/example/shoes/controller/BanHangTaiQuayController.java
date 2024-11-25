@@ -135,41 +135,5 @@ private HoaDonRepo hoaDonRepo;
     }
 
 
-    @GetMapping("/theo-ngay")
-    public ApiResponse<List<BaoCaoThongKeResponse>> layBaoCaoTaiChinhTheoNgay(
-            @RequestParam LocalDate startDate,
-            @RequestParam LocalDate endDate) {
-        List<BaoCaoThongKeResponse> responses = hoaDonService.layBaoCaoTaiChinhTheoNgay(startDate, endDate);
-        return ApiResponse.<List<BaoCaoThongKeResponse>>builder()
-                .result(responses)
-                .build();
-    }
 
-    @GetMapping("/theo-thang")
-    public ApiResponse<List<BaoCaoThongKeResponse>> layBaoCaoTaiChinhTheoThang(
-            @RequestParam LocalDate startDate,
-            @RequestParam LocalDate endDate) {
-        List<BaoCaoThongKeResponse> responses =hoaDonService.layBaoCaoTaiChinhTheoThang(startDate, endDate);
-        return ApiResponse.<List<BaoCaoThongKeResponse>>builder()
-                .result(responses)
-                .build();
-    }
-
-    @GetMapping("/theo-nam")
-    public ApiResponse<List<BaoCaoThongKeResponse>> layBaoCaoTaiChinhTheoNam(
-            @RequestParam LocalDate startDate,
-            @RequestParam LocalDate endDate) {
-        List<BaoCaoThongKeResponse> responses = hoaDonService.layBaoCaoTaiChinhTheoNam(startDate, endDate);
-        return ApiResponse.<List<BaoCaoThongKeResponse>>builder()
-                .result(responses)
-                .build();
-    }
-
-    @GetMapping("/tong-quat")
-    public ApiResponse<BaoCaoThongKeResponse> layBaoCaoTaiChinhTongQuuat() {
-        BaoCaoThongKeResponse response = hoaDonService.layBaoCaoTaiChinhTongQuat();
-        return ApiResponse.<BaoCaoThongKeResponse>builder()
-                .result(response)
-                .build();
-    }
 }

@@ -19,9 +19,11 @@ import DiaCHiMacDinhKhachHang from "./DiaChiMacDinhKhachHang";
 import "react-toastify/dist/ReactToastify.css";
 import { ShoppingCartIcon } from "@heroicons/react/16/solid";
 import { ExportPDF, generatePDF } from "../XuatFilePDF/ExportPDF";
+import { getAllSPCTBH } from "./SanPhamService";
+import ThemMauSac from "../SanPham/ProductDetail/ThemMauSac.jsx";
 import ThanhToanCKTM from "./ThanhToanCKTM.jsx";
 import ThemKH from "./ThemKH.jsx";
-import { each } from "lodash";
+import { useNavigate } from "react-router-dom";
 
 export default function BanHangTaiQuay() {
   const [hoaDonFalse, setHoaDonFalse] = useState([]);
@@ -29,7 +31,9 @@ export default function BanHangTaiQuay() {
   const [openThanhToan, setOpenThanhToan] = useState(false);
   const [SPCTChuaThanhToan, setSPCTChuaThanhToan] = useState([]);
   const [selectedHoaDonId, setSelectedHoaDonId] = useState(null); // State lưu trữ id hóa đơn được chọn
-  const [diaChiGiaoHang, setdiaChiGiaoHang] = useState("");
+
+  const navigate = useNavigate();
+
   // chon giao hang
   const [phiGiaoHang, setPhiGiaoHang] = useState(0);
   const [giaoHang, setGiaoHang] = useState(false);
@@ -62,6 +66,7 @@ export default function BanHangTaiQuay() {
   const [tenKhachHang, setTenKhachHang] = useState(null);
   const [idKhachHang, setIdKhachHangDangChon] = useState();
   const [soDienThoai, setsoDienThoai] = useState(null);
+  const [diaChiGiaoHang, setdiaChiGiaoHang] = useState("");
   const [thaydoiSoLuongMua, setThayDoiSoLuongMua] = useState(0);
   const [idSPCTDangChon, setIdSPCTDangChon] = useState();
   const [soLuongTonCuaSPCT, setSoLuongTonCuaSPCT] = useState(0);
@@ -109,7 +114,10 @@ export default function BanHangTaiQuay() {
         const hd = await axios.get(
           `${ApiLayThongTinHoaDon}/${hoaDonList[0].id}`,
         );
+        // setMaHD(hd.data.result.ma);
       }
+
+      // console.log(hd.data.result.ma);
     } catch (error) {
       console.log("Lấy hóa đơn lỗi:", error);
     }
@@ -169,7 +177,6 @@ export default function BanHangTaiQuay() {
       console.log("Lấy chi tiết sản phẩm lỗi:", error);
     }
   };
-
   // Lấy số lượng tồn của sản phẩm
   const LaySoLuongTonCuaSPCT = async () => {
     const responseSoLuongTon = await axios.get(
@@ -246,56 +253,47 @@ export default function BanHangTaiQuay() {
   };
 
   const upDateSoLuongMua = async () => {
-    // Gửi yêu cầu lấy số lượng tồn kho của sản phẩm cụ thể
     const responseSoLuongTon = await axios.get(
       `${ApiLaySoLuongTonCuaSPCT}/${idSPCTDangChon}`,
     );
-    const SLT = responseSoLuongTon.data.result.soLuong; // Lưu số lượng tồn từ phản hồi API
-    const previousQuantity = thaydoiSoLuongMua; // Lưu số lượng hiện tại trước khi cập nhật
-
+    const SLT = responseSoLuongTon.data.result.soLuong;
+    const previousQuantity = thaydoiSoLuongMua; // Store the previous quantity
     try {
-      // Kiểm tra nếu số lượng muốn cập nhật vượt quá số lượng tồn
+      // Check if the quantity to update exceeds the available stock
       if (thaydoiSoLuongMua > SLT) {
-        console.log(SLT); // Log số lượng tồn để debug
+        console.log(SLT);
         toast.error(
           `Số lượng tồn của sản phẩm còn ${SLT} sản phẩm. Không thể cập nhật!`,
         );
-        return; // Thoát khỏi hàm nếu điều kiện không thỏa mãn
+        return; // Exit the function if the condition is met
       }
 
-      // Gửi yêu cầu cập nhật số lượng sản phẩm trong hóa đơn
       await axios.put(`${ApiUpdateSoLuongSPTrongHoaDon}/${selectedHoaDonId}`, {
         idSpct: idSPCTDangChon,
         soLuong: thaydoiSoLuongMua,
       });
 
-      // Sau khi cập nhật, kiểm tra lại số lượng tồn của sản phẩm
+      // Check if SLT is -1 after the update
       const updatedResponseSoLuongTon = await axios.get(
         `${ApiLaySoLuongTonCuaSPCT}/${idSPCTDangChon}`,
       );
       const updatedSLT = updatedResponseSoLuongTon.data.result.soLuong;
-
-      // Nếu số lượng tồn cập nhật là -1, nghĩa là cập nhật không thành công
       if (updatedSLT === -1) {
         toast.error("Cập nhật không thành công, số lượng tồn không hợp lệ!");
-        setThayDoiSoLuongMua(previousQuantity); // Khôi phục lại số lượng trước đó
-        return; // Thoát khỏi hàm nếu điều kiện không hợp lệ
+        setThayDoiSoLuongMua(previousQuantity); // Restore previous quantity
+        return; // Exit the function if SLT is -1
       }
 
-      // Thực hiện đồng thời các thao tác cập nhật thông tin liên quan
       await Promise.all([
-        LayChiTietSanPham(), // Cập nhật lại danh sách sản phẩm trong giỏ hàng
+        LayChiTietSanPham(), // Cập nhật giỏ hàng sau khi thêm sản phẩm
         LayThongTinThanhToanCuaHoaDon(), // Cập nhật thông tin hóa đơn mới, bao gồm tổng tiền
-        LaySoLuongTonCuaSPCT(), // Lấy lại số lượng tồn kho của sản phẩm cụ thể
+        LaySoLuongTonCuaSPCT(),
       ]);
-
-      // Thông báo thành công
       toast.success("Cập nhật thành công");
     } catch (error) {
-      // Log lỗi nếu có và khôi phục lại số lượng trước đó
       console.log(error);
-      setThayDoiSoLuongMua(previousQuantity); // Khôi phục số lượng nếu gặp lỗi
-      toast.error("Cập nhật thất bại"); // Hiển thị thông báo lỗi
+      setThayDoiSoLuongMua(previousQuantity); // Restore previous quantity on error
+      toast.error("Cập nhật thất bại");
     }
   };
 
@@ -381,8 +379,7 @@ export default function BanHangTaiQuay() {
       LayThongTinThanhToanCuaHoaDon();
     } catch (error) {
       console.log(error);
-
-      toast.error("Đơn hàng k đủ điều kiện ");
+      toast.error("Có lỗi xảy ra");
       setIsSelectDisabled(false);
       idPhieuGiamGiaDangChon(null);
     }
@@ -394,6 +391,20 @@ export default function BanHangTaiQuay() {
       setIsSelectDisabled(true); // Disable Select sau khi gọi hàm
     }
   };
+
+  //Them VND
+  function formatTien(value) {
+    // Loại bỏ dấu phân cách thập phân và chuyển thành số
+    const parsedValue = parseFloat(value.toString().replace(",", "."));
+
+    // Kiểm tra nếu không phải số hợp lệ
+    if (isNaN(parsedValue)) {
+      return "0 VNĐ"; // Giá trị mặc định nếu `value` không hợp lệ
+    }
+
+    // Định dạng số và thêm đơn vị VNĐ
+    return parsedValue.toLocaleString("vi-VN") + " VNĐ";
+  }
 
   //Xoa Phieu Giam Gia
   const XoaPhieuGiamGiaKhoiHoaDon = async () => {
@@ -544,24 +555,24 @@ export default function BanHangTaiQuay() {
     }
   }, [selectedHoaDonId, hoaDonFalse]);
 
+  // useEffect(() => {
+  //   if (idLonNhat) {
+  //     handleGeneratePDF(); // Gọi hàm tạo PDF khi idLonNhat đã được cập nhật
+  //   }
+  // }, [idLonNhat]);
+
   // hàm format lại định dạng khi gửi về be
   const formatCurrencyToNumber = (value) => {
-    return parseInt(value.replace(/[^\d]/g, ""));
+    // Đảm bảo giá trị là chuỗi trước khi sử dụng replace
+    const stringValue = String(value);
+
+    // Loại bỏ tất cả các ký tự không phải là số
+    const formattedValue = stringValue.replace(/[^\d]/g, "");
+
+    // Chuyển chuỗi thành số và trả về kết quả
+    return parseInt(formattedValue, 10);
   };
 
-  //Them VND
-  function formatTien(value) {
-    // Loại bỏ dấu phân cách thập phân và chuyển thành số
-    const parsedValue = parseFloat(value.toString().replace(",", "."));
-
-    // Kiểm tra nếu không phải số hợp lệ
-    if (isNaN(parsedValue)) {
-      return "0 VNĐ"; // Giá trị mặc định nếu `value` không hợp lệ
-    }
-
-    // Định dạng số và thêm đơn vị VNĐ
-    return parsedValue.toLocaleString("vi-VN") + " VNĐ";
-  }
   // thanh toán vnpay
   const handlePaymentClick = async () => {
     try {
@@ -598,6 +609,10 @@ export default function BanHangTaiQuay() {
               phiVanChuyen: phiGiaoHang,
               diaChiChiTiet: diaChiGiaoHang,
               ngayDuKien: ngayDuKien,
+              soDienThoai: soDienThoai,
+              tenKhachHang: tenKhachHang,
+              tienPhaiThanhToan:
+                formatCurrencyToNumber(tienPhaiThanhToan) + phiGiaoHang,
             },
           )
           .then((response) => {
@@ -606,6 +621,7 @@ export default function BanHangTaiQuay() {
             toast.success("Cập nhật thành công");
             LayDanhSachHoaDonChuaThanhToan();
             setGiaoHang(false);
+            navigate(0);
           })
           .catch((error) => {
             setError(error.response.data.message);
@@ -616,6 +632,7 @@ export default function BanHangTaiQuay() {
       },
     });
   };
+
   return (
     <>
       <div className="mx-2 flex max-h-screen overflow-y-hidden font-mono">
@@ -708,8 +725,7 @@ export default function BanHangTaiQuay() {
                             {SPCT.tenSanPham} <br />
                             {SPCT.maSPCT} [{SPCT.kichThuoc} - {SPCT.mauSac}]
                             <br />
-                            {formatTien(SPCT.donGia)}
-                            {/* {SPCT.donGia} */}
+                            {SPCT.donGia}
                           </td>
 
                           <td className="text-center">
@@ -738,9 +754,9 @@ export default function BanHangTaiQuay() {
                                     setThayDoiSoLuongMua(SPCT.soLuong);
                                     // LaySoLuongTonCuaSPCT();
                                   }}
-                                  onChange={(e) => {
+                                  onChange={(event) => {
                                     setThayDoiSoLuongMua(
-                                      Number(e.target.value),
+                                      Number(event.target.value),
                                     );
                                   }}
                                   onKeyDown={(e) => {
@@ -768,13 +784,13 @@ export default function BanHangTaiQuay() {
                             </div>
                           </td>
 
-                          <td>{formatTien(SPCT.donGia * SPCT.soLuong)}</td>
+                          <td>{SPCT.donGia * SPCT.soLuong}</td>
                           <td>
                             <Popconfirm
-                              title="Xóa khỏi giỏ hàng"
-                              description="Bạn có chắc cahwns không?"
-                              okText="Có"
-                              cancelText="Hủy"
+                              title="Delete the task"
+                              description="Are you sure to delete this task?"
+                              okText="Yes"
+                              cancelText="No"
                               onConfirm={(e) => {
                                 e.preventDefault();
                                 XoaSPKhoiGioHang(SPCT.idSpct);
@@ -834,18 +850,11 @@ export default function BanHangTaiQuay() {
                               onMouseEnter={() =>
                                 setIdPhieuGiamGiaDangChon(pgg.id)
                               }
-                              onMouseLeave={() =>
-                                setIdPhieuGiamGiaDangChon(null)
-                              }
                             >
                               <span>tên: {pgg.tenVoucher}</span> <br />
                               <span>
                                 Mức giảm: {pgg.mucGiam} {pgg.hinhThucGiam}
-                              </span>
-                              <br />
-                              <span>
-                                Hóa đơn tối thiểu:{pgg.dieuKienGiamGia}
-                              </span>
+                              </span>{" "}
                               <br />
                               <span>Giảm tối đa: {pgg.giamToiDa} VNĐ</span>
                               <br />
@@ -892,7 +901,10 @@ export default function BanHangTaiQuay() {
                   <div>
                     <Switch
                       value={giaoHang}
-                      onClick={() => setGiaoHang(!giaoHang)}
+                      onClick={() => {
+                        setGiaoHang(!giaoHang);
+                        setPhiGiaoHang(0);
+                      }}
                     />
                   </div>
                 </div>
@@ -901,7 +913,9 @@ export default function BanHangTaiQuay() {
 
               <div className="my-4 flex items-center justify-between">
                 <div>Thành tiền</div>
-                <div className="text-red-500">{tienPhaiThanhToan} VND</div>
+                <div className="text-red-500">
+                  {formatCurrencyToNumber(tienPhaiThanhToan) + phiGiaoHang} VNĐ
+                </div>
               </div>
 
               <div className="mx-3 mt-2">
@@ -1124,8 +1138,8 @@ export default function BanHangTaiQuay() {
       )}
 
       <ToastContainer
-        position="top-center"
-        autoClose={2000}
+        position="top-right"
+        autoClose={1000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick

@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Setter
@@ -25,8 +26,9 @@ public class HoaDonResponse {
     private String tienThua;
     private String phuongThucThanhToan;
     private String phuongThucGiaoHang;
-    private LocalDate ngayTao;
+    private LocalDateTime ngayTao;
     private String trangThai;
+    private String tienShip;
 }
 
 

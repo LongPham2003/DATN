@@ -9,10 +9,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
+@Repository
 public interface HoaDonChiTietRepo extends JpaRepository<HoaDonChiTiet, Integer> {
     // Tìm chi tiết hóa đơn theo hóa đơn và sản phẩm chi tiết
     @Query("SELECT hdc FROM HoaDonChiTiet hdc WHERE hdc.idHoaDon = ?1 AND hdc.idSpct = ?2")

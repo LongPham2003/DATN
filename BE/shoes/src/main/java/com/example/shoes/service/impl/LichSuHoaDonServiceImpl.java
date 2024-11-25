@@ -1,5 +1,6 @@
 package com.example.shoes.service.impl;
 
+import com.example.shoes.dto.lichsuhoadon.response.LSHD;
 import com.example.shoes.dto.lichsuhoadon.response.LichSuHoaDonResponse;
 import com.example.shoes.entity.LichSuHoaDon;
 import com.example.shoes.repository.LichSuHoaDonRepo;
@@ -24,12 +25,18 @@ public class LichSuHoaDonServiceImpl implements LichSuHoaDonService {
         // Trả về danh sách response
         return lichSuHoaDonResponses ;
     }
+
+    @Override
+    public List<LSHD> getByBill(Integer id) {
+        return lichSuHoaDonRepo.getByIdHoaDon(id);
+    }
+
     private LichSuHoaDonResponse converToResponse(LichSuHoaDon lichSuHoaDon) {
         LichSuHoaDonResponse lichSuHoaDonResponse=new LichSuHoaDonResponse();
         lichSuHoaDonResponse.setId(lichSuHoaDon.getId());
         lichSuHoaDonResponse.setIdHoaDon(lichSuHoaDon.getIdHoaDon().getId());
         lichSuHoaDonResponse.setMoTa(lichSuHoaDon.getMoTa());
-        lichSuHoaDonResponse.setThoiGian(lichSuHoaDon.getThoiGian());
+        lichSuHoaDonResponse.setTrangThai(lichSuHoaDon.getTrangThai());
         lichSuHoaDonResponse.setNguoiThucHien(lichSuHoaDon.getNguoiThucHien());
         return lichSuHoaDonResponse;
     }
