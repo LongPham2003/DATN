@@ -1,47 +1,30 @@
-import { Button, Input, Select } from "antd";
+import { Input, Select } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
 export default function ThongTinCaNhan() {
   const [email, setEmail] = useState("");
   const [khachHang, setKhachHang] = useState({});
-  const [role, setRole] = useState();
 
   useEffect(() => {
     const ten = localStorage.getItem("email");
-    const r = localStorage.getItem("role");
     setEmail(ten);
-    setRole(r);
   }, []);
   useEffect(() => {
     const ApiTimKhTheoEmail = `http://localhost:8080/client/khachhang/timtheoEmail?email=${email}`;
-    const ApiTimNVquamail = `http://localhost:8080/api/nhanvien/email?email=${email}`;
-    if (role === "ROLE_KHACHHANG") {
-      async function fetchKhachHang() {
-        try {
-          const response = await axios.get(ApiTimKhTheoEmail);
-          setKhachHang(response.data);
-          console.log(response.data);
-        } catch (error) {
-          console.error("Error fetching customer data:", error);
-        }
+
+    async function fetchKhachHang() {
+      try {
+        const response = await axios.get(ApiTimKhTheoEmail);
+        setKhachHang(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error("Error fetching customer data:", error);
       }
-      if (email) {
-        fetchKhachHang();
-      }
-    } else {
-      async function fetchKhachHang() {
-        try {
-          const response = await axios.get(ApiTimNVquamail);
-          setKhachHang(response.data.result);
-          console.log(response.data);
-        } catch (error) {
-          console.error("Error fetching customer data:", error);
-        }
-      }
-      if (email) {
-        fetchKhachHang();
-      }
+    }
+
+    if (email) {
+      fetchKhachHang();
     }
   }, [email]);
   return (
@@ -67,8 +50,8 @@ export default function ThongTinCaNhan() {
               value={khachHang.gioiTinh || ""}
               size="large"
             >
-              <Select.Option value="Nam">Nam</Select.Option>
-              <Select.Option value="Nu">Nữ</Select.Option>
+              <Select.Option value="Nam">Male</Select.Option>
+              <Select.Option value="Nu">Female</Select.Option>
             </Select>
           </div>
           <div>
@@ -97,17 +80,8 @@ export default function ThongTinCaNhan() {
           </div>
         </div>
       </div>
-      <div className="my-3 flex justify-center">
-        <Button style={{ width: "150px", height: "50px", fontSize: "18px" }}>
-          Cap nhat
-        </Button>
-      </div>
       <div className="my-10 flex justify-center text-2xl font-semibold">
-        {role === "ROLE_KHACHHANG" ? (
-          <span>Danh sach dia chi giao hang</span>
-        ) : (
-          ""
-        )}
+        <span>Danh sach dia chi giao hang</span>
       </div>
       <div></div>
     </>

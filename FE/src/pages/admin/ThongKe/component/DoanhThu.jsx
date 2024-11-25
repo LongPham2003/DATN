@@ -28,7 +28,7 @@ export default function DoanhThu() {
       setTheoTuan(tuan.data);
       setTheoThang(thang.data);
       setTheoNam(nam.data);
-      setSelectedDate("")
+      setSelectedDate("");
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -40,7 +40,7 @@ export default function DoanhThu() {
   const handleDateChange = (date) => {
     setSelectedDate(date);
     if (date) {
-      const formattedDate = date.toISOString().split('T')[0];
+      const formattedDate = date.toISOString().split("T")[0];
       fetchData(formattedDate);
     }
   };
@@ -60,8 +60,14 @@ export default function DoanhThu() {
   return (
     <>
       <div className="mb-4 ml-10 flex gap-3">
-        <DatePicker className="border-blue-600" onChange={handleDateChange} value={selectedDate}/>
-        <Button className="border-blue-600" onClick={DoanhThu}>Hôm nay</Button>
+        <DatePicker
+          className="border-blue-600"
+          onChange={handleDateChange}
+          value={selectedDate}
+        />
+        <Button className="border-blue-600" onClick={DoanhThu}>
+          Hôm nay
+        </Button>
       </div>
       <div className="mx-10 flex h-auto gap-6">
         <div className="w-1/2">
@@ -69,7 +75,8 @@ export default function DoanhThu() {
           <div className="mb-4 h-[180px] rounded-md bg-blue-600 text-lg font-semibold text-white shadow drop-shadow-2xl">
             <div className="flex justify-center">Hom Nay</div>
             <div className="flex justify-center">
-              {theoNgay ? formatTien(theoNgay.tongTien) : "Loading..."}
+              {/* {theoNgay ? formatTien(theoNgay.tongTien) : "Loading..."} */}
+              {/* {theoNgay.tongTien} */}
             </div>
             <div className="mx-2 mt-12 flex justify-between gap-5">
               <div>San pham da ban</div>
@@ -91,7 +98,8 @@ export default function DoanhThu() {
           <div className="mb-4 h-[180px] rounded-md bg-blue-600 text-lg font-semibold text-white shadow drop-shadow-2xl">
             <div className="flex justify-center">Tuan Nay</div>
             <div className="flex justify-center">
-              {theoTuan ? formatTien(theoTuan.tongTien) : "Loading..."}
+              {/* {theoTuan ? formatTien(theoTuan.tongTien) : "Loading..."} */}
+              {theoTuan.tongTien}
             </div>
             <div className="mx-2 mt-12 flex justify-between gap-5">
               <div>San pham da ban</div>
@@ -115,7 +123,8 @@ export default function DoanhThu() {
           <div className="mb-4 h-[180px] rounded-md bg-blue-600 text-lg font-semibold text-white shadow drop-shadow-2xl">
             <div className="flex justify-center">Thang Nay</div>
             <div className="flex justify-center">
-              {theoThang ? formatTien(theoThang.tongTien) : "Loading..."}
+              {/* {theoThang ? formatTien(theoThang.tongTien) : "Loading..."} */}
+              {theoThang.tongTien}
             </div>
             <div className="mx-2 mt-12 flex justify-between gap-5">
               <div>San pham da ban</div>
@@ -138,7 +147,8 @@ export default function DoanhThu() {
             <div className="flex justify-center">Nam Nay</div>
             <div className="flex justify-center">
               {" "}
-              {theoNam ? formatTien(theoNam.tongTien) : "Loading..."}
+              {/* {theoNam ? formatTien(theoNam.tongTien) : "Loading..."} */}
+              {theoNam.tongTien}
             </div>
             <div className="mx-2 mt-12 flex justify-between gap-5">
               <div>San pham da ban</div>

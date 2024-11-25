@@ -147,11 +147,6 @@ public class NhanVienServiceImpl implements NhanVienService {
         return nhanVienRepo.findById(id).get();
     }
 
-    @Override
-    public Optional<NhanVien> findByEmial(String emial) {
-        return nhanVienRepo.findByEmail(emial);
-    }
-
     public String generatePass() {
         // Các ký tự để tạo mật khẩu
         String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";

@@ -7,7 +7,6 @@ import com.example.shoes.dto.nhanvien.request.NhanvienAddRequest;
 import com.example.shoes.entity.NhanVien;
 
 import java.util.List;
-import java.util.Optional;
 
 
 public interface NhanVienService {
@@ -17,5 +16,4 @@ public interface NhanVienService {
     NhanVien updateNhanVien(Integer id , NhanVienUpdateRequest request);
     NhanVien deleteNhanVien(Integer id);
     NhanVien getById(Integer id);
-    Optional<NhanVien> findByEmial(String emial);
 }

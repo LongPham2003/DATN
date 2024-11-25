@@ -74,9 +74,12 @@ public class HoaDon extends CrudByAt {
     @Column(name = "ten_khach_hang")
     private String tenKhachHang;
 
-    @Column(name = "trang_thai")
+    @Column(name = "trang_thai_don_hang")
     @Enumerated(EnumType.STRING)
-    private TrangThai trangThai;
+    private TrangThai trangThaiDonHang;
+
+    @Column(name = "trang_thai_thanh_toan")
+    private Boolean trangThaiThanhToan;
     // Thiết lập quan hệ OneToMany với HoaDonChiTiet
     @OneToMany(mappedBy = "idHoaDon", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<HoaDonChiTiet> hoaDonChiTiets; // Phương thức getHoaDonChiTiets() sẽ lấy danh sách chi tiết hóa đơn

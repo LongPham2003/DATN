@@ -498,8 +498,12 @@ export default function BanHangTaiQuay() {
       // Gọi hàm lấy ID lớn nhất sau khi thanh toán đã hoàn tất
       // await LayIdLonNhat(); // Gọi hàm này sau khi thanh toán thành công
       // Gọi hàm tạo PDF với ID hóa đơn
+
       setTimeout(() => {
         handleGeneratePDF();
+        setTimeout(() => {
+          window.location.reload();
+        }, 500);
       }, 900);
 
       // Xóa ID tạm thời sau 1 phút

@@ -41,6 +41,15 @@ const HoaDonChiTiet = () => {
   };
 
   // model update chờ giao
+  const [OpenModelXacNhan, setOpenModelXacNhan] = useState(false);
+  const openModalXacNhan = () => {
+    setOpenModelXacNhan(true);
+  };
+  const closeModalXacNhan = async () => {
+    setOpenModelXacNhan(false);
+  };
+
+  // model update chờ giao
   const [OpenModelChoGiao, setOpenModelChoGiao] = useState(false);
   const openModalChoGiao = () => {
     setOpenModelChoGiao(true);
@@ -111,6 +120,7 @@ const HoaDonChiTiet = () => {
 
   console.log(thanhToan);
   console.log(lichSuHoaDon);
+  console.log(hoaDon);
 
   const formatDate = (dateTimeString) => {
     const date = new Date(dateTimeString);
@@ -174,6 +184,35 @@ const HoaDonChiTiet = () => {
           })
           .catch((error) => {
             console.error("Lỗi khi cập nhật:", error);
+          });
+      },
+      onCancel() {
+        // Nếu người dùng hủy, có thể không cần làm gì cả
+      },
+    });
+  };
+  // xác nhận
+  const handleSubmitUpdateXacNhan = (e) => {
+    e.preventDefault(); // Ngăn chặn hành động mặc định của form
+    Modal.confirm({
+      title: "Xác nhận cập nhật",
+      content: "Bạn có chắc chắn muốn cập  không?",
+      onOk() {
+        axios
+          .post(`http://localhost:8080/api/hoadon/xacnhan/${id}`, {
+            ghiChu: ghiChu,
+          })
+          .then((response) => {
+            console.log("Cập nhật thành công:", response.data);
+            toast.success("Thành công");
+            closeModalXacNhan();
+            fillHoaDon();
+            fillHoaDonChiTiet();
+            fillLichSuHoaDon();
+          })
+          .catch((error) => {
+            closeModalXacNhan();
+            toast.error(error.response.data.message); // Hiển thị thông báo từ server
           });
       },
       onCancel() {
@@ -270,7 +309,10 @@ const HoaDonChiTiet = () => {
       <div className="mx-10 flex justify-between">
         <div>
           {hoaDon.trangThai === "Chờ Xác Nhận" && (
-            <button className="rounded bg-blue-500 px-2 py-1 text-white">
+            <button
+              onClick={openModalXacNhan}
+              className="rounded bg-blue-500 px-2 py-1 text-white"
+            >
               Xác nhận
             </button>
           )}
@@ -552,6 +594,36 @@ const HoaDonChiTiet = () => {
           </div>
         </div>
       )}
+      {OpenModelXacNhan && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="flex h-[300px] w-[400px] justify-between rounded-lg bg-white p-8">
+            <div className="font-bold">
+              <h3 className="mb-3">Cập nhật hóa đơn</h3>
+              <label className="pt-3">Ghi chú</label>
+              <textarea
+                onChange={(e) => setGhiChu(e.target.value)}
+                className="w-full rounded border p-2"
+                rows="4" // Số dòng hiển thị
+                placeholder="Nhập ghi chú tại đây..."
+              ></textarea>
+              <div className="mx-auto my-3 flex justify-center">
+                <button
+                  onClick={handleSubmitUpdateXacNhan}
+                  className="rounded bg-blue-500 px-2 py-2 text-white"
+                >
+                  Cập nhật
+                </button>
+              </div>
+            </div>
+            <button
+              onClick={closeModalXacNhan}
+              className="h-10 rounded bg-red-500 px-4 text-white hover:bg-red-600"
+            >
+              X
+            </button>
+          </div>
+        </div>
+      )}{" "}
     </div>
   );
 };
