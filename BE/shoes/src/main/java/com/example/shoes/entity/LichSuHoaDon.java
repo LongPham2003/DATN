@@ -1,5 +1,7 @@
 package com.example.shoes.entity;
 
+import com.example.shoes.entity.base.CrudByAt;
+import com.example.shoes.enums.TrangThai;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -13,7 +15,7 @@ import java.time.LocalDate;
 @Setter
 @Entity
 @Table(name = "lich_su_hoa_don")
-public class LichSuHoaDon {
+public class LichSuHoaDon extends CrudByAt {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -33,5 +35,9 @@ public class LichSuHoaDon {
 
     @Column(name = "nguoi_thuc_hien")
     private String nguoiThucHien;
+
+    @Column(name = "trang_thai")
+    @Enumerated(EnumType.STRING)
+    private TrangThai trangThai;
 
 }

@@ -185,7 +185,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         // Lấy danh sách hóa đơn chi tiết liên quan có trạng thái "CHO_XAC_NHAN" hoặc "CHUA_THANH_TOAN"
         List<HoaDonChiTiet> hoaDonChiTietList = hoaDonChiTietRepo.findByIdSpctAndTrangThaiIn(
                 sanPhamChiTiet,
-                List.of(TrangThai.CHO_XAC_NHAN_DON, TrangThai.CHUA_THANH_TOAN)
+                List.of(TrangThai.CHO_XAC_NHAN, TrangThai.CHO_XAC_NHAN)
         );
 
         // Lặp qua từng hóa đơn chi tiết để cập nhật đơn giá

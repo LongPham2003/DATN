@@ -14,11 +14,12 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
-
+@Repository
 public interface SanPhamChiTietRepo extends JpaRepository<SanPhamChiTiet, Integer> {
 
     //   loc san pham chi tiet theo ten thuoc tinh va danh sach spct

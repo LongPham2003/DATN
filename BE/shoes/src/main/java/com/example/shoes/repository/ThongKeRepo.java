@@ -16,15 +16,15 @@ public interface ThongKeRepo extends HoaDonRepo{
 SELECT 
     (SELECT SUM(hd.tong_tien) 
      FROM hoa_don hd 
-     WHERE hd.trang_thai = 'DA_THANH_TOAN' 
+     WHERE hd.trang_thai = 'HOAN_THANH' 
        AND DATE(hd.update_at) = :date) AS tongTien,
     COUNT(DISTINCT hd.id_khach_hang) AS tongKhachHang,
     SUM(COALESCE(hdct.so_luong, 0)) AS sanPhamBanDuoc,
     COUNT(DISTINCT CASE WHEN hd.id_khach_hang IS NULL THEN hd.id END) AS khachLe,
-    COUNT(CASE WHEN hd.trang_thai = 'DA_THANH_TOAN' THEN hd.id END) AS donThanhCong,
+    COUNT(CASE WHEN hd.trang_thai = 'HOAN_THANH' THEN hd.id END) AS donThanhCong,
     COUNT(CASE WHEN hd.trang_thai = 'HUY_DON' THEN hd.id END) AS donHuy,
     COALESCE(SUM(hd.tien_duoc_giam), 0) AS tongTienGiam,
-    COUNT(CASE WHEN hd.trang_thai = 'DA_THANH_TOAN' AND hd.id_phieu_giam_gia IS NOT NULL THEN hd.id END) AS tongDonApDungPhieuGiamGia
+    COUNT(CASE WHEN hd.trang_thai = 'HOAN_THANH' AND hd.id_phieu_giam_gia IS NOT NULL THEN hd.id END) AS tongDonApDungPhieuGiamGia
 FROM 
     hoa_don hd 
 LEFT JOIN 
@@ -37,15 +37,15 @@ WHERE
     @Query(value = """
         SELECT COALESCE((SELECT SUM(hd.tong_tien)
           FROM hoa_don hd
-          WHERE hd.trang_thai = 'DA_THANH_TOAN'
+          WHERE hd.trang_thai = 'HOAN_THANH'
             AND DATE(hd.update_at) = CURDATE()), 0) AS tongTien,
         COALESCE(COUNT(DISTINCT hd.id_khach_hang), 0) AS tongKhachHang,
         COALESCE(SUM(hdct.so_luong), 0) AS sanPhamBanDuoc,
         COALESCE(COUNT(DISTINCT CASE WHEN hd.id_khach_hang IS NULL THEN hd.id END), 0) AS khachLe,
-        COALESCE(COUNT(CASE WHEN hd.trang_thai = 'DA_THANH_TOAN' THEN hd.id END), 0) AS donThanhCong,
+        COALESCE(COUNT(CASE WHEN hd.trang_thai = 'HOAN_THANH' THEN hd.id END), 0) AS donThanhCong,
         COALESCE(COUNT(CASE WHEN hd.trang_thai = 'HUY_DON' THEN hd.id END), 0) AS donHuy,
         COALESCE(SUM(hd.tien_duoc_giam), 0) AS tongTienGiam,
-        COUNT(CASE WHEN hd.trang_thai = 'DA_THANH_TOAN' AND hd.id_phieu_giam_gia IS NOT NULL THEN hd.id END) AS tongDonApDungPhieuGiamGia
+        COUNT(CASE WHEN hd.trang_thai = 'HOAN_THANH' AND hd.id_phieu_giam_gia IS NOT NULL THEN hd.id END) AS tongDonApDungPhieuGiamGia
     FROM
         hoa_don hd
     LEFT JOIN
@@ -61,16 +61,16 @@ WHERE
                 SELECT
                     (SELECT SUM(hd.tong_tien)
                      FROM hoa_don hd
-                     WHERE hd.trang_thai = 'DA_THANH_TOAN'
+                     WHERE hd.trang_thai = 'HOAN_THANH'
                      AND WEEK(hd.update_at) = WEEK(CURDATE())
                      AND YEAR(hd.update_at) = YEAR(CURDATE())) AS tongTien,
                   COUNT(DISTINCT hd.id_khach_hang) AS tongKhachHang,
                   SUM(COALESCE(hdct.so_luong, 0)) AS sanPhamBanDuoc,
                   COUNT(DISTINCT CASE WHEN hd.id_khach_hang IS NULL THEN hd.id END) AS khachLe,
-                  COUNT(CASE WHEN hd.trang_thai = 'DA_THANH_TOAN' THEN hd.id END) AS donThanhCong,
+                  COUNT(CASE WHEN hd.trang_thai = 'HOAN_THANH' THEN hd.id END) AS donThanhCong,
                   COUNT(CASE WHEN hd.trang_thai = 'HUY_DON' THEN hd.id END) AS donHuy,
                   COALESCE(SUM(hd.tien_duoc_giam), 0) AS tongTienGiam,
-                  COUNT(CASE WHEN hd.trang_thai = 'DA_THANH_TOAN' AND hd.id_phieu_giam_gia IS NOT NULL THEN hd.id END) AS tongDonApDungPhieuGiamGia
+                  COUNT(CASE WHEN hd.trang_thai = 'HOAN_THANH' AND hd.id_phieu_giam_gia IS NOT NULL THEN hd.id END) AS tongDonApDungPhieuGiamGia
                 FROM
                     hoa_don hd
                 LEFT JOIN
@@ -86,16 +86,16 @@ WHERE
                SELECT
                      (SELECT SUM(hd.tong_tien)
                      FROM hoa_don hd
-                     WHERE hd.trang_thai = 'DA_THANH_TOAN'
+                     WHERE hd.trang_thai = 'HOAN_THANH'
                      AND MONTH(hd.update_at) = MONTH(CURDATE())
                      AND YEAR(hd.update_at) = YEAR(CURDATE())) AS tongTien,
                COUNT(DISTINCT hd.id_khach_hang) AS tongKhachHang,
                SUM(COALESCE(hdct.so_luong, 0)) AS sanPhamBanDuoc,
                COUNT(DISTINCT CASE WHEN hd.id_khach_hang IS NULL THEN hd.id END) AS khachLe,
-               COUNT(CASE WHEN hd.trang_thai = 'DA_THANH_TOAN' THEN hd.id END) AS donThanhCong,
+               COUNT(CASE WHEN hd.trang_thai = 'HOAN_THANH' THEN hd.id END) AS donThanhCong,
                COUNT(CASE WHEN hd.trang_thai = 'HUY_DON' THEN hd.id END) AS donHuy,
                COALESCE(SUM(hd.tien_duoc_giam), 0) AS tongTienGiam,
-               COUNT(CASE WHEN hd.trang_thai = 'DA_THANH_TOAN' AND hd.id_phieu_giam_gia IS NOT NULL THEN hd.id END) AS tongDonApDungPhieuGiamGia
+               COUNT(CASE WHEN hd.trang_thai = 'HOAN_THANH' AND hd.id_phieu_giam_gia IS NOT NULL THEN hd.id END) AS tongDonApDungPhieuGiamGia
                FROM
                hoa_don hd
                LEFT JOIN
@@ -112,15 +112,15 @@ DoanhThu doanhThuThang();
                 SELECT
                     (SELECT SUM(hd.tong_tien)
                      FROM hoa_don hd
-                     WHERE hd.trang_thai = 'DA_THANH_TOAN'
+                     WHERE hd.trang_thai = 'HOAN_THANH'
                        AND YEAR(hd.update_at) = YEAR(CURDATE())) AS tongTien,
                     COUNT(DISTINCT hd.id_khach_hang) AS tongKhachHang,
                     SUM(COALESCE(hdct.so_luong, 0)) AS sanPhamBanDuoc,
                     COUNT(DISTINCT CASE WHEN hd.id_khach_hang IS NULL THEN hd.id END) AS khachLe,
-                    COUNT(CASE WHEN hd.trang_thai = 'DA_THANH_TOAN' THEN hd.id END) AS donThanhCong,
+                    COUNT(CASE WHEN hd.trang_thai = 'HOAN_THANH' THEN hd.id END) AS donThanhCong,
                     COUNT(CASE WHEN hd.trang_thai = 'HUY_DON' THEN hd.id END) AS donHuy,
                     COALESCE(SUM(hd.tien_duoc_giam), 0) AS tongTienGiam,
-                    COUNT(CASE WHEN hd.trang_thai = 'DA_THANH_TOAN' AND hd.id_phieu_giam_gia IS NOT NULL THEN hd.id END) AS tongDonApDungPhieuGiamGia
+                    COUNT(CASE WHEN hd.trang_thai = 'HOAN_THANH' AND hd.id_phieu_giam_gia IS NOT NULL THEN hd.id END) AS tongDonApDungPhieuGiamGia
                 FROM
                     hoa_don hd
                 LEFT JOIN
@@ -143,7 +143,7 @@ DoanhThu doanhThuNam();
      JOIN hoa_don_chi_tiet hdct_inner ON spct_inner.id = hdct_inner.id_spct
      JOIN hoa_don hd_inner ON hd_inner.id = hdct_inner.id_hoa_don
      WHERE spct_inner.id_san_pham = sp.id
-       AND hd_inner.trang_thai = 'DA_THANH_TOAN'
+       AND hd_inner.trang_thai = 'HOAN_THANH'
      GROUP BY spct_inner.id
      ORDER BY SUM(hdct_inner.so_luong) DESC
      LIMIT 1) AS idSPCTBanChayNhat
@@ -154,7 +154,7 @@ DoanhThu doanhThuNam();
      JOIN hoa_don_chi_tiet hdct_inner ON spct_inner.id = hdct_inner.id_spct
      JOIN hoa_don hd_inner ON hd_inner.id = hdct_inner.id_hoa_don
      WHERE spct_inner.id_san_pham = sp.id
-       AND hd_inner.trang_thai = 'DA_THANH_TOAN'
+       AND hd_inner.trang_thai = 'HOAN_THANH'
      GROUP BY th.ten
      ORDER BY SUM(hdct_inner.so_luong) DESC
      LIMIT 1) AS tenThuongHieuBanChay,
@@ -172,7 +172,7 @@ JOIN
 JOIN
     hoa_don hd ON hd.id = hdct.id_hoa_don
 WHERE
-    hd.trang_thai = 'DA_THANH_TOAN'
+    hd.trang_thai = 'HOAN_THANH'
     AND DATE(hd.update_at) = CURDATE() -- Lọc theo ngày hôm nay
 GROUP BY
     sp.id, sp.ten_san_pham, l.ten
@@ -196,7 +196,7 @@ LIMIT 3;
      JOIN hoa_don_chi_tiet hdct_inner ON spct_inner.id = hdct_inner.id_spct
      JOIN hoa_don hd_inner ON hd_inner.id = hdct_inner.id_hoa_don
      WHERE spct_inner.id_san_pham = sp.id
-       AND hd_inner.trang_thai = 'DA_THANH_TOAN'
+       AND hd_inner.trang_thai = 'HOAN_THANH'
      GROUP BY spct_inner.id
      ORDER BY SUM(hdct_inner.so_luong) DESC
      LIMIT 1) AS idSPCTBanChayNhat
@@ -207,7 +207,7 @@ LIMIT 3;
      JOIN hoa_don_chi_tiet hdct_inner ON spct_inner.id = hdct_inner.id_spct
      JOIN hoa_don hd_inner ON hd_inner.id = hdct_inner.id_hoa_don
      WHERE spct_inner.id_san_pham = sp.id
-       AND hd_inner.trang_thai = 'DA_THANH_TOAN'
+       AND hd_inner.trang_thai = 'HOAN_THANH'
      GROUP BY th.ten
      ORDER BY SUM(hdct_inner.so_luong) DESC
      LIMIT 1) AS tenThuongHieuBanChay,
@@ -225,7 +225,7 @@ JOIN
 JOIN
     hoa_don hd ON hd.id = hdct.id_hoa_don
 WHERE
-    hd.trang_thai = 'DA_THANH_TOAN'
+    hd.trang_thai = 'HOAN_THANH'
     AND WEEK(hd.update_at, 1) = WEEK(CURDATE(), 1) -- Lọc theo tuần hiện tại
     AND YEAR(hd.update_at) = YEAR(CURDATE())       -- Lọc theo năm hiện tại
 GROUP BY
@@ -251,7 +251,7 @@ LIMIT 3;
      JOIN hoa_don_chi_tiet hdct_inner ON spct_inner.id = hdct_inner.id_spct
      JOIN hoa_don hd_inner ON hd_inner.id = hdct_inner.id_hoa_don
      WHERE spct_inner.id_san_pham = sp.id
-       AND hd_inner.trang_thai = 'DA_THANH_TOAN'
+       AND hd_inner.trang_thai = 'HOAN_THANH'
      GROUP BY spct_inner.id
      ORDER BY SUM(hdct_inner.so_luong) DESC
      LIMIT 1) AS idSPCTBanChayNhat
@@ -262,7 +262,7 @@ LIMIT 3;
      JOIN hoa_don_chi_tiet hdct_inner ON spct_inner.id = hdct_inner.id_spct
      JOIN hoa_don hd_inner ON hd_inner.id = hdct_inner.id_hoa_don
      WHERE spct_inner.id_san_pham = sp.id
-       AND hd_inner.trang_thai = 'DA_THANH_TOAN'
+       AND hd_inner.trang_thai = 'HOAN_THANH'
      GROUP BY th.ten
      ORDER BY SUM(hdct_inner.so_luong) DESC
      LIMIT 1) AS tenThuongHieuBanChay,
@@ -280,7 +280,7 @@ JOIN\s
 JOIN\s
     hoa_don hd ON hd.id = hdct.id_hoa_don
 WHERE\s
-    hd.trang_thai = 'DA_THANH_TOAN'
+    hd.trang_thai = 'HOAN_THANH'
     AND MONTH(hd.update_at) = MONTH(CURDATE()) -- Lọc theo tháng hiện tại
     AND YEAR(hd.update_at) = YEAR(CURDATE())   -- Lọc theo năm hiện tại
 GROUP BY\s
@@ -303,7 +303,7 @@ LIMIT 3;
      JOIN hoa_don_chi_tiet hdct_inner ON spct_inner.id = hdct_inner.id_spct
      JOIN hoa_don hd_inner ON hd_inner.id = hdct_inner.id_hoa_don
      WHERE spct_inner.id_san_pham = sp.id
-       AND hd_inner.trang_thai = 'DA_THANH_TOAN'
+       AND hd_inner.trang_thai = 'HOAN_THANH'
      GROUP BY spct_inner.id
      ORDER BY SUM(hdct_inner.so_luong) DESC
      LIMIT 1) AS idSPCTBanChayNhat
@@ -314,7 +314,7 @@ LIMIT 3;
      JOIN hoa_don_chi_tiet hdct_inner ON spct_inner.id = hdct_inner.id_spct
      JOIN hoa_don hd_inner ON hd_inner.id = hdct_inner.id_hoa_don
      WHERE spct_inner.id_san_pham = sp.id
-       AND hd_inner.trang_thai = 'DA_THANH_TOAN'
+       AND hd_inner.trang_thai = 'HOAN_THANH'
      GROUP BY th.ten
      ORDER BY SUM(hdct_inner.so_luong) DESC
      LIMIT 1) AS tenThuongHieuBanChay,
@@ -332,7 +332,7 @@ JOIN\s
 JOIN\s
     hoa_don hd ON hd.id = hdct.id_hoa_don
 WHERE\s
-    hd.trang_thai = 'DA_THANH_TOAN'
+    hd.trang_thai = 'HOAN_THANH'
     AND YEAR(hd.update_at) = YEAR(CURDATE()) -- Lọc theo năm hiện tại
 GROUP BY\s
     sp.id, sp.ten_san_pham, l.ten
@@ -353,7 +353,7 @@ SELECT \s
      JOIN hoa_don_chi_tiet hdct_inner ON spct_inner.id = hdct_inner.id_spct
      JOIN hoa_don hd_inner ON hd_inner.id = hdct_inner.id_hoa_don
      WHERE spct_inner.id_san_pham = sp.id
-       AND hd_inner.trang_thai = 'DA_THANH_TOAN'
+       AND hd_inner.trang_thai = 'HOAN_THANH'
        AND hd_inner.update_at BETWEEN :startdate AND :enddate -- Thêm điều kiện lọc theo khoảng ngày
      GROUP BY spct_inner.id
      ORDER BY SUM(hdct_inner.so_luong) DESC
@@ -364,7 +364,7 @@ SELECT \s
      JOIN hoa_don_chi_tiet hdct_inner ON spct_inner.id = hdct_inner.id_spct
      JOIN hoa_don hd_inner ON hd_inner.id = hdct_inner.id_hoa_don
      WHERE spct_inner.id_san_pham = sp.id
-       AND hd_inner.trang_thai = 'DA_THANH_TOAN'
+       AND hd_inner.trang_thai = 'HOAN_THANH'
        AND hd_inner.update_at BETWEEN :startdate AND :enddate -- Thêm điều kiện lọc theo khoảng ngày
      GROUP BY th.ten
      ORDER BY SUM(hdct_inner.so_luong) DESC
@@ -383,7 +383,7 @@ JOIN
 JOIN 
     hoa_don hd ON hd.id = hdct.id_hoa_don
 WHERE 
-    hd.trang_thai = 'DA_THANH_TOAN'
+    hd.trang_thai = 'HOAN_THANH'
     AND hd.update_at BETWEEN :startdate AND :enddate -- Lọc theo khoảng ngày
 GROUP BY 
     sp.id, sp.ten_san_pham, l.ten
@@ -399,7 +399,7 @@ LIMIT 3;
 
             SELECT\s
     weekdays.ngayTrongTuan,
-    COALESCE(SUM(CASE WHEN hd.trang_thai = 'DA_THANH_TOAN' THEN hd.tong_tien ELSE 0 END), 0) AS tongTien,
+    COALESCE(SUM(CASE WHEN hd.trang_thai = 'HOAN_THANH' THEN hd.tong_tien ELSE 0 END), 0) AS tongTien,
     COALESCE(SUM(COALESCE(hdct.so_luong, 0)), 0) AS sanPhamBanDuoc
 FROM\s
     (SELECT 'Monday' AS ngayTrongTuan UNION ALL

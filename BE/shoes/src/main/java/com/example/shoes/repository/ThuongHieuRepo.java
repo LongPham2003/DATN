@@ -10,9 +10,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
+@Repository
 public interface ThuongHieuRepo extends JpaRepository<ThuongHieu, Integer> {
     // Phương thức tìm kiếm  theo tên (không phân biệt chữ hoa thường)
     List<ThuongHieu> findByTenContainingIgnoreCase(String ten);

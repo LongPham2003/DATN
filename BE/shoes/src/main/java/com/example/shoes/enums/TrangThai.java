@@ -1,16 +1,13 @@
 package com.example.shoes.enums;
 
 public enum TrangThai {
-    CHUA_THANH_TOAN("Chưa thanh toán"),
-    TAO_MOI("Đơn vừa được tạo bởi khách hàng"),
-    DANG_GIAO("Đơn đang trên đường giao hàng  "),
-    GIAO_THANH_CONG("Đơn hàng đã được giao hàng thành công "),
-    CHO_XAC_NHAN_DON("Chờ xác nhận đơn"),// đơn hàng mới được tạo
-    DA_XAC_NHAN_DON("Đã xác nhận đơn"),// nv đã xác nhận chờ đơn vị vận chuyển
-    CHO_DVVC("Chờ đơn vị vẫn chuyển"),
+    CHO_XAC_NHAN("Chờ Xác Nhận"),
+    DA_XAC_NHAN("Đã xác nhận đơn"), // nv đã xác nhận chờ đơn vị vận chuyển
+    CHO_GIAO_HANG("Chờ đơn vị vẫn chuyển"),
+    DANG_GIAO("Đơn đang trên đường giao hàng"),
     XAC_NHAN_THANH_TOAN("Chờ xác nhận thanh toán"),
-    DA_THANH_TOAN("Đã thanh toán"),//
-
+    DA_THANH_TOAN("Đã thanh toán"), //
+    HOAN_THANH("Hoàn thành"),
     HUY_DON("Hủy đơn");
 
     private final String moTa;

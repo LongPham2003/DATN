@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
-import { Button, ButtonGroup, Radio } from "@material-tailwind/react";
+import { Radio } from "@material-tailwind/react";
 import AddProduct from "../Product/AddProduct";
 import ReactPaginate from "react-paginate";
 import axios from "../../../../api/axiosConfig";
-import { ToastContainer } from "react-toastify";
 import CustomDropdown from "../../../CustomDropdown";
-import DetailProduct from "../Product/DetailProduct"; // Import the DetailProduct component
 import { Link } from "react-router-dom";
 import SanPhamChiTiet from "./SanPhamChiTiet.jsx";
 
@@ -20,7 +18,6 @@ export default function ListProduct() {
   const [trangHienTai, setTrangHienTai] = useState(1);
   const [idLoai, setidLoai] = useState();
   const [tenTimKiem, setTenTimKiem] = useState("");
-
 
   const [selectedProductId, setSelectedProductId] = useState(null);
 
@@ -65,7 +62,7 @@ export default function ListProduct() {
       setTongSoTrang(
         response.data.result.totalPages === undefined
           ? 0
-          : response.data.result.totalPages
+          : response.data.result.totalPages,
       );
       // console.log(DetailPD.data);
     } catch (error) {
@@ -77,7 +74,6 @@ export default function ListProduct() {
     setIsModalOpen(true);
     setIsModalSuaOpen(false);
   };
-
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -99,7 +95,6 @@ export default function ListProduct() {
     setTrangHienTai(selectedPage.selected + 1);
   };
 
-
   // useEffect(() => {
   //   loadSanPham(trangHienTai);
   // }, [trangHienTai]);
@@ -115,12 +110,12 @@ export default function ListProduct() {
     setidLoai(""); // Đặt lại loại nếu cần
     // setLoaiTimKiem(""); // Đặt lại loại tìm kiếm nếu cần
     // Bỏ chọn radio button
-    const radioButtons = document.querySelectorAll("input[name=\"color\"]");
+    const radioButtons = document.querySelectorAll('input[name="color"]');
     radioButtons.forEach((radio) => {
       radio.checked = false; // Bỏ chọn tất cả radio button
     });
     // Xóa nội dung ô tìm kiếm
-    const searchInput = document.querySelector("input[type=\"text\"]");
+    const searchInput = document.querySelector('input[type="text"]');
     if (searchInput) {
       searchInput.value = ""; // Đặt lại giá trị ô tìm kiếm
     }
@@ -131,7 +126,6 @@ export default function ListProduct() {
   useEffect(() => {
     loadSanPham(trangHienTai, tenTimKiem, trangThaiTimKiem, idLoai);
   }, [trangHienTai, tenTimKiem, trangThaiTimKiem, idLoai]);
-
 
   return (
     <>
@@ -154,7 +148,6 @@ export default function ListProduct() {
               Loại:
             </label>
             <CustomDropdown
-
               options={loaiSelect}
               selectedValue={
                 idLoai
@@ -166,7 +159,7 @@ export default function ListProduct() {
           </div>
         </div>
 
-        <div className="mt-7 justify-center flex">
+        <div className="mt-7 flex justify-center">
           {/* <div className="items-center justify-start">
             <label htmlFor="">Danh mục:</label>
             <select className="ml-9 h-[44px] w-[500px] rounded-md border-2 border-gray-300 p-2 outline-none transition-colors duration-300 hover:border-blue-500 focus:border-yellow-500">
@@ -178,7 +171,7 @@ export default function ListProduct() {
             </select>
           </div> */}
 
-          <div className=" flex items-center ">
+          <div className="flex items-center">
             <label className="mr-3 text-xl">Trạng thái:</label>
             Đang kinh doanh
             <Radio
@@ -202,7 +195,7 @@ export default function ListProduct() {
               className="mt-10 h-10 w-32 rounded-md bg-red-400 font-semibold text-white transition-colors duration-300 hover:bg-red-600 focus:bg-red-700 active:bg-red-300" // Thêm margin-left để tạo khoảng cách
               // Gọi hàm reset khi nhấn nút
             >
-              Reset
+              Làm mới
             </button>
           </div>
         </div>
@@ -227,66 +220,70 @@ export default function ListProduct() {
               <div className="">
                 <table className="min-w-full text-left text-sm font-light">
                   <thead className="bg-blue-700 text-xl font-medium text-white">
-                  <tr>
-                    <th className="w-10 px-6 py-4">STT</th>
-                    <th className="w-14 px-6 py-4">Mã</th>
-                    <th className="w-52 px-6 py-4">Tên</th>
-                    <th className="w-52 px-6 py-4">Loại</th>
-                    <th className="w-52 px-6 py-4">Ngày tạo</th>
-                    <th className="w-52 px-6 py-4">Số lượng tồn</th>
-                    <th className="w-52 px-6 py-4">Trạng thái</th>
-                    <th className="px-6 py-4">Hành động</th>
-                  </tr>
+                    <tr>
+                      <th className="w-10 px-6 py-4">STT</th>
+                      <th className="w-14 px-6 py-4">Mã</th>
+                      <th className="w-52 px-6 py-4">Tên</th>
+                      <th className="w-52 px-6 py-4">Loại</th>
+                      <th className="w-52 px-6 py-4">Ngày tạo</th>
+                      <th className="w-52 px-6 py-4">Số lượng tồn</th>
+                      <th className="w-52 px-6 py-4">Trạng thái</th>
+                      <th className="px-6 py-4">Hành động</th>
+                    </tr>
                   </thead>
                   <tbody>
-                  {danhSachSanPham.map((sp, index) => (
-                    <tr
-                      key={sp.id}
-                      className="border-b border-neutral-950 text-xl font-medium"
-                    >
-                      <td className="px-6 py-4">{index + 1}</td>
-                      <td className="px-6 py-4">{sp.ma}</td>
-                      <td className="px-6 py-4">{sp.tenSanPham}</td>
-                      <td className="px-6 py-4">{sp.tenLoai}</td>
-                      <td className="px-6 py-4">{sp.ngayTao}</td>
-                      <td className="px-6 py-4">{sp.soLuongTon}</td>
-                      <td className="px-6 py-4">
-                        {sp.trangThai ? "Bán" : "Không bán"}
-                      </td>
-                      <td className="px-6 py-4">
-                        {/* <button>Chi tiet</button> */}
-                        {/* Xem detail */}
-                        <div className="flex gap-4">
-                          <button className="rounded bg-blue-500 px-2 py-1 text-white"
-                                  onClick={() => openSuaModal(sp.id)}>Sửa
+                    {danhSachSanPham.map((sp, index) => (
+                      <tr
+                        key={sp.id}
+                        className="border-b border-neutral-950 text-xl font-medium"
+                      >
+                        <td className="px-6 py-4">{index + 1}</td>
+                        <td className="px-6 py-4">{sp.ma}</td>
+                        <td className="px-6 py-4">{sp.tenSanPham}</td>
+                        <td className="px-6 py-4">{sp.tenLoai}</td>
+                        <td className="px-6 py-4">{sp.ngayTao}</td>
+                        <td className="px-6 py-4">{sp.soLuongTon}</td>
+                        <td className="px-6 py-4">
+                          {sp.trangThai
+                            ? "Đang kinh doanh"
+                            : "Ngừng Kinh Doanh"}
+                        </td>
+                        <td className="px-6 py-4">
+                          {/* <button>Chi tiet</button> */}
+                          {/* Xem detail */}
+                          <div className="flex gap-4">
+                            <button
+                              className="rounded bg-blue-500 px-2 py-1 text-white"
+                              onClick={() => openSuaModal(sp.id)}
+                            >
+                              Sửa
+                            </button>
 
-                          </button>
-
-                          <button className="rounded bg-blue-500 px-2 py-1 text-white">
-                            <Link to={`/admin/chitietsanpham/${sp.id}`}>
-                              <div className="flex gap-2 transition-transform duration-500 hover:scale-125">
-                                <span>Chi tiết</span>
-                              </div>
-                            </Link>
-                          </button>
-                          <button className="rounded bg-blue-500 px-2 py-1 text-white">
-                            <Link to={`/admin/themsanphamchitiet/${sp.id}`}>
-                              <span>Thêm SPCT</span>
-                            </Link>
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                  {emptyRows > 0 &&
-                    Array.from({ length: emptyRows }).map((_, index) => (
-                      <tr key={`empty-${index}`} style={{ height: "61px" }}>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                            <button className="rounded bg-blue-500 px-2 py-1 text-white">
+                              <Link to={`/admin/chitietsanpham/${sp.id}`}>
+                                <div className="flex gap-2 transition-transform duration-500 hover:scale-125">
+                                  <span>Chi tiết</span>
+                                </div>
+                              </Link>
+                            </button>
+                            <button className="rounded bg-blue-500 px-2 py-1 text-white">
+                              <Link to={`/admin/themsanphamchitiet/${sp.id}`}>
+                                <span>Thêm SPCT</span>
+                              </Link>
+                            </button>
+                          </div>
+                        </td>
                       </tr>
                     ))}
+                    {emptyRows > 0 &&
+                      Array.from({ length: emptyRows }).map((_, index) => (
+                        <tr key={`empty-${index}`} style={{ height: "61px" }}>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                        </tr>
+                      ))}
                   </tbody>
                 </table>
                 {tongSoTrang > 1 && (
@@ -331,7 +328,6 @@ export default function ListProduct() {
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="h-[600px] w-[800px] rounded-lg bg-white p-8">
-
             <AddProduct />
             <button
               onClick={closeModal}
@@ -344,9 +340,12 @@ export default function ListProduct() {
       )}
 
       {isModalSuaOpen && (
-        <div className="fixed inset-0  flex items-center justify-center bg-black bg-opacity-50">
-          <div className="h-[750px] w-[800px]  rounded-lg bg-white p-8">
-            <SanPhamChiTiet productId={selectedProductId} closeModal={closeSuaModal} />
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="h-[750px] w-[800px] rounded-lg bg-white p-8">
+            <SanPhamChiTiet
+              productId={selectedProductId}
+              closeModal={closeSuaModal}
+            />
             <button
               onClick={closeSuaModal}
               className="mt-4 rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600"

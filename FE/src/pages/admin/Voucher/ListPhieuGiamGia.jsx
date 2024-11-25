@@ -66,6 +66,13 @@ export default function ListPhieuGiamGia() {
     // Dọn dẹp interval khi component unmount
     return () => clearInterval(intervalId);
   }, [trangHienTai, tenVoucher, added, trangThai, ngayBatDau, ngayKetThuc]);
+
+  const handleLamMoi = () => {
+    setTrangThai(null);
+    setTenVoucher("");
+    setNgayBatDau("");
+    setNgayKetThuc("");
+  };
   return (
     <div className="p-4">
       <h1 className="mb-4 text-2xl font-bold">Quản Lý Phiếu Giảm Giá</h1>
@@ -83,6 +90,7 @@ export default function ListPhieuGiamGia() {
               placeholder="Nhập tên hoặc mã Phiếu Giảm Giá..."
               className="w-full rounded border border-gray-300 p-2"
               onChange={(event) => setTenVoucher(event.target.value)}
+              value={tenVoucher}
             />
           </div>
 
@@ -94,6 +102,7 @@ export default function ListPhieuGiamGia() {
               name="trangThai"
               id="trangThai"
               className="w-full rounded border border-gray-300 p-2"
+              value={trangThai}
               onChange={(e) => {
                 e.target.value === ""
                   ? setTrangThai(null)
@@ -115,6 +124,7 @@ export default function ListPhieuGiamGia() {
               placeholder="Nhập tên hoặc mã Phiếu Giảm Giá..."
               className="w-full rounded border border-gray-300 p-2"
               onChange={handleNgayBatDauChange}
+              value={ngayBatDau}
             />
           </div>
 
@@ -125,9 +135,16 @@ export default function ListPhieuGiamGia() {
               placeholder="Nhập tên hoặc mã Phiếu Giảm Giá..."
               className="w-full rounded border border-gray-300 p-2"
               onChange={handleNgayKetThucChange}
+              value={ngayKetThuc}
             />
           </div>
         </div>
+        <button
+          onClick={handleLamMoi}
+          className="mx-auto flex rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-600"
+        >
+          Làm mới
+        </button>
       </div>
 
       {/* Danh sách  */}

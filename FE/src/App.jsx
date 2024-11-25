@@ -38,6 +38,7 @@ import TrangChu from "./pages/client/TrangChu/TrangChu.jsx";
 import GioHang from "./pages/client/GioHang/GioHang.jsx";
 
 import ChiTietSanPham from "./pages/client/ChiTietSanPham/ChiTietSanPham.jsx";
+import HoaDonChiTiet from "./pages/admin/QuanLiHoaDon/HoaDonChiTiet.jsx";
 import ThongTinCaNhan from "./pages/client/ThongTinCaNhan/ThongTinCaNhan.jsx";
 import DatHang from "./pages/client/DatHang/DatHang.jsx";
 import MuaNgay from "./pages/client/MuaNgay/MuaNgay.jsx";
@@ -214,6 +215,14 @@ function App() {
               element={
                 <>
                   <DanhSachHoaDon />
+                </>
+              }
+            />
+            <Route
+              path="hoadon/:id"
+              element={
+                <>
+                  <HoaDonChiTiet />
                 </>
               }
             />
