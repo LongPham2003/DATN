@@ -500,8 +500,10 @@ export default function BanHangTaiQuay() {
       // Gọi hàm tạo PDF với ID hóa đơn
       setTimeout(() => {
         handleGeneratePDF();
+        setTimeout(() => {
+          window.location.reload();
+        }, 500);
       }, 900);
-
       // Xóa ID tạm thời sau 1 phút
       setTimeout(() => {
         setTempHoaDonId(null); // Xóa ID tạm thời sau 1 phút
