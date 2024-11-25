@@ -26,7 +26,6 @@ public class HoaDonRequest {
     private String phuongThucGiaoHang;
     private List<HoaDonChiTietRequest> chiTietSanPhams = new ArrayList<>(); // Khởi tạo danh sách rỗng
     private BigDecimal phiVanChuyen;
-
     private String soDienThoai;
 
     private String tenKhachHang;

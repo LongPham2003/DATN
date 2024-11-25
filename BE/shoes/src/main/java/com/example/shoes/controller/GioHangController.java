@@ -87,6 +87,10 @@ public class GioHangController {
                 .build();
     }
 //    request { "idPhieuGiamGia":11,
+//    "phiVanChuyen",
+//    "soDienThoai",
+//    "diaChiChiTiet",
+//    "ngayDuKien",
 //    "chiTietSanPhams": [
 //        { "idSpct": 11, "soLuong": 2 },
 //        { "idSpct": 12, "soLuong": 3 }

@@ -465,18 +465,12 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
         hoaDon.setMa(maHoaDon);
         hoaDon.setIdKhachHang(khachHang);
         hoaDon.setTenKhachHang(khachHang.getHoTen());
-        // Kiểm tra số điện thoại của khách hàng
-        if (khachHang.getSdt() == null || khachHang.getSdt().isEmpty()) {
-            throw new AppException(ErrorCode.INVALID_PHONE_NUMBER);
-        }
+// lay tu request
+        hoaDon.setSoDienThoai(hoaDonRequest.getSoDienThoai());
+        hoaDon.setDiaChiGiaoHang(hoaDonRequest.getDiaChiChiTiet());
+        hoaDon.setPhiVanChuyen(hoaDonRequest.getPhiVanChuyen());
+        hoaDon.setNgayDuKien(hoaDonRequest.getNgayDuKien());
 
-        // Kiểm tra địa chỉ giao hàng
-        DiaChi diaChiMacDinh = diaChiRepo.getDiaChiByIdKhachHangAndDiaChiMacDinh(khachHang.getId());
-        if (diaChiMacDinh == null || diaChiMacDinh.getDiaChiChiTiet() == null || diaChiMacDinh.getDiaChiChiTiet().isEmpty()) {
-            throw new AppException(ErrorCode.INVALID_ADDRESS);
-        }
-
-        hoaDon.setDiaChiGiaoHang(diaChiMacDinh.getDiaChiChiTiet());
         hoaDon.setPhuongThucGiaoHang("Giao Hàng");
         hoaDon.setTrangThaiDonHang(TrangThai.CHO_XAC_NHAN); // Chưa thanh toán
         hoaDon.setTrangThaiThanhToan(false);
