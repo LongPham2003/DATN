@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
-import { Button, ButtonGroup, Radio } from "@material-tailwind/react";
+import { Radio } from "@material-tailwind/react";
 import AddProduct from "../Product/AddProduct";
 import ReactPaginate from "react-paginate";
 import axios from "../../../../api/axiosConfig";
-import { ToastContainer } from "react-toastify";
 import CustomDropdown from "../../../CustomDropdown";
-import DetailProduct from "../Product/DetailProduct"; // Import the DetailProduct component
 import { Link } from "react-router-dom";
 import SanPhamChiTiet from "./SanPhamChiTiet.jsx";
 
@@ -246,7 +244,9 @@ export default function ListProduct() {
                         <td className="px-6 py-4">{sp.ngayTao}</td>
                         <td className="px-6 py-4">{sp.soLuongTon}</td>
                         <td className="px-6 py-4">
-                          {sp.trangThai ? "Bán" : "Không bán"}
+                          {sp.trangThai
+                            ? "Đang kinh doanh"
+                            : "Ngừng Kinh Doanh"}
                         </td>
                         <td className="px-6 py-4">
                           {/* <button>Chi tiet</button> */}

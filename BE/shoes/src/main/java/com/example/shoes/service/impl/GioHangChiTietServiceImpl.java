@@ -7,29 +7,11 @@ import com.example.shoes.dto.hoadon.request.HoaDonRequest;
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
 import com.example.shoes.dto.hoadonchitiet.request.HoaDonChiTietRequest;
 import com.example.shoes.dto.vnpay.response.TransactionStatus;
-import com.example.shoes.entity.DiaChi;
-import com.example.shoes.entity.GioHang;
-import com.example.shoes.entity.GioHangChiTiet;
-import com.example.shoes.entity.HoaDon;
-import com.example.shoes.entity.HoaDonChiTiet;
-import com.example.shoes.entity.KhachHang;
-import com.example.shoes.entity.NhanVien;
-import com.example.shoes.entity.PhieuGiamGia;
-import com.example.shoes.entity.PhuongThucThanhToan;
-import com.example.shoes.entity.SanPhamChiTiet;
+import com.example.shoes.entity.*;
 import com.example.shoes.enums.TrangThai;
 import com.example.shoes.exception.AppException;
 import com.example.shoes.exception.ErrorCode;
-import com.example.shoes.repository.DiaChiRepo;
-import com.example.shoes.repository.GioHangChiTietRepo;
-import com.example.shoes.repository.GioHangRepo;
-import com.example.shoes.repository.HoaDonChiTietRepo;
-import com.example.shoes.repository.HoaDonRepo;
-import com.example.shoes.repository.KhachHangRepo;
-import com.example.shoes.repository.NhanVienRepo;
-import com.example.shoes.repository.PhieuGiamGiaRepo;
-import com.example.shoes.repository.PhuongThucThanhToanRepo;
-import com.example.shoes.repository.SanPhamChiTietRepo;
+import com.example.shoes.repository.*;
 import com.example.shoes.service.GioHangChiTietService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,6 +56,8 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
     private NhanVienRepo nhanVienRepo;
     @Autowired
     private PhieuGiamGiaRepo phieuGiamGiaRepo;
+    @Autowired
+    private LichSuHoaDonRepo lichSuHoaDonRepo;
 
     private KhachHang getCurrentKhachHang() {
         // Lấy thông tin người dùng hiện tại
@@ -311,7 +295,7 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
         hoaDon.setIdKhachHang(khachHang);
         hoaDon.setSoDienThoai(khachHang.getSdt());
         hoaDon.setDiaChiGiaoHang(diaChi.getDiaChiChiTiet());
-        hoaDon.setPhuongThucGiaoHang("giao hang nhanh");
+        hoaDon.setPhuongThucGiaoHang("Giao Hàng");
         hoaDon.setTrangThai(TrangThai.CHO_XAC_NHAN); // Chưa thanh toán
         // Khởi tạo tổng tiền, tiền được giảm và tiền phải trả bằng 0
         hoaDon.setTongTien(BigDecimal.ZERO);
@@ -363,7 +347,7 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
         hoaDon.setIdKhachHang(khachHang);
         hoaDon.setSoDienThoai(khachHang.getSdt());
         hoaDon.setDiaChiGiaoHang(diaChi.getDiaChiChiTiet());
-        hoaDon.setPhuongThucGiaoHang("giao hàng nhanh");
+        hoaDon.setPhuongThucGiaoHang("Giao Hàng");
         hoaDon.setTrangThai(TrangThai.CHO_XAC_NHAN);
         hoaDon.setTongTien(BigDecimal.ZERO);
         hoaDon.setTienDuocGiam(BigDecimal.ZERO);
@@ -515,6 +499,7 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
         }
 
     }
+
     public BigDecimal apDungVoucher(BigDecimal tongTienDonHang, PhieuGiamGia phieuGiamGia) {
         // Kiểm tra điều kiện áp dụng voucher
         if (tongTienDonHang.compareTo(phieuGiamGia.getDieuKienGiamGia()) < 0) {
@@ -557,7 +542,7 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
         hoaDon.setSoDienThoai(khachHang.getSdt());
         DiaChi diaChiMacDinh = diaChiRepo.getDiaChiByIdKhachHangAndDiaChiMacDinh(khachHang.getId());
         hoaDon.setDiaChiGiaoHang(diaChiMacDinh.getDiaChiChiTiet());
-        hoaDon.setPhuongThucGiaoHang("Giao Hang Nhanh ");
+        hoaDon.setPhuongThucGiaoHang("Giao Hàng");
         hoaDon.setTrangThai(TrangThai.CHO_XAC_NHAN); // Chưa thanh toán
 
         // Khởi tạo tổng tiền, tiền được giảm và tiền phải trả bằng 0
@@ -567,9 +552,13 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
         hoaDon.setTienKhachDua(BigDecimal.ZERO);
         hoaDon.setTienThua(BigDecimal.ZERO);
 
+
         // Lưu hóa đơn ban đầu
         HoaDon savedHoaDon = hoaDonRepo.save(hoaDon);
-
+        LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
+        lichSuHoaDon.setIdHoaDon(savedHoaDon);
+        lichSuHoaDon.setTrangThai(TrangThai.CHO_XAC_NHAN);
+        lichSuHoaDonRepo.save(lichSuHoaDon);
         // Thêm sản phẩm chi tiết vào hóa đơn chi tiet
         themSanPhamChiTietVaoHoaDon(savedHoaDon, hoaDonRequest.getChiTietSanPhams());
 
@@ -591,7 +580,7 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
             BigDecimal soTienGiam = apDungVoucher(hoaDon.getTongTien(), phieuGiamGia);
 
             // Cập nhật thông tin giảm giá
-           savedHoaDon.setTienDuocGiam(soTienGiam);
+            savedHoaDon.setTienDuocGiam(soTienGiam);
             savedHoaDon.setTienPhaiThanhToan(hoaDon.getTongTien().subtract(soTienGiam));
             savedHoaDon.setIdPhieuGiamGia(phieuGiamGia);
 

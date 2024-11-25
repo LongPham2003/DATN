@@ -996,6 +996,21 @@ public class HoaDonServiceImpl implements HoaDonService {
     }
 
     @Override
+    public Void updateTrangThaiHoaDonByIdXacNhan(Integer idHoaDon, GhiChu moTa) {
+        HoaDon hoaDon = hoaDonRepo.findById(idHoaDon).get();
+        hoaDon.setTrangThai(TrangThai.DA_XAC_NHAN);
+        hoaDonRepo.save(hoaDon);
+        LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
+        lichSuHoaDon.setIdHoaDon(hoaDon);
+        lichSuHoaDon.setTrangThai(TrangThai.DA_XAC_NHAN);
+        lichSuHoaDon.setMoTa(moTa.getGhiChu());
+        lichSuHoaDonRepo.save(lichSuHoaDon);
+        HoaDonChiTiet hoaDonChiTiet = hoaDonChiTietRepo.findById(idHoaDon).get();
+        hoaDonChiTiet.setTrangThai(TrangThai.DA_XAC_NHAN);
+        return null;
+    }
+
+    @Override
     public Void updateTrangThaiHoaDonByIdChoVanChuyen(Integer idHoaDon, GhiChu moTa) {
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon).get();
         hoaDon.setTrangThai(TrangThai.CHO_GIAO_HANG);

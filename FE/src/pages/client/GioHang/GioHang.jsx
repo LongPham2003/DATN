@@ -323,9 +323,7 @@ export default function GioHang() {
                   </div>
                   {/* Tong cong */}
                   <div className="ml-14">
-                    <div className="flex items-center justify-center">
-                      <p>Con hang</p>
-                    </div>
+                    <div className="flex items-center justify-center"></div>
                     <div className="mt-3 flex items-center justify-center">
                       {/* Tong tien */}
                       {/* <p>200000</p> */}
