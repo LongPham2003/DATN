@@ -116,8 +116,8 @@ export default function DanhSachNhanVien() {
             value={trangThai}
           >
             <option value="">Tất cả</option>
-            <option value="true">Hoạt động</option>
-            <option value="false">Không hoạt động</option>
+            <option value="true">Đang làm</option>
+            <option value="false">Nghỉ</option>
           </select>
         </div>
       </div>
