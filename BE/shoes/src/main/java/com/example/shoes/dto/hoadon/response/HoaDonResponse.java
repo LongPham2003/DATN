@@ -1,5 +1,6 @@
 package com.example.shoes.dto.hoadon.response;
 
+import com.example.shoes.enums.TrangThai;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,7 +27,9 @@ public class HoaDonResponse {
     private String phuongThucThanhToan;
     private String phuongThucGiaoHang;
     private LocalDate ngayTao;
-    private String trangThai;
+    private String trangThaiDonHang;
+    private Boolean trangThaiThanhToan;
+
 }
 
 

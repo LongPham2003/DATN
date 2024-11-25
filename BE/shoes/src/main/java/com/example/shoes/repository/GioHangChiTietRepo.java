@@ -41,6 +41,7 @@ public interface GioHangChiTietRepo extends JpaRepository<GioHangChiTiet, Intege
     SELECT * FROM datn.gio_hang_chi_tiet where id= :idGHCT
 """ , nativeQuery = true)
     GioHangChiTiet findByIdGHCT(@Param("idGHCT") Integer idGHCT);
+
     @Modifying
     @Transactional
     @Query("DELETE FROM GioHangChiTiet g WHERE g.idSanPhamChiTiet.id = :idSanPhamChiTiet")
