@@ -141,7 +141,7 @@ public class HoaDonServiceImpl implements HoaDonService {
         hoaDon.setIdNhanVien(nhanVien);
         hoaDon.setPhuongThucGiaoHang("tại quầy ");
         hoaDon.setTrangThaiDonHang(TrangThai.CHO_XAC_NHAN); // Chưa thanh toán
-
+        hoaDon.setTrangThaiThanhToan(false);
         // Khởi tạo tổng tiền, tiền được giảm và tiền phải trả bằng 0
         hoaDon.setTongTien(BigDecimal.ZERO);
         hoaDon.setTienDuocGiam(BigDecimal.ZERO);
@@ -485,6 +485,26 @@ public class HoaDonServiceImpl implements HoaDonService {
         hoaDon.setTrangThaiDonHang(TrangThai.HOAN_THANH);
         hoaDon.setTrangThaiThanhToan(true);
         hoaDon.setPhuongThucThanhToan("Tiền mặt");
+        // Kiểm tra nếu tiền khách đưa lớn hơn hoặc bằng tiền phải thanh toán
+        BigDecimal tienKhachDua = hoaDonRequest.getTienKhachDua();
+        BigDecimal tienPhaiThanhToan = hoaDon.getTienPhaiThanhToan();
+
+        if (tienKhachDua.compareTo(tienPhaiThanhToan) >= 0) {
+            // Thiết lập tiền khách đưa
+            hoaDon.setTienKhachDua(tienKhachDua);
+
+            // Tính toán tiền thừa
+            BigDecimal tienThua = tienKhachDua.subtract(tienPhaiThanhToan);
+            hoaDon.setTienThua(tienThua);
+
+            // Lưu hóa đơn vào cơ sở dữ liệu
+            hoaDonRepo.save(hoaDon);
+        } else {
+            // Nếu tiền khách đưa không đủ, ném ra ngoại lệ hoặc xử lý lỗi
+            throw new AppException(ErrorCode.INSUFFICIENT_PAYMENT);
+        }
+        // Nếu khách hàng đã thanh toán, cập nhật trạng thái hóa đơn
+        capNhatTrangThaiHoaDon(hoaDon);
         hoaDonRepo.save(hoaDon);
 
     }

@@ -480,7 +480,6 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
         // Trả về số tiền được giảm
         return soTienGiam;
     }
-
     @Override
     public HoaDonResponse datHang(HoaDonRequest hoaDonRequest) {
         // Lấy thông tin khách hàng hiện tại
@@ -491,11 +490,17 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
         String maHoaDon = generateMaHoaDon();
         hoaDon.setMa(maHoaDon);
         hoaDon.setIdKhachHang(khachHang);
-        hoaDon.setSoDienThoai(khachHang.getSdt());
-        DiaChi diaChiMacDinh = diaChiRepo.getDiaChiByIdKhachHangAndDiaChiMacDinh(khachHang.getId());
-        hoaDon.setDiaChiGiaoHang(diaChiMacDinh.getDiaChiChiTiet());
+        hoaDon.setTenKhachHang(khachHang.getHoTen());
+// lay tu request
+        hoaDon.setSoDienThoai(hoaDonRequest.getSoDienThoai());
+        hoaDon.setDiaChiGiaoHang(hoaDonRequest.getDiaChiChiTiet());
+        hoaDon.setPhiVanChuyen(hoaDonRequest.getPhiVanChuyen());
+        hoaDon.setNgayDuKien(hoaDonRequest.getNgayDuKien());
+        hoaDon.setPhuongThucThanhToan(hoaDonRequest.getPhuongThucThanhToan());
+
         hoaDon.setPhuongThucGiaoHang("Giao Hàng");
         hoaDon.setTrangThaiDonHang(TrangThai.CHO_XAC_NHAN); // Chưa thanh toán
+        hoaDon.setTrangThaiThanhToan(false);
 
         // Khởi tạo tổng tiền, tiền được giảm và tiền phải trả bằng 0
         hoaDon.setTongTien(BigDecimal.ZERO);
@@ -549,6 +554,7 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
 
         return converToHoaDonResponse(hoaDon);
     }
+
 
     private void themSanPhamChiTietVaoHoaDon(HoaDon hoaDon, List<HoaDonChiTietRequest> chiTietRequests) {
         List<HoaDonChiTiet> hoaDonChiTietList = new ArrayList<>();
