@@ -139,7 +139,7 @@ public class HoaDonServiceImpl implements HoaDonService {
         String maHoaDon = generateMaHoaDon();
         hoaDon.setMa(maHoaDon);
         hoaDon.setIdNhanVien(nhanVien);
-        hoaDon.setPhuongThucGiaoHang("tại quầy ");
+        hoaDon.setPhuongThucGiaoHang("tại quầy");
         hoaDon.setTrangThaiDonHang(TrangThai.CHO_XAC_NHAN); // Chưa thanh toán
         hoaDon.setTrangThaiThanhToan(false);
         // Khởi tạo tổng tiền, tiền được giảm và tiền phải trả bằng 0

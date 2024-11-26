@@ -21,7 +21,7 @@ public interface HoaDonRepo extends JpaRepository<HoaDon, Integer> {
         @Query("SELECT hd FROM HoaDon  hd WHERE hd.trangThaiDonHang = 'DA_THANH_TOAN'")
         List<HoaDon> getAllTrangThaiDaThanhToan();
 
-        @Query("SELECT hd FROM HoaDon  hd WHERE hd.trangThaiDonHang = 'CHO_XAC_NHAN' ")
+        @Query("SELECT hd FROM HoaDon  hd WHERE hd.trangThaiThanhToan = false and hd.phuongThucGiaoHang= 'tại quầy' ")
         List<HoaDon> getAllTrangThaiChuaThanhToan();
 
         // Query để lấy mã hóa đơn lớn nhất

@@ -497,7 +497,7 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
         hoaDon.setPhiVanChuyen(hoaDonRequest.getPhiVanChuyen());
         hoaDon.setNgayDuKien(hoaDonRequest.getNgayDuKien());
         hoaDon.setPhuongThucThanhToan(hoaDonRequest.getPhuongThucThanhToan());
-
+        hoaDon.setIdPhieuGiamGia(hoaDon.getIdPhieuGiamGia());
         hoaDon.setPhuongThucGiaoHang("Giao Hàng");
         hoaDon.setTrangThaiDonHang(TrangThai.CHO_XAC_NHAN); // Chưa thanh toán
         hoaDon.setTrangThaiThanhToan(false);
@@ -505,7 +505,7 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
         // Khởi tạo tổng tiền, tiền được giảm và tiền phải trả bằng 0
         hoaDon.setTongTien(BigDecimal.ZERO);
         hoaDon.setTienDuocGiam(BigDecimal.ZERO);
-        hoaDon.setTienPhaiThanhToan(BigDecimal.ZERO);
+        hoaDon.setTienPhaiThanhToan(hoaDonRequest.getTienPhaiThanhToan());
         hoaDon.setTienKhachDua(BigDecimal.ZERO);
         hoaDon.setTienThua(BigDecimal.ZERO);
 
@@ -538,7 +538,7 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
 
             // Cập nhật thông tin giảm giá
             savedHoaDon.setTienDuocGiam(soTienGiam);
-            savedHoaDon.setTienPhaiThanhToan(hoaDon.getTongTien().subtract(soTienGiam));
+//            savedHoaDon.setTienPhaiThanhToan(hoaDon.getTongTien().subtract(soTienGiam));
             savedHoaDon.setIdPhieuGiamGia(phieuGiamGia);
 
             // Giảm số lượng phiếu giảm giá
@@ -546,7 +546,8 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
             phieuGiamGiaRepo.save(phieuGiamGia);
         } else {
             // Nếu không áp dụng phiếu giảm giá, tiền phải thanh toán là tổng tiền
-            savedHoaDon.setTienPhaiThanhToan(hoaDon.getTongTien());
+//            savedHoaDon.setTienPhaiThanhToan(hoaDon.getTongTien());
+            return  null;
         }
 
         // Lưu hóa đơn cuối cùng
