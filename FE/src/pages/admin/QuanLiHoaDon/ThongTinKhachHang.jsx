@@ -30,7 +30,7 @@ const ThongTinKhachHang = ({ hoaDon }) => {
                 Địa chỉ giao hàng:
               </span>
               <h3 className="font-semibold text-gray-800">
-                {hoaDon.diaChiGiaoHang}
+                {hoaDon.diaChiGiaoHang || "Không có"}
               </h3>
             </div>
           </div>

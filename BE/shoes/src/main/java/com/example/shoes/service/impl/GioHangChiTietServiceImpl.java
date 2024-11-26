@@ -688,7 +688,7 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
         hoaDonResponse.setPhuongThucThanhToan(hoaDon.getPhuongThucThanhToan());
         hoaDonResponse.setPhuongThucGiaoHang(hoaDon.getPhuongThucGiaoHang());
         hoaDonResponse.setNgayTao(hoaDon.getCreatedAt());
-        hoaDonResponse.setTrangThai(hoaDon.getTrangThaiDonHang().getMoTa());
+        hoaDonResponse.setTrangThaiDonHang(hoaDon.getTrangThaiDonHang().getMoTa());
         hoaDonResponse.setTienShip(formatCurrency(hoaDon.getPhiVanChuyen()));
         return hoaDonResponse;
     }

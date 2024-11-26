@@ -12,6 +12,7 @@ const ChiTietPhieuGiamGia = () => {
   // eslint-disable-next-line no-unused-vars
   const [phieuGiamGia, setPhieuGiamGia] = useState();
   const [formData, setFormData] = useState({
+    ma: "",
     tenVoucher: "",
     dieuKienGiamGia: "",
     hinhThucGiam: "VND",
@@ -20,22 +21,31 @@ const ChiTietPhieuGiamGia = () => {
     soLuong: "",
     ngayBatDau: "",
     ngayKetThuc: "",
-    trangThai: ""
+    trangThai: "",
   });
+
+  const formatCurrency = (value) => {
+    if (!value) return "";
+    // Xóa ký tự không phải số và định dạng lại
+    const numberValue = value.replace(/[^0-9]/g, "");
+    return new Intl.NumberFormat("vi-VN").format(numberValue);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
     setFormData((prevState) => ({
       ...prevState,
-      [name]: value
+      [name]:
+        name === "dieuKienGiamGia" || name === "mucGiam" || name === "giamToiDa"
+          ? formatCurrency(value) // Format trực tiếp
+          : value,
     }));
   };
 
   // hàm format lại định dạng khi gửi về be
   const formatCurrencyToNumber = (value) => {
-
     return parseInt(value.replace(/(?!^-)\D/g, ""));
-
   };
 
   // update phiếu giảm giá
@@ -57,7 +67,8 @@ const ChiTietPhieuGiamGia = () => {
             soLuong: formData.soLuong,
             ngayBatDau: formData.ngayBatDau,
             ngayKetThuc: formData.ngayKetThuc,
-            trangThai: formData.trangThai
+            trangThai: formData.trangThai,
+            ma: formData.ma,
           })
           .then((response) => {
             console.log("Cập nhật thành công:", response.data);
@@ -72,7 +83,7 @@ const ChiTietPhieuGiamGia = () => {
       },
       onCancel() {
         // Nếu người dùng hủy, có thể không cần làm gì cả
-      }
+      },
     });
   };
 
@@ -86,6 +97,7 @@ const ChiTietPhieuGiamGia = () => {
 
         setPhieuGiamGia(resData);
         setFormData({
+          ma: resData.ma,
           tenVoucher: resData.tenVoucher,
           dieuKienGiamGia: resData.dieuKienGiamGia,
           hinhThucGiam: resData.hinhThucGiam,
@@ -98,7 +110,7 @@ const ChiTietPhieuGiamGia = () => {
           ngayTao: resData.ngayTao,
           ngayCapNhat: resData.ngayCapNhat,
           nguoiTao: resData.nguoiTao,
-          nguoiCapNhat: resData.nguoiCapNhat
+          nguoiCapNhat: resData.nguoiCapNhat,
         });
       })
       .catch((error) => {
@@ -115,6 +127,18 @@ const ChiTietPhieuGiamGia = () => {
         </h1>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="flex flex-wrap">
+            <div className="w-full p-2 sm:w-1/2">
+              <label className="block">Mã</label>
+              <input
+                name="tenVoucher"
+                value={formData.ma}
+                onChange={handleChange}
+                className="block w-full rounded-md border border-slate-300 bg-white py-2 pl-2 shadow-sm"
+                placeholder="Tên voucher..."
+                type="text"
+                readOnly
+              />
+            </div>
             <div className="w-full p-2 sm:w-1/2">
               <label className="block">Tên khuyến mãi:</label>
               <input
@@ -140,13 +164,12 @@ const ChiTietPhieuGiamGia = () => {
             <div className="w-full p-2 sm:w-1/2">
               <label className="block">Hình thức giảm:</label>
 
-              <select className="block w-full rounded-md border border-slate-300 bg-white py-2 pl-2 shadow-sm"
-                      name="hinhThucGiam"
-                      value={formData.hinhThucGiam}
-                      onChange={handleChange}
-
-                      disabled
-
+              <select
+                className="block w-full rounded-md border border-slate-300 bg-white py-2 pl-2 shadow-sm"
+                name="hinhThucGiam"
+                value={formData.hinhThucGiam}
+                onChange={handleChange}
+                disabled
               >
                 <option value="VND">Tiền mặt</option>
 

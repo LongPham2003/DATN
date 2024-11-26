@@ -39,15 +39,25 @@ export default function BanHangTaiQuay() {
   const [giaoHang, setGiaoHang] = useState(false);
   const [ngayDuKien, setNgayDuKien] = useState(null);
 
-  // model thanh toán 50 50
-  const [openThanhToanCKTM, setOpenThanhToanCKTM] = useState(false);
+  // model showqr chuyển khoản
+  const [openThanhToanQR, setOpenThanhToanQR] = useState(false);
 
-  const openModalThanhToanCKTM = () => {
-    setOpenThanhToanCKTM(true);
+  const openModalThanhToanQR = () => {
+    setOpenThanhToanQR(true);
   };
-  const closeModalThanhToanCKTM = async () => {
-    setOpenThanhToanCKTM(false);
+  const closeModalThanhToanQR = async () => {
+    setOpenThanhToanQR(false);
   };
+
+  // model thanh toán 50 50
+  // const [openThanhToanCKTM, setOpenThanhToanCKTM] = useState(false);
+
+  // const openModalThanhToanCKTM = () => {
+  //   setOpenThanhToanCKTM(true);
+  // };
+  // const closeModalThanhToanCKTM = async () => {
+  //   setOpenThanhToanCKTM(false);
+  // };
 
   // model thêm khách hàng
   const [openThemKH, setOpenThemKH] = useState(false);
@@ -576,26 +586,26 @@ export default function BanHangTaiQuay() {
   };
 
   // thanh toán vnpay
-  const handlePaymentClick = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:8080/api/paymentvnpay/create-payment",
-        {
-          params: {
-            maHoaDon: selectedHoaDonId,
-            amount: formatCurrencyToNumber(tienPhaiThanhToan),
-          },
-        },
-      );
+  // const handlePaymentClick = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       "http://localhost:8080/api/paymentvnpay/create-payment",
+  //       {
+  //         params: {
+  //           maHoaDon: selectedHoaDonId,
+  //           amount: formatCurrencyToNumber(tienPhaiThanhToan),
+  //         },
+  //       },
+  //     );
 
-      if (response.data) {
-        window.location.href = response.data;
-        localStorage.setItem("check", "VNPAY");
-      }
-    } catch (error) {
-      console.error("Lỗi khi gọi API:", error);
-    }
-  };
+  //     if (response.data) {
+  //       window.location.href = response.data;
+  //       localStorage.setItem("check", "VNPAY");
+  //     }
+  //   } catch (error) {
+  //     console.error("Lỗi khi gọi API:", error);
+  //   }
+  // };
 
   // khách đặt giao hàng ở tại quầy
   const handleDatHang = async () => {
@@ -624,6 +634,50 @@ export default function BanHangTaiQuay() {
             LayDanhSachHoaDonChuaThanhToan();
             setGiaoHang(false);
             navigate(0);
+          })
+          .catch((error) => {
+            setError(error.response.data.message);
+          });
+      },
+      onCancel() {
+        // Nếu người dùng hủy, có thể không cần làm gì cả
+      },
+    });
+  };
+
+  // xác nhận thanh toán
+  const handleXacNhanThanhToan = async () => {
+    Modal.confirm({
+      title: "Xác nhận cập nhật",
+      content: "Bạn đồng ý xác nhận thanh toán?",
+      onOk() {
+        // Nếu người dùng xác nhận, gửi yêu cầu cập nhật
+        axios
+          .post(
+            `http://localhost:8080/api/hoadon/thanh-toan/tc-vnpay/${selectedHoaDonId}`,
+            {
+              phuongThucThanhToan: "Chuyển khoản",
+              tienKhachDua: formatCurrencyToNumber(tienPhaiThanhToan),
+            },
+          )
+          .then((response) => {
+            console.log("Cập nhật thành công 111:", response.data);
+            setError("");
+            toast.success("Cập nhật thành công");
+            LayDanhSachHoaDonChuaThanhToan();
+            setGiaoHang(false);
+            // navigate(0);
+            setTempHoaDonId(selectedHoaDonId);
+            setTimeout(() => {
+              handleGeneratePDF();
+              setTimeout(() => {
+                window.location.reload();
+              }, 500);
+            }, 900);
+            // Xóa ID tạm thời sau 1 phút
+            setTimeout(() => {
+              setTempHoaDonId(null); // Xóa ID tạm thời sau 1 phút
+            }, 5000); // 60000 ms = 1 phút
           })
           .catch((error) => {
             setError(error.response.data.message);
@@ -1005,12 +1059,13 @@ export default function BanHangTaiQuay() {
                     <Button
                       style={{ height: "50px", width: "220px" }}
                       className="ml-[10px] border-2 border-yellow-500 text-lg font-medium text-yellow-500"
-                      onClick={handlePaymentClick}
+                      // onClick={handlePaymentClick}
+                      onClick={openModalThanhToanQR}
                     >
                       Chuyển khoản
                     </Button>
                   </div>
-                  <div className="my-2">
+                  {/* <div className="my-2">
                     <Button
                       style={{ height: "50px", width: "450px" }}
                       className="ml-[10px] border-2 border-orange-600 text-lg font-medium text-orange-700"
@@ -1018,7 +1073,7 @@ export default function BanHangTaiQuay() {
                     >
                       Tiền mặt & Chuyển khoản
                     </Button>
-                  </div>
+                  </div> */}
                   <div className="my-2">
                     <Button
                       style={{ height: "50px", width: "450px" }}
@@ -1100,7 +1155,34 @@ export default function BanHangTaiQuay() {
         </div>
       </Modal>
 
-      {openThanhToanCKTM && (
+      {openThanhToanQR && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="h-[600px] w-[600px] justify-between rounded-lg bg-white p-8">
+            <div className="">
+              <img
+                src="https://kalite.vn/wp-content/uploads/2021/09/maqrkalite.jpg"
+                alt=""
+              />
+            </div>
+            <div className="flex justify-center gap-5">
+              <button
+                onClick={closeModalThanhToanQR}
+                className="h-10 rounded bg-red-500 px-4 text-white hover:bg-red-600"
+              >
+                Hủy
+              </button>
+              <button
+                onClick={handleXacNhanThanhToan}
+                className="h-10 rounded bg-blue-500 px-4 text-white hover:bg-blue-600"
+              >
+                Xác nhận thanh toán
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* {openThanhToanCKTM && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="flex h-[200px] w-[600px] justify-between rounded-lg bg-white p-8">
             <div className="">
@@ -1118,7 +1200,7 @@ export default function BanHangTaiQuay() {
             </button>
           </div>
         </div>
-      )}
+      )} */}
 
       {openThemKH && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -1141,7 +1223,7 @@ export default function BanHangTaiQuay() {
 
       <ToastContainer
         position="top-right"
-        autoClose={1000}
+        autoClose={500}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick

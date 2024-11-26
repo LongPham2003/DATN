@@ -124,19 +124,19 @@ export default function DanhSachHoaDon() {
             </button>
             <button
               className="rounded bg-blue-500 px-4 py-2 text-white"
-              onClick={() => setTrangThai("CHO_XAC_NHAN_DON")}
+              onClick={() => setTrangThai("CHO_XAC_NHAN")}
             >
               Chờ xác nhận
             </button>
             <button
               className="rounded bg-blue-500 px-4 py-2 text-white"
-              onClick={() => setTrangThai("DA_XAC_NHAN_DON")}
+              onClick={() => setTrangThai("DA_XAC_NHAN")}
             >
               Chờ giao
             </button>
             <button
               className="rounded bg-blue-500 px-4 py-2 text-white"
-              onClick={() => setTrangThai("DA_THANH_TOAN")}
+              onClick={() => setTrangThai("HOAN_THANH")}
             >
               Hoàn thành
             </button>
@@ -190,7 +190,9 @@ export default function DanhSachHoaDon() {
                   <td className="border-b px-4 py-2">
                     {formatDate(item.ngayTao)}
                   </td>
-                  <td className="border-b px-4 py-2">{item.trangThai}</td>
+                  <td className="border-b px-4 py-2">
+                    {item.trangThaiDonHang}
+                  </td>
                   <td>
                     <button className="rounded bg-blue-500 px-2 py-1 text-white">
                       <Link to={`/admin/hoadon/${item.id}`}>Chi Tiết</Link>

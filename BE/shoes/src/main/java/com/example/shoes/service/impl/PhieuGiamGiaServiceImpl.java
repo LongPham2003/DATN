@@ -48,6 +48,7 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
         phieuGiamGia.setTenVoucher(request.getTenVoucher());
         phieuGiamGia.setDieuKienGiamGia(request.getDieuKienGiamGia());
         phieuGiamGia.setHinhThucGiam(request.getHinhThucGiam());
+        phieuGiamGia.setMa(generateMaPGG());
         if(request.getHinhThucGiam().equals("%")){
             if(request.getMucGiam().compareTo(BigDecimal.valueOf(100))>0 ||request.getMucGiam().compareTo(BigDecimal.ZERO)<=0){
                 throw  new AppException(ErrorCode.VALID_PHIEU_GIAM_GIA_MUC_GIAM);
@@ -152,6 +153,7 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
     private PhieuGiamGiaResponse convertToResponse(PhieuGiamGia phieuGiamGia) {
         PhieuGiamGiaResponse phieuGiamGiaResponse = new PhieuGiamGiaResponse();
         phieuGiamGiaResponse.setId(phieuGiamGia.getId());
+        phieuGiamGiaResponse.setMa(phieuGiamGia.getMa());
         phieuGiamGiaResponse.setTenVoucher(phieuGiamGia.getTenVoucher());
         phieuGiamGiaResponse.setDieuKienGiamGia(formatCurrency(phieuGiamGia.getDieuKienGiamGia()));
         if(phieuGiamGia.getHinhThucGiam().equals("%")){
@@ -209,6 +211,28 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
     private String formatPhanTram(BigDecimal mucGiam) {
         DecimalFormat df = new DecimalFormat("#"); // Định dạng không có số thập phân
         return df.format(mucGiam) + "%"; // Thêm ký hiệu phần trăm
+    }
+
+    public String generateMaPGG() {
+        // Lấy danh sách mã sản phẩm lớn nhất (SPxx)
+        List<String> maNV = phieuGiamGiaRepo.findTopMaPhieuGiamGia();
+
+        // Kiểm tra nếu không có sản phẩm nào thì bắt đầu từ SP01
+        if (maNV.isEmpty()) {
+            return "PGG01";
+        }
+
+        // Lấy mã sản phẩm lớn nhất (ví dụ: SP05)
+        String maxMaSanPham = maNV.get(0);
+
+        // Tách phần số ra khỏi chuỗi, ví dụ: "SP05" -> "05"
+        int maxNumber = Integer.parseInt(maxMaSanPham.substring(2));
+
+        // Tăng giá trị lên 1
+        int newNumber = maxNumber + 1;
+
+        // Trả về mã sản phẩm mới theo định dạng "SPxx" (ví dụ: SP06)
+        return String.format("PGG%02d", newNumber);
     }
 
 }
