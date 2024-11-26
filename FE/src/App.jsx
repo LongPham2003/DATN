@@ -44,7 +44,6 @@ import ThongTinCaNhan from "./pages/client/ThongTinCaNhan/ThongTinCaNhan.jsx";
 import DatHang from "./pages/client/DatHang/DatHang.jsx";
 import MuaNgay from "./pages/client/MuaNgay/MuaNgay.jsx";
 
-
 function App() {
   return (
     <>
@@ -107,7 +106,6 @@ function App() {
               }
             />
             <Route
-
               path="dathang"
               element={
                 <>
@@ -130,7 +128,6 @@ function App() {
               }
             />
             <Route
-
               path="thongtin"
               element={
                 <>

@@ -5,8 +5,6 @@ import Search from "antd/es/input/Search";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import ChonSizeVSMauSac from "../ChiTietSanPham/component/ThongTinSPvaChonSizeMS";
-
 
 export default function Header() {
   const [tenKH, setTenKH] = useState("");
@@ -25,7 +23,6 @@ export default function Header() {
     }
   };
 
-
   useEffect(() => {
     const ten = localStorage.getItem("email");
     const role = localStorage.getItem("userRole");
@@ -37,7 +34,6 @@ export default function Header() {
 
   useEffect(() => {
     layTongSoSP();
-
   }, []);
 
   return (
@@ -45,10 +41,8 @@ export default function Header() {
       <header className="fixed left-0 right-0 top-0 z-50 bg-white shadow-md">
         <div className="flex h-[45px] justify-end space-x-4 bg-gray-800 p-2 text-sm text-white">
           {role !== "ROLE_KHACHHANG" && (
-
             <Link
               to="/admin/thongke"
-
               className="flex items-center space-x-1 hover:text-gray-400"
             >
               <svg
@@ -66,9 +60,7 @@ export default function Header() {
                 />
               </svg>
               <span>Quan li cua hang</span>
-
             </Link>
-
           )}
           <a
             href="#"
@@ -122,7 +114,7 @@ export default function Header() {
           >
             <div className="mt-1 flex items-center space-x-2">
               <Link to="/GioHang">
-                <Badge count={soLuong} size="small" offset={[5, -5]}>
+                <Badge count={soLuong} size="small">
                   <ShoppingCartOutlined
                     style={{ fontSize: "24px", color: "white" }}
                   />

@@ -44,6 +44,7 @@ const Login = () => {
         localStorage.setItem("authToken", authToken);
         localStorage.setItem("userRole", response.data.result.roles);
         localStorage.setItem("email", response.data.result.email);
+        // localStorage.setItem("id", response.data.result.id);
 
         setError("");
         toast.success("Đăng nhập thành công");

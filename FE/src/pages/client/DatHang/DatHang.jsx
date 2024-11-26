@@ -1,8 +1,7 @@
-import { Select } from "antd";
+import { Modal, Popconfirm, Select } from "antd";
 import axios from "./../../../api/axiosConfig";
 import { useEffect } from "react";
 import { useState } from "react";
-import DiaChiMacDinhKhachHang from "./../../admin/BanHangTaiQuay/DiaChiMacDinhKhachHang";
 import ThongTinSPCT from "./../GioHang/component/ThongTinSPCT";
 import LayANhTheoIDSP from "./../../admin/SanPham/Product/LayANhTheoIDSP";
 import DiaCHiMacDinhKhachHang from "./../../admin/BanHangTaiQuay/DiaChiMacDinhKhachHang";
@@ -70,32 +69,41 @@ export default function DatHang() {
       const response = await axios.get(
         `${ApiLayThongTinPhieuGiamGiaDangChon}/${idPGG}`,
       );
-      setPhieuGiamGiaDangChon(response.data.result); // Giả sử dữ liệu trả về là object
-      console.log("Thông tin phiếu giảm giá:", response.data.result);
-      console.log("Thông tin phiếu giảm giá:", response.data.result.mucGiam);
+      setPhieuGiamGiaDangChon(response.data.result);
+      // console.log(response.data.result);
+      // console.log( response.data.result.mucGiam);
       setdieuKienGiam(response.data.result.dieuKienGiamGia);
     } catch (error) {
       console.error("Error fetching selected discount coupon:", error);
     }
   };
 
+  // Hàm DatHang với xác nhận
   const DatHang = async (e) => {
     e.preventDefault();
+    const chiTietSanPhams = listSP.map((item) => ({
+      idSpct: item.idSanPhamChiTiet,
+      soLuong: item.soLuong,
+    }));
+    // Hiển thị hộp thoại xác nhận
     try {
-      const chiTietSanPhams = listSP.map((item) => ({
-        idSpct: item.idSanPhamChiTiet,
-        soLuong: item.soLuong,
-      }));
-
       await axios.post(ApiDatHangonLine, {
+        phuongThucThanhToan: "Tiền mặt",
         chiTietSanPhams,
         idPhieuGiamGia: idPGGDangChon || null,
+        soDienThoai: khachHang.sdt,
+        phiVanChuyen: phiGiaoHang,
+        diaChiChiTiet: diaChiGiaoHang,
+        ngayDuKien: ngayDuKien,
       });
       localStorage.removeItem("sanPhamChon");
+      toast.success("Đặt hàng thành công");
       setTimeout(() => {
         navigate("/trangchu");
+        setTimeout(() => {
+          window.location.reload();
+        }, 500);
       }, 1000);
-      toast.success("Đặt hàng thành công");
     } catch (error) {
       console.error("Lỗi khi đặt hàng:", error);
       toast.error("Có lỗi xảy ra khi đặt hàng");
@@ -107,29 +115,35 @@ export default function DatHang() {
     LayThongTinPhieuGiamGiaDangChon(idPGGDangChon);
   }, [idPGGDangChon]);
 
-  useEffect(() => {
-    const ten = localStorage.getItem("email");
-    setemail(ten);
-    const ApiTimKhTheoEmail = `http://localhost:8080/client/khachhang/timtheoEmail?email=${email}`;
+  const fetchKhachHang = async () => {
+    const email = localStorage.getItem("email");
+    setemail(email);
 
-    async function fetchKhachHang() {
-      try {
-        const response = await axios.get(ApiTimKhTheoEmail);
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/client/khachhang/timtheoEmail?email=${email}`,
+      );
+      if (response.data) {
         setKhachHang(response.data);
-        setIdKH(response.data.id);
-        console.log(response.data.id);
-      } catch (error) {
-        console.error("Error fetching customer data:", error);
+        // Đảm bảo không gán undefined
+        setIdKH(response.data.id || null);
       }
+    } catch (error) {
+      console.error("Error fetching customer data:", error);
     }
+  };
 
-    if (email) {
-      fetchKhachHang();
+  useEffect(async () => {
+    try {
+      await Promise.all([
+        LuuSPVaoList(),
+        LayDanhSachPhieuGiamGia(),
+        fetchKhachHang(),
+      ]);
+      // console.log("Tất cả các tác vụ đã hoàn thành");
+    } catch (error) {
+      console.error("Có lỗi xảy ra trong khi chạy các tác vụ:", error);
     }
-  }, [email]);
-  useEffect(() => {
-    LuuSPVaoList();
-    LayDanhSachPhieuGiamGia();
   }, []);
 
   useEffect(() => {
@@ -360,6 +374,14 @@ export default function DatHang() {
             </div>
           </div>
           <div>
+            <span>Thong tin nguoi dat</span>
+            <div>Họ Tên: {khachHang.hoTen ? khachHang.hoTen : ""}</div>
+            <div>
+              Số điện thoại:{" "}
+              {khachHang.sdt ? khachHang.sdt : "Bạn chưa thêm số điện thoại"}
+            </div>
+          </div>
+          <div>
             <DiaCHiMacDinhKhachHang
               idKhachHang={idKH}
               giaoHang={true}
@@ -369,12 +391,16 @@ export default function DatHang() {
             />
           </div>
           <div className="my-8">
-            <button
-              onClick={DatHang}
-              className="h-16 w-full rounded-lg border bg-orange-600 text-2xl font-semibold text-white transition duration-300 ease-in-out hover:bg-black"
+            <Popconfirm
+              title="Bạn có chắc chắn muốn đặt hàng không?"
+              onConfirm={DatHang}
+              okText="Có"
+              cancelText="Không"
             >
-              Đặt Hàng
-            </button>
+              <button className="h-16 w-full rounded-lg border bg-orange-600 text-2xl font-semibold text-white transition duration-300 ease-in-out hover:bg-black">
+                Đặt Hàng
+              </button>
+            </Popconfirm>
           </div>
         </div>
       </div>

@@ -64,7 +64,8 @@ export default function CacSanPham() {
       // Gọi API
       const sanPham = await axios.get(ApiSanPhamBanHang, { params });
       setListSanPham(sanPham.data);
-      console.log("Fetched products:", sanPham.data);
+
+      // console.log("Fetched products:", sanPham.data);
     } catch (error) {
       console.error("Error fetching products:", error);
     }
