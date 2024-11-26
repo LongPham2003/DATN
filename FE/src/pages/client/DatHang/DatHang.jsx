@@ -95,6 +95,7 @@ export default function DatHang() {
         phiVanChuyen: phiGiaoHang,
         diaChiChiTiet: diaChiGiaoHang,
         ngayDuKien: ngayDuKien,
+        tienPhaiThanhToan: thanhTien,
       });
       localStorage.removeItem("sanPhamChon");
       toast.success("Đặt hàng thành công");

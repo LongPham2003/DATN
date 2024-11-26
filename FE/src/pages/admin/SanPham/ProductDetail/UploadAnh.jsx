@@ -50,7 +50,6 @@ const ImageUpload = ({ fileList, setFileList }) => {
         onPreview={handlePreview}
         onChange={handleChange}
         beforeUpload={() => false}
-        multiple
       >
         {fileList.length >= 5 ? null : uploadButton}
       </Upload>

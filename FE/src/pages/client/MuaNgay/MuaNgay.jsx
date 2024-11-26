@@ -146,6 +146,7 @@ export default function MuaNgay() {
         phiVanChuyen: phiGiaoHang,
         diaChiChiTiet: diaChiGiaoHang,
         ngayDuKien: ngayDuKien,
+        tienPhaiThanhToan: thanhTien,
       });
 
       setTimeout(() => {

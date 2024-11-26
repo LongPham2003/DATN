@@ -456,23 +456,22 @@ export default function BanHangTaiQuay() {
   };
 
   const tinhTienThua = (value) => {
-    // Loại bỏ "VNĐ" và dấu chấm, sau đó chuyển thành số
+    // Chuyển giá trị tiền phải thanh toán thành số
     const tienPhaiThanhToanNum = Number(
       tienPhaiThanhToan.replace(/[.VNĐ]/g, "").trim(),
     );
 
     console.log(tienPhaiThanhToanNum);
-
     setTienKhachDua(value);
 
     // Tính tiền trả lại khách
     const tienTraLaiKhach = value - tienPhaiThanhToanNum;
-
     if (tienTraLaiKhach >= 0) {
       setTienThuaTraKhach(tienTraLaiKhach);
       setError(""); // Xóa lỗi nếu đủ tiền thanh toán
     } else {
-      setError("không đủ tiền thanh toán"); // Báo lỗi nếu không đủ tiền
+      setError("Không đủ tiền thanh toán"); // Báo lỗi nếu không đủ tiền
+      setTienThuaTraKhach(0); // Đặt tiền thừa về 0 nếu không đủ
     }
   };
 
@@ -918,7 +917,9 @@ export default function BanHangTaiQuay() {
               <div className="my-4 flex items-center justify-between">
                 <div>Thành tiền</div>
                 <div className="text-red-500">
-                  {formatCurrencyToNumber(tienPhaiThanhToan) + phiGiaoHang} VNĐ
+                  {formatTien(
+                    formatCurrencyToNumber(tienPhaiThanhToan) + phiGiaoHang,
+                  )}{" "}
                 </div>
               </div>
 
@@ -1085,8 +1086,13 @@ export default function BanHangTaiQuay() {
           <InputNumber
             addonAfter={"VNĐ"}
             defaultValue={0}
+            formatter={(value) =>
+              `VNĐ ${value.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`
+            }
+            parser={(value) => value.replace(/VNĐ\s?|(,*)/g, "")}
             onChange={(value) => {
-              tinhTienThua(value), console.log(value);
+              tinhTienThua(value || 0); // Gọi hàm với giá trị 0 nếu value là null
+              console.log(value);
             }}
           />
         </div>
@@ -1097,6 +1103,9 @@ export default function BanHangTaiQuay() {
             addonAfter={"VNĐ"}
             defaultValue={0}
             disabled
+            formatter={(value) =>
+              `VNĐ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+            }
           />
           {error && <p className="text-red-500">{error}</p>}
         </div>
