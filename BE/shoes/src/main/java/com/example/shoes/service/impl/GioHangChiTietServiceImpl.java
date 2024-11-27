@@ -521,7 +521,10 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
             // Nếu không áp dụng phiếu giảm giá, tiền phải thanh toán là tổng tiền
             savedHoaDon.setTienPhaiThanhToan(hoaDon.getTongTien());
         }
-
+// Cập nhật số sản phẩm trong giỏ hàng
+        GioHang gioHang =gioHangRepo.findByIdKhachHang_Id(khachHang.getId())
+                .orElseThrow(() -> new AppException(ErrorCode.VOUCHER_NOT_FOUND));
+        capNhatSoSanPham(gioHang.getId());
         // Lưu hóa đơn cuối cùng
         hoaDonRepo.save(savedHoaDon);
 
