@@ -553,7 +553,6 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
 //            savedHoaDon.setTienPhaiThanhToan(hoaDon.getTongTien());
             return  null;
         }
-
         // Lưu hóa đơn cuối cùng
         hoaDonRepo.save(savedHoaDon);
 
@@ -699,7 +698,7 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
         hoaDonResponse.setPhuongThucThanhToan(hoaDon.getPhuongThucThanhToan());
         hoaDonResponse.setPhuongThucGiaoHang(hoaDon.getPhuongThucGiaoHang());
         hoaDonResponse.setNgayTao(hoaDon.getCreatedAt());
-        hoaDonResponse.setTrangThai(hoaDon.getTrangThaiDonHang().getMoTa());
+        hoaDonResponse.setTrangThaiDonHang(hoaDon.getTrangThaiDonHang().getMoTa());
         hoaDonResponse.setTienShip(formatCurrency(hoaDon.getPhiVanChuyen()));
         return hoaDonResponse;
     }
