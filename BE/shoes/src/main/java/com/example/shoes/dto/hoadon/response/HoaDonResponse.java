@@ -31,7 +31,7 @@ public class HoaDonResponse {
     private String trangThaiDonHang;
     private boolean trangThaiThanhToan;
     private String tienShip;
-
+    private String PhieuGiamGia;
 }
 
 

@@ -26,15 +26,18 @@ public interface PhieuGiamGiaRepo extends JpaRepository<PhieuGiamGia, Integer> {
     List<PhieuGiamGia> findByTrangThai(String trangThai);
 
     @Query("SELECT p FROM PhieuGiamGia p WHERE "
-            + "(:tenVoucher IS NULL OR LOWER(p.tenVoucher) LIKE LOWER(CONCAT('%', :tenVoucher, '%'))) "
+            + "(p.ma like %:keyword% or p.tenVoucher like %:keyword%)"
             + "AND (:trangThai IS NULL OR p.trangThai = :trangThai) "
             + "AND (:ngayBatDau IS NULL OR p.ngayBatDau >= :ngayBatDau) "
             + "AND (:ngayKetThuc IS NULL OR p.ngayKetThuc <= :ngayKetThuc) "
             + "ORDER BY p.id DESC")
     Page<PhieuGiamGia> searchPhieuGiamGia(
             Pageable pageable,
-            @Param("tenVoucher") String tenVoucher,
+            @Param("keyword") String keyword,
             @Param("trangThai") String trangThai,
             @Param("ngayBatDau") LocalDateTime ngayBatDau,
             @Param("ngayKetThuc") LocalDateTime ngayKetThuc);
+
+    @Query("SELECT pgg.ma FROM PhieuGiamGia pgg ORDER BY pgg.ma DESC")
+    List<String> findTopMaPhieuGiamGia();
 }

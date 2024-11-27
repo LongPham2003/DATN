@@ -23,7 +23,7 @@ import java.util.*;
 public class PaymentVNPAYController {
 
     @GetMapping("/create-payment")
-    public String creatPayment(String maHoaDon ,String amount) throws UnsupportedEncodingException {
+    public String creatPayment(String amount) throws UnsupportedEncodingException {
 
 
         String orderType = "other";
@@ -45,7 +45,7 @@ public class PaymentVNPAYController {
         vnp_Params.put("vnp_Amount", String.valueOf(new BigDecimal(amount).multiply(BigDecimal.valueOf(100))));
         vnp_Params.put("vnp_CurrCode", "VND");
         vnp_Params.put("vnp_BankCode", "NCB");
-        vnp_Params.put("vnp_TxnRef", maHoaDon);
+        vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
         vnp_Params.put("vnp_OrderInfo", vnp_TxnRef);
         vnp_Params.put("vnp_Locale", "vn");
         vnp_Params.put("vnp_OrderType", orderType);

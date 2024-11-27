@@ -12,6 +12,14 @@ export default function PaymentResult() {
   const params = new URLSearchParams(location.search);
   const id = params.get("vnp_TxnRef");
 
+  const chiTietSanPhams = JSON.parse(localStorage.getItem("chiTietSanPhams"));
+  const idPhieuGiamGia = localStorage.getItem("idPhieuGiamGia");
+  const soDienThoai = localStorage.getItem("soDienThoai");
+  const phiVanChuyen = localStorage.getItem("phiVanChuyen");
+  const diaChiChiTiet = localStorage.getItem("diaChiChiTiet");
+  const ngayDuKien = localStorage.getItem("ngayDuKien");
+  const tienPhaiThanhToan = localStorage.getItem("tienPhaiThanhToan");
+
   const handleGeneratePDF = () => {
     setShowPDF(true); // Hiển thị ExportPDF để có thể tạo file PDF
     setTimeout(() => {
@@ -20,7 +28,7 @@ export default function PaymentResult() {
     }, 1000); // Đợi 1 giây để đảm bảo ExportPDF đã render
   };
 
-  const check = localStorage.getItem("check");
+  // const check = localStorage.getItem("check");
 
   useEffect(() => {
     async function checkPaymentStatus() {
@@ -38,20 +46,38 @@ export default function PaymentResult() {
         );
 
         if (response.data) {
-          await axios.post(
-            `http://localhost:8080/api/hoadon/thanh-toan/tc-vnpay/${id}`,
-            {
-              phuongThucThanhToan: check,
-              tienKhachDua: 0,
-            },
-          );
+          await axios.post("http://localhost:8080/api/giohang/dat-hang-vnpay", {
+            // phuongThucThanhToan: check,
+            chiTietSanPhams,
+            idPhieuGiamGia: idPhieuGiamGia || null,
+            soDienThoai: soDienThoai,
+            phiVanChuyen: phiVanChuyen,
+            diaChiChiTiet: diaChiChiTiet,
+            ngayDuKien: ngayDuKien,
+            tienPhaiThanhToan: tienPhaiThanhToan,
+          });
 
-          // navigate("/admin/banhangoff");
+          navigate("/trangChu");
           toast.success("Thành công ");
-          handleGeneratePDF();
+          //  handleGeneratePDF();
+          localStorage.removeItem("chiTietSanPhams");
+          localStorage.removeItem("idPhieuGiamGia");
+          localStorage.removeItem("soDienThoai");
+          localStorage.removeItem("phiVanChuyen");
+          localStorage.removeItem("diaChiChiTiet");
+          localStorage.removeItem("ngayDuKien");
+          localStorage.removeItem("tienPhaiThanhToan");
+          localStorage.removeItem("sanPhamChon");
         } else {
-          setTimeout(() => navigate("/admin/banhangoff"), 500);
+          setTimeout(() => navigate("/datHang"), 500);
           toast.error("Thất bại");
+          localStorage.removeItem("chiTietSanPhams");
+          localStorage.removeItem("idPhieuGiamGia");
+          localStorage.removeItem("soDienThoai");
+          localStorage.removeItem("phiVanChuyen");
+          localStorage.removeItem("diaChiChiTiet");
+          localStorage.removeItem("ngayDuKien");
+          localStorage.removeItem("sanPhamChon");
         }
       } catch (error) {
         console.error("Error:", error);
@@ -63,7 +89,7 @@ export default function PaymentResult() {
 
   return (
     <div>
-      Thanh toán đã thành công bạn có muốn in hóa đơn không
+      {/* Thanh toán đã thành công bạn có muốn in hóa đơn không */}
       <ToastContainer
         position="top-right"
         autoClose={1000}
@@ -76,8 +102,8 @@ export default function PaymentResult() {
         theme="light"
         transition={Bounce}
       />
-      {/* Hiển thị ExportPDF tạm thời khi showPDF là true */}
-      {showPDF && <ExportPDF idHoaDon={id} />}
+      {/* Hiển thị ExportPDF tạm thời khi showPDF là true
+      {showPDF && <ExportPDF idHoaDon={id} />} */}
     </div>
   );
 }

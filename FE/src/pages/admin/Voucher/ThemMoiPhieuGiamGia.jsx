@@ -21,11 +21,22 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
     trangThai: "",
   });
 
+  const formatCurrency = (value) => {
+    if (!value) return "";
+    // Xóa ký tự không phải số và định dạng lại
+    const numberValue = value.replace(/[^0-9]/g, "");
+    return new Intl.NumberFormat("vi-VN").format(numberValue);
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
+
     setFormData((prevState) => ({
       ...prevState,
-      [name]: value,
+      [name]:
+        name === "dieuKienGiamGia" || name === "mucGiam" || name === "giamToiDa"
+          ? formatCurrency(value) // Format trực tiếp
+          : value,
     }));
   };
 

@@ -250,6 +250,8 @@ const HoaDonChiTiet = () => {
     });
   };
 
+  console.log(hoaDon);
+
   return (
     <div className="mx-3 py-3">
       <Timeline minEvents={6} placeholder>
@@ -308,7 +310,7 @@ const HoaDonChiTiet = () => {
       <hr className="mb-2" />
       <div className="mx-10 flex justify-between">
         <div>
-          {hoaDon.trangThai === "Chờ Xác Nhận" && (
+          {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" && (
             <button
               onClick={openModalXacNhan}
               className="rounded bg-blue-500 px-2 py-1 text-white"
@@ -316,7 +318,7 @@ const HoaDonChiTiet = () => {
               Xác nhận
             </button>
           )}
-          {hoaDon.trangThai === "Đã xác nhận đơn" && (
+          {hoaDon.trangThaiDonHang === "Đã xác nhận đơn" && (
             <button
               onClick={openModalChoGiao}
               className="rounded bg-blue-500 px-2 py-1 text-white"
@@ -324,7 +326,7 @@ const HoaDonChiTiet = () => {
               Chờ vẫn chuyển
             </button>
           )}
-          {hoaDon.trangThai === "Chờ đơn vị vẫn chuyển" && (
+          {hoaDon.trangThaiDonHang === "Chờ đơn vị vẫn chuyển" && (
             <button
               onClick={openModalGiao}
               className="rounded bg-blue-500 px-2 py-1 text-white"
@@ -333,7 +335,7 @@ const HoaDonChiTiet = () => {
             </button>
           )}
 
-          {hoaDon.trangThai === "Đơn đang trên đường giao hàng" && (
+          {hoaDon.trangThaiDonHang === "Đơn đang trên đường giao hàng" && (
             <button
               onClick={openModalHT}
               className="rounded bg-blue-500 px-2 py-1 text-white"
@@ -342,17 +344,9 @@ const HoaDonChiTiet = () => {
             </button>
           )}
 
-          {hoaDon.trangThai === "Hoàn thành" && (
+          {hoaDon.trangThaiDonHang === "Hoàn thành" && (
             <button className="rounded bg-blue-500 px-2 py-1 text-white">
               Xuất Hóa Đơn
-            </button>
-          )}
-          {hoaDon.trangThai === "Đã thanh toán" && (
-            <button
-              onClick={openModalHT}
-              className="rounded bg-blue-500 px-2 py-1 text-white"
-            >
-              Hoàn thành
             </button>
           )}
         </div>
@@ -363,11 +357,15 @@ const HoaDonChiTiet = () => {
           Lịch sử hóa đơn
         </button>
       </div>
+      <hr className="my-3" />
+      <div className="my-3">
+        <ThongTinKhachHang hoaDon={hoaDon}></ThongTinKhachHang>
+      </div>
       <hr className="my-2" />
       <div className="my-3">
         <div className="flex items-center justify-between">
           <h2 className="text-[20px] font-bold text-pink-500">
-            Lịch sử thanh toán
+            Thời gian thanh toán
           </h2>
 
           <button
@@ -425,9 +423,6 @@ const HoaDonChiTiet = () => {
         ></ThongTinHoaDon>
       </div>
       <hr className="border-s-pink-700" />
-      <div className="my-3">
-        <ThongTinKhachHang hoaDon={hoaDon}></ThongTinKhachHang>
-      </div>
       <ToastContainer
         position="top-right"
         autoClose={1000}
@@ -443,7 +438,7 @@ const HoaDonChiTiet = () => {
       />
       {OpenModelLSHD && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="flex h-[525px] max-h-[600px] w-[400px] justify-between overflow-y-auto rounded-lg bg-white p-8">
+          <div className="flex h-[525px] max-h-[600px] w-[450px] justify-between overflow-y-auto rounded-lg bg-white p-8">
             <div className="font-bold">
               <h3 className="mb-3">Lịch sử hóa đơn</h3>
 

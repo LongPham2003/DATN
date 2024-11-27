@@ -41,7 +41,9 @@ const ThongTinHoaDon = ({ hoaDon, hoaDonChiTiet }) => {
         <div className="w-1/2 space-y-4 border-r pr-4">
           <div className="flex items-center justify-between">
             <span className="font-medium text-gray-600">Trạng thái:</span>
-            <h3 className="font-semibold text-blue-600">{hoaDon.trangThai}</h3>
+            <h3 className="font-semibold text-blue-600">
+              {hoaDon.trangThaiDonHang}
+            </h3>
           </div>
           <div className="flex items-center justify-between">
             <span className="font-medium text-gray-600">Mã đơn hàng:</span>
@@ -53,14 +55,28 @@ const ThongTinHoaDon = ({ hoaDon, hoaDonChiTiet }) => {
               {hoaDon.phuongThucGiaoHang}
             </h3>
           </div>
+          <div className="flex items-center justify-between">
+            <span className="font-medium text-gray-600">Ngày tạo:</span>
+            <h3 className="font-semibold text-gray-800">
+              {formatDate(hoaDon.ngayTao)}
+            </h3>
+          </div>
         </div>
 
         {/* Cột phải */}
         <div className="w-1/2 space-y-4 pl-4">
           <div className="flex items-center justify-between">
-            <span className="font-medium text-gray-600">Ngày tạo:</span>
+            <span className="font-medium text-gray-600">
+              Mã phiếu giảm giá:
+            </span>
             <h3 className="font-semibold text-gray-800">
-              {formatDate(hoaDon.ngayTao)}
+              {hoaDon.phieuGiamGia}
+            </h3>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="font-medium text-gray-600">Tiền được giảm:</span>
+            <h3 className="font-semibold text-gray-800">
+              {hoaDon.tienDuocGiam}
             </h3>
           </div>
           <div className="flex items-center justify-between">

@@ -91,7 +91,7 @@ export default function DanhSachHoaDon() {
             >
               <option value="">Tất cả</option>
               <option value="Giao Hàng">Online</option>
-              <option value="Tại quầy ">Tại Quầy</option>
+              <option value="Tại quầy">Tại Quầy</option>
             </select>
           </div>
         </div>
@@ -124,19 +124,31 @@ export default function DanhSachHoaDon() {
             </button>
             <button
               className="rounded bg-blue-500 px-4 py-2 text-white"
-              onClick={() => setTrangThai("CHO_XAC_NHAN_DON")}
+              onClick={() => setTrangThai("CHO_XAC_NHAN")}
             >
               Chờ xác nhận
             </button>
             <button
               className="rounded bg-blue-500 px-4 py-2 text-white"
-              onClick={() => setTrangThai("DA_XAC_NHAN_DON")}
+              onClick={() => setTrangThai("DA_XAC_NHAN")}
+            >
+              Đã xác nhận
+            </button>
+            <button
+              className="rounded bg-blue-500 px-4 py-2 text-white"
+              onClick={() => setTrangThai("CHO_GIAO_HANG")}
             >
               Chờ giao
             </button>
             <button
               className="rounded bg-blue-500 px-4 py-2 text-white"
-              onClick={() => setTrangThai("DA_THANH_TOAN")}
+              onClick={() => setTrangThai("DANG_GIAO")}
+            >
+              Đang giao
+            </button>
+            <button
+              className="rounded bg-blue-500 px-4 py-2 text-white"
+              onClick={() => setTrangThai("HOAN_THANH")}
             >
               Hoàn thành
             </button>
@@ -173,7 +185,9 @@ export default function DanhSachHoaDon() {
                   <td className="border-b px-4 py-2">{item.ma}</td>
                   <td className="border-b px-4 py-2">{item.tenKhachHang}</td>
                   <td className="border-b px-4 py-2">{item.soDienThoai}</td>
-                  <td className="border-b px-4 py-2">{item.tongTien}</td>
+                  <td className="border-b px-4 py-2">
+                    {item.tienPhaiThanhToan}
+                  </td>
                   <td className="mx-auto flex justify-center border-b px-4 py-2 text-center">
                     <button
                       className={`rounded border-2 px-4 py-2 ${
@@ -190,7 +204,26 @@ export default function DanhSachHoaDon() {
                   <td className="border-b px-4 py-2">
                     {formatDate(item.ngayTao)}
                   </td>
-                  <td className="border-b px-4 py-2">{item.trangThai}</td>
+                  <td
+                    className={`text-lg font-semibold ${
+                      item.trangThaiDonHang === "Chờ Xác Nhận"
+                        ? "text-yellow-500"
+                        : item.trangThaiDonHang === "Đã Xác Nhận"
+                          ? "text-green-500"
+                          : item.trangThaiDonHang === "Chờ đơn vị vận chuyển"
+                            ? "text-purple-500"
+                            : item.trangThaiDonHang ===
+                                "Đơn đang trên đường giao hàng"
+                              ? "text-blue-500"
+                              : item.trangThaiDonHang === "Đã thanh toán"
+                                ? "text-green-600"
+                                : item.trangThaiDonHang === "Hoàn thành"
+                                  ? "text-green-600"
+                                  : "text-gray-500"
+                    }`}
+                  >
+                    {item.trangThaiDonHang}
+                  </td>
                   <td>
                     <button className="rounded bg-blue-500 px-2 py-1 text-white">
                       <Link to={`/admin/hoadon/${item.id}`}>Chi Tiết</Link>
