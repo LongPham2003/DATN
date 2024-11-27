@@ -2,18 +2,14 @@ package com.example.shoes.controller;
 
 import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.sanphamchitiet.request.SanPhamChiTietRequest;
-import com.example.shoes.dto.sanphamchitiet.response.KichThuocMauSacResponse;
 import com.example.shoes.dto.sanphamchitiet.response.SPCTBanHangResponse;
 import com.example.shoes.dto.sanphamchitiet.response.SanPhamChiTietDetailResponse;
 import com.example.shoes.dto.sanphamchitiet.response.SanPhamChiTietResponse;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.service.SanPhamChiTietService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.function.EntityResponse;
+
 
 import java.math.BigDecimal;
 import java.util.List;
