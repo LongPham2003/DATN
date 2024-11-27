@@ -497,7 +497,11 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
         hoaDon.setPhiVanChuyen(hoaDonRequest.getPhiVanChuyen());
         hoaDon.setNgayDuKien(hoaDonRequest.getNgayDuKien());
         hoaDon.setPhuongThucThanhToan(hoaDonRequest.getPhuongThucThanhToan());
-        hoaDon.setIdPhieuGiamGia(hoaDon.getIdPhieuGiamGia());
+        if(hoaDonRequest.getIdPhieuGiamGia()!=null){
+            PhieuGiamGia pgg = new PhieuGiamGia();
+            pgg.setId(hoaDonRequest.getIdPhieuGiamGia());
+            hoaDon.setIdPhieuGiamGia(pgg);
+        }
         hoaDon.setPhuongThucGiaoHang("Giao Hàng");
         hoaDon.setTrangThaiDonHang(TrangThai.CHO_XAC_NHAN); // Chưa thanh toán
         hoaDon.setTrangThaiThanhToan(false);

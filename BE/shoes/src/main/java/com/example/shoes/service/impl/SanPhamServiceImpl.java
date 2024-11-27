@@ -129,7 +129,7 @@ public class SanPhamServiceImpl implements SanPhamService {
 
         sanPham.setLoai(loai); // Gán đối tượng Loai cho SanPham
         sanPham.setTenSanPham(request.getTenSanPham());
-        sanPham.setNgayTao(LocalDate.now());
+        sanPham.setNgayTao(sanPham.getNgayTao());
         sanPham.setMoTa(request.getMoTa());
         sanPham.setTrangThai(request.getTrangThai());
 
