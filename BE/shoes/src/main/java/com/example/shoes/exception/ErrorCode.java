@@ -52,6 +52,8 @@ public enum ErrorCode {
     CART_NOT_FOUND(1005,"khong tim thay gio hang ",HttpStatus.NOT_FOUND),
     CUSTOMER_NOT_FOUND(1005,"khong tim khach hang tren he thong  ",HttpStatus.NOT_FOUND),
     CHUA_THANH_TOAN(1005,"Chưa Thanh Toán",HttpStatus.BAD_REQUEST),
+    INVALID_PHONE_NUMBER(1005,"Số điện thoại không được để trống!",HttpStatus.BAD_REQUEST),
+    INVALID_ADDRESS(1005,"Địa chỉ giao hàng không được để trống!",HttpStatus.BAD_REQUEST),
     ;
     private int code;
     private String message;

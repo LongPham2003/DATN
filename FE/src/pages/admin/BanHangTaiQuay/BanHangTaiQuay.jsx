@@ -517,7 +517,6 @@ export default function BanHangTaiQuay() {
           window.location.reload();
         }, 500);
       }, 900);
-
       // Xóa ID tạm thời sau 1 phút
       setTimeout(() => {
         setTempHoaDonId(null); // Xóa ID tạm thời sau 1 phút
