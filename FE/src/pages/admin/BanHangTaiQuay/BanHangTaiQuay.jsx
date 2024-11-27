@@ -369,14 +369,23 @@ export default function BanHangTaiQuay() {
 
   //Huy Hoa Don
   const huyHoaDon = async () => {
-    try {
-      await axios.delete(ApiHuyHoaDon);
-      toast.success("Hủy hóa đơn thành công");
-      LayDanhSachHoaDonChuaThanhToan();
-    } catch (error) {
-      console.log(error);
-      toast.error("Không thành công, có lỗi xảy ra");
-    }
+    Modal.confirm({
+      title: "Xác nhận",
+      content: "Bạn có chắc chắn muốn hủy hóa đơn này không?",
+      onOk: async () => {
+        try {
+          await axios.put(ApiHuyHoaDon);
+          toast.success("Hủy hóa đơn thành công");
+          LayDanhSachHoaDonChuaThanhToan();
+        } catch (error) {
+          console.log(error);
+          toast.error("Không thành công, có lỗi xảy ra");
+        }
+      },
+      onCancel() {
+        // Do nothing if the user cancels
+      },
+    });
   };
 
   // add Phieu Giam Gia
@@ -423,7 +432,7 @@ export default function BanHangTaiQuay() {
       await axios.delete(
         `${ApiXoaPhieuGiamGiaKhoiHoaDon}/${idPhieuGiamGiaDangChon}`,
       );
-      toast.success("Không áp dụng voucher tahnfh công");
+      toast.success("Hủy voucher thàng công");
       LayThongTinThanhToanCuaHoaDon();
       setIsSelectDisabled(false);
     } catch (error) {
@@ -781,7 +790,7 @@ export default function BanHangTaiQuay() {
                             {SPCT.tenSanPham} <br />
                             {SPCT.maSPCT} [{SPCT.kichThuoc} - {SPCT.mauSac}]
                             <br />
-                            {SPCT.donGia}
+                            {formatTien(SPCT.donGia)}
                           </td>
 
                           <td className="text-center">
@@ -840,7 +849,7 @@ export default function BanHangTaiQuay() {
                             </div>
                           </td>
 
-                          <td>{SPCT.donGia * SPCT.soLuong}</td>
+                          <td>{formatTien(SPCT.donGia * SPCT.soLuong)}</td>
                           <td>
                             <Popconfirm
                               title="Delete the task"
@@ -964,13 +973,15 @@ export default function BanHangTaiQuay() {
                     />
                   </div>
                 </div>
-                <div>{giaoHang && <div>{phiGiaoHang}</div>}</div>
+                <div>{giaoHang && <div>{formatTien(phiGiaoHang)}</div>}</div>
               </div>
 
               <div className="my-4 flex items-center justify-between">
                 <div>Thành tiền</div>
                 <div className="text-red-500">
-                  {formatCurrencyToNumber(tienPhaiThanhToan) + phiGiaoHang} VNĐ
+                  {formatTien(
+                    formatCurrencyToNumber(tienPhaiThanhToan) + phiGiaoHang,
+                  )}
                 </div>
               </div>
 
@@ -1222,7 +1233,7 @@ export default function BanHangTaiQuay() {
       )}
 
       <ToastContainer
-        position="top-right"
+        position="top-center"
         autoClose={500}
         hideProgressBar={false}
         newestOnTop={false}
