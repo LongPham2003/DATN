@@ -3,14 +3,16 @@ import { Badge } from "antd";
 import Search from "antd/es/input/Search";
 
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { ThemeContext } from "../../GlobalProvider";
 
 export default function Header() {
   const [tenKH, setTenKH] = useState("");
   const [role, setrole] = useState("");
 
   const [soLuong, setSoLuong] = useState();
+  const { reload } = useContext(ThemeContext);
 
   const ApiTongSoSPCT = `http://localhost:8080/api/giohang/tongsanphamnguoidung`;
   const layTongSoSP = async () => {
@@ -18,6 +20,7 @@ export default function Header() {
       const response = await axios.get(ApiTongSoSPCT);
       // Giả sử API trả về số lượng sản phẩm trong response.data.soLuong
       setSoLuong(response.data.result.tongSoLuong); // Cập nhật state với số lượng nhận được
+      console.log(response.data.result);
     } catch (error) {
       console.error("Có lỗi xảy ra khi lấy tổng số sản phẩm:", error);
     }
@@ -30,11 +33,11 @@ export default function Header() {
     setrole(role);
 
     layTongSoSP();
-  }, []);
+  }, [reload]);
 
   useEffect(() => {
     layTongSoSP();
-  }, []);
+  }, [reload]);
 
   return (
     <>
@@ -114,7 +117,7 @@ export default function Header() {
           >
             <div className="mt-1 flex items-center space-x-2">
               <Link to="/GioHang">
-                <Badge count={soLuong} size="small">
+                <Badge count={soLuong ? soLuong : 0} size="small">
                   <ShoppingCartOutlined
                     style={{ fontSize: "24px", color: "white" }}
                   />

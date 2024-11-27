@@ -1,11 +1,11 @@
 import { Button, InputNumber } from "antd";
 
 import axios from "./../../../../api/axiosConfig";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Bounce, toast, ToastContainer, Zoom } from "react-toastify";
 import Header from "../../Header/Header";
 import { Link } from "react-router-dom";
-
+import { ThemeContext } from "../../../GlobalProvider";
 
 export default function ChonSizeVSMauSac({ id }) {
   const [listSize, setListSize] = useState([]);
@@ -25,13 +25,13 @@ export default function ChonSizeVSMauSac({ id }) {
   const [soLuongMua, setSoLuongMua] = useState(1);
   const [Disable, setDisable] = useState(false);
 
+  const { reload, setReload } = useContext(ThemeContext);
 
   const ApiLayDanhSachSizeCuaSP = `http://localhost:8080/api/kichthuoc/kichthuoctheoidsp/${id}`;
   const ApiLayDanhMauSacCuaSP = `http://localhost:8080/api/mausac/mausactheoidsp/${id}`;
   const ApiLocLaySPCT = `http://localhost:8080/api/sanphamchitiet/loc?idSanPham=${id}`;
 
   const ApiLaySp = `http://localhost:8080/api/sanpham/SPClient?idSP=${id}`;
-
 
   const ApiThemSPCTVaoGioHang = `http://localhost:8080/api/giohang/themvaogiohangchitiet/${idSPCT}`;
 
@@ -79,7 +79,6 @@ export default function ChonSizeVSMauSac({ id }) {
 
         // Disable nút nếu không còn hàng
         setDisable(slt === 0);
-
       } else {
         setIdSPCT(null); // Không tìm thấy `id`
         setDonGia(null);
@@ -111,7 +110,6 @@ export default function ChonSizeVSMauSac({ id }) {
     }
   }, [idSize, idMauSac]);
 
-
   const [error, setError] = useState(""); // Biến lưu trạng thái lỗi
 
   const handleChange = (value) => {
@@ -128,6 +126,7 @@ export default function ChonSizeVSMauSac({ id }) {
     try {
       await axios.post(ApiThemSPCTVaoGioHang, { soLuong: soLuongMua });
       toast.success("Thêm thành công");
+      setReload(!reload);
     } catch (error) {
       console.log(error);
       toast.error("Bạn chưa chọn sản phẩm hoặc số lượng bạn cần mua");
@@ -143,7 +142,6 @@ export default function ChonSizeVSMauSac({ id }) {
     localStorage.setItem("idSPCTCHon", JSON.stringify(IdSPCTvaoLocal));
     localStorage.setItem("soLuong", JSON.stringify(luuSLvaoLocal));
   }, [IdSPCTvaoLocal, luuSLvaoLocal]);
-
 
   return (
     <>
@@ -193,14 +191,12 @@ export default function ChonSizeVSMauSac({ id }) {
         <br />
         <InputNumber
           min={1}
-
           value={soLuongMua} // Sử dụng `value` để đồng bộ với `soLuongMua`
           size="large"
           className="mx-2 w-[200px]"
           onChange={handleChange} // Giữ logic xử lý thay đổi
         />
         {error && <p style={{ color: "red", marginTop: "5px" }}>{error}</p>}
-
       </div>
       <div className="flex gap-2">
         <div className="flex gap-2">
@@ -254,7 +250,6 @@ export default function ChonSizeVSMauSac({ id }) {
         autoClose={1000}
         transition={Zoom}
       />
-
     </>
   );
 }
