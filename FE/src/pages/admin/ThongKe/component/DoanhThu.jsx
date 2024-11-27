@@ -66,11 +66,14 @@ export default function DoanhThu() {
   return (
     <>
       <div className="mb-4 ml-10 flex gap-3">
-        <DatePicker
-          className="border-blue-600"
-          onChange={handleDateChange}
-          value={selectedDate}
-        />
+        <div>
+          Chọn ngày muốn xem:&nbsp;
+          <DatePicker
+            className="border-blue-600"
+            onChange={handleDateChange}
+            value={selectedDate}
+          />
+        </div>
         <Button className="border-blue-600" onClick={DoanhThu}>
           Hôm nay
         </Button>
