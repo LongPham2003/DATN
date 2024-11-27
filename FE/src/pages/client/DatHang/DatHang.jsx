@@ -27,6 +27,7 @@ export default function DatHang() {
   const [listPhieuGiamGia, setListPhieuGiamGia] = useState([]);
   const [idPGGDangChon, setIdPhieuGiamGiaDangChon] = useState();
   const [phieuGiamGiaDangChon, setPhieuGiamGiaDangChon] = useState();
+  const [phuongThucThanhToan, setPhuongThucThanhToan] = useState("Tiền mặt");
 
   const ApiLayTTGHCT = `http://localhost:8080/api/giohang/laygiohangchitiet`;
   let ApiLayPhieuGiamGia = `http://localhost:8080/api/phieugiamgia/trang-thai-true`; // Danh Sach Phiếu Giam giá
@@ -70,21 +71,24 @@ export default function DatHang() {
         `${ApiLayThongTinPhieuGiamGiaDangChon}/${idPGG}`,
       );
       setPhieuGiamGiaDangChon(response.data.result);
-      // console.log(response.data.result);
-      // console.log( response.data.result.mucGiam);
+      console.log(response.data.result);
+      console.log(response.data.result.mucGiam);
       setdieuKienGiam(response.data.result.dieuKienGiamGia);
+      setTienDuocGiam(response.data.result.mucGiam);
     } catch (error) {
       console.error("Error fetching selected discount coupon:", error);
     }
   };
 
+  const chiTietSanPhams = listSP.map((item) => ({
+    idSpct: item.idSanPhamChiTiet,
+    soLuong: item.soLuong,
+  }));
+  console.log(chiTietSanPhams);
   // Hàm DatHang với xác nhận
   const DatHang = async (e) => {
     e.preventDefault();
-    const chiTietSanPhams = listSP.map((item) => ({
-      idSpct: item.idSanPhamChiTiet,
-      soLuong: item.soLuong,
-    }));
+
     // Hiển thị hộp thoại xác nhận
     try {
       await axios.post(ApiDatHangonLine, {
@@ -95,6 +99,7 @@ export default function DatHang() {
         phiVanChuyen: phiGiaoHang,
         diaChiChiTiet: diaChiGiaoHang,
         ngayDuKien: ngayDuKien,
+        tienPhaiThanhToan: thanhTien,
       });
       localStorage.removeItem("sanPhamChon");
       toast.success("Đặt hàng thành công");
@@ -190,7 +195,7 @@ export default function DatHang() {
       console.log(
         `Giảm theo %: ${mucGiamValue}% của ${tongTien} = ${tienGiam}`,
       );
-    } else if (hinhThucGiam === "VNĐ") {
+    } else if (hinhThucGiam === "VND") {
       // Nếu giảm giá trực tiếp
       tienGiam = formatCurrencyToNumber(mucGiam);
       console.log(`Giảm trực tiếp: ${tienGiam} VNĐ`);
@@ -253,6 +258,37 @@ export default function DatHang() {
     return Number(mucGiam); // Đảm bảo trả về kiểu số nếu đã là number
   }
 
+  // thanh toán vnpay
+  const handlePaymentClick = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8080/api/paymentvnpay/create-payment",
+        {
+          params: {
+            amount: thanhTien,
+          },
+        },
+      );
+
+      if (response.data) {
+        window.location.href = response.data;
+        // localStorage.setItem("check", "VNPAY");
+        localStorage.setItem(
+          "chiTietSanPhams",
+          JSON.stringify(chiTietSanPhams),
+        );
+        localStorage.setItem("idPhieuGiamGia", idPGGDangChon || null);
+        localStorage.setItem("soDienThoai", khachHang.sdt);
+        localStorage.setItem("phiVanChuyen", phiGiaoHang);
+        localStorage.setItem("diaChiChiTiet", diaChiGiaoHang);
+        localStorage.setItem("ngayDuKien", ngayDuKien);
+        localStorage.setItem("tienPhaiThanhToan", thanhTien);
+      }
+    } catch (error) {
+      console.error("Lỗi khi gọi API:", error);
+    }
+  };
+
   return (
     <>
       <div className="my-5 flex">
@@ -265,16 +301,16 @@ export default function DatHang() {
               <thead>
                 <tr>
                   <th>STT</th>
-                  <th>Anh</th>
-                  <th>San Pham</th>
-                  <th>So luong</th>
-                  <th>Don gia</th>
-                  <th>Thanh tien</th>
+                  <th>Ảnh</th>
+                  <th>Sản phẩm</th>
+                  <th>Số lượng</th>
+                  <th>Đơn giá</th>
+                  <th>Thành tiền</th>
                 </tr>
               </thead>
               <tbody className="text-center">
                 {listSP.map((ghct, index) => (
-                  <tr className="border-b-2">
+                  <tr key={index} className="border-b-2">
                     <td>{index + 1}</td>
                     <td>
                       <div className="flex justify-center">
@@ -303,7 +339,7 @@ export default function DatHang() {
         <div className="ml-8 w-1/3">
           <div className="ml-1">
             <span>Chọn phiếu giảm giá và địa chỉ</span>
-            <div className="my-4 flex gap-5">
+            <div className="my-2 flex gap-5">
               <span>Phieu giam gia</span>
               <Select
                 style={{ width: 300, height: "35px" }}
@@ -347,38 +383,39 @@ export default function DatHang() {
               </Select>
             </div>
             <br />
-            {/* <DiaChiMacDinhKhachHang /> */}
 
             <div>
               <div className="flex gap-10">
-                <span className="font-semibold">Tong tien: </span>
+                <span className="font-semibold">Tổng tiền: </span>
                 <span className="ml-auto">{formatTien(tongTien)}</span>
               </div>
               <div className="flex gap-10">
-                <span className="font-semibold">Phi giao hang: </span>
+                <span className="font-semibold">Phí giao hang: </span>
                 <span className="ml-auto">{formatTien(phiGiaoHang)}</span>
               </div>
               <div className="flex gap-10">
-                <span className="font-semibold">Tien duoc giam: </span>
+                <span className="font-semibold">Tiền được giảm: </span>
                 <span className="ml-auto"> {formatTien(TienDuocGiam)}</span>
               </div>
               <div className="flex gap-10">
-                <span className="font-semibold">Thanh tien: </span>
+                <span className="font-semibold">Thành tiền: </span>
                 <span className="ml-auto">{formatTien(thanhTien)}</span>
               </div>
 
               <div className="my-5 flex gap-10">
-                <span className="font-semibold">Ngay nhan hang du kien: </span>
+                <span className="font-semibold">Ngày nhận dự kiến: </span>
                 <span className="ml-auto">{ngayDuKien}</span>
               </div>
             </div>
           </div>
           <div>
-            <span>Thong tin nguoi dat</span>
-            <div>Họ Tên: {khachHang.hoTen ? khachHang.hoTen : ""}</div>
-            <div>
-              Số điện thoại:{" "}
-              {khachHang.sdt ? khachHang.sdt : "Bạn chưa thêm số điện thoại"}
+            <span>Thông tin người đặt</span>
+            <div className="flex justify-between">
+              <div>Họ Tên: {khachHang.hoTen ? khachHang.hoTen : ""}</div>
+              <div>
+                Số điện thoại:{" "}
+                {khachHang.sdt ? khachHang.sdt : "Bạn chưa thêm số điện thoại"}
+              </div>
             </div>
           </div>
           <div>
@@ -390,18 +427,48 @@ export default function DatHang() {
               setdiaChiGiaoHang={setdiaChiGiaoHang}
             />
           </div>
-          <div className="my-8">
-            <Popconfirm
-              title="Bạn có chắc chắn muốn đặt hàng không?"
-              onConfirm={DatHang}
-              okText="Có"
-              cancelText="Không"
-            >
-              <button className="h-16 w-full rounded-lg border bg-orange-600 text-2xl font-semibold text-white transition duration-300 ease-in-out hover:bg-black">
-                Đặt Hàng
-              </button>
-            </Popconfirm>
+          <div>
+            <p>Phương thức thanh toán:</p>
+            <div className="flex gap-5">
+              <input name="phuongThucThanhToan" defaultChecked type="radio" />{" "}
+              Thanh toán khi nhận hàng
+              <input
+                onClick={() => setPhuongThucThanhToan("Chuyển khoản")}
+                name="phuongThucThanhToan"
+                type="radio"
+              />{" "}
+              Chuyển khoản
+            </div>
           </div>
+          {phuongThucThanhToan === "Tiền mặt" && (
+            <div className="my-8">
+              <Popconfirm
+                title="Bạn có chắc chắn muốn đặt hàng không?"
+                onConfirm={DatHang}
+                okText="Có"
+                cancelText="Không"
+              >
+                <button className="h-16 w-full rounded-lg border bg-orange-600 text-2xl font-semibold text-white transition duration-300 ease-in-out hover:bg-black">
+                  Đặt Hàng
+                </button>
+              </Popconfirm>
+            </div>
+          )}
+
+          {phuongThucThanhToan === "Chuyển khoản" && (
+            <div className="my-8">
+              <Popconfirm
+                title="Bạn có chắc chắn muốn đặt hàng không?"
+                onConfirm={handlePaymentClick}
+                okText="Có"
+                cancelText="Không"
+              >
+                <button className="h-16 w-full rounded-lg border bg-orange-600 text-2xl font-semibold text-white transition duration-300 ease-in-out hover:bg-black">
+                  Đặt Hàng
+                </button>
+              </Popconfirm>
+            </div>
+          )}
         </div>
       </div>
       <ToastContainer position="top-center" hideProgressBar />

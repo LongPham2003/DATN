@@ -707,6 +707,15 @@ public class HoaDonServiceImpl implements HoaDonService {
         lichSuHoaDon.setTrangThai(TrangThai.DA_THANH_TOAN);
         lichSuHoaDon.setMoTa(xacNhanThanhToan.getMoTa());
         lichSuHoaDonRepo.save(lichSuHoaDon);
+        if(hoaDon.getPhuongThucGiaoHang().equals("Tại quầy")){
+            LichSuHoaDon lichSuHoaDon1 = new LichSuHoaDon();
+            lichSuHoaDon1.setIdHoaDon(hoaDon);
+            lichSuHoaDon1.setNguoiThucHien(getCurrentNhanVien().getHoTen());
+            lichSuHoaDon1.setTrangThai(TrangThai.HOAN_THANH);
+            lichSuHoaDon1.setMoTa("Hoàn thành");
+            lichSuHoaDonRepo.save(lichSuHoaDon1);
+        }
+
         return null;
     }
 

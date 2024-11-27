@@ -365,7 +365,7 @@ const HoaDonChiTiet = () => {
       <div className="my-3">
         <div className="flex items-center justify-between">
           <h2 className="text-[20px] font-bold text-pink-500">
-            Lịch sử thanh toán
+            Thời gian thanh toán
           </h2>
 
           <button
@@ -438,7 +438,7 @@ const HoaDonChiTiet = () => {
       />
       {OpenModelLSHD && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="flex h-[525px] max-h-[600px] w-[400px] justify-between overflow-y-auto rounded-lg bg-white p-8">
+          <div className="flex h-[525px] max-h-[600px] w-[450px] justify-between overflow-y-auto rounded-lg bg-white p-8">
             <div className="font-bold">
               <h3 className="mb-3">Lịch sử hóa đơn</h3>
 

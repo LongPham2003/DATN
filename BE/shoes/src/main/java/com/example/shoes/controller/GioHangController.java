@@ -99,6 +99,14 @@ public class GioHangController {
                 .result(response)
                 .build();
     }
+
+    @PostMapping("/dat-hang-vnpay")
+    public ApiResponse<HoaDonResponse> datHangVnpay(@RequestBody  HoaDonRequest hoaDonRequest) {
+        HoaDonResponse response = gioHangChiTietService.datHangVNPay(hoaDonRequest);
+        return ApiResponse.<HoaDonResponse>builder()
+                .result(response)
+                .build();
+    }
     // Lấy chi tiết giỏ hàng theo ID
     @GetMapping("/laygiohangchitiet/{id}")
     public ApiResponse<GioHangChiTietResponse> layGioHangChiTiet(@PathVariable Integer id) {
