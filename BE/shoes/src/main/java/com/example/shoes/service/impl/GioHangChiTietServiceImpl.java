@@ -550,9 +550,9 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
             hoaDonChiTiet.setTrangThai(TrangThai.CHO_XAC_NHAN);
             hoaDonChiTiet.setTrangThai(TrangThai.CHO_XAC_NHAN);
 
-            // Giảm số lượng tồn kho
-            sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - chiTietRequest.getSoLuong());
-            sanPhamChiTietRepo.save(sanPhamChiTiet);
+//            // Giảm số lượng tồn kho khi đơn được xác nhận
+//            sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - chiTietRequest.getSoLuong());
+//            sanPhamChiTietRepo.save(sanPhamChiTiet);
 
             // Thêm vào danh sách chi tiết hóa đơn
             hoaDonChiTietList.add(hoaDonChiTiet);
