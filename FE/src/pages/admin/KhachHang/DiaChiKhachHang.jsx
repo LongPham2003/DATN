@@ -196,7 +196,7 @@ export const DiaChiKhachHang = ({ idKhachHang }) => {
           // eslint-disable-next-line no-unused-vars
           .then((res) => {
             toast.success("Cập nhật thông tin thành công!");
-            navigate("/admin/khachhang");
+            navigate(0);
           })
 
           .catch((error) => {
@@ -255,7 +255,7 @@ export const DiaChiKhachHang = ({ idKhachHang }) => {
               name="province"
               value={selectedProvince}
               onChange={handleProvinceChange}
-              className="w-full rounded border p-2 "
+              className="w-full rounded border p-2"
               required
             >
               <option value="">Chọn tỉnh/thành phố</option>

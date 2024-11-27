@@ -42,6 +42,7 @@ import HoaDonChiTiet from "./pages/admin/QuanLiHoaDon/HoaDonChiTiet.jsx";
 import ThongTinCaNhan from "./pages/client/ThongTinCaNhan/ThongTinCaNhan.jsx";
 import DatHang from "./pages/client/DatHang/DatHang.jsx";
 import MuaNgay from "./pages/client/MuaNgay/MuaNgay.jsx";
+import TraCuuDonHang from "./pages/client/ThongTinCaNhan/TraCuuDonHang.jsx";
 
 function App() {
   return (
@@ -112,6 +113,17 @@ function App() {
                     <title>Đặt hàng</title>
                   </Helmet>
                   <DatHang />
+                </>
+              }
+            />
+            <Route
+              path="tracuudonhang"
+              element={
+                <>
+                  <Helmet>
+                    <title>Đơn hàng</title>
+                  </Helmet>
+                  <TraCuuDonHang />
                 </>
               }
             />

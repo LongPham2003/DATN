@@ -21,6 +21,8 @@ const HoaDonChiTiet = () => {
   const [lichSuHoaDon, setLichSuHoaDon] = useState([]);
   const [hoaDonChiTiet, setHoaDonChiTiet] = useState([]);
   const [ghiChu, setGhiChu] = useState("");
+  const [trangThaiThanhToan, setTrangThaiThanhToan] =
+    useState("Chưa thanh toán");
 
   // model lịch sử hóa đơn
   const [OpenModelLSHD, setOpenModelLSHD] = useState(false);
@@ -80,6 +82,7 @@ const HoaDonChiTiet = () => {
       .get(`http://localhost:8080/api/hoadon/${id}`)
       .then((res) => {
         setHoaDon(res.data.result);
+        setTrangThaiThanhToan(res.data.result.trangThaiThanhToan);
       })
       .catch((error) => {
         console.log(error);
@@ -367,13 +370,14 @@ const HoaDonChiTiet = () => {
           <h2 className="text-[20px] font-bold text-pink-500">
             Thời gian thanh toán
           </h2>
-
-          <button
-            onClick={openModalXNTT}
-            className="rounded bg-blue-500 px-2 py-2 text-white"
-          >
-            Xác nhận thanh toán
-          </button>
+          {trangThaiThanhToan === "Chưa thanh toán" && (
+            <button
+              onClick={openModalXNTT}
+              className="rounded bg-blue-500 px-2 py-2 text-white"
+            >
+              Xác nhận thanh toán
+            </button>
+          )}
         </div>
 
         <div>
