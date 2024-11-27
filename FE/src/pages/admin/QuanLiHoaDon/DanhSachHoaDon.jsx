@@ -56,7 +56,7 @@ export default function DanhSachHoaDon() {
     return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
   };
 
-  console.log(hoaDon);
+  // console.log(hoaDon);
 
   return (
     <>

@@ -107,7 +107,7 @@ export default function MuaNgay() {
       console.log(
         `Giảm theo %: ${mucGiamValue}% của ${tongTien} = ${tienGiam}`,
       );
-    } else if (hinhThucGiam === "VNĐ") {
+    } else if (hinhThucGiam === "VND") {
       // Nếu giảm giá trực tiếp
       tienGiam = formatCurrencyToNumber(mucGiam);
       console.log(`Giảm trực tiếp: ${tienGiam} VNĐ`);

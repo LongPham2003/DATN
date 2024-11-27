@@ -71,7 +71,7 @@ export default function DatHang() {
       );
       setPhieuGiamGiaDangChon(response.data.result);
       // console.log(response.data.result);
-      // console.log( response.data.result.mucGiam);
+      // setTienDuocGiam(response.data.result.mucGiam);
       setdieuKienGiam(response.data.result.dieuKienGiamGia);
     } catch (error) {
       console.error("Error fetching selected discount coupon:", error);
@@ -174,13 +174,10 @@ export default function DatHang() {
     // Kiểm tra điều kiện hóa đơn tối thiểu
     const dieuKienGiamGiaValue = formatCurrencyToNumber(dieuKienGiamGia);
     if (tongTien < dieuKienGiamGiaValue) {
-      console.log(
-        `Không đủ điều kiện áp dụng: Tổng tiền (${tongTien}) < Điều kiện tối thiểu (${dieuKienGiamGiaValue})`,
-      );
       return 0;
     }
 
-    console.log("Đủ điều kiện áp dụng phiếu giảm giá");
+    // console.log("Đủ điều kiện áp dụng phiếu giảm giá");
 
     let tienGiam = 0;
 
@@ -188,10 +185,10 @@ export default function DatHang() {
       // Nếu giảm theo %, tính toán giá trị giảm
       const mucGiamValue = formatMucGiam(mucGiam);
       tienGiam = (tongTien * mucGiamValue) / 100;
-      console.log(
-        `Giảm theo %: ${mucGiamValue}% của ${tongTien} = ${tienGiam}`,
-      );
-    } else if (hinhThucGiam === "VNĐ") {
+      // console.log(
+      //   `Giảm theo %: ${mucGiamValue}% của ${tongTien} = ${tienGiam}`,
+      // );
+    } else if (hinhThucGiam === "VND") {
       // Nếu giảm giá trực tiếp
       tienGiam = formatCurrencyToNumber(mucGiam);
       console.log(`Giảm trực tiếp: ${tienGiam} VNĐ`);

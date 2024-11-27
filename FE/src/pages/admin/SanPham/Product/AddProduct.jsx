@@ -1,3 +1,4 @@
+import { Modal } from "antd";
 import axios from "../../../../api/axiosConfig";
 import { useEffect, useState } from "react";
 import { Bounce, toast, ToastContainer } from "react-toastify";
@@ -50,7 +51,6 @@ export default function AddProduct() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       if (tenSanPham.trim() === "") {
         setErrorTenSP("Tên sản phẩm không được để trống");
@@ -60,34 +60,56 @@ export default function AddProduct() {
         return;
       }
 
-      if (!window.confirm("Bạn có chắc chắn muốn thêm sản phẩm này không?")) {
-        return; // Nếu người dùng chọn Cancel, dừng thao tác
-      }
-
-      const result = await add(newProduct); // Chờ kết quả từ hàm add
-
-      // Hiển thị hộp thoại xác nhận
-      if (result) {
-        toast.success("Thêm sản phẩm mới thành công", {
-          position: "top-right",
-          autoClose: 1000,
-          hideProgressBar: false,
-          newestOnTop: false,
-          closeOnClick: true,
-          rtl: false,
-          pauseOnFocusLoss: true,
-          draggable: true,
-          pauseOnHover: true,
-          theme: "light",
-          transition: Bounce,
-        });
-        // console.log(newProduct);
-        setTimeout(() => {
-          window.location.reload(); // Load lại trang sau 1 giây
-        }, 1700);
-      } else {
-        throw new Error("Thêm mới thất bại");
-      }
+      // Sử dụng Modal.confirm để hiển thị hộp thoại xác nhận
+      Modal.confirm({
+        title: "Xác nhận thêm sản phẩm",
+        content: "Bạn có chắc chắn muốn thêm sản phẩm này không?",
+        okText: "Có",
+        cancelText: "Không",
+        onOk: async () => {
+          try {
+            const result = await add(newProduct); // Chờ kết quả từ hàm add
+            // Hiển thị thông báo thành công
+            if (result) {
+              toast.success("Thêm sản phẩm mới thành công", {
+                position: "top-center",
+                autoClose: 1000,
+                hideProgressBar: false,
+                newestOnTop: false,
+                closeOnClick: true,
+                rtl: false,
+                pauseOnFocusLoss: true,
+                draggable: true,
+                pauseOnHover: true,
+                theme: "light",
+                transition: Bounce,
+              });
+              // Load lại trang sau 1 giây
+              setTimeout(() => {
+                window.location.reload();
+              }, 1700);
+            } else {
+              throw new Error("Thêm mới thất bại");
+            }
+          } catch (error) {
+            console.log(newProduct);
+            toast.error(error.message || "Thêm mới thất bại", {
+              position: "top-right",
+              autoClose: 1000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+              transition: Bounce,
+            });
+          }
+        },
+        onCancel() {
+          console.log("Thao tác thêm sản phẩm đã bị hủy");
+        },
+      });
     } catch (error) {
       console.log(newProduct);
       toast.error(error.message || "Thêm mới thất bại", {

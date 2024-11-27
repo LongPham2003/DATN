@@ -56,7 +56,7 @@ const RevenueChart = () => {
       ...(optionType === 2
         ? [
             {
-              label: "Số lượng sản phẩm bán trong tuần",
+              label: "Số lượng sản phẩm đã bán",
               data: Data.map((item) => item.sanPhamBanDuoc),
               backgroundColor: "rgba(153, 102, 255, 0.5)",
               borderColor: "rgba(153, 102, 255, 1)",
