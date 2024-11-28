@@ -5,6 +5,7 @@ import com.example.shoes.dto.hoadon.request.DatHangRequest;
 import com.example.shoes.dto.hoadon.request.GhiChu;
 import com.example.shoes.dto.hoadon.request.XacNhanThanhToan;
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
+import com.example.shoes.dto.hoadon.response.HoaDonTheoIdKH;
 import com.example.shoes.dto.payment.PaymentRequest;
 import com.example.shoes.entity.HoaDon;
 import com.example.shoes.exception.ApiResponse;
@@ -38,7 +39,12 @@ public class HoaDonController {
                 .result(hoaDonResponses)
                 .build();
     }
-
+    @GetMapping("/getAllHDTheoIDKH")
+    public ApiResponse<List<HoaDonTheoIdKH>> getAllHDTheoIDKH( @RequestParam(value = "maHD", required = false) String maHD,
+                                                                @RequestParam(value = "idKhachHang", required = false) Integer idKhachHang ) {
+    List<HoaDonTheoIdKH> hdresq = hoaDonService.getHoaDonTheoKH( idKhachHang,maHD);
+    return ApiResponse.<List<HoaDonTheoIdKH>>builder().result(hdresq).build();
+    }
 
     @GetMapping("/getall-dathanhtoan")
     public ApiResponse<List<HoaDonResponse>> getAllDaThanhToan() {
@@ -123,5 +129,7 @@ public class HoaDonController {
     private ApiResponse<Void> xacNhan(@PathVariable Integer id,@RequestBody XacNhanThanhToan xacNhanThanhToan) {
         return ApiResponse.<Void>builder().result(hoaDonService.xacNhanThanhToan(id,xacNhanThanhToan)).build();
     }
+
+
 
 }

@@ -723,7 +723,7 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
         Integer idKhachHang = getCurrentKhachHangId();
         GioHang gioHang = gioHangRepo.findByIdKhachHang_Id(idKhachHang)
                 .orElseThrow(() -> new AppException(ErrorCode.CART_NOT_FOUND));
-
+        capNhatSoSanPham(gioHang.getId());
         // Chuyển đổi đối tượng GioHang sang GioHangResponse (DTO)
         GioHangResponse response = new GioHangResponse();
         response.setId(gioHang.getId());

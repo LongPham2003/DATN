@@ -29,7 +29,7 @@ public class HoaDonResponse {
     private String phuongThucGiaoHang;
     private LocalDateTime ngayTao;
     private String trangThaiDonHang;
-    private boolean trangThaiThanhToan;
+    private String trangThaiThanhToan;
     private String tienShip;
     private String PhieuGiamGia;
 }
