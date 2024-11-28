@@ -1,7 +1,6 @@
-import { Modal, Popconfirm, Select } from "antd";
+import { Popconfirm, Select } from "antd";
 import axios from "./../../../api/axiosConfig";
-import { useEffect } from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ThongTinSPCT from "./../GioHang/component/ThongTinSPCT";
 import LayANhTheoIDSP from "./../../admin/SanPham/Product/LayANhTheoIDSP";
 import DiaCHiMacDinhKhachHang from "./../../admin/BanHangTaiQuay/DiaChiMacDinhKhachHang";
@@ -29,7 +28,7 @@ export default function DatHang() {
   const [phieuGiamGiaDangChon, setPhieuGiamGiaDangChon] = useState();
   const [phuongThucThanhToan, setPhuongThucThanhToan] = useState("Tiền mặt");
 
-  const ApiLayTTGHCT = `http://localhost:8080/api/giohang/laygiohangchitiet`;
+  let ApiLayTTGHCT = `http://localhost:8080/api/giohang/laygiohangchitiet`;
   let ApiLayPhieuGiamGia = `http://localhost:8080/api/phieugiamgia/trang-thai-true`; // Danh Sach Phiếu Giam giá
   let ApiLayThongTinPhieuGiamGiaDangChon = `http://localhost:8080/api/phieugiamgia`;
   let ApiDatHangonLine = `http://localhost:8080/api/giohang/dat-hang`;
@@ -59,20 +58,20 @@ export default function DatHang() {
       console.error("Error fetching discount coupons:", error);
     }
   };
-  // Hàm lấy thông tin phiếu giảm giá
+
+  // // Hàm lấy thông tin phiếu giảm giá
   const LayThongTinPhieuGiamGiaDangChon = async (idPGG) => {
     if (!idPGG) {
       setPhieuGiamGiaDangChon(null); // Reset nếu không có phiếu giảm giá được chọn
       return;
     }
-
     try {
       const response = await axios.get(
         `${ApiLayThongTinPhieuGiamGiaDangChon}/${idPGG}`,
       );
       setPhieuGiamGiaDangChon(response.data.result);
       // console.log(response.data.result);
-      // setTienDuocGiam(response.data.result.mucGiam);
+      // console.log(response.data.result.mucGiam);
       setdieuKienGiam(response.data.result.dieuKienGiamGia);
       setTienDuocGiam(response.data.result.mucGiam);
     } catch (error) {
@@ -80,13 +79,16 @@ export default function DatHang() {
     }
   };
 
-  // Hàm DatHang với xác nhận
+  const chiTietSanPhams = listSP.map((item) => ({
+    idSpct: item.idSanPhamChiTiet,
+    soLuong: item.soLuong,
+  }));
+
+  // // console.log(chiTietSanPhams);
+  // // Hàm DatHang với xác nhận
   const DatHang = async (e) => {
     e.preventDefault();
-    const chiTietSanPhams = listSP.map((item) => ({
-      idSpct: item.idSanPhamChiTiet,
-      soLuong: item.soLuong,
-    }));
+
     // Hiển thị hộp thoại xác nhận
     try {
       await axios.post(ApiDatHangonLine, {
@@ -113,7 +115,7 @@ export default function DatHang() {
     }
   };
 
-  // Gọi hàm khi idPGGDangChon thay đổi
+  // // Gọi hàm khi idPGGDangChon thay đổi
   useEffect(() => {
     LayThongTinPhieuGiamGiaDangChon(idPGGDangChon);
   }, [idPGGDangChon]);
@@ -136,17 +138,10 @@ export default function DatHang() {
     }
   };
 
-  useEffect(async () => {
-    try {
-      await Promise.all([
-        LuuSPVaoList(),
-        LayDanhSachPhieuGiamGia(),
-        fetchKhachHang(),
-      ]);
-      // console.log("Tất cả các tác vụ đã hoàn thành");
-    } catch (error) {
-      console.error("Có lỗi xảy ra trong khi chạy các tác vụ:", error);
-    }
+  useEffect(() => {
+    LuuSPVaoList();
+    LayDanhSachPhieuGiamGia();
+    fetchKhachHang();
   }, []);
 
   useEffect(() => {
@@ -176,10 +171,13 @@ export default function DatHang() {
     // Kiểm tra điều kiện hóa đơn tối thiểu
     const dieuKienGiamGiaValue = formatCurrencyToNumber(dieuKienGiamGia);
     if (tongTien < dieuKienGiamGiaValue) {
+      console.log(
+        `Không đủ điều kiện áp dụng: Tổng tiền (${tongTien}) < Điều kiện tối thiểu (${dieuKienGiamGiaValue})`,
+      );
       return 0;
     }
 
-    console.log("Đủ điều kiện áp dụng phiếu giảm giá");
+    //   console.log("Đủ điều kiện áp dụng phiếu giảm giá");
 
     let tienGiam = 0;
 
@@ -187,9 +185,9 @@ export default function DatHang() {
       // Nếu giảm theo %, tính toán giá trị giảm
       const mucGiamValue = formatMucGiam(mucGiam);
       tienGiam = (tongTien * mucGiamValue) / 100;
-      // console.log(
-      //   `Giảm theo %: ${mucGiamValue}% của ${tongTien} = ${tienGiam}`,
-      // );
+      console.log(
+        `Giảm theo %: ${mucGiamValue}% của ${tongTien} = ${tienGiam}`,
+      );
     } else if (hinhThucGiam === "VND") {
       // Nếu giảm giá trực tiếp
       tienGiam = formatCurrencyToNumber(mucGiam);
@@ -230,7 +228,7 @@ export default function DatHang() {
     return parseInt(value.replace(/[^\d]/g, ""));
   };
 
-  //Them VND
+  // //Them VND
   function formatTien(value) {
     // Loại bỏ dấu phân cách thập phân và chuyển thành số
     const parsedValue = parseFloat(value.toString().replace(",", "."));
@@ -253,7 +251,7 @@ export default function DatHang() {
     return Number(mucGiam); // Đảm bảo trả về kiểu số nếu đã là number
   }
 
-  // thanh toán vnpay
+  // // thanh toán vnpay
   const handlePaymentClick = async () => {
     try {
       const response = await axios.get(
@@ -378,7 +376,6 @@ export default function DatHang() {
               </Select>
             </div>
             <br />
-            {/* <DiaChiMacDinhKhachHang /> */}
 
             <div>
               <div className="flex gap-10">
@@ -426,7 +423,12 @@ export default function DatHang() {
           <div>
             <p>Phương thức thanh toán:</p>
             <div className="flex gap-5">
-              <input name="phuongThucThanhToan" defaultChecked type="radio" />{" "}
+              <input
+                onClick={() => setPhuongThucThanhToan("Tiền mặt")}
+                name="phuongThucThanhToan"
+                defaultChecked
+                type="radio"
+              />{" "}
               Thanh toán khi nhận hàng
               <input
                 onClick={() => setPhuongThucThanhToan("Chuyển khoản")}

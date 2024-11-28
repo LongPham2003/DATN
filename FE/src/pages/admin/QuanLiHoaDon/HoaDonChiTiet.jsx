@@ -15,6 +15,7 @@ import { Bounce, toast, ToastContainer } from "react-toastify";
 import ThongTinHoaDon from "./ThongTinHoaDon";
 import ThongTinKhachHang from "./ThongTinKhachHang";
 import XacNhanThanhToan from "./XacNhanThanhToan";
+import { ExportPDF, generatePDF } from "../XuatFilePDF/ExportPDF";
 const HoaDonChiTiet = () => {
   const { id } = useParams();
   const [hoaDon, setHoaDon] = useState([]);
@@ -118,9 +119,9 @@ const HoaDonChiTiet = () => {
     (item) => item.trangThai === "DA_THANH_TOAN",
   );
 
-  console.log(thanhToan);
-  console.log(lichSuHoaDon);
-  console.log(hoaDon);
+  // console.log(thanhToan);
+  // console.log(lichSuHoaDon);
+  // console.log(hoaDon);
 
   const formatDate = (dateTimeString) => {
     const date = new Date(dateTimeString);
@@ -250,7 +251,10 @@ const HoaDonChiTiet = () => {
     });
   };
 
-  console.log(hoaDon);
+  const handleGenPDF = () => {
+    generatePDF();
+  };
+  // console.log(hoaDon);
 
   return (
     <div className="mx-3 py-3">
@@ -345,7 +349,10 @@ const HoaDonChiTiet = () => {
           )}
 
           {hoaDon.trangThaiDonHang === "Hoàn thành" && (
-            <button className="rounded bg-blue-500 px-2 py-1 text-white">
+            <button
+              className="rounded bg-blue-500 px-2 py-1 text-white"
+              onClick={handleGenPDF}
+            >
               Xuất Hóa Đơn
             </button>
           )}
@@ -619,6 +626,9 @@ const HoaDonChiTiet = () => {
           </div>
         </div>
       )}{" "}
+      <div style={{ display: "none" }}>
+        <ExportPDF idHoaDon={id} />
+      </div>
     </div>
   );
 };

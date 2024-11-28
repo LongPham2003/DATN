@@ -10,11 +10,14 @@ import { ThemeContext } from "../../GlobalProvider";
 export default function Header() {
   const [tenKH, setTenKH] = useState("");
   const [role, setrole] = useState("");
+  const [idKH, setIdKH] = useState();
 
   const [soLuong, setSoLuong] = useState();
   const { reload } = useContext(ThemeContext);
 
   const ApiTongSoSPCT = `http://localhost:8080/api/giohang/tongsanphamnguoidung`;
+  const ApiTimKH = `http://localhost:8080/client/khachhang/timtheoEmail?email=${tenKH}`;
+
   const layTongSoSP = async () => {
     try {
       const response = await axios.get(ApiTongSoSPCT);
@@ -32,7 +35,20 @@ export default function Header() {
     setTenKH(ten);
     setrole(role);
 
+    const TimKh = async () => {
+      try {
+        const resp = await axios.get(
+          `http://localhost:8080/client/khachhang/timtheoEmail?email=${localStorage.getItem("email")}`,
+        );
+        setIdKH(resp.data.id);
+        // console.log(resp.data.id);
+        localStorage.setItem("idKH", resp.data.id);
+      } catch (error) {
+        console.log(error);
+      }
+    };
     layTongSoSP();
+    TimKh();
   }, [reload]);
 
   useEffect(() => {
@@ -65,8 +81,8 @@ export default function Header() {
               <span>Quan li cua hang</span>
             </Link>
           )}
-          <a
-            href="#"
+          <Link
+            to="/theodoidonhang"
             className="flex items-center space-x-1 hover:text-gray-400"
           >
             <svg
@@ -84,7 +100,7 @@ export default function Header() {
               />
             </svg>
             <span>Tra cứu đơn hàng</span>
-          </a>
+          </Link>
           <Link
             to="/thongtin"
             className="flex items-center space-x-1 hover:text-gray-400"

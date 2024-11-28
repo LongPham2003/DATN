@@ -333,9 +333,7 @@ export default function BanHangTaiQuay() {
         ]);
         toast.success("Cập nhật thành công");
       } else {
-        toast.warning(
-          "Sản phẩm đã hết hàng, không thể tăng số lượng"
-        );
+        toast.warning("Sản phẩm đã hết hàng, không thể tăng số lượng");
       }
     } catch (error) {
       console.log(error);
@@ -1154,8 +1152,14 @@ export default function BanHangTaiQuay() {
           <InputNumber
             addonAfter={"VNĐ"}
             defaultValue={0}
+            formatter={
+              (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ".") // Thêm dấu chấm cho hàng nghìn
+            }
+            parser={(value) =>
+              value.replace(/\./g, "").replace(/VNĐ\s?|(,*)/g, "")
+            } // Xóa dấu chấm trước khi lưu giá trị
             onChange={(value) => {
-              tinhTienThua(value), console.log(value);
+              tinhTienThua(value || 0); // Gọi hàm với giá trị 0 nếu value là null
             }}
           />
         </div>
@@ -1166,8 +1170,8 @@ export default function BanHangTaiQuay() {
             addonAfter={"VNĐ"}
             defaultValue={0}
             disabled
-            formatter={(value) =>
-              `VNĐ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+            formatter={
+              (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ".") // Format hàng nghìn với dấu chấm
             }
           />
           {error && <p className="text-red-500">{error}</p>}
