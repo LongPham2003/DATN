@@ -129,7 +129,7 @@ public class SanPhamServiceImpl implements SanPhamService {
 
         sanPham.setLoai(loai); // Gán đối tượng Loai cho SanPham
         sanPham.setTenSanPham(request.getTenSanPham());
-        sanPham.setNgayTao(LocalDate.now());
+        sanPham.setNgayTao(sanPham.getNgayTao());
         sanPham.setMoTa(request.getMoTa());
         sanPham.setTrangThai(request.getTrangThai());
 
@@ -189,8 +189,10 @@ public class SanPhamServiceImpl implements SanPhamService {
     }
 
     @Override
+
     public List<SanPhamClient> sanPhamClient(String tenSP, Integer idLoai, Integer kichThuoc, Integer idMauSac, BigDecimal donGiaMin, BigDecimal donGiaMax) {
         return sanPhamRepo.sanPhamClient(tenSP, idLoai,kichThuoc,idMauSac,donGiaMin,donGiaMax);
+
     }
 
 

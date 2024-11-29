@@ -79,7 +79,7 @@ export default function SanPhamBanChay() {
         // Chuyển đổi lại thành chuỗi ISO để truyền vào URL
         const startDateString = startDate.toISOString().split("T")[0]; // Chỉ lấy phần ngày
         const endDateString = endDate.toISOString().split("T")[0]; // Chỉ lấy phần ngày
-        
+
         // Kiểm tra nếu ngày bắt đầu và ngày kết thúc là cùng một ngày
         if (startDateString === endDateString) {
           // Nếu cùng ngày, gọi API với tham số "homNay"
@@ -153,35 +153,37 @@ export default function SanPhamBanChay() {
             </tr>
           </thead>
           <tbody>
-            {ListSP.map((item, index) => (
-              <tr key={index} className="border-b-2 text-center">
-                <td>{index + 1}</td>
-                <td>
-                  <div className="flex justify-center">
-                    <LayANhTheoIDSP
-                      id={item.idSPCTBanChayNhat}
-                      className="h-[130px] w-[130px]"
-                    />
-                  </div>
-                </td>
-                <td>
-                  <div className="ml-[100px] text-left">
-                    <b>
-                      {item.tenSanPham}
-                      <div className="text-red-500">
-                        {formatTien(item.giaThapNhat)} -{" "}
-                        {formatTien(item.giaCaoNhat)}
+            {ListSP
+              ? ListSP.map((item, index) => (
+                  <tr key={index} className="border-b-2 text-center">
+                    <td>{index + 1}</td>
+                    <td>
+                      <div className="flex justify-center">
+                        <LayANhTheoIDSP
+                          id={item.idSPCTBanChayNhat}
+                          className="h-[130px] w-[130px]"
+                        />
                       </div>
-                    </b>
-                    <div className="font-light">Loại: {item.tenLoai}</div>
-                    <div className="font-light">
-                      Thương hiệu: {item.tenThuongHieuBanChay}
-                    </div>
-                  </div>
-                </td>
-                <td>{item.tongSoLuongBanDuoc}</td>
-              </tr>
-            ))}
+                    </td>
+                    <td>
+                      <div className="ml-[100px] text-left">
+                        <b>
+                          {item.tenSanPham}
+                          <div className="text-red-500">
+                            {formatTien(item.giaThapNhat)} -{" "}
+                            {formatTien(item.giaCaoNhat)}
+                          </div>
+                        </b>
+                        <div className="font-light">Loại: {item.tenLoai}</div>
+                        <div className="font-light">
+                          Thương hiệu: {item.tenThuongHieuBanChay}
+                        </div>
+                      </div>
+                    </td>
+                    <td>{item.tongSoLuongBanDuoc}</td>
+                  </tr>
+                ))
+              : "Hôm nay chưa bán gì"}
           </tbody>
         </table>
       </div>

@@ -21,6 +21,7 @@ public interface GioHangChiTietService {
     HoaDonResponse muaHangTuGioHangChiTiet(List<HoaDonChiTietRequest> chiTietRequests);
     void thanhToan(Integer idHoaDon, HoaDonRequest hoaDonRequest);
     HoaDonResponse datHang( HoaDonRequest hoaDonRequest);
+    HoaDonResponse datHangVNPay( HoaDonRequest hoaDonRequest);
     HoaDonResponse nhanVienXacNhan(Integer idHoaDon);
     GioHangResponse layGioHangTheoIdKhachHang();
 

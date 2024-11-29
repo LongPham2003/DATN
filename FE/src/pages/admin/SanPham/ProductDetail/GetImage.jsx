@@ -69,7 +69,6 @@ const GetImage = ({ fileList, setFileList }) => {
         onPreview={handlePreview}
         onChange={handleChange}
         beforeUpload={() => false}
-        multiple
         onRemove={(file) =>
           new Promise((resolve, reject) => {
             Modal.confirm({

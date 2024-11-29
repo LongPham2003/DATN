@@ -12,8 +12,6 @@ export default function UpdateProductDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-
-
   const [idSanPham, setIdSanPham] = useState();
   const [SPCT, setSPCT] = useState({});
   const [SP, setSP] = useState({});
@@ -137,7 +135,16 @@ export default function UpdateProductDetail() {
     getData(); // lay dữ liệu\
     console.log(hinhAnh);
   }, []);
+  const formatCurrencyToNumber = (value) => {
+    // Đảm bảo giá trị là chuỗi trước khi sử dụng replace
+    const stringValue = String(value);
 
+    // Loại bỏ tất cả các ký tự không phải là số
+    const formattedValue = stringValue.replace(/[^\d]/g, "");
+
+    // Chuyển chuỗi thành số và trả về kết quả
+    return parseInt(formattedValue, 10);
+  };
   return (
     <>
       <div className="mx-10 font-mono">
@@ -176,10 +183,16 @@ export default function UpdateProductDetail() {
                   marginLeft: "43px",
                 }}
                 size="large"
-                value={SPCT.donGia}
+                value={
+                  SPCT.donGia
+                    ? `${SPCT.donGia.replace(/\B(?=(\d{3})+(?!\d))/g, ".")} `
+                    : "0 VNĐ"
+                }
                 onChange={(e) => {
-                  setSPCT({ ...SPCT, donGia: e.target.value }); // Sửa Dữ liệu trược tiếp vào Sate SPCT
-                  // console.log(value);
+                  // Lấy giá trị nhập vào và loại bỏ "VNĐ" cùng các ký tự không phải số
+                  const rawValue = e.target.value.replace(/[^0-9]/g, "");
+                  // Cập nhật state với giá trị thô
+                  setSPCT({ ...SPCT, donGia: rawValue });
                 }}
               />
             </div>

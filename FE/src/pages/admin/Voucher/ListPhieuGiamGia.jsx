@@ -201,6 +201,7 @@ export default function ListPhieuGiamGia() {
             <thead>
               <tr className="bg-gray-100">
                 <th className="border-b px-4 py-2 text-[12px]">STT</th>
+                <th className="border-b px-4 py-2 text-[12px]">Mã</th>
                 <th className="border-b px-4 py-2 text-[12px]">Tên Phiếu</th>
                 <th className="border-b px-4 py-2 text-[12px]">
                   Điều Kiện Giảm
@@ -223,6 +224,7 @@ export default function ListPhieuGiamGia() {
                   <td className="border-b px-4 py-2">
                     {index + 1 + (trangHienTai - 1) * pageSize}
                   </td>
+                  <td className="border-b px-4 py-2">{item.ma}</td>
                   <td className="border-b px-4 py-2">{item.tenVoucher}</td>
                   <td className="border-b px-4 py-2">{item.dieuKienGiamGia}</td>
                   <td className="border-b px-4 py-2">{item.hinhThucGiam}</td>

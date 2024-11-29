@@ -46,4 +46,5 @@ public class HoaDonRequest {
     private Date ngayDuKien;
 
     private BigDecimal tienPhaiThanhToan;
+
 }

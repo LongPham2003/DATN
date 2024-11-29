@@ -23,6 +23,9 @@ public class PhieuGiamGia extends CrudByAt {
     @Column(name = "id")
     private Integer id;
 
+    @Column(name = "ma")
+    private String ma;
+
     @NotBlank(message = "Tên voucher không được để trống")
     @Column(name = "ten_voucher")
     private String tenVoucher;

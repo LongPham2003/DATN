@@ -38,10 +38,12 @@ import TrangChu from "./pages/client/TrangChu/TrangChu.jsx";
 import GioHang from "./pages/client/GioHang/GioHang.jsx";
 
 import ChiTietSanPham from "./pages/client/ChiTietSanPham/ChiTietSanPham.jsx";
+
 import HoaDonChiTiet from "./pages/admin/QuanLiHoaDon/HoaDonChiTiet.jsx";
 import ThongTinCaNhan from "./pages/client/ThongTinCaNhan/ThongTinCaNhan.jsx";
 import DatHang from "./pages/client/DatHang/DatHang.jsx";
 import MuaNgay from "./pages/client/MuaNgay/MuaNgay.jsx";
+import TheoDoiDonHang from "./pages/client/TheoDoiDonHang/TheoDoiDonHang.jsx";
 
 function App() {
   return (
@@ -134,6 +136,17 @@ function App() {
                     <title>Thông tin cá nhân</title>
                   </Helmet>
                   <ThongTinCaNhan />
+                </>
+              }
+            />
+            <Route
+              path="theodoidonhang"
+              element={
+                <>
+                  <Helmet>
+                    <title>Theo dõi đơn hàng</title>
+                  </Helmet>
+                  <TheoDoiDonHang />
                 </>
               }
             />

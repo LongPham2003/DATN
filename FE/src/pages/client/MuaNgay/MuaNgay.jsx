@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import DiaCHiMacDinhKhachHang from "../../admin/BanHangTaiQuay/DiaChiMacDinhKhachHang";
-import { Select } from "antd";
+import { Popconfirm, Select } from "antd";
 import LayAnhTheoIdSP from "../../admin/SanPham/Product/LayANhTheoIDSP";
 
 export default function MuaNgay() {
@@ -16,7 +16,7 @@ export default function MuaNgay() {
   const [size, setSize] = useState();
   const [mauSac, setMauSac] = useState();
   const [donGia, setDonGia] = useState();
-
+  const [khachHang, setKhachHang] = useState({});
   const [tongTien, setTongTien] = useState(0);
   const [TienDuocGiam, setTienDuocGiam] = useState(0);
   const [thanhTien, setThanhTien] = useState(0);
@@ -107,7 +107,7 @@ export default function MuaNgay() {
       console.log(
         `Giảm theo %: ${mucGiamValue}% của ${tongTien} = ${tienGiam}`,
       );
-    } else if (hinhThucGiam === "VNĐ") {
+    } else if (hinhThucGiam === "VND") {
       // Nếu giảm giá trực tiếp
       tienGiam = formatCurrencyToNumber(mucGiam);
       console.log(`Giảm trực tiếp: ${tienGiam} VNĐ`);
@@ -139,13 +139,21 @@ export default function MuaNgay() {
       ];
 
       await axios.post(ApiDatHangonLine, {
+        phuongThucThanhToan: "Tiền mặt",
         chiTietSanPhams,
-
         idPhieuGiamGia: idPGGDangChon || null,
+        soDienThoai: khachHang.sdt,
+        phiVanChuyen: phiGiaoHang,
+        diaChiChiTiet: diaChiGiaoHang,
+        ngayDuKien: ngayDuKien,
+        tienPhaiThanhToan: thanhTien,
       });
 
       setTimeout(() => {
         navigate("/trangchu");
+        setTimeout(() => {
+          window.location.reload();
+        }, 500);
       }, 1000);
       toast.success("Đặt hàng thành công");
     } catch (error) {
@@ -171,7 +179,7 @@ export default function MuaNgay() {
     async function fetchKhachHang() {
       try {
         const response = await axios.get(ApiTimKhTheoEmail);
-        // setKhachHang(response.data);
+        setKhachHang(response.data);
         setIdKH(response.data.id);
         // console.log(response.data.id);
       } catch (error) {
@@ -358,12 +366,16 @@ export default function MuaNgay() {
             />
           </div>
           <div className="my-8">
-            <button
-              onClick={DatHang}
-              className="h-16 w-full rounded-lg border bg-orange-600 text-2xl font-semibold text-white transition duration-300 ease-in-out hover:bg-black"
+            <Popconfirm
+              title="Bạn có chắc chắn muốn đặt hàng không?"
+              onConfirm={DatHang}
+              okText="Có"
+              cancelText="Không"
             >
-              Đặt Hàng
-            </button>
+              <button className="h-16 w-full rounded-lg border bg-orange-600 text-2xl font-semibold text-white transition duration-300 ease-in-out hover:bg-black">
+                Đặt Hàng
+              </button>
+            </Popconfirm>
           </div>
         </div>
       </div>

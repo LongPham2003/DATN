@@ -19,6 +19,8 @@ public class PhieuGiamGiaResponse {
 
     private Integer id;
 
+    private String ma;
+
     private String tenVoucher;
 
     private String dieuKienGiamGia;

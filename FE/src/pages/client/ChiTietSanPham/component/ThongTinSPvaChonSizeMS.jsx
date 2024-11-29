@@ -1,9 +1,11 @@
 import { Button, InputNumber } from "antd";
+
 import axios from "./../../../../api/axiosConfig";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Bounce, toast, ToastContainer, Zoom } from "react-toastify";
 import Header from "../../Header/Header";
 import { Link } from "react-router-dom";
+import { ThemeContext } from "../../../GlobalProvider";
 
 export default function ChonSizeVSMauSac({ id }) {
   const [listSize, setListSize] = useState([]);
@@ -19,8 +21,11 @@ export default function ChonSizeVSMauSac({ id }) {
   const [ThuongHieu, setThuongHieu] = useState(null);
   const [DeGiay, setDeGiay] = useState(null);
   const [ChatLieu, setChatLieu] = useState(null);
+
   const [soLuongMua, setSoLuongMua] = useState(1);
   const [Disable, setDisable] = useState(false);
+
+  const { reload, setReload } = useContext(ThemeContext);
 
   const ApiLayDanhSachSizeCuaSP = `http://localhost:8080/api/kichthuoc/kichthuoctheoidsp/${id}`;
   const ApiLayDanhMauSacCuaSP = `http://localhost:8080/api/mausac/mausactheoidsp/${id}`;
@@ -57,12 +62,13 @@ export default function ChonSizeVSMauSac({ id }) {
 
       const data = responSPCT.data.result;
       setSPCT(data); // Lưu toàn bộ dữ liệu SPCT
-      console.log(data);
+      // console.log(data);
 
       if (Array.isArray(data) && data.length > 0) {
         setIdSPCT(data[0].id); // Lấy `id` của phần tử đầu tiên
         setDonGia(data[0].donGia);
         setChatLieu(data[0].chatLieu);
+
         setDeGiay(data[0].deGiay);
         setThuongHieu(data[0].thuongHieu);
         setMa(data[0].ma);
@@ -120,6 +126,7 @@ export default function ChonSizeVSMauSac({ id }) {
     try {
       await axios.post(ApiThemSPCTVaoGioHang, { soLuong: soLuongMua });
       toast.success("Thêm thành công");
+      setReload(!reload);
     } catch (error) {
       console.log(error);
       toast.error("Bạn chưa chọn sản phẩm hoặc số lượng bạn cần mua");
@@ -237,6 +244,7 @@ export default function ChonSizeVSMauSac({ id }) {
           )
         ) : null}
       </div>
+
       <ToastContainer
         position="top-center"
         autoClose={1000}
