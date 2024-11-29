@@ -119,7 +119,10 @@ export default function TheoDoiDonHang() {
                   {hd.ngayDatHang}
                 </div>
                 <div className="mt-4">
-                  Ngày nhận hàng dự kiến:{hd.ngayGiaoHang}
+                  {hd.trangThaiDonHang === "HOAN_THANH"
+                    ? "Ngày giao:"
+                    : "Ngày nhận hàng dự kiến:"}
+                  {hd.ngayGiaoHang}
                 </div>
                 <div className="mt-4">
                   <span className="font-bold"> Tổng tiền hàng:</span>{" "}

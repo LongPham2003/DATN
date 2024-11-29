@@ -1,11 +1,12 @@
 import { TrashIcon, XMarkIcon } from "@heroicons/react/16/solid";
 import { Button, Checkbox, Input, Popconfirm, Select } from "antd";
 import axios from "./../../../api/axiosConfig";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import ThongTinSPCT from "./component/ThongTinSPCT";
 import LayANhTheoIDSp from "./../../admin/SanPham/Product/LayANhTheoIDSP";
 import { toast, ToastContainer, Zoom } from "react-toastify";
 import { Link } from "react-router-dom";
+import { ThemeContext } from "../../GlobalProvider";
 
 export default function GioHang() {
   const [ListSPCT, setListSPCT] = useState([]);
@@ -15,7 +16,7 @@ export default function GioHang() {
   const [IdGH, setIdGH] = useState();
   const [soLuongTon, setSoLuongTon] = useState();
   const [IdGioHangChiTiet, setIdGioHangChiTiet] = useState(0);
-
+  const { reload, setReload } = useContext(ThemeContext);
   const ApiLayDanhSachSPCT = `http://localhost:8080/api/giohang/laytatcagiohangchitiet`;
   const ApiCapNhatSoLuongMua = `http://localhost:8080/api/giohang/capnhatgiohangchitiet`;
   const ApiXoaSPKhoiGioHang = `http://localhost:8080/api/giohang/xoagiohangchitiet`;
@@ -107,6 +108,7 @@ export default function GioHang() {
       await axios.delete(`${ApiXoaSPKhoiGioHang}/${IdGioHangChiTiet}`);
       toast.success("Đã xóa SP khỏi Giỏ hàng");
       LayDanhSachSP();
+      setReload(!reload);
     } catch (error) {
       console.log(error);
 
