@@ -76,7 +76,6 @@ export default function ChonSizeVSMauSac({ id }) {
 
         const slt = data[0].soLuong;
         setSoLuongTon(slt);
-
         // Disable nút nếu không còn hàng
         setDisable(slt === 0);
       } else {

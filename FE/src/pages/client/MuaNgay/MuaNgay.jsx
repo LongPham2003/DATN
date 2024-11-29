@@ -29,6 +29,7 @@ export default function MuaNgay() {
   const [listPhieuGiamGia, setListPhieuGiamGia] = useState([]);
   const [idPGGDangChon, setIdPhieuGiamGiaDangChon] = useState();
   const [phieuGiamGiaDangChon, setPhieuGiamGiaDangChon] = useState();
+  const [phuongThucThanhToan, setPhuongThucThanhToan] = useState("Tiền mặt");
 
   let ApiLayPhieuGiamGia = `http://localhost:8080/api/phieugiamgia/trang-thai-true`; // Danh Sach Phiếu Giam giá
   let ApiLayThongTinPhieuGiamGiaDangChon = `http://localhost:8080/api/phieugiamgia`;
@@ -128,16 +129,16 @@ export default function MuaNgay() {
     return tienGiam;
   };
 
+  const chiTietSanPhams = [
+    {
+      idSpct: IdSPCt,
+      soLuong: soLuongMua,
+    },
+  ];
+
   const DatHang = async (e) => {
     e.preventDefault();
     try {
-      const chiTietSanPhams = [
-        {
-          idSpct: IdSPCt,
-          soLuong: soLuongMua,
-        },
-      ];
-
       await axios.post(ApiDatHangonLine, {
         phuongThucThanhToan: "Tiền mặt",
         chiTietSanPhams,
@@ -239,6 +240,37 @@ export default function MuaNgay() {
     }
     return Number(mucGiam); // Đảm bảo trả về kiểu số nếu đã là number
   }
+
+  // thanh toán vnpay
+  const handlePaymentClick = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8080/api/paymentvnpay/create-payment",
+        {
+          params: {
+            amount: thanhTien,
+          },
+        },
+      );
+
+      if (response.data) {
+        window.location.href = response.data;
+        // localStorage.setItem("check", "VNPAY");
+        localStorage.setItem(
+          "chiTietSanPhams",
+          JSON.stringify(chiTietSanPhams),
+        );
+        localStorage.setItem("idPhieuGiamGia", idPGGDangChon || null);
+        localStorage.setItem("soDienThoai", khachHang.sdt);
+        localStorage.setItem("phiVanChuyen", phiGiaoHang);
+        localStorage.setItem("diaChiChiTiet", diaChiGiaoHang);
+        localStorage.setItem("ngayDuKien", ngayDuKien);
+        localStorage.setItem("tienPhaiThanhToan", thanhTien);
+      }
+    } catch (error) {
+      console.error("Lỗi khi gọi API:", error);
+    }
+  };
 
   return (
     <>
@@ -365,18 +397,48 @@ export default function MuaNgay() {
               setdiaChiGiaoHang={setdiaChiGiaoHang}
             />
           </div>
-          <div className="my-8">
-            <Popconfirm
-              title="Bạn có chắc chắn muốn đặt hàng không?"
-              onConfirm={DatHang}
-              okText="Có"
-              cancelText="Không"
-            >
-              <button className="h-16 w-full rounded-lg border bg-orange-600 text-2xl font-semibold text-white transition duration-300 ease-in-out hover:bg-black">
-                Đặt Hàng
-              </button>
-            </Popconfirm>
+          <div>
+            <p>Phương thức thanh toán:</p>
+            <div className="flex gap-5">
+              <input name="phuongThucThanhToan" defaultChecked type="radio" />{" "}
+              Thanh toán khi nhận hàng
+              <input
+                onClick={() => setPhuongThucThanhToan("Chuyển khoản")}
+                name="phuongThucThanhToan"
+                type="radio"
+              />{" "}
+              Chuyển khoản
+            </div>
           </div>
+          {phuongThucThanhToan === "Tiền mặt" && (
+            <div className="my-8">
+              <Popconfirm
+                title="Bạn có chắc chắn muốn đặt hàng không?"
+                onConfirm={DatHang}
+                okText="Có"
+                cancelText="Không"
+              >
+                <button className="h-16 w-full rounded-lg border bg-orange-600 text-2xl font-semibold text-white transition duration-300 ease-in-out hover:bg-black">
+                  Đặt Hàng
+                </button>
+              </Popconfirm>
+            </div>
+          )}
+
+          {phuongThucThanhToan === "Chuyển khoản" && (
+            <div className="my-8">
+              <Popconfirm
+                title="Bạn có chắc chắn muốn đặt hàng không?"
+                onConfirm={handlePaymentClick}
+                okText="Có"
+                cancelText="Không"
+              >
+                <button className="h-16 w-full rounded-lg border bg-orange-600 text-2xl font-semibold text-white transition duration-300 ease-in-out hover:bg-black">
+                  Đặt Hàng
+                </button>
+              </Popconfirm>
+            </div>
+          )}
         </div>
       </div>
       <ToastContainer position="top-center" hideProgressBar />

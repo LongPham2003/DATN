@@ -20,6 +20,7 @@ export default function DanhSachHoaDon() {
     setKeyword("");
     setPhuongThucGiaoHang(null);
   };
+  console.log(hoaDon);
   useEffect(() => {
     axios
       .get("http://localhost:8080/api/hoadon/getall", {

@@ -5,7 +5,6 @@ import DropdownDetail from "../../../DropdownDetail";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import { Modal } from "antd";
 import "react-toastify/dist/ReactToastify.css";
-
 const SanPhamChiTiet = ({ productId, closeModal }) => {
   const id = productId;
   const navigate = useNavigate();
@@ -67,40 +66,28 @@ const SanPhamChiTiet = ({ productId, closeModal }) => {
   };
   // eslint-disable-next-line no-unused-vars
   const update = async (e) => {
-    // Sử dụng Modal.confirm để hiển thị hộp thoại xác nhận
-    Modal.confirm({
-      title: "Xác nhận cập nhật",
-      content: "Bạn có chắc chắn muốn cập nhật không?",
-      okText: "Có",
-      cancelText: "Không",
-      onOk: async () => {
-        try {
-          const res = await axios.put(
-            `http://localhost:8080/api/sanpham/update/${id}`,
-            formData,
-          );
-          toast.success("Sửa thành công");
-          // navigate("/admin/sanpham");
-          closeModal();
-          // console.log("Update response:", res);
-        } catch (error) {
-          console.log("Error during update:", error);
-          toast.error("Có lỗi sảy ra");
-        }
-      },
-      onCancel() {
-        console.log("Cập nhật đã bị hủy");
-      },
-    });
-  };
+    try {
+      const res = await axios.put(
+        `http://localhost:8080/api/sanpham/update/${id}`,
+        formData,
+      );
+      toast.success("Sửa thành công");
+      navigate("/admin/sanpham");
+      closeModal();
+      console.log("Update response:", res);
 
+    } catch (error) {
+      console.log("Error during update:", error);
+      toast.error("Có lỗi sảy ra");
+    }
+  };
   useEffect(() => {
     getById();
     // getByIdSP();
     // layAnh();
   }, []);
   return (
-    <div className="mx-auto mt-3 flex w-auto">
+    <div className="flex mx-auto mt-3 w-auto">
       <form
         action=""
         className="mx-auto my-2"
@@ -218,8 +205,8 @@ const SanPhamChiTiet = ({ productId, closeModal }) => {
         </div>
       </form>
       <ToastContainer
-        position="top-center"
-        autoClose={1000}
+        position="top-right"
+        autoClose={3000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick

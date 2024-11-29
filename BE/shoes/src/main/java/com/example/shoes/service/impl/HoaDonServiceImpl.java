@@ -10,7 +10,6 @@ import com.example.shoes.dto.hoadon.request.HoaDonRequest;
 import com.example.shoes.dto.hoadon.request.XacNhanThanhToan;
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
 import com.example.shoes.dto.hoadon.response.HoaDonTheoIDResponse;
-import com.example.shoes.dto.hoadon.response.HoaDonTheoIdKH;
 import com.example.shoes.dto.hoadonchitiet.request.HoaDonChiTietRequest;
 import com.example.shoes.dto.payment.PaymentRequest;
 import com.example.shoes.dto.phuongthucthanhtoan.request.PhuongThucThanhToanRequest;
@@ -142,6 +141,7 @@ public class HoaDonServiceImpl implements HoaDonService {
         hoaDon.setPhuongThucGiaoHang("Tại quầy");
         hoaDon.setTrangThaiDonHang(TrangThai.CHO_XAC_NHAN); // Chưa thanh toán
         hoaDon.setTrangThaiThanhToan(false);
+
         // Khởi tạo tổng tiền, tiền được giảm và tiền phải trả bằng 0
         hoaDon.setTongTien(BigDecimal.ZERO);
         hoaDon.setTienDuocGiam(BigDecimal.ZERO);
@@ -669,15 +669,7 @@ public class HoaDonServiceImpl implements HoaDonService {
         return phanTrangResponse;
     }
 
-    @Override
-    public List<HoaDonTheoIdKH> getHoaDonTheoKH( Integer idKhachHang , String maHD) {
-
-        List<HoaDonTheoIdKH> page = hoaDonRepo.getHoaDonTheoKH(idKhachHang, maHD);
-
-        return page;
-    }
-
-    //dat hanfg tai quay
+    //dat hang tai quay
     @Override
     public Void updateTrangThaiHoaDonById(Integer idHoaDon, DatHangRequest datHangRequest) {
 
@@ -726,8 +718,6 @@ public class HoaDonServiceImpl implements HoaDonService {
 
         return null;
     }
-
-
 
     @Override
     public List<HoaDonResponse> getAllTrangThaiChuaThanhToan() {
@@ -1081,7 +1071,7 @@ public class HoaDonServiceImpl implements HoaDonService {
         hoaDonResponse.setPhuongThucGiaoHang(hoaDon.getPhuongThucGiaoHang());
         hoaDonResponse.setNgayTao(hoaDon.getCreatedAt());
         hoaDonResponse.setTrangThaiDonHang(hoaDon.getTrangThaiDonHang().getMoTa());
-        hoaDonResponse.setTrangThaiThanhToan(hoaDon.getTrangThaiThanhToan() ? "Đã thanh toán":"Chưa thanh toán");
+        hoaDonResponse.setTrangThaiThanhToan(hoaDon.getTrangThaiThanhToan()? "Đã thanh toán":"Chưa thanh toán");
         hoaDonResponse.setTienShip(formatCurrency(hoaDon.getPhiVanChuyen()));
         hoaDonResponse.setPhieuGiamGia(hoaDon.getIdPhieuGiamGia() != null ? hoaDon.getIdPhieuGiamGia().getMa(): "Không có");
         return hoaDonResponse;

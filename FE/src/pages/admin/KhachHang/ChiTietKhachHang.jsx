@@ -251,6 +251,7 @@ export default function ChiTietKhachHang() {
                   value={formData.ma}
                   onChange={handleChange}
                   className="w-full rounded border p-2"
+                  disabled
                 />
               </div>
               <div className="w-full p-2 sm:w-1/2">
@@ -427,7 +428,7 @@ export default function ChiTietKhachHang() {
             <button
               type="submit"
               onClick={handleUpdate}
-              className="w-full rounded bg-blue-500 p-2 text-white"
+              className="mx-auto flex h-[40px] w-[200px] items-center justify-center rounded bg-blue-500 p-2 text-white"
             >
               Cập Nhật
             </button>

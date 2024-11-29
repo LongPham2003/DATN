@@ -132,15 +132,12 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
     @Override
     public GioHangChiTietResponse updateGioHangChiTiet(Integer idGH, GioHangChiTietRequest request) {
 //       // Tìm giỏ hàng theo ID
-        GioHang gioHang = gioHangRepo.findById(idGH)
-                .orElseThrow(() -> new AppException(ErrorCode.CART_NOT_FOUND));
+        GioHang gioHang = gioHangRepo.findById(idGH).orElseThrow(() -> new AppException(ErrorCode.CART_NOT_FOUND));
 // Lấy chi tiết sản phẩm
-        SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepo.findById(request.getIdSanPhamChiTiet())
-                .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
+        SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepo.findById(request.getIdSanPhamChiTiet()).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
 
         // Kiểm tra giỏ hàng chi tiết có tồn tại trong giỏ hàng
-        GioHangChiTiet gioHangChiTiet = gioHangChiTietRepo.findByGioHangAndSanPhamChiTiet(gioHang, sanPhamChiTiet)
-                .orElseThrow(() -> new AppException(ErrorCode.CART_DETAIL_NOT_FOUND));
+        GioHangChiTiet gioHangChiTiet = gioHangChiTietRepo.findByGioHangAndSanPhamChiTiet(gioHang, sanPhamChiTiet).orElseThrow(() -> new AppException(ErrorCode.CART_DETAIL_NOT_FOUND));
 
         // Kiểm tra số lượng yêu cầu
 
@@ -163,8 +160,7 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
     @Override
     public GioHangChiTietResponse findByid(Integer id) {
         // Tìm chi tiết giỏ hàng theo ID
-        GioHangChiTiet gioHangChiTiet = gioHangChiTietRepo.findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.CART_DETAIL_NOT_FOUND));
+        GioHangChiTiet gioHangChiTiet = gioHangChiTietRepo.findById(id).orElseThrow(() -> new AppException(ErrorCode.CART_DETAIL_NOT_FOUND));
 
         // Chuyển đổi và trả về phản hồi
         return convertToGioHangChiTietResponse(gioHangChiTiet);
@@ -174,8 +170,7 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
     @Transactional
     public GioHangChiTietResponse deleteGioHangChiTiet(Integer idgiohangchitiet) {
 // Tìm giỏ hàng chi tiết theo ID
-        GioHangChiTiet gioHangChiTiet = gioHangChiTietRepo.findById(idgiohangchitiet)
-                .orElseThrow(() -> new AppException(ErrorCode.CART_DETAIL_NOT_FOUND));
+        GioHangChiTiet gioHangChiTiet = gioHangChiTietRepo.findById(idgiohangchitiet).orElseThrow(() -> new AppException(ErrorCode.CART_DETAIL_NOT_FOUND));
 
         // Lấy giỏ hàng liên quan
         GioHang gioHang = gioHangChiTiet.getIdGioHang();
@@ -231,16 +226,13 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
         Integer idKhachHang = getCurrentKhachHangId(); // Cách lấy ID khách hàng từ người dùng đăng nhập
 
         // Tìm giỏ hàng của khách hàng
-        GioHang gioHang = gioHangRepo.findByIdKhachHang_Id(idKhachHang)
-                .orElseThrow(() -> new AppException(ErrorCode.CART_NOT_FOUND));
+        GioHang gioHang = gioHangRepo.findByIdKhachHang_Id(idKhachHang).orElseThrow(() -> new AppException(ErrorCode.CART_NOT_FOUND));
         System.out.println(gioHang);
         // Lấy danh sách giỏ hàng chi tiết của giỏ hàng này
         List<GioHangChiTiet> gioHangChiTietList = gioHangChiTietRepo.findByIdGioHang(gioHang.getId());
 
         // Chuyển đổi danh sách giỏ hàng chi tiết thành danh sách phản hồi
-        return gioHangChiTietList.stream()
-                .map(this::convertToGioHangChiTietResponse)
-                .toList();
+        return gioHangChiTietList.stream().map(this::convertToGioHangChiTietResponse).toList();
     }
 
     public String generateMaHoaDon() {
@@ -358,8 +350,7 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
         // Duyệt qua từng chi tiết yêu cầu
         for (HoaDonChiTietRequest request : chiTietRequests) {
             // Kiểm tra sản phẩm chi tiết trong giỏ hàng của khách hàng
-            GioHangChiTiet gioHangChiTiet = gioHangChiTietRepo.findByIdGioHang_IdKhachHang_IdAndIdSanPhamChiTiet_Id(
-                    khachHang.getId(), request.getIdSpct() // ID sản phẩm chi tiết từ yêu cầu
+            GioHangChiTiet gioHangChiTiet = gioHangChiTietRepo.findByIdGioHang_IdKhachHang_IdAndIdSanPhamChiTiet_Id(khachHang.getId(), request.getIdSpct() // ID sản phẩm chi tiết từ yêu cầu
             ).orElseThrow(() -> new AppException(ErrorCode.ITEM_NOT_FOUND_IN_CART));
 
             // Lấy thông tin chi tiết sản phẩm (SanPhamChiTiet)
@@ -432,8 +423,7 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
     @Override
     public void thanhToan(Integer idHoaDon, HoaDonRequest hoaDonRequest) {
 // Tìm hóa đơn
-        HoaDon hoaDon = hoaDonRepo.findById(idHoaDon)
-                .orElseThrow(() -> new IllegalArgumentException("Hóa đơn không tồn tại."));
+        HoaDon hoaDon = hoaDonRepo.findById(idHoaDon).orElseThrow(() -> new IllegalArgumentException("Hóa đơn không tồn tại."));
 
         // Kiểm tra phương thức thanh toán
         if (hoaDonRequest == null || hoaDonRequest.getPhuongThucThanhToan() == null) {
@@ -587,7 +577,7 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
         // Khởi tạo tổng tiền, tiền được giảm và tiền phải trả bằng 0
         hoaDon.setTongTien(BigDecimal.ZERO);
         hoaDon.setTienDuocGiam(BigDecimal.ZERO);
-        hoaDon.setTienPhaiThanhToan(BigDecimal.ZERO);
+        hoaDon.setTienPhaiThanhToan(hoaDonRequest.getTienPhaiThanhToan());
         hoaDon.setTienKhachDua(BigDecimal.ZERO);
         hoaDon.setTienThua(BigDecimal.ZERO);
 
@@ -609,8 +599,7 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
 
         // Kiểm tra và áp dụng phiếu giảm giá nếu có
         if (hoaDonRequest.getIdPhieuGiamGia() != null) {
-            PhieuGiamGia phieuGiamGia = phieuGiamGiaRepo.findById(hoaDonRequest.getIdPhieuGiamGia())
-                    .orElseThrow(() -> new AppException(ErrorCode.VOUCHER_NOT_FOUND));
+            PhieuGiamGia phieuGiamGia = phieuGiamGiaRepo.findById(hoaDonRequest.getIdPhieuGiamGia()).orElseThrow(() -> new AppException(ErrorCode.VOUCHER_NOT_FOUND));
 
             // Kiểm tra điều kiện áp dụng phiếu giảm giá
             if (phieuGiamGia.getSoLuong() <= 0) {
@@ -626,7 +615,7 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
 
             // Cập nhật thông tin giảm giá
             savedHoaDon.setTienDuocGiam(soTienGiam);
-            savedHoaDon.setTienPhaiThanhToan(hoaDon.getTongTien().subtract(soTienGiam));
+//            savedHoaDon.setTienPhaiThanhToan(hoaDon.getTongTien().subtract(soTienGiam));
             savedHoaDon.setIdPhieuGiamGia(phieuGiamGia);
 
             // Giảm số lượng phiếu giảm giá
@@ -649,8 +638,7 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
 
         for (HoaDonChiTietRequest chiTietRequest : chiTietRequests) {
             // Kiểm tra sản phẩm chi tiết
-            SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepo.findById(chiTietRequest.getIdSpct())
-                    .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_DETAIL_NOT_FOUND));
+            SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepo.findById(chiTietRequest.getIdSpct()).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_DETAIL_NOT_FOUND));
 
             // Kiểm tra số lượng tồn kho
             if (sanPhamChiTiet.getSoLuong() < chiTietRequest.getSoLuong()) {
@@ -666,8 +654,8 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
             hoaDonChiTiet.setTrangThai(TrangThai.CHO_XAC_NHAN);
 
             // Giảm số lượng tồn kho
-            sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - chiTietRequest.getSoLuong());
-            sanPhamChiTietRepo.save(sanPhamChiTiet);
+//            sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - chiTietRequest.getSoLuong());
+//            sanPhamChiTietRepo.save(sanPhamChiTiet);
 
             // Thêm vào danh sách chi tiết hóa đơn
             hoaDonChiTietList.add(hoaDonChiTiet);
@@ -692,8 +680,7 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
         String username = authentication.getName(); // Tên đăng nhập
 
         // Tìm nhân viên từ tên đăng nhập
-        return nhanVienRepo.findByEmail(username)
-                .orElseThrow(() -> new AppException(ErrorCode.STAFF)); // Xử lý nếu không tìm thấy nhân viên
+        return nhanVienRepo.findByEmail(username).orElseThrow(() -> new AppException(ErrorCode.STAFF)); // Xử lý nếu không tìm thấy nhân viên
     }
 
     @Override
@@ -721,8 +708,8 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
     public GioHangResponse layGioHangTheoIdKhachHang() {
         // Lấy ID khách hàng của người dùng hiện tại
         Integer idKhachHang = getCurrentKhachHangId();
-        GioHang gioHang = gioHangRepo.findByIdKhachHang_Id(idKhachHang)
-                .orElseThrow(() -> new AppException(ErrorCode.CART_NOT_FOUND));
+        GioHang gioHang = gioHangRepo.findByIdKhachHang_Id(idKhachHang).orElseThrow(() -> new AppException(ErrorCode.CART_NOT_FOUND));
+
         capNhatSoSanPham(gioHang.getId());
         // Chuyển đổi đối tượng GioHang sang GioHangResponse (DTO)
         GioHangResponse response = new GioHangResponse();
@@ -767,8 +754,7 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
         hoaDonResponse.setId(hoaDon.getId());
         hoaDonResponse.setMa(hoaDon.getMa());
         hoaDonResponse.setTenNhanVien(hoaDon.getIdNhanVien() != null ? hoaDon.getIdNhanVien().getHoTen() : null);
-        hoaDonResponse
-                .setTenKhachHang(hoaDon.getIdKhachHang() != null ? hoaDon.getIdKhachHang().getHoTen() : "Khách lẻ");
+        hoaDonResponse.setTenKhachHang(hoaDon.getIdKhachHang() != null ? hoaDon.getIdKhachHang().getHoTen() : "Khách lẻ");
 
         hoaDonResponse.setSoDienThoai(hoaDon.getIdKhachHang() != null ? hoaDon.getIdKhachHang().getSdt() : "Không có");
 
