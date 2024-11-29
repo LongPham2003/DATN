@@ -38,7 +38,7 @@ public interface HoaDonService {
  HoaDonTheoIDResponse getTheoIdHoaDon(Integer idHoaDon);
  HoaDonResponse addKhachHangHoaDon(Integer idHoaDon, Integer idKhachHang);
  HoaDonResponse xoaKhachHangHoaDon(Integer idHoaDon, Integer idKhachHang);
-
+ Void updateTrangThaiHoaDonByIdHuy (Integer idHoaDon, GhiChu moTa);
  Integer idHoaDon();
  Void updateHoaDonById(Integer idHoaDon , PaymentRequest paymentRequest);
  Void updateTrangThaiHoaDonByIdXacNhan(Integer idHoaDon, GhiChu moTa );
