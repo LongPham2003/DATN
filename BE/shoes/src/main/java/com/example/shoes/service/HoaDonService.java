@@ -45,4 +45,5 @@ public interface HoaDonService {
  PhanTrangResponse<HoaDonResponse> getHoaDon(int pageNumber,int pageSize,String keyword,String phuongThucGiaoHang,String trangThai);
  Void updateTrangThaiHoaDonById(Integer idHoaDon, DatHangRequest datHangRequest);
  Void xacNhanThanhToan(Integer idHoaDon, XacNhanThanhToan xacNhanThanhToan);
+ Void updateTrangThaiHoaDonByIdHuy (Integer idHoaDon, GhiChu moTa);
 }

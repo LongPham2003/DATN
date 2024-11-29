@@ -259,10 +259,9 @@ export default function ThongTinCaNhan() {
   return (
     <div className="flex h-auto items-center justify-center bg-gray-100">
       <div className="w-full rounded-lg bg-white px-8 shadow-md">
-        <h1 className="mb-6 text-2xl font-bold">Thông tin cá nhân</h1>
-
         <div className="flex gap-3">
           <form className="w-2/4">
+            <h1 className="mb-6 text-2xl font-bold">Thông tin cá nhân</h1>
             <div className="flex flex-wrap">
               {/* <div className="w-full p-2 sm:w-1/2">
                 <label htmlFor="ma" className="mb-1 block">
@@ -277,7 +276,7 @@ export default function ThongTinCaNhan() {
                   className="w-full rounded border p-2"
                 />
               </div> */}
-              <div className="w-full p-2 sm:w-1/2">
+              <div className="w-full p-3 sm:w-1/2">
                 <label htmlFor="hoTen" className="mb-1 block">
                   Họ Tên:
                 </label>
@@ -290,7 +289,7 @@ export default function ThongTinCaNhan() {
                   className="w-full rounded border p-2"
                 />
               </div>
-              <div className="w-full p-2 sm:w-1/2">
+              <div className="w-full p-3 sm:w-1/2">
                 <label className="mb-1 block">Email:</label>
                 <input
                   type="email"
@@ -301,7 +300,7 @@ export default function ThongTinCaNhan() {
                   className="w-full rounded border p-2"
                 />
               </div>
-              <div className="w-full p-2 sm:w-1/2">
+              <div className="w-full p-3 sm:w-1/2">
                 <label className="mb-1 block">Số Điện Thoại:</label>
                 <input
                   type="text"
@@ -312,7 +311,7 @@ export default function ThongTinCaNhan() {
                   className="w-full rounded border p-2"
                 />
               </div>
-              <div className="w-full p-2 sm:w-1/2">
+              <div className="w-full p-3 sm:w-1/2">
                 <label htmlFor="ngaySinh" className="mb-1 block">
                   Ngày Sinh:
                 </label>
@@ -325,13 +324,13 @@ export default function ThongTinCaNhan() {
                   className="w-full rounded border p-2"
                 />
               </div>
-              <div className="w-full p-2 sm:w-1/2">
+              <div className="w-full p-3 sm:w-1/2">
                 <label className="mb-1 block">Giới Tính:</label>
                 <select
                   name="gioiTinh"
                   value={formData.gioiTinh}
                   onChange={handleChange}
-                  className="w-full rounded border p-2"
+                  className="w-full rounded border p-3"
                   required
                 >
                   <option value="">Chọn giới tính</option>
@@ -356,13 +355,13 @@ export default function ThongTinCaNhan() {
                 </select>
               </div> */}
 
-              <div className="w-full p-2 sm:w-1/2">
+              <div className="w-full p-3 sm:w-1/2">
                 <label className="mb-1 block">Tỉnh/Thành Phố:</label>
                 <select
                   name="province"
                   value={selectedProvince}
                   onChange={handleProvinceChange}
-                  className="w-full rounded border p-2"
+                  className="w-full rounded border p-3"
                   required
                 >
                   <option value="">Chọn tỉnh/thành phố</option>
@@ -376,13 +375,13 @@ export default function ThongTinCaNhan() {
                   ))}
                 </select>
               </div>
-              <div className="w-full p-2 sm:w-1/2">
+              <div className="w-full p-3 sm:w-1/2">
                 <label className="mb-1 block">Quận/Huyện:</label>
                 <select
                   name="district"
                   value={selectedDistrict}
                   onChange={handleDistrictChange}
-                  className="w-full rounded border p-2"
+                  className="w-full rounded border p-3"
                   required
                 >
                   <option value="">Chọn quận/huyện</option>
@@ -401,13 +400,13 @@ export default function ThongTinCaNhan() {
                       ))}
                 </select>
               </div>
-              <div className="w-full p-2 sm:w-1/2">
+              <div className="w-full p-3 sm:w-1/2">
                 <label className="mb-1 block">Xã/Phường:</label>
                 <select
                   name="ward"
                   value={selectedCommune}
                   onChange={handleCommuneChange}
-                  className="w-full rounded border p-2"
+                  className="w-full rounded border p-3"
                   required
                 >
                   <option value="">Chọn xã/phường</option>
@@ -426,17 +425,17 @@ export default function ThongTinCaNhan() {
                       ))}
                 </select>
               </div>
-              <div className="w-full p-2 sm:w-1/2">
+              <div className="w-full p-3 sm:w-1/2">
                 <label className="mb-1 block">Số Nhà, Làng :</label>
                 <input
                   type="text"
                   value={formData.soNhaDuongThonXom}
-                  className="w-full rounded border p-2"
+                  className="w-full rounded border p-3"
                   onChange={handleChange}
                   name="soNhaDuongThonXom" // Đảm bảo có name để xử lý
                 />
               </div>
-              <div className="w-full p-2">
+              <div className="w-full p-3">
                 <label className="mb-1 block">Địa Chỉ chi tiết:</label>
                 <input
                   type="text"
@@ -450,13 +449,13 @@ export default function ThongTinCaNhan() {
             <button
               type="submit"
               onClick={handleUpdate}
-              className="w-full rounded bg-blue-500 p-2 text-white"
+              className="mx-auto flex h-[40px] w-[200px] items-center justify-center rounded bg-blue-500 p-2 text-white"
             >
               Cập Nhật
             </button>
           </form>
 
-          <div className="w-2/4">
+          <div className="my-4 w-2/4">
             <DiaChiKhachHang idKhachHang={id}></DiaChiKhachHang>
           </div>
         </div>

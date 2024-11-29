@@ -138,17 +138,10 @@ export default function DatHang() {
     }
   };
 
-  useEffect(async () => {
-    try {
-      await Promise.all([
-        LuuSPVaoList(),
-        LayDanhSachPhieuGiamGia(),
-        fetchKhachHang(),
-      ]);
-      // console.log("Tất cả các tác vụ đã hoàn thành");
-    } catch (error) {
-      console.error("Có lỗi xảy ra trong khi chạy các tác vụ:", error);
-    }
+  useEffect(() => {
+    LuuSPVaoList();
+    LayDanhSachPhieuGiamGia();
+    fetchKhachHang();
   }, []);
 
   useEffect(() => {
@@ -430,7 +423,12 @@ export default function DatHang() {
           <div>
             <p>Phương thức thanh toán:</p>
             <div className="flex gap-5">
-              <input name="phuongThucThanhToan" defaultChecked type="radio" />{" "}
+              <input
+                onClick={() => setPhuongThucThanhToan("Tiền mặt")}
+                name="phuongThucThanhToan"
+                defaultChecked
+                type="radio"
+              />{" "}
               Thanh toán khi nhận hàng
               <input
                 onClick={() => setPhuongThucThanhToan("Chuyển khoản")}

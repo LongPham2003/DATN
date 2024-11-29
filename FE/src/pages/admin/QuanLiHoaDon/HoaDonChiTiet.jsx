@@ -6,6 +6,7 @@ import {
   FaCheck,
   FaCheckCircle,
   FaHourglassStart,
+  FaRegTimesCircle,
   FaStackOverflow,
   FaTruck,
 } from "react-icons/fa";
@@ -40,6 +41,15 @@ const HoaDonChiTiet = () => {
   };
   const closeModalXNTT = async () => {
     setOpenModelXNTT(false);
+  };
+
+  // model update huy
+  const [OpenModelHuy, setOpenModelHuy] = useState(false);
+  const openModalHuy = () => {
+    setOpenModelHuy(true);
+  };
+  const closeModalHuy = async () => {
+    setOpenModelHuy(false);
   };
 
   // model update chờ giao
@@ -137,6 +147,35 @@ const HoaDonChiTiet = () => {
     const seconds = String(date.getSeconds()).padStart(2, "0");
 
     return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+  };
+
+  const handleSubmitUpdateHuy = (e) => {
+    e.preventDefault(); // Ngăn chặn hành động mặc định của form
+    Modal.confirm({
+      title: "Xác nhận cập nhật",
+      content: "Bạn có chắc chắn muốn cập  không?",
+      onOk() {
+        axios
+          .post(`http://localhost:8080/api/hoadon/huy/${id}`, {
+            ghiChu: ghiChu,
+          })
+          .then((response) => {
+            console.log("Cập nhật thành công:", response.data);
+            toast.success("Thành công");
+            closeModalXacNhan();
+            fillHoaDon();
+            fillHoaDonChiTiet();
+            fillLichSuHoaDon();
+          })
+          .catch((error) => {
+            closeModalXacNhan();
+            toast.error(error.response.data.message); // Hiển thị thông báo từ server
+          });
+      },
+      onCancel() {
+        // Nếu người dùng hủy, có thể không cần làm gì cả
+      },
+    });
   };
 
   const handleSubmitUpdateChoGiao = (e) => {
@@ -257,55 +296,61 @@ const HoaDonChiTiet = () => {
 
   return (
     <div className="mx-3 py-3">
-      <Timeline minEvents={6} placeholder>
+      <Timeline minEvents={6}>
         {lichSuHoaDon.map((item, index) => (
           <TimelineEvent
             key={index}
             icon={
               item.trangThai === "CHO_XAC_NHAN"
                 ? FaHourglassStart
-                : item.trangThai === "DA_XAC_NHAN"
-                  ? FaCheck
-                  : item.trangThai === "CHO_GIAO_HANG"
-                    ? FaCar
-                    : item.trangThai === "DANG_GIAO"
-                      ? FaTruck
-                      : item.trangThai === "DA_THANH_TOAN"
-                        ? FaStackOverflow
-                        : item.trangThai === "HOAN_THANH"
-                          ? FaCheckCircle
-                          : ""
+                : item.trangThai === "HUY_DON"
+                  ? FaRegTimesCircle
+                  : item.trangThai === "DA_XAC_NHAN"
+                    ? FaCheck
+                    : item.trangThai === "CHO_GIAO_HANG"
+                      ? FaCar
+                      : item.trangThai === "DANG_GIAO"
+                        ? FaTruck
+                        : item.trangThai === "DA_THANH_TOAN"
+                          ? FaStackOverflow
+                          : item.trangThai === "HOAN_THANH"
+                            ? FaCheckCircle
+                            : ""
             }
             color={
               item.trangThai === "CHO_XAC_NHAN"
                 ? "#FFFF33"
-                : item.trangThai === "DA_XAC_NHAN"
-                  ? "#33FF33"
-                  : item.trangThai === "CHO_GIAO_HANG"
-                    ? "#9999CC"
-                    : item.trangThai === "DANG_GIAO"
-                      ? "#6699FF"
-                      : item.trangThai === "DA_THANH_TOAN"
-                        ? "#99FF00"
-                        : item.trangThai === "HOAN_THANH"
+                : item.trangThai === "HUY_DON"
+                  ? "#FF0000"
+                  : item.trangThai === "DA_XAC_NHAN"
+                    ? "#33FF33"
+                    : item.trangThai === "CHO_GIAO_HANG"
+                      ? "#9999CC"
+                      : item.trangThai === "DANG_GIAO"
+                        ? "#6699FF"
+                        : item.trangThai === "DA_THANH_TOAN"
                           ? "#99FF00"
-                          : ""
+                          : item.trangThai === "HOAN_THANH"
+                            ? "#99FF00"
+                            : ""
             }
             subtitle={formatDate(item.createAt)}
             title={
               item.trangThai === "CHO_XAC_NHAN"
                 ? "Chờ xác nhận"
-                : item.trangThai === "DA_XAC_NHAN"
-                  ? "Đã xác nhận"
-                  : item.trangThai === "CHO_GIAO_HANG"
-                    ? "Chờ giao hàng"
-                    : item.trangThai === "DANG_GIAO"
-                      ? "Đang giao hàng"
-                      : item.trangThai === "DA_THANH_TOAN"
-                        ? "Đã thanh toán"
-                        : item.trangThai === "HOAN_THANH"
-                          ? "Hoàn thành"
-                          : ""
+                : item.trangThai === "HUY_DON"
+                  ? "Đã hủy đơn"
+                  : item.trangThai === "DA_XAC_NHAN"
+                    ? "Đã xác nhận"
+                    : item.trangThai === "CHO_GIAO_HANG"
+                      ? "Chờ giao hàng"
+                      : item.trangThai === "DANG_GIAO"
+                        ? "Đang giao hàng"
+                        : item.trangThai === "DA_THANH_TOAN"
+                          ? "Đã thanh toán"
+                          : item.trangThai === "HOAN_THANH"
+                            ? "Hoàn thành"
+                            : ""
             }
           ></TimelineEvent>
         ))}
@@ -319,6 +364,14 @@ const HoaDonChiTiet = () => {
               className="rounded bg-blue-500 px-2 py-1 text-white"
             >
               Xác nhận
+            </button>
+          )}
+          {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" && (
+            <button
+              onClick={openModalHuy}
+              className="mx-5 rounded bg-blue-500 px-2 py-1 text-white"
+            >
+              Hủy Hóa Đơn
             </button>
           )}
           {hoaDon.trangThaiDonHang === "Đã xác nhận đơn" && (
@@ -501,6 +554,36 @@ const HoaDonChiTiet = () => {
             loadHoaDonCT={fillHoaDonChiTiet}
             loadLSHD={fillLichSuHoaDon}
           ></XacNhanThanhToan>
+        </div>
+      )}
+      {OpenModelHuy && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="flex h-[300px] w-[400px] justify-between rounded-lg bg-white p-8">
+            <div className="font-bold">
+              <h3 className="mb-3">Cập nhật hóa đơn</h3>
+              <label className="pt-3">Ghi chú</label>
+              <textarea
+                onChange={(e) => setGhiChu(e.target.value)}
+                className="w-full rounded border p-2"
+                rows="4" // Số dòng hiển thị
+                placeholder="Nhập ghi chú tại đây..."
+              ></textarea>
+              <div className="mx-auto my-3 flex justify-center">
+                <button
+                  onClick={handleSubmitUpdateHuy}
+                  className="rounded bg-blue-500 px-2 py-2 text-white"
+                >
+                  Cập nhật
+                </button>
+              </div>
+            </div>
+            <button
+              onClick={closeModalHuy}
+              className="h-10 rounded bg-red-500 px-4 text-white hover:bg-red-600"
+            >
+              X
+            </button>
+          </div>
         </div>
       )}
       {OpenModelChoGiao && (

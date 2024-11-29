@@ -85,7 +85,18 @@ export default function PaymentResult() {
     }
 
     checkPaymentStatus();
-  }, [location.search, navigate]);
+  }, [
+    chiTietSanPhams,
+    diaChiChiTiet,
+    idPhieuGiamGia,
+    location.search,
+    navigate,
+    ngayDuKien,
+    params,
+    phiVanChuyen,
+    soDienThoai,
+    tienPhaiThanhToan,
+  ]);
 
   return (
     <div>

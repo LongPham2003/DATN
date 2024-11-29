@@ -1,22 +1,29 @@
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { Badge } from "antd";
 import Search from "antd/es/input/Search";
+
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import ChonSizeVSMauSac from "../ChiTietSanPham/component/ThongTinSPvaChonSizeMS";
+import { ThemeContext } from "../../GlobalProvider";
 
 export default function Header() {
   const [tenKH, setTenKH] = useState("");
   const [role, setrole] = useState("");
+  const [idKH, setIdKH] = useState();
+
   const [soLuong, setSoLuong] = useState();
+  const { reload } = useContext(ThemeContext);
 
   const ApiTongSoSPCT = `http://localhost:8080/api/giohang/tongsanphamnguoidung`;
+  const ApiTimKH = `http://localhost:8080/client/khachhang/timtheoEmail?email=${tenKH}`;
+
   const layTongSoSP = async () => {
     try {
       const response = await axios.get(ApiTongSoSPCT);
       // Giả sử API trả về số lượng sản phẩm trong response.data.soLuong
       setSoLuong(response.data.result.tongSoLuong); // Cập nhật state với số lượng nhận được
+      console.log(response.data.result);
     } catch (error) {
       console.error("Có lỗi xảy ra khi lấy tổng số sản phẩm:", error);
     }
@@ -27,12 +34,26 @@ export default function Header() {
     const role = localStorage.getItem("userRole");
     setTenKH(ten);
     setrole(role);
+
+    const TimKh = async () => {
+      try {
+        const resp = await axios.get(
+          `http://localhost:8080/client/khachhang/timtheoEmail?email=${localStorage.getItem("email")}`,
+        );
+        setIdKH(resp.data.id);
+        // console.log(resp.data.id);
+        localStorage.setItem("idKH", resp.data.id);
+      } catch (error) {
+        console.log(error);
+      }
+    };
     layTongSoSP();
-  }, []);
+    TimKh();
+  }, [reload]);
 
   useEffect(() => {
     layTongSoSP();
-  }, []);
+  }, [reload]);
 
   return (
     <>
@@ -60,8 +81,8 @@ export default function Header() {
               <span>Quan li cua hang</span>
             </Link>
           )}
-          <a
-            href="#"
+          <Link
+            to="/theodoidonhang"
             className="flex items-center space-x-1 hover:text-gray-400"
           >
             <svg
@@ -78,14 +99,8 @@ export default function Header() {
                 d="m15.75 15.75-2.489-2.489m0 0a3.375 3.375 0 1 0-4.773-4.773 3.375 3.375 0 0 0 4.774 4.774ZM21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
               />
             </svg>
-            <Link
-              to="/tracuudonhang"
-              className="flex items-center space-x-1 hover:text-gray-400"
-            >
-              {" "}
-              <span>Tra cứu đơn hàng</span>
-            </Link>
-          </a>
+            <span>Tra cứu đơn hàng</span>
+          </Link>
           <Link
             to="/thongtin"
             className="flex items-center space-x-1 hover:text-gray-400"
@@ -118,7 +133,7 @@ export default function Header() {
           >
             <div className="mt-1 flex items-center space-x-2">
               <Link to="/GioHang">
-                <Badge count={soLuong} size="small" offset={[5, -5]}>
+                <Badge count={soLuong ? soLuong : 0} size="small">
                   <ShoppingCartOutlined
                     style={{ fontSize: "24px", color: "white" }}
                   />

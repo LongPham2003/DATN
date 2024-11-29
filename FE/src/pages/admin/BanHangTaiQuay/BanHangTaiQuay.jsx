@@ -463,7 +463,7 @@ export default function BanHangTaiQuay() {
     try {
       await axios.post(`${ApiXoaKhachHangKhoiHoaDon}/${idKhachHang}`);
       await LayThongTinThanhToanCuaHoaDon();
-      toast.success("Thanh cong");
+      toast.success("Thành công");
       setDisableSelectKhachHang(false);
       setGiaoHang(false);
       setPhiGiaoHang(0);

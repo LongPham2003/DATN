@@ -44,14 +44,15 @@ public enum ErrorCode {
     VALID_PHIEU_GIAM_GIA_MUC_GIAM_PT(1002,"Mức giảm không hợp lệ phải từ 0 -> 100",HttpStatus.BAD_REQUEST),
     VALID_PHIEU_GIAM_GIA_MUC_GIAM(1002,"Mức giảm không hợp lệ",HttpStatus.BAD_REQUEST),
     VALID_PHIEU_GIAM_GIA_DK_GIAM(1002,"Điều kiện giảm không hợp lệ",HttpStatus.BAD_REQUEST),
-    BILL_NOT_FOUND_h(1005,"du lieu không đung",HttpStatus.NOT_FOUND),
+    BILL_NOT_FOUND_h(1005,"Dữ liệu không đúng",HttpStatus.NOT_FOUND),
     INSUFFICIENT_PAYMENT(1002,"Số tiền khách đưa không đủ để thanh toán.",HttpStatus.BAD_REQUEST),
-    CART_DETAIL_NOT_FOUND(1005,"khong tim thay gio hang chi tiet",HttpStatus.NOT_FOUND),
+    CART_DETAIL_NOT_FOUND(1005,"Không tìm thấy giỏ hàng chi tiết",HttpStatus.NOT_FOUND),
     EMPTY_CART(1005,"chua co san pham trong gio hang",HttpStatus.NOT_FOUND),
     ITEM_NOT_FOUND_IN_CART(1005,"hãy mua sắm",HttpStatus.NOT_FOUND),
     CART_NOT_FOUND(1005,"khong tim thay gio hang ",HttpStatus.NOT_FOUND),
     CUSTOMER_NOT_FOUND(1005,"khong tim khach hang tren he thong  ",HttpStatus.NOT_FOUND),
     CHUA_THANH_TOAN(1005,"Chưa Thanh Toán",HttpStatus.BAD_REQUEST),
+    HUY_HANG(1005,"Thao tác chưa thành công",HttpStatus.BAD_REQUEST),
     ;
     private int code;
     private String message;

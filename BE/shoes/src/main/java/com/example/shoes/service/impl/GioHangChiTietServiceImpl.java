@@ -654,8 +654,8 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
             hoaDonChiTiet.setTrangThai(TrangThai.CHO_XAC_NHAN);
 
             // Giảm số lượng tồn kho
-            sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - chiTietRequest.getSoLuong());
-            sanPhamChiTietRepo.save(sanPhamChiTiet);
+//            sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - chiTietRequest.getSoLuong());
+//            sanPhamChiTietRepo.save(sanPhamChiTiet);
 
             // Thêm vào danh sách chi tiết hóa đơn
             hoaDonChiTietList.add(hoaDonChiTiet);
@@ -710,6 +710,7 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
         Integer idKhachHang = getCurrentKhachHangId();
         GioHang gioHang = gioHangRepo.findByIdKhachHang_Id(idKhachHang).orElseThrow(() -> new AppException(ErrorCode.CART_NOT_FOUND));
 
+        capNhatSoSanPham(gioHang.getId());
         // Chuyển đổi đối tượng GioHang sang GioHangResponse (DTO)
         GioHangResponse response = new GioHangResponse();
         response.setId(gioHang.getId());

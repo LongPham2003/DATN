@@ -340,7 +340,7 @@ export const DiaChiKhachHang = ({ idKhachHang }) => {
         <button
           type="submit"
           onClick={handleAddDiaChi}
-          className="w-full rounded bg-blue-500 p-2 text-white"
+          className="mx-auto flex h-[40px] w-[200px] items-center justify-center rounded bg-blue-500 p-2 text-white"
         >
           Thêm địa chỉ mới
         </button>
