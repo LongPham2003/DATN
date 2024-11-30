@@ -8,8 +8,10 @@ import com.example.shoes.dto.hoadon.response.HoaDonResponse;
 import com.example.shoes.dto.payment.PaymentRequest;
 import com.example.shoes.entity.HoaDon;
 import com.example.shoes.exception.ApiResponse;
+import com.example.shoes.repository.HoaDonRepo;
 import com.example.shoes.service.HoaDonService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +21,8 @@ import java.util.List;
 public class HoaDonController {
     @Autowired
     private HoaDonService hoaDonService;
+    @Autowired
+    private HoaDonRepo hoaDonRepo;
 
 
     @GetMapping("/getall")
@@ -126,6 +130,35 @@ public class HoaDonController {
     @PostMapping("/xacnhanthanhtoan/{id}")
     private ApiResponse<Void> xacNhan(@PathVariable Integer id,@RequestBody XacNhanThanhToan xacNhanThanhToan) {
         return ApiResponse.<Void>builder().result(hoaDonService.xacNhanThanhToan(id,xacNhanThanhToan)).build();
+    }
+
+    @GetMapping("/soluong/hoadon")
+    private ApiResponse<Integer> soluong() {
+        return ApiResponse.<Integer>builder().result(hoaDonRepo.getCountHoaDon()).build();
+    }
+    @GetMapping("/soluong/hoadoncxn")
+    private ApiResponse<Integer> soluongcxn() {
+        return ApiResponse.<Integer>builder().result(hoaDonRepo.getCountHoaDonCXN()).build();
+    }
+    @GetMapping("/soluong/hoadondxn")
+    private ApiResponse<Integer> soluongdxn() {
+        return ApiResponse.<Integer>builder().result(hoaDonRepo.getCountHoaDonDXN()).build();
+    }
+    @GetMapping("/soluong/hoadoncgh")
+    private ApiResponse<Integer> soluongcgh() {
+        return ApiResponse.<Integer>builder().result(hoaDonRepo.getCountHoaDonCGH()).build();
+    }
+    @GetMapping("/soluong/hoadondg")
+    private ApiResponse<Integer> soluongdg() {
+        return ApiResponse.<Integer>builder().result(hoaDonRepo.getCountHoaDonDG()).build();
+    }
+    @GetMapping("/soluong/hoadonht")
+    private ApiResponse<Integer> soluonght() {
+        return ApiResponse.<Integer>builder().result(hoaDonRepo.getCountHoaDonHT()).build();
+    }
+    @GetMapping("/soluong/hoadonhd")
+    private ApiResponse<Integer> soluongHuy() {
+        return ApiResponse.<Integer>builder().result(hoaDonRepo.getCountHoaDonHuy()).build();
     }
 
 }

@@ -772,4 +772,98 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
         hoaDonResponse.setTienShip(formatCurrency(hoaDon.getPhiVanChuyen()));
         return hoaDonResponse;
     }
+
+    // chỉnh sửa hóa đơn
+    @Override
+    public HoaDonResponse addSanPhamChiTietToHoaDon(Integer idHoaDon, HoaDonChiTietRequest chiTietRequest) {
+        // Tìm hóa đơn theo ID
+        HoaDon hoaDon = hoaDonRepo.findById(idHoaDon)
+                .orElseThrow(() -> new AppException(ErrorCode.BILL_NOT_FOUND));
+
+        // Tìm sản phẩm chi tiết
+        SanPhamChiTiet spct = sanPhamChiTietRepo.findById(chiTietRequest.getIdSpct())
+                .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_DETAIL_NOT_FOUND));
+
+        // Kiểm tra số lượng có đủ để thêm vào hóa đơn không
+        if (chiTietRequest.getSoLuong() > spct.getSoLuong()) {
+            throw new AppException(ErrorCode.INSUFFICIENT_STOCK); // Kiểm tra nếu không đủ hàng
+        }
+
+        // Tìm chi tiết hóa đơn đã tồn tại
+        HoaDonChiTiet existingChiTiet = hoaDonChiTietRepo.findByHoaDonAndSanPhamChiTiet(hoaDon, spct);
+
+        if (existingChiTiet != null) {
+            // Nếu chi tiết hóa đơn đã tồn tại, cộng thêm số lượng
+            existingChiTiet.setSoLuong(existingChiTiet.getSoLuong() + chiTietRequest.getSoLuong());
+            existingChiTiet.setDonGia(spct.getDonGia()); // Cập nhật đơn giá (nếu cần thiết)
+            // Cập nhật số lượng trong SPCT
+        //    spct.setSoLuong(spct.getSoLuong() - chiTietRequest.getSoLuong());
+
+            // Lưu lại chi tiết hóa đơn đã cập nhật
+            hoaDonChiTietRepo.save(existingChiTiet);
+        } else {
+            // Nếu chi tiết hóa đơn chưa tồn tại, tạo mới
+            HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
+            hoaDonChiTiet.setIdHoaDon(hoaDon); // Liên kết với hóa đơn
+            hoaDonChiTiet.setIdSpct(spct); // Liên kết với sản phẩm
+
+            hoaDonChiTiet.setSoLuong(chiTietRequest.getSoLuong());
+            hoaDonChiTiet.setDonGia(chiTietRequest.getDonGia() != null ? chiTietRequest.getDonGia() : spct.getDonGia());
+            hoaDonChiTiet.setTrangThai(TrangThai.CHO_XAC_NHAN);
+
+            // Cập nhật số lượng trong SPCT
+      //      spct.setSoLuong(spct.getSoLuong() - chiTietRequest.getSoLuong());
+
+            // Lưu chi tiết hóa đơn
+            hoaDonChiTietRepo.save(hoaDonChiTiet);
+        }
+
+        // Cập nhật tổng tiền hóa đơn
+        BigDecimal tongTien = hoaDon.getTongTien();
+        BigDecimal tongTienChiTiet = spct.getDonGia().multiply(BigDecimal.valueOf(chiTietRequest.getSoLuong()));
+        hoaDon.setTongTien(tongTien.add(tongTienChiTiet));
+
+        // Tính lại tiền phải thanh toán
+        hoaDon.setTienPhaiThanhToan(hoaDon.getTongTien().subtract(hoaDon.getTienDuocGiam()));
+
+        // Lưu lại hóa đơn đã cập nhật
+        hoaDonRepo.save(hoaDon);
+        // Cập nhật số lượng sản phẩm chi tiết
+        sanPhamChiTietRepo.save(spct); // Lưu thay đổi số lượng SPCT
+
+        // Trả về kết quả
+        return converToHoaDonResponse(hoaDon);
+    }
+
+    //delete
+    @Override
+    public void deleteByIdHoaDonAndIdSpct(Integer idHoaDon, Integer idSpct) {
+        // Kiểm tra tồn tại của hóa đơn
+        HoaDon hoaDon = hoaDonRepo.findById(idHoaDon)
+                .orElseThrow(() -> new AppException(ErrorCode.BILL_NOT_FOUND));
+
+        // Kiểm tra tồn tại của sản phẩm chi tiết trong hóa đơn chi tiết
+        HoaDonChiTiet hoaDonChiTiet = hoaDonChiTietRepo.findByHoaDonAndSanPhamChiTiet(hoaDon, sanPhamChiTietRepo.findById(idSpct)
+                .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_DETAIL_NOT_FOUND)));
+
+        // Lấy thông tin sản phẩm chi tiết để cập nhật lại số lượng
+        SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getIdSpct();
+
+        // Cộng lại số lượng sản phẩm chi tiết
+   //     sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() + hoaDonChiTiet.getSoLuong());
+
+        // Trừ số tiền từ hóa đơn dựa trên đơn giá và số lượng của sản phẩm chi tiết
+        BigDecimal amountToSubtract = hoaDonChiTiet.getDonGia().multiply(BigDecimal.valueOf(hoaDonChiTiet.getSoLuong()));
+        hoaDon.setTongTien(hoaDon.getTongTien().subtract(amountToSubtract));
+        // Tính lại tiền phải thanh toán: tổng tiền - tiền được giảm
+        hoaDon.setTienPhaiThanhToan(hoaDon.getTongTien().subtract(hoaDon.getTienDuocGiam()));
+        // Xóa chi tiết hóa đơn
+        hoaDonChiTietRepo.deleteByIdHoaDonAndIdSpct(idHoaDon, idSpct);
+
+        // Lưu các thay đổi vào cơ sở dữ liệu
+        sanPhamChiTietRepo.save(sanPhamChiTiet);
+        hoaDonRepo.save(hoaDon);
+
+    }
+
 }
