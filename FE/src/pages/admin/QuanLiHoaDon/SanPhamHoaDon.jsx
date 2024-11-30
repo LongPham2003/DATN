@@ -1,7 +1,7 @@
 import axios from "../../../api/axiosConfig.js";
 import { useEffect, useState } from "react";
 import LayAnhTheoIdSP from "../SanPham/Product/LayANhTheoIDSP";
-import { Button, Input, InputNumber, Modal, Select } from "antd";
+import { Button, Input, Modal, Select } from "antd";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 // import { getAllSPCTBH } from "./SanPhamService.js";
 
@@ -11,11 +11,7 @@ export const getAllSPBH = async (params = {}) => {
   return data.data.result;
 };
 
-export default function SanPhamBanTaiQuay({
-  id,
-  onProductAdded,
-  thayDoiSoLuong,
-}) {
+export default function SanPhamHoaDon({ id, fillHoaDon, fillHoaDonChiTiet }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [SPCTBH, setSPCTBH] = useState([]);
   const [hangs, setHangs] = useState([]);
@@ -34,8 +30,7 @@ export default function SanPhamBanTaiQuay({
   const [soLuongMua, setSoLuongMua] = useState(0);
   const [error, setError] = useState("");
 
-  let ApiThemSPvaoHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/addspct/${id}`;
-  let ApiLaySPCT = `http://localhost:8080/api/sanphamchitiet/getallSPCTBH`;
+  let ApiThemSPvaoHoaDon = `http://localhost:8080/api/giohang/addspct/${id}`;
   const getallSPCTBH = async () => {
     const params = {};
 
@@ -72,8 +67,9 @@ export default function SanPhamBanTaiQuay({
         transition: Bounce,
       });
       // Gọi hàm onProductAdded để báo cho component cha biết và cập nhật giỏ hàng
-      if (onProductAdded) {
-        onProductAdded();
+      if (fillHoaDon) {
+        fillHoaDon();
+        fillHoaDonChiTiet();
       }
 
       getallSPCTBH();
@@ -200,7 +196,6 @@ export default function SanPhamBanTaiQuay({
     selectedIdKichThuoc,
     selectedIdDeGiay,
     selectedIdChatLieu,
-    thayDoiSoLuong,
   ]);
 
   const handleResetSelectedChange = () => {
@@ -214,8 +209,8 @@ export default function SanPhamBanTaiQuay({
 
   return (
     <>
-      <div className="h-[700px]">
-        <div className="bg-slate-300 font-mono">
+      <div className="h-[700px] bg-orange-500">
+        <div className="font-mono">
           <div className="flex justify-center gap-5">
             <div>
               <p className="font-bold">Mã sản phẩm</p>
@@ -313,7 +308,7 @@ export default function SanPhamBanTaiQuay({
         </div>
         <div className="mx-5 my-3 font-mono">
           <div className="my-5 flex">
-            <span className="text-xl font-bold">
+            <span className="bg- text-xl font-bold">
               Danh sách sản phẩm chi tiết của sản phẩm:
             </span>
           </div>
@@ -335,7 +330,7 @@ export default function SanPhamBanTaiQuay({
                   </thead>
                   <tbody className="text-center">
                     {SPCTBH.map((item, index) => (
-                      <tr key={item.id} className="hover:bg-gray-100">
+                      <tr key={index} className="hover:bg-gray-100">
                         <td className="border-b-[1px] border-indigo-500 px-4 py-2">
                           {item.maSPCT}
                         </td>

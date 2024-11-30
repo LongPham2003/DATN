@@ -41,7 +41,14 @@ export default function DanhSachHoaDon() {
       .catch((error) => {
         console.log(error);
       });
-  }, [trangHienTai, soPhanTu, phuongThucGiaoHang, keyword, trangThai]);
+  }, [
+    trangHienTai,
+    soPhanTu,
+    phuongThucGiaoHang,
+    keyword,
+    trangThai,
+    hoaDon.length,
+  ]);
 
   const formatDate = (dateTimeString) => {
     const date = new Date(dateTimeString);
@@ -57,8 +64,48 @@ export default function DanhSachHoaDon() {
     return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
   };
 
-  console.log(hoaDon);
+  const [soluong, setSoluong] = useState({
+    hd: 0,
+    cxn: 0,
+    dxn: 0,
+    cgh: 0,
+    dg: 0,
+    ht: 0,
+    huy: 0,
+  });
 
+  useEffect(() => {
+    const fetchSoluong = async () => {
+      try {
+        // Gọi tất cả các API song song
+        const [hoadonRes, cxnRes, dxnRes, cghRes, dgRes, htRes, huyRes] =
+          await Promise.all([
+            axios.get("http://localhost:8080/api/hoadon/soluong/hoadon"),
+            axios.get("http://localhost:8080/api/hoadon/soluong/hoadoncxn"),
+            axios.get("http://localhost:8080/api/hoadon/soluong/hoadondxn"),
+            axios.get("http://localhost:8080/api/hoadon/soluong/hoadoncgh"),
+            axios.get("http://localhost:8080/api/hoadon/soluong/hoadondg"),
+            axios.get("http://localhost:8080/api/hoadon/soluong/hoadonht"),
+            axios.get("http://localhost:8080/api/hoadon/soluong/hoadonhd"),
+          ]);
+
+        // Cập nhật số lượng trong state
+        setSoluong({
+          hd: hoadonRes.data.result,
+          cxn: cxnRes.data.result,
+          dxn: dxnRes.data.result,
+          cgh: cghRes.data.result,
+          dg: dgRes.data.result,
+          ht: htRes.data.result,
+          huy: huyRes.data.result,
+        });
+      } catch (error) {
+        console.error("Lỗi khi gọi API:", error);
+      }
+    };
+
+    fetchSoluong();
+  }, []);
   return (
     <>
       <div className="p-4">
@@ -103,7 +150,7 @@ export default function DanhSachHoaDon() {
           Làm mới
         </button>
       </div>
-      <div className="rounded bg-white p-4 shadow">
+      <div className="rounded bg-white p-4 pt-2 shadow">
         <div className="flex justify-between">
           <h2 className="mb-4 text-xl font-semibold">Danh Sách Hóa Đơn</h2>
           <div className="mb-4 text-xl font-semibold">
@@ -118,45 +165,69 @@ export default function DanhSachHoaDon() {
         <div className="flex justify-between">
           <div className="flex gap-4 p-2">
             <button
-              className="rounded bg-blue-500 px-4 py-2 text-white"
+              className="relative rounded bg-blue-500 px-4 py-2 text-white"
               onClick={() => setTrangThai(null)}
             >
+              {/* Badge */}
+              <span className="absolute right-0 top-0 flex h-6 w-6 translate-x-[50%] translate-y-[-50%] items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                {soluong.hd}
+              </span>
               Tất cả
             </button>
+
             <button
-              className="rounded bg-blue-500 px-4 py-2 text-white"
+              className="relative rounded bg-blue-500 px-4 py-2 text-white"
               onClick={() => setTrangThai("CHO_XAC_NHAN")}
             >
+              <span className="absolute right-0 top-0 flex h-6 w-6 translate-x-[50%] translate-y-[-50%] items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                {soluong.cxn}
+              </span>
               Chờ xác nhận
             </button>
             <button
-              className="rounded bg-blue-500 px-4 py-2 text-white"
+              className="relative rounded bg-blue-500 px-4 py-2 text-white"
               onClick={() => setTrangThai("DA_XAC_NHAN")}
             >
+              <span className="absolute right-0 top-0 flex h-6 w-6 translate-x-[50%] translate-y-[-50%] items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                {soluong.dxn}
+              </span>
               Đã xác nhận
             </button>
             <button
-              className="rounded bg-blue-500 px-4 py-2 text-white"
+              className="relative rounded bg-blue-500 px-4 py-2 text-white"
               onClick={() => setTrangThai("CHO_GIAO_HANG")}
             >
+              <span className="absolute right-0 top-0 flex h-6 w-6 translate-x-[50%] translate-y-[-50%] items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                {soluong.cgh}
+              </span>
               Chờ giao
             </button>
             <button
-              className="rounded bg-blue-500 px-4 py-2 text-white"
+              className="relative rounded bg-blue-500 px-4 py-2 text-white"
               onClick={() => setTrangThai("DANG_GIAO")}
             >
+              {" "}
+              <span className="absolute right-0 top-0 flex h-6 w-6 translate-x-[50%] translate-y-[-50%] items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                {soluong.dg}
+              </span>
               Đang giao
             </button>
             <button
-              className="rounded bg-blue-500 px-4 py-2 text-white"
+              className="relative rounded bg-blue-500 px-4 py-2 text-white"
               onClick={() => setTrangThai("HOAN_THANH")}
             >
+              <span className="absolute right-0 top-0 flex h-6 w-6 translate-x-[50%] translate-y-[-50%] items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                {soluong.ht}
+              </span>
               Hoàn thành
             </button>
             <button
-              className="rounded bg-blue-500 px-4 py-2 text-white"
+              className="relative rounded bg-blue-500 px-4 py-2 text-white"
               onClick={() => setTrangThai("HUY_DON")}
             >
+              <span className="absolute right-0 top-0 flex h-6 w-6 translate-x-[50%] translate-y-[-50%] items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                {soluong.huy}
+              </span>
               Đã hủy
             </button>
           </div>

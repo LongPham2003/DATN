@@ -292,8 +292,6 @@ const HoaDonChiTiet = () => {
     });
   };
 
-  console.log(hoaDon);
-
   return (
     <div className="mx-3 py-3">
       <Timeline minEvents={6}>
@@ -477,6 +475,8 @@ const HoaDonChiTiet = () => {
         <ThongTinHoaDon
           hoaDon={hoaDon}
           hoaDonChiTiet={hoaDonChiTiet}
+          fillHoaDon={fillHoaDon}
+          fillHoaDonChiTiet={fillHoaDonChiTiet}
         ></ThongTinHoaDon>
       </div>
       <hr className="border-s-pink-700" />
