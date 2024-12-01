@@ -209,14 +209,14 @@ export default function SanPhamHoaDon({ id, fillHoaDon, fillHoaDonChiTiet }) {
 
   return (
     <>
-      <div className="h-[700px] bg-orange-500">
+      <div className="h-[700px] bg-orange-300">
         <div className="font-mono">
           <div className="flex justify-center gap-5">
             <div>
               <p className="font-bold">Mã sản phẩm</p>
               <Input
                 className="h-[38px] w-[250px]"
-                placeholder="Ma san pham ..."
+                placeholder="Mã sản phẩm ..."
                 size="large"
                 onChange={(e) => setMaSanPham(e.target.value)} // Gọi hàm khi có thay đổi
               />
@@ -319,6 +319,7 @@ export default function SanPhamHoaDon({ id, fillHoaDon, fillHoaDonChiTiet }) {
                 <table className="mb-[60px] min-w-full bg-white text-[20px]">
                   <thead className="sticky top-0 z-10 bg-white">
                     <tr className="h-10 border-b-2 border-indigo-500 text-base">
+                      <th>STT</th>
                       <th className="w-20">Mã sản phẩm</th>
                       <th className="w-[230px]">Sản phẩm</th>
                       <th className="w-[100px] border-b">Ảnh</th>
@@ -331,6 +332,7 @@ export default function SanPhamHoaDon({ id, fillHoaDon, fillHoaDonChiTiet }) {
                   <tbody className="text-center">
                     {SPCTBH.map((item, index) => (
                       <tr key={index} className="hover:bg-gray-100">
+                        <td>{index + 1}</td>
                         <td className="border-b-[1px] border-indigo-500 px-4 py-2">
                           {item.maSPCT}
                         </td>
@@ -392,7 +394,19 @@ export default function SanPhamHoaDon({ id, fillHoaDon, fillHoaDonChiTiet }) {
           {error && <p className="text-red-500">{error}</p>}
         </div>
       </Modal>
-      <ToastContainer />
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
     </>
   );
 }

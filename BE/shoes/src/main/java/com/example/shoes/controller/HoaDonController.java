@@ -111,6 +111,10 @@ public class HoaDonController {
     private ApiResponse<Void> updateXacNhan(@PathVariable Integer id,@RequestBody GhiChu moTa) {
         return ApiResponse.<Void>builder().result(hoaDonService.updateTrangThaiHoaDonByIdXacNhan(id,moTa)).build();
     }
+    @PostMapping("/cholayhang/{id}")
+    private ApiResponse<Void> updateChoLayHang(@PathVariable Integer id,@RequestBody GhiChu moTa) {
+        return ApiResponse.<Void>builder().result(hoaDonService.updateTrangThaiHoaDonByIdChoLayHang(id,moTa)).build();
+    }
     @PostMapping("/chogiaohang/{id}")
     private ApiResponse<Void> updateChoGiaoHang(@PathVariable Integer id,@RequestBody GhiChu moTa) {
         return ApiResponse.<Void>builder().result(hoaDonService.updateTrangThaiHoaDonByIdChoVanChuyen(id,moTa)).build();

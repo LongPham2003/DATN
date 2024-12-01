@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "../../../api/axiosConfig.js";
 import ReactPaginate from "react-paginate";
 import { Link } from "react-router-dom";
+import { Bounce, ToastContainer } from "react-toastify";
 
 export default function DanhSachHoaDon() {
   const [hoaDon, setHoaDon] = useState([]);
@@ -339,6 +340,19 @@ export default function DanhSachHoaDon() {
           />
         </div>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
     </>
   );
 }

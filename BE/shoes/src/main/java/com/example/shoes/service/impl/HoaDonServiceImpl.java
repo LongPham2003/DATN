@@ -672,7 +672,7 @@ public class HoaDonServiceImpl implements HoaDonService {
 
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon).get();
         hoaDon.setTrangThaiDonHang(TrangThai.DA_XAC_NHAN);
-        hoaDon.setPhuongThucGiaoHang("Giao Hàng");
+        hoaDon.setPhuongThucGiaoHang("Tại quầy");
         hoaDon.setTienPhaiThanhToan(datHangRequest.getTienPhaiThanhToan());
         hoaDon.setPhiVanChuyen(datHangRequest.getPhiVanChuyen());
         hoaDon.setDiaChiGiaoHang(datHangRequest.getDiaChiChiTiet());
@@ -904,6 +904,7 @@ public class HoaDonServiceImpl implements HoaDonService {
         hoaDon.setPhuongThucThanhToan(paymentRequest.getPhuongThucThanhToan());
         hoaDon.setTienKhachDua(paymentRequest.getTienKhachDua());
         hoaDon.setTrangThaiThanhToan(true);
+        hoaDon.setPhuongThucGiaoHang("Tại quầy");
         hoaDonRepo.save(hoaDon);
         List<HoaDonChiTiet> chiTietList = hoaDonChiTietRepo.findByIdHoaDon(hoaDon.getId());
         for (HoaDonChiTiet chiTiet : chiTietList) {
@@ -993,6 +994,26 @@ public class HoaDonServiceImpl implements HoaDonService {
             throw new AppException(ErrorCode.HUY_HANG);
         }
 
+        return null;
+    }
+
+    @Override
+    public Void updateTrangThaiHoaDonByIdChoLayHang(Integer idHoaDon, GhiChu moTa) {
+        HoaDon hoaDon = hoaDonRepo.findById(idHoaDon).get();
+        hoaDon.setTrangThaiDonHang(TrangThai.CHO_LAY_HANG);
+        hoaDonRepo.save(hoaDon);
+        LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
+        lichSuHoaDon.setIdHoaDon(hoaDon);
+        lichSuHoaDon.setTrangThai(TrangThai.CHO_LAY_HANG);
+        lichSuHoaDon.setMoTa(moTa.getGhiChu());
+        lichSuHoaDonRepo.save(lichSuHoaDon);
+        HoaDonChiTiet hoaDonChiTiet = hoaDonChiTietRepo.findById(idHoaDon).get();
+        hoaDonChiTiet.setTrangThai(TrangThai.CHO_LAY_HANG);
+        List<HoaDonChiTiet> chiTietList = hoaDonChiTietRepo.findByIdHoaDon(hoaDon.getId());
+        for (HoaDonChiTiet chiTiet : chiTietList) {
+            chiTiet.setTrangThai(TrangThai.CHO_LAY_HANG); // Cập nhật trạng thái thành true
+        }
+        hoaDonChiTietRepo.saveAll(chiTietList);
         return null;
     }
 

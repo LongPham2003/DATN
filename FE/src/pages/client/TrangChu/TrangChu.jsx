@@ -17,6 +17,32 @@ export default function TrangChu() {
     localStorage.removeItem("soLuong");
     localStorage.removeItem("idSPCTCHon");
   }, []);
+  const products = [
+    {
+      id: 1,
+      name: "Nike Air Max",
+      price: "2,500,000",
+      image: "/images/nike-air-max.jpg",
+    },
+    {
+      id: 2,
+      name: "Adidas Ultraboost",
+      price: "3,200,000",
+      image: "/images/adidas-ultraboost.jpg",
+    },
+    {
+      id: 3,
+      name: "Converse Classic",
+      price: "1,500,000",
+      image: "/images/converse-classic.jpg",
+    },
+    {
+      id: 4,
+      name: "Vans Old Skool",
+      price: "1,800,000",
+      image: "/images/vans-old-skool.jpg",
+    },
+  ];
   return (
     <>
       <div className="container">

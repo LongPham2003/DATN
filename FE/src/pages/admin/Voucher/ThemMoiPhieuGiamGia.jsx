@@ -42,7 +42,8 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
 
   // hàm format lại định dạng khi gửi về be
   const formatCurrencyToNumber = (value) => {
-    return parseInt(value.replace(/[^\d]/g, ""));
+    if (!value) return 0; // Trả về 0 nếu giá trị rỗng
+    return parseInt(value.replace(/\./g, ""), 10); // Loại bỏ dấu "." và chuyển thành số
   };
 
   const handleSubmit = async (e) => {
@@ -65,11 +66,12 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
                 formData.hinhThucGiam === "%"
                   ? formatCurrencyToNumber(formData.giamToiDa)
                   : formatCurrencyToNumber(formData.mucGiam),
-              soLuong: formData.soLuong,
+              soLuong: parseInt(formData.soLuong),
               ngayBatDau: formData.ngayBatDau,
               ngayKetThuc: formData.ngayKetThuc,
               // trangThai: true
             },
+            console.log(formData),
           );
 
           if (response.status === 200) {

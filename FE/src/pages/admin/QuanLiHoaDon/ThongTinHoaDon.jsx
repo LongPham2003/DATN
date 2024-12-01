@@ -130,12 +130,16 @@ const ThongTinHoaDon = ({
       <div className="mx-4 py-4">
         <div className="mx-5 flex justify-between py-3">
           <h3 className="text-[20px] font-bold">Sản phẩm</h3>
-          <button
-            onClick={openModalSP}
-            className="rounded bg-blue-500 px-2 py-2 text-white"
-          >
-            Sửa hóa đơn
-          </button>
+          {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" ? (
+            <button
+              onClick={openModalSP}
+              className="rounded bg-blue-500 px-2 py-2 text-white"
+            >
+              Sửa hóa đơn
+            </button>
+          ) : (
+            ""
+          )}
         </div>
 
         <table className="min-w-full text-center text-sm font-light">
@@ -147,7 +151,9 @@ const ThongTinHoaDon = ({
               <th className="w-52 px-6 py-4">Đơn giá</th>
               <th className="w-52 px-6 py-4">Số lượng</th>
               <th className="w-52 px-6 py-4">Thành tiền</th>
-              <th className="w-52 px-6 py-4">Hàng động</th>
+              <th className="w-52 px-6 py-4">
+                {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" ? "Hàng động" : ""}
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -169,21 +175,25 @@ const ThongTinHoaDon = ({
                 <td>{SPCT.soLuong}</td>
                 <td>{formatTien(SPCT.donGia * SPCT.soLuong)}</td>
                 <td>
-                  <Popconfirm
-                    title="Delete the task"
-                    description="Are you sure to delete this task?"
-                    okText="Yes"
-                    cancelText="No"
-                    onConfirm={(e) => {
-                      e.preventDefault();
-                      XoaSPKhoiGioHang(SPCT.idSpct);
-                    }}
-                  >
-                    <Button type="primary" danger>
-                      <TrashIcon className="h-5 w-5 text-white" />
-                      Xóa
-                    </Button>
-                  </Popconfirm>
+                  {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" ? (
+                    <Popconfirm
+                      title="Xóa Sản phẩm"
+                      description="Bạn có muốn xóa sản phẩm không?"
+                      okText="Yes"
+                      cancelText="No"
+                      onConfirm={(e) => {
+                        e.preventDefault();
+                        XoaSPKhoiGioHang(SPCT.idSpct);
+                      }}
+                    >
+                      <Button type="primary" danger>
+                        <TrashIcon className="h-5 w-5 text-white" />
+                        Xóa
+                      </Button>
+                    </Popconfirm>
+                  ) : (
+                    ""
+                  )}
                 </td>
               </tr>
             ))}
@@ -191,18 +201,23 @@ const ThongTinHoaDon = ({
         </table>
       </div>
       {OpenModelSP && (
-        <div className="fixed inset-0 flex items-center justify-center bg-opacity-50">
-          <SanPhamHoaDon
-            id={hoaDon.id}
-            fillHoaDon={fillHoaDon}
-            fillHoaDonChiTiet={fillHoaDonChiTiet}
-          ></SanPhamHoaDon>
-          <button
-            onClick={closeModalSP}
-            className="h-10 rounded bg-red-500 px-4 text-white hover:bg-red-600"
-          >
-            X
-          </button>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="relative w-full max-w-[1150px] rounded-lg bg-white p-6 shadow-lg">
+            {/* Nội dung của modal */}
+            <SanPhamHoaDon
+              id={hoaDon.id}
+              fillHoaDon={fillHoaDon}
+              fillHoaDonChiTiet={fillHoaDonChiTiet}
+            />
+
+            {/* Nút đóng modal */}
+            <button
+              onClick={closeModalSP}
+              className="absolute right-2 top-2 rounded bg-red-500 px-3 py-1 text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300"
+            >
+              X
+            </button>
+          </div>
         </div>
       )}
     </div>

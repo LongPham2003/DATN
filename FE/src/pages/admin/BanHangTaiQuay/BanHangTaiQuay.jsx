@@ -369,23 +369,14 @@ export default function BanHangTaiQuay() {
 
   //Huy Hoa Don
   const huyHoaDon = async () => {
-    Modal.confirm({
-      title: "Xác nhận",
-      content: "Bạn có chắc chắn muốn hủy hóa đơn này không?",
-      onOk: async () => {
-        try {
-          await axios.put(ApiHuyHoaDon);
-          toast.success("Hủy hóa đơn thành công");
-          LayDanhSachHoaDonChuaThanhToan();
-        } catch (error) {
-          console.log(error);
-          toast.error("Không thành công, có lỗi xảy ra");
-        }
-      },
-      onCancel() {
-        // Do nothing if the user cancels
-      },
-    });
+    try {
+      await axios.delete(ApiHuyHoaDon);
+      toast.success("Hủy hóa đơn thành công");
+      LayDanhSachHoaDonChuaThanhToan();
+    } catch (error) {
+      console.log(error);
+      toast.error("Không thành công, có lỗi xảy ra");
+    }
   };
 
   // add Phieu Giam Gia
@@ -432,7 +423,7 @@ export default function BanHangTaiQuay() {
       await axios.delete(
         `${ApiXoaPhieuGiamGiaKhoiHoaDon}/${idPhieuGiamGiaDangChon}`,
       );
-      toast.success("Hủy voucher thàng công");
+      toast.success("Không áp dụng voucher tahnfh công");
       LayThongTinThanhToanCuaHoaDon();
       setIsSelectDisabled(false);
     } catch (error) {
@@ -463,7 +454,7 @@ export default function BanHangTaiQuay() {
     try {
       await axios.post(`${ApiXoaKhachHangKhoiHoaDon}/${idKhachHang}`);
       await LayThongTinThanhToanCuaHoaDon();
-      toast.success("Thành công");
+      toast.success("Thanh cong");
       setDisableSelectKhachHang(false);
       setGiaoHang(false);
       setPhiGiaoHang(0);
@@ -698,6 +689,23 @@ export default function BanHangTaiQuay() {
     });
   };
 
+  // //Them VND
+  // function formatTien(value) {
+  //   if (value === null) {
+  //     return 0;
+  //   }
+  //   // Loại bỏ dấu phân cách thập phân và chuyển thành số
+  //   const parsedValue = parseFloat(value.toString().replace(",", "."));
+
+  //   // Kiểm tra nếu không phải số hợp lệ
+  //   if (isNaN(parsedValue)) {
+  //     return "0 VNĐ"; // Giá trị mặc định nếu `value` không hợp lệ
+  //   }
+
+  //   // Định dạng số và thêm đơn vị VNĐ
+  //   return parsedValue.toLocaleString("vi-VN") + " VNĐ";
+  // }
+
   return (
     <>
       <div className="mx-2 flex max-h-screen overflow-y-hidden font-mono">
@@ -900,44 +908,52 @@ export default function BanHangTaiQuay() {
                     placeholder="Chọn phiếu giảm giá"
                     optionLabelProp="label" // Chỉ hiển thị 'label' sau khi chọn
                     value={idPhieuGiamGiaDangChon}
-                    // onChange={handleVoucherChange} // Cập nhật idPhieuGiamGiaDangChon khi chọn
-                    onClick={addVoucher} // Gọi addPhieuGiamGia khi mất focus
+                    onChange={(value) => setIdPhieuGiamGiaDangChon(value)} // Gọi khi thay đổi lựa chọn
+                    onClick={addVoucher} // Gọi addVoucher khi click vào Select
                     disabled={isSelectDisabled} // Disable Select khi isSelectDisabled là true
-                    options={[
-                      { label: "Không chọn phiếu", value: "" }, // Option rỗng
-                      ...danhSachPhieuGiamGia.map((pgg) => ({
-                        label: `${pgg.tenVoucher}`, // Hiển thị tên sau khi chọn
-                        value: pgg.id,
-                        disabled: pgg.soLuong === 0, // Disable option nếu soLuong = 0
-                        description: (
-                          <>
-                            <div
-                              onMouseEnter={() =>
-                                setIdPhieuGiamGiaDangChon(pgg.id)
-                              }
-                            >
-                              <span>tên: {pgg.tenVoucher}</span> <br />
-                              <span>
-                                Mức giảm: {pgg.mucGiam} {pgg.hinhThucGiam}
-                              </span>{" "}
-                              <br />
-                              <span>Giảm tối đa: {pgg.giamToiDa} VNĐ</span>
-                              <br />
-                              <span className="text-red-600">
-                                Còn: {pgg.soLuong} phiếu
-                              </span>
-                              <hr />
-                            </div>
-                          </>
-                        ),
-                      })),
-                    ]}
-                    fieldNames={{ label: "description", value: "value" }} // Hiển thị thông tin chi tiết khi mở dropdown
-                    filterOption={
-                      (input, option) =>
-                        option.label.toLowerCase().includes(input.toLowerCase()) // Tìm kiếm theo tên phiếu giảm giá (label)
-                    }
-                  />
+                    filterOption={(input, option) =>
+                      option?.label?.toLowerCase().includes(input.toLowerCase())
+                    } // Tìm kiếm theo tên phiếu giảm giá (label)
+                  >
+                    {/* Option rỗng */}
+                    <Select.Option value="" label="Không chọn phiếu">
+                      <div>
+                        <span>Không chọn phiếu giảm giá</span>
+                      </div>
+                    </Select.Option>
+
+                    {/* Danh sách phiếu giảm giá */}
+                    {danhSachPhieuGiamGia.map((pgg) => (
+                      <Select.Option
+                        key={pgg.id}
+                        value={pgg.id}
+                        label={pgg.tenVoucher}
+                        disabled={
+                          pgg.soLuong === 0 ||
+                          // formatCurrencyToNumber(tongTien) <
+                          //   formatCurrencyToNumber(pgg.giamToiDa) ||
+                          // formatCurrencyToNumber(tongTien) <
+                          //   formatCurrencyToNumber(pgg.mucGiam) ||
+                          formatCurrencyToNumber(tongTien) <
+                            formatCurrencyToNumber(pgg.dieuKienGiamGia)
+                          // Disable option nếu số lượng bằng 0
+                        }
+                      >
+                        <div
+                          onMouseEnter={() => setIdPhieuGiamGiaDangChon(pgg.id)} // Gọi khi hover qua từng option
+                        >
+                          <span>Tên: {pgg.tenVoucher}</span> <br />
+                          <span>Điều kiện: {pgg.dieuKienGiamGia}</span> <br />
+                          <span>Mức giảm: {pgg.mucGiam}</span> <br />
+                          <span>Giảm tối đa: {pgg.giamToiDa}</span> <br />
+                          <span className="text-red-600">
+                            Còn: {pgg.soLuong} phiếu
+                          </span>
+                          <hr />
+                        </div>
+                      </Select.Option>
+                    ))}
+                  </Select>
 
                   <Button
                     color="danger"
@@ -1149,8 +1165,14 @@ export default function BanHangTaiQuay() {
           <InputNumber
             addonAfter={"VNĐ"}
             defaultValue={0}
+            formatter={
+              (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ".") // Thêm dấu chấm cho hàng nghìn
+            }
+            parser={(value) =>
+              value.replace(/\./g, "").replace(/VNĐ\s?|(,*)/g, "")
+            } // Xóa dấu chấm trước khi lưu giá trị
             onChange={(value) => {
-              tinhTienThua(value), console.log(value);
+              tinhTienThua(value || 0); // Gọi hàm với giá trị 0 nếu value là null
             }}
           />
         </div>
@@ -1161,6 +1183,9 @@ export default function BanHangTaiQuay() {
             addonAfter={"VNĐ"}
             defaultValue={0}
             disabled
+            formatter={
+              (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ".") // Format hàng nghìn với dấu chấm
+            }
           />
           {error && <p className="text-red-500">{error}</p>}
         </div>
@@ -1220,6 +1245,7 @@ export default function BanHangTaiQuay() {
               <ThemKH
                 idHoaDon={selectedHoaDonId}
                 onadd={LayThongTinThanhToanCuaHoaDon}
+                closeModalThemKH={closeModalThemKH}
               />
             </div>
             <button

@@ -43,6 +43,7 @@ public enum ErrorCode {
     VALID_PHIEU_GIAM_GIA(1002,"Ngày kết thúc phải sau ngày bắt đầu.",HttpStatus.BAD_REQUEST),
     VALID_PHIEU_GIAM_GIA_MUC_GIAM_PT(1002,"Mức giảm không hợp lệ phải từ 0 -> 100",HttpStatus.BAD_REQUEST),
     VALID_PHIEU_GIAM_GIA_MUC_GIAM(1002,"Mức giảm không hợp lệ",HttpStatus.BAD_REQUEST),
+    VALID_PHIEU_GIAM_GIA_DKG_MG(1002,"Điều kiện giảm phải lớn hơn giảm tối đa",HttpStatus.BAD_REQUEST),
     VALID_PHIEU_GIAM_GIA_DK_GIAM(1002,"Điều kiện giảm không hợp lệ",HttpStatus.BAD_REQUEST),
     BILL_NOT_FOUND_h(1005,"Dữ liệu không đúng",HttpStatus.NOT_FOUND),
     INSUFFICIENT_PAYMENT(1002,"Số tiền khách đưa không đủ để thanh toán.",HttpStatus.BAD_REQUEST),
