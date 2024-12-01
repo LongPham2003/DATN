@@ -43,9 +43,10 @@ export default function DoanhThu() {
   };
 
   const handleDateChange = (date) => {
-    setSelectedDate(date);
     if (date) {
-      const formattedDate = date.toISOString().split("T")[0];
+      const localDate = date.toDate(); // Chuyển từ moment sang Date cục bộ
+      const formattedDate = `${localDate.getFullYear()}-${String(localDate.getMonth() + 1).padStart(2, "0")}-${String(localDate.getDate()).padStart(2, "0")}`;
+      setSelectedDate(date);
       setTitle(`Ngày: ${formattedDate}`);
       fetchData(formattedDate);
     }

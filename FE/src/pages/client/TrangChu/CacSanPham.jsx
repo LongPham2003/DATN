@@ -20,9 +20,9 @@ export default function CacSanPham() {
   const [donGiaMin, setMinGia] = useState(null);
   const [donGiaMax, setMaxGia] = useState(null);
 
-  let ApiMauSac = `http://localhost:8080/api/mausac/getall`;
-  let ApiLoai = `http://localhost:8080/api/loai/getall`;
-  let ApiKichThuoc = `http://localhost:8080/api/kichthuoc/getall`;
+  let ApiMauSac = `http://localhost:8080/api/mausac/list?pageSize=99`;
+  let ApiLoai = `http://localhost:8080/api/loai/list?pageSize=99`;
+  let ApiKichThuoc = `http://localhost:8080/api/kichthuoc/list?pageSize=99`;
 
   let ApiSanPhamBanHang = `http://localhost:8080/api/sanpham/trangchu`;
 
@@ -33,9 +33,9 @@ export default function CacSanPham() {
         axios.get(ApiLoai),
         axios.get(ApiKichThuoc),
       ]);
-      setListMauSac(MauSac.data.result);
-      setListLoai(Loai.data.result);
-      setListKichThuoc(KichThuoc.data.result);
+      setListMauSac(MauSac.data.result.result);
+      setListLoai(Loai.data.result.result);
+      setListKichThuoc(KichThuoc.data.result.result);
     } catch (error) {
       console.error("Lỗi khi lấy dữ liệu:", error);
     }
@@ -106,8 +106,8 @@ export default function CacSanPham() {
 
   return (
     <>
-      <div className="grid grid-cols-12 gap-4">
-        <div className="col-span-3 mr-[60px] flex justify-center">
+      <div className="gap-4">
+        {/* <div className="col-span-3 mr-[60px] flex justify-center">
           <span className="text-3xl font-semibold">Bộ Lọc</span>
         </div>
         <div className="col-span-3 col-start-1 col-end-3 h-auto">
@@ -281,21 +281,21 @@ export default function CacSanPham() {
               </div>
             </Card>
           </div>
-        </div>
+        </div> */}
 
-        <div className="col-span-9 col-start-4 col-end-12 flex justify-between">
+        <div className="flex justify-between">
           <div className="grid w-full grid-cols-3 gap-8">
             {listSanPham.map((spct, index) => (
               <Card
                 key={index}
                 hoverable
-                className="h-[360px]"
+                className="h-[460px]"
                 cover={
                   <Link to={`/chitiet/${spct.idSP}`}>
                     <div className="transition-transform duration-300 hover:scale-110">
                       <LayANhTheoIdSPCT
                         id={spct.idSPCT}
-                        className="h-[200px] w-auto justify-center object-cover"
+                        className="h-[300px] w-auto justify-center object-cover"
                       />
                     </div>
                   </Link>

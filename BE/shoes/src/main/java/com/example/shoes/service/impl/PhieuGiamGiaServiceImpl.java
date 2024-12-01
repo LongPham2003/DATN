@@ -232,7 +232,7 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
         int newNumber = maxNumber + 1;
 
         // Trả về mã sản phẩm mới theo định dạng "SPxx" (ví dụ: SP06)
-        return String.format("PGG%02d", newNumber);
+        return String.format("VC%02d", newNumber);
     }
 
 }

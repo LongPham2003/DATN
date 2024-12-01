@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -21,7 +22,8 @@ public class ThongKeController {
 
     @GetMapping("/ngay-tuy-chinh")
     public  DoanhThu ngayTuyChinh( @RequestParam("date") String date){
-        return thongkeService.ngayTuyChinh(date);
+        LocalDate localDate = LocalDate.parse(date);
+        return thongkeService.ngayTuyChinh(localDate);
     }
 
     @GetMapping("/ngay-hom-nay")

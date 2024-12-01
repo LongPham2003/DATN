@@ -75,7 +75,7 @@ public interface SanPhamRepo extends JpaRepository<SanPham, Integer> {
       AND (:idMauSac IS NULL OR spct.id_mau_sac = :idMauSac)
          AND (:donGiaMin IS NULL OR :donGiaMax IS NULL OR spct.don_gia BETWEEN :donGiaMin AND :donGiaMax)
     GROUP BY sp.id, th.id, sp.ten_san_pham
-    ORDER BY sp.id;
+    ORDER BY sp.id desc
 """, nativeQuery = true)
     List<SanPhamClient> sanPhamClient(@Param("tenSP") String tenSP,
                                         @Param("idLoai") Integer idLoai,

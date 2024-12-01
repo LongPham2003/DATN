@@ -1,10 +1,28 @@
 /* eslint-disable no-unused-vars */
 
+import { Button, Popconfirm } from "antd";
 import LayAnhTheoIdSP from "../SanPham/Product/LayANhTheoIDSP";
+import { TrashIcon } from "@heroicons/react/16/solid";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useState } from "react";
+import SanPhamHoaDon from "./SanPhamHoaDon";
 
 /* eslint-disable react/prop-types */
-const ThongTinHoaDon = ({ hoaDon, hoaDonChiTiet }) => {
+const ThongTinHoaDon = ({
+  hoaDon,
+  hoaDonChiTiet,
+  fillHoaDon,
+  fillHoaDonChiTiet,
+}) => {
   console.log(hoaDonChiTiet);
+  const [OpenModelSP, setOpenModelSP] = useState(false);
+  const openModalSP = () => {
+    setOpenModelSP(true);
+  };
+  const closeModalSP = async () => {
+    setOpenModelSP(false);
+  };
   const formatDate = (dateTimeString) => {
     const date = new Date(dateTimeString);
 
@@ -31,6 +49,21 @@ const ThongTinHoaDon = ({ hoaDon, hoaDonChiTiet }) => {
     // Định dạng số và thêm đơn vị VNĐ
     return parsedValue.toLocaleString("vi-VN") + " VNĐ";
   }
+
+  const XoaSPKhoiGioHang = async (idSPCT) => {
+    try {
+      await axios.delete(
+        `http://localhost:8080/api/giohang/${hoaDon.id}/spct/${idSPCT}`,
+      );
+      toast.success("Xóa thành công");
+      await fillHoaDon();
+      await fillHoaDonChiTiet();
+    } catch (error) {
+      console.error("Error:", error);
+      toast.error("Có lỗi xẩy ra");
+    }
+  };
+
   return (
     <div>
       <h3 className="text-[20px] font-bold text-pink-500">
@@ -93,8 +126,21 @@ const ThongTinHoaDon = ({ hoaDon, hoaDonChiTiet }) => {
           </div>
         </div>
       </div>
+      <hr />
       <div className="mx-4 py-4">
-        <h3 className="text-[20px] font-bold">Sản phẩm</h3>
+        <div className="mx-5 flex justify-between py-3">
+          <h3 className="text-[20px] font-bold">Sản phẩm</h3>
+          {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" ? (
+            <button
+              onClick={openModalSP}
+              className="rounded bg-blue-500 px-2 py-2 text-white"
+            >
+              Sửa hóa đơn
+            </button>
+          ) : (
+            ""
+          )}
+        </div>
 
         <table className="min-w-full text-center text-sm font-light">
           <thead className="top-0 bg-blue-700 text-xl font-medium text-white">
@@ -105,6 +151,9 @@ const ThongTinHoaDon = ({ hoaDon, hoaDonChiTiet }) => {
               <th className="w-52 px-6 py-4">Đơn giá</th>
               <th className="w-52 px-6 py-4">Số lượng</th>
               <th className="w-52 px-6 py-4">Thành tiền</th>
+              <th className="w-52 px-6 py-4">
+                {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" ? "Hàng động" : ""}
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -125,12 +174,49 @@ const ThongTinHoaDon = ({ hoaDon, hoaDonChiTiet }) => {
                 <td>{formatTien(SPCT.donGia)}</td>
                 <td>{SPCT.soLuong}</td>
                 <td>{formatTien(SPCT.donGia * SPCT.soLuong)}</td>
+                <td>
+                  {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" ? (
+                    <Popconfirm
+                      title="Xóa Sản phẩm"
+                      description="Bạn có muốn xóa sản phẩm không?"
+                      okText="Yes"
+                      cancelText="No"
+                      onConfirm={(e) => {
+                        e.preventDefault();
+                        XoaSPKhoiGioHang(SPCT.idSpct);
+                      }}
+                    >
+                      <Button type="primary" danger>
+                        <TrashIcon className="h-5 w-5 text-white" />
+                        Xóa
+                      </Button>
+                    </Popconfirm>
+                  ) : (
+                    ""
+                  )}
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+      {OpenModelSP && (
+        <div className="fixed inset-0 flex items-center justify-center bg-opacity-50">
+          <SanPhamHoaDon
+            id={hoaDon.id}
+            fillHoaDon={fillHoaDon}
+            fillHoaDonChiTiet={fillHoaDonChiTiet}
+          ></SanPhamHoaDon>
+          <button
+            onClick={closeModalSP}
+            className="h-10 rounded bg-red-500 px-4 text-white hover:bg-red-600"
+          >
+            X
+          </button>
+        </div>
+      )}
     </div>
   );
 };
+
 export default ThongTinHoaDon;

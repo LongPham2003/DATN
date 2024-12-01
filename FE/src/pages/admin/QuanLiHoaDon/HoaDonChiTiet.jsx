@@ -132,9 +132,9 @@ const HoaDonChiTiet = () => {
     (item) => item.trangThai === "DA_THANH_TOAN",
   );
 
-  // console.log(thanhToan);
-  // console.log(lichSuHoaDon);
-  // console.log(hoaDon);
+  console.log(thanhToan);
+  console.log(lichSuHoaDon);
+  console.log(hoaDon);
 
   const formatDate = (dateTimeString) => {
     const date = new Date(dateTimeString);
@@ -292,11 +292,9 @@ const HoaDonChiTiet = () => {
       },
     });
   };
-
-  const handleGenPDF = () => {
+  const handalePDF = () => {
     generatePDF();
   };
-  // console.log(hoaDon);
 
   return (
     <div className="mx-3 py-3">
@@ -404,14 +402,12 @@ const HoaDonChiTiet = () => {
             </button>
           )}
 
-          {hoaDon.trangThaiDonHang === "Hoàn thành" && (
-            <button
-              className="rounded bg-blue-500 px-2 py-1 text-white"
-              onClick={handleGenPDF}
-            >
-              Xuất Hóa Đơn
-            </button>
-          )}
+          <button
+            className="ml-4 rounded bg-blue-500 px-2 py-1 text-white"
+            onClick={handalePDF}
+          >
+            Xuất Hóa Đơn
+          </button>
         </div>
         <button
           className="rounded bg-blue-500 px-2 py-1 text-white"
@@ -484,6 +480,8 @@ const HoaDonChiTiet = () => {
         <ThongTinHoaDon
           hoaDon={hoaDon}
           hoaDonChiTiet={hoaDonChiTiet}
+          fillHoaDon={fillHoaDon}
+          fillHoaDonChiTiet={fillHoaDonChiTiet}
         ></ThongTinHoaDon>
       </div>
       <hr className="border-s-pink-700" />

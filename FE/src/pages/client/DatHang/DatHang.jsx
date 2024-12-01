@@ -353,6 +353,7 @@ export default function DatHang() {
                     label={pgg.tenVoucher}
                     disabled={
                       tongTien < formatCurrencyToNumber(pgg.dieuKienGiamGia) ||
+                      tongTien < formatCurrencyToNumber(pgg.mucGiam) ||
                       pgg.soLuong === 0
                     }
                   >

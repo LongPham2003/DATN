@@ -257,8 +257,8 @@ export default function ThongTinCaNhan() {
     }
   }, [id, diaChiData]);
   return (
-    <div className="flex h-auto items-center justify-center bg-gray-100">
-      <div className="w-full rounded-lg bg-white px-8 shadow-md">
+    <div className="flex h-auto items-center justify-center">
+      <div className="my-5 w-full rounded-lg bg-white px-8">
         <div className="flex gap-3">
           <form className="w-2/4">
             <h1 className="mb-6 text-2xl font-bold">Thông tin cá nhân</h1>

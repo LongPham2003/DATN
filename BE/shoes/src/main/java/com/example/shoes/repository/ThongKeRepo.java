@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -32,7 +33,7 @@ LEFT JOIN
 WHERE 
     DATE(hd.update_at) = :date;
 """, nativeQuery = true)
-    DoanhThu ngayTuyChinh(@Param("date") String date);
+    DoanhThu ngayTuyChinh(@Param("date") LocalDate date);
     //Ngay hom nay
     @Query(value = """
     SELECT\s

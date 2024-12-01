@@ -568,6 +568,8 @@ public class HoaDonServiceImpl implements HoaDonService {
         return converToHoaDonResponse(hoaDon);
     }
 
+
+
     public BigDecimal apDungVoucher(BigDecimal tongTienDonHang, PhieuGiamGia phieuGiamGia) {
         // Kiểm tra điều kiện áp dụng voucher
         if (tongTienDonHang.compareTo(phieuGiamGia.getDieuKienGiamGia()) < 0) {

@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface HoaDonRepo extends JpaRepository<HoaDon, Integer> {
+
         @Query("SELECT hd FROM HoaDon  hd WHERE hd.trangThaiDonHang = 'DA_THANH_TOAN'")
         List<HoaDon> getAllTrangThaiDaThanhToan();
 
@@ -110,4 +111,19 @@ public interface HoaDonRepo extends JpaRepository<HoaDon, Integer> {
         """, nativeQuery = true)
         List<HoaDonTheoIdKH> getHoaDonTheoKH(@Param("idKhachHang") Integer idKhachHang, @Param("maHD") String maHD);
 
+
+        @Query(value = "select count(id) from hoa_don",nativeQuery = true)
+        Integer getCountHoaDon();
+        @Query(value = "select count(id) from hoa_don where trang_thai_don_hang = 'CHO_XAC_NHAN'",nativeQuery = true)
+        Integer getCountHoaDonCXN();
+        @Query(value = "select count(id) from hoa_don where trang_thai_don_hang = 'DA_XAC_NHAN'",nativeQuery = true)
+        Integer getCountHoaDonDXN();
+        @Query(value = "select count(id) from hoa_don where trang_thai_don_hang = 'CHO_GIAO_HANG'",nativeQuery = true)
+        Integer getCountHoaDonCGH();
+        @Query(value = "select count(id) from hoa_don where trang_thai_don_hang = 'DANG_GIAO'",nativeQuery = true)
+        Integer getCountHoaDonDG();
+        @Query(value = "select count(id) from hoa_don where trang_thai_don_hang = 'HOAN_THANH'",nativeQuery = true)
+        Integer getCountHoaDonHT();
+        @Query(value = "select count(id) from hoa_don where trang_thai_don_hang = 'HUY_DON'",nativeQuery = true)
+        Integer getCountHoaDonHuy();
 }

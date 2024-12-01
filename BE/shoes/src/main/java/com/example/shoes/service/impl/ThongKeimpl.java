@@ -9,6 +9,7 @@ import com.example.shoes.service.ThongKeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -18,7 +19,7 @@ public class ThongKeimpl implements ThongKeService {
 
 
     @Override
-    public DoanhThu ngayTuyChinh(String date) {
+    public DoanhThu ngayTuyChinh(LocalDate date) {
         return thongKeRepo.ngayTuyChinh(date);
     }
 

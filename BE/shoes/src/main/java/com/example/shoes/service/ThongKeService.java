@@ -4,11 +4,12 @@ import com.example.shoes.dto.thongke.response.BieuDoNgayTrongTuan;
 import com.example.shoes.dto.thongke.response.DoanhThu;
 import com.example.shoes.dto.thongke.response.SanPhamBanChay;
 
+import java.time.LocalDate;
 import java.util.List;
 
 
 public interface ThongKeService {
-    DoanhThu ngayTuyChinh(String date);
+    DoanhThu ngayTuyChinh(LocalDate date);
     DoanhThu doanhThuHomNay();
     DoanhThu doanhThuTuan();
     DoanhThu doanhThuThang();

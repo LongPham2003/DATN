@@ -1,4 +1,4 @@
-import { Button, Input, Pagination } from "antd";
+import { Button, Input, Modal, Pagination } from "antd";
 import axios from "axios";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -8,28 +8,28 @@ export default function TheoDoiDonHang() {
   const [idKH, setIdKH] = useState();
   const [listHoaDon, setListHoaDon] = useState([]);
   const [maHD, setmaHD] = useState();
+  const laydsHD = async () => {
+    let idkh = Number(localStorage.getItem("idKH"));
+    setIdKH(idkh);
+
+    // Khởi tạo URL cơ bản
+    let url = `http://localhost:8080/api/hoadon/getAllHDTheoIDKH?idKhachHang=${idkh}`;
+
+    // Thêm `maHD` nếu khác null
+    if (maHD) {
+      url += `&maHD=${maHD}`;
+    }
+
+    try {
+      const resp = await axios.get(url);
+      console.log(resp.data.result); // Log dữ liệu trả về
+      setListHoaDon(resp.data.result);
+    } catch (error) {
+      console.error("Error fetching data:", error); // Log lỗi
+    }
+  };
+
   useEffect(() => {
-    const laydsHD = async () => {
-      let idkh = Number(localStorage.getItem("idKH"));
-      setIdKH(idkh);
-
-      // Khởi tạo URL cơ bản
-      let url = `http://localhost:8080/api/hoadon/getAllHDTheoIDKH?idKhachHang=${idkh}`;
-
-      // Thêm `maHD` nếu khác null
-      if (maHD) {
-        url += `&maHD=${maHD}`;
-      }
-
-      try {
-        const resp = await axios.get(url);
-        console.log(resp.data.result); // Log dữ liệu trả về
-        setListHoaDon(resp.data.result);
-      } catch (error) {
-        console.error("Error fetching data:", error); // Log lỗi
-      }
-    };
-
     laydsHD(); // Gọi API
   }, [maHD]);
   //Them VND
@@ -48,6 +48,43 @@ export default function TheoDoiDonHang() {
     // Định dạng số và thêm đơn vị VNĐ
     return parsedValue.toLocaleString("vi-VN") + " VNĐ";
   }
+  const [OpenModelHuy, setOpenModelHuy] = useState(false);
+  const openModalHuy = () => {
+    setOpenModelHuy(true);
+  };
+  const closeModalHuy = async () => {
+    setOpenModelHuy(false);
+  };
+  const [ghiChu, setGhiChu] = useState("");
+  const handleSubmitUpdateHuy = (id) => {
+    // e.preventDefault(); // Ngăn chặn hành động mặc định của form
+    Modal.confirm({
+      title: "Xác nhận cập nhật",
+      content: "Bạn có chắc chắn muốn cập  không?",
+      onOk() {
+        axios
+          .post(`http://localhost:8080/api/hoadon/huy/${id}`, {
+            ghiChu: ghiChu,
+          })
+          .then((response) => {
+            console.log("Cập nhật thành công:", response.data);
+            // toast.success("Thành công");
+            openModalHuy();
+            // fillHoaDon();
+            // fillHoaDonChiTiet();
+            // fillLichSuHoaDon();
+            laydsHD();
+          })
+          .catch((error) => {
+            openModalHuy();
+            // toast.error(error.response.data.message); // Hiển thị thông báo từ server
+          });
+      },
+      onCancel() {
+        // Nếu người dùng hủy, có thể không cần làm gì cả
+      },
+    });
+  };
   return (
     <>
       <div className="my-10">
@@ -145,13 +182,17 @@ export default function TheoDoiDonHang() {
                   {formatTien(hd.tienPhaiThanhToan)}
                 </div>
                 <div className="mt-10">
-                  {hd.trangThaiDonHang === "CHO_XAC_NHAN" ? (
-                    <Button color="danger" variant="outlined">
+                  {/* {hd.trangThaiDonHang === "CHO_XAC_NHAN" ? (
+                    <Button
+                      color="danger"
+                      variant="outlined"
+                      onClick={() => handleSubmitUpdateHuy(hd.idHoaDon)}
+                    >
                       Hủy đơn
                     </Button>
                   ) : (
                     ""
-                  )}
+                  )} */}
                 </div>
               </div>
               <div>
@@ -162,6 +203,36 @@ export default function TheoDoiDonHang() {
         ))}
       </div>
       <div></div>
+      {OpenModelHuy && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="flex h-[300px] w-[400px] justify-between rounded-lg bg-white p-8">
+            <div className="font-bold">
+              <h3 className="mb-3">Cập nhật hóa đơn</h3>
+              <label className="pt-3">Ghi chú</label>
+              <textarea
+                onChange={(e) => setGhiChu(e.target.value)}
+                className="w-full rounded border p-2"
+                rows="4" // Số dòng hiển thị
+                placeholder="Nhập ghi chú tại đây..."
+              ></textarea>
+              <div className="mx-auto my-3 flex justify-center">
+                <button
+                  onClick={handleSubmitUpdateHuy}
+                  className="rounded bg-blue-500 px-2 py-2 text-white"
+                >
+                  Cập nhật
+                </button>
+              </div>
+            </div>
+            <button
+              onClick={closeModalHuy}
+              className="h-10 rounded bg-red-500 px-4 text-white hover:bg-red-600"
+            >
+              X
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 }
