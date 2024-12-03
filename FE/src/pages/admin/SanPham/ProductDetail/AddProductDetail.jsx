@@ -627,9 +627,6 @@ export default function AddProductDetail() {
                             onChange={(value) =>
                               handleChangeGiaBanSPCT(SPCT.id, value)
                             } // Nhận trực tiếp giá trị
-                            formatter={(value) =>
-                              `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                            }
                           />
                         </td>
 
@@ -795,7 +792,7 @@ export default function AddProductDetail() {
         </div>
       )}
 
-      <ToastContainer />
+      {/* <ToastContainer /> */}
     </>
   );
 }

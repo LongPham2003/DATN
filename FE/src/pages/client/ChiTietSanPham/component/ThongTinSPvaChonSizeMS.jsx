@@ -62,7 +62,7 @@ export default function ChonSizeVSMauSac({ id }) {
 
       const data = responSPCT.data.result;
       setSPCT(data); // Lưu toàn bộ dữ liệu SPCT
-      // console.log(data);
+      console.log(data);
 
       if (Array.isArray(data) && data.length > 0) {
         setIdSPCT(data[0].id); // Lấy `id` của phần tử đầu tiên
@@ -76,7 +76,6 @@ export default function ChonSizeVSMauSac({ id }) {
 
         const slt = data[0].soLuong;
         setSoLuongTon(slt);
-
         // Disable nút nếu không còn hàng
         setDisable(slt === 0);
       } else {
@@ -245,11 +244,11 @@ export default function ChonSizeVSMauSac({ id }) {
         ) : null}
       </div>
 
-      <ToastContainer
+      {/* <ToastContainer
         position="top-center"
         autoClose={1000}
         transition={Zoom}
-      />
+      /> */}
     </>
   );
 }

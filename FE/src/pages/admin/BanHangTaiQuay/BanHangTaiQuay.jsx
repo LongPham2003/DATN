@@ -85,7 +85,16 @@ export default function BanHangTaiQuay() {
   const [tienKhachDua, setTienKhachDua] = useState();
   const [tienThuaTraKhach, setTienThuaTraKhach] = useState();
   const [error, setError] = useState("");
-
+  const [soLuongSanPham, setSoLuongSanPham] = useState(1);
+  useEffect(() => {
+    if (SPCTChuaThanhToan && Array.isArray(SPCTChuaThanhToan)) {
+      const total = SPCTChuaThanhToan.reduce(
+        (sum, item) => sum + (item.soLuong || 0),
+        0,
+      );
+      setSoLuongSanPham(total);
+    }
+  }, [SPCTChuaThanhToan]);
   const [disableSelctKhachHang, setDisableSelectKhachHang] = useState(false);
   const [isSelectDisabled, setIsSelectDisabled] = useState(false); // State để quản lý disable
 
@@ -118,8 +127,6 @@ export default function BanHangTaiQuay() {
       const response = await axios.get(ApiLayHoaDonChuaThanhToan);
 
       const hoaDonList = response.data.result;
-      console.log(response.data.result);
-
       setHoaDonFalse(hoaDonList);
       if (hoaDonList.length > 0) {
         setSelectedHoaDonId(hoaDonList[0].id); // Chọn id hóa đơn đầu tiên khi tải dữ liệu lần đầu
@@ -371,23 +378,14 @@ export default function BanHangTaiQuay() {
 
   //Huy Hoa Don
   const huyHoaDon = async () => {
-    Modal.confirm({
-      title: "Xác nhận",
-      content: "Bạn có chắc chắn muốn hủy hóa đơn này không?",
-      onOk: async () => {
-        try {
-          await axios.put(ApiHuyHoaDon);
-          toast.success("Hủy hóa đơn thành công");
-          LayDanhSachHoaDonChuaThanhToan();
-        } catch (error) {
-          console.log(error);
-          toast.error("Không thành công, có lỗi xảy ra");
-        }
-      },
-      onCancel() {
-        // Do nothing if the user cancels
-      },
-    });
+    try {
+      await axios.put(ApiHuyHoaDon);
+      toast.success("Hủy hóa đơn thành công");
+      LayDanhSachHoaDonChuaThanhToan();
+    } catch (error) {
+      console.log(error);
+      toast.error("Không thành công, có lỗi xảy ra");
+    }
   };
 
   // add Phieu Giam Gia
@@ -482,7 +480,7 @@ export default function BanHangTaiQuay() {
       tienPhaiThanhToan.replace(/[.VNĐ]/g, "").trim(),
     );
 
-    console.log(tienPhaiThanhToanNum);
+    // console.log(tienPhaiThanhToanNum);
 
     setTienKhachDua(value);
 
@@ -519,7 +517,6 @@ export default function BanHangTaiQuay() {
       // Gọi hàm lấy ID lớn nhất sau khi thanh toán đã hoàn tất
       // await LayIdLonNhat(); // Gọi hàm này sau khi thanh toán thành công
       // Gọi hàm tạo PDF với ID hóa đơn
-
       setTimeout(() => {
         handleGeneratePDF();
         setTimeout(() => {
@@ -701,6 +698,23 @@ export default function BanHangTaiQuay() {
     });
   };
 
+  // //Them VND
+  // function formatTien(value) {
+  //   if (value === null) {
+  //     return 0;
+  //   }
+  //   // Loại bỏ dấu phân cách thập phân và chuyển thành số
+  //   const parsedValue = parseFloat(value.toString().replace(",", "."));
+
+  //   // Kiểm tra nếu không phải số hợp lệ
+  //   if (isNaN(parsedValue)) {
+  //     return "0 VNĐ"; // Giá trị mặc định nếu `value` không hợp lệ
+  //   }
+
+  //   // Định dạng số và thêm đơn vị VNĐ
+  //   return parsedValue.toLocaleString("vi-VN") + " VNĐ";
+  // }
+
   return (
     <>
       <div className="mx-2 flex max-h-screen overflow-y-hidden font-mono">
@@ -727,7 +741,9 @@ export default function BanHangTaiQuay() {
             </div>
             <Tabs
               activeKey={selectedHoaDonId} // Hiển thị tab tương ứng với hóa đơn được chọn
-              onChange={(key) => setSelectedHoaDonId(key)} // Cập nhật id hóa đơn được chọn khi người dùng chọn tab mới
+              onChange={(key) => {
+                setSelectedHoaDonId(key), setGiaoHang(false);
+              }} // Cập nhật id hóa đơn được chọn khi người dùng chọn tab mới
               defaultActiveKey={hoaDonFalse[0]?.id} // Chọn tab đầu tiên mặc định
               animated={{ inkBar: true, tabPane: true }} // Bật hiệu ứng chuyển tab
               items={hoaDonFalse.map((tab) => ({
@@ -739,18 +755,22 @@ export default function BanHangTaiQuay() {
           </div>
 
           <div className="ml-[60px] mt-[30px]">
-            <Button
-              style={{
-                borderRadius: "30px",
-                height: "35px",
-                backgroundColor: "yellow",
-                color: "black",
-                fontWeight: "bold",
-              }}
-              onClick={openModal}
-            >
-              Chọn sản phẩm
-            </Button>
+            {hoaDonFalse.length !== 0 ? (
+              <Button
+                style={{
+                  borderRadius: "30px",
+                  height: "35px",
+                  backgroundColor: "yellow",
+                  color: "black",
+                  fontWeight: "bold",
+                }}
+                onClick={openModal}
+              >
+                Chọn sản phẩm
+              </Button>
+            ) : (
+              ""
+            )}
           </div>
 
           <div className="mt-7">
@@ -903,44 +923,52 @@ export default function BanHangTaiQuay() {
                     placeholder="Chọn phiếu giảm giá"
                     optionLabelProp="label" // Chỉ hiển thị 'label' sau khi chọn
                     value={idPhieuGiamGiaDangChon}
-                    // onChange={handleVoucherChange} // Cập nhật idPhieuGiamGiaDangChon khi chọn
-                    onClick={addVoucher} // Gọi addPhieuGiamGia khi mất focus
+                    onChange={(value) => setIdPhieuGiamGiaDangChon(value)} // Gọi khi thay đổi lựa chọn
+                    onClick={addVoucher} // Gọi addVoucher khi click vào Select
                     disabled={isSelectDisabled} // Disable Select khi isSelectDisabled là true
-                    options={[
-                      { label: "Không chọn phiếu", value: "" }, // Option rỗng
-                      ...danhSachPhieuGiamGia.map((pgg) => ({
-                        label: `${pgg.tenVoucher}`, // Hiển thị tên sau khi chọn
-                        value: pgg.id,
-                        disabled: pgg.soLuong === 0, // Disable option nếu soLuong = 0
-                        description: (
-                          <>
-                            <div
-                              onMouseEnter={() =>
-                                setIdPhieuGiamGiaDangChon(pgg.id)
-                              }
-                            >
-                              <span>tên: {pgg.tenVoucher}</span> <br />
-                              <span>
-                                Mức giảm: {pgg.mucGiam} {pgg.hinhThucGiam}
-                              </span>{" "}
-                              <br />
-                              <span>Giảm tối đa: {pgg.giamToiDa} VNĐ</span>
-                              <br />
-                              <span className="text-red-600">
-                                Còn: {pgg.soLuong} phiếu
-                              </span>
-                              <hr />
-                            </div>
-                          </>
-                        ),
-                      })),
-                    ]}
-                    fieldNames={{ label: "description", value: "value" }} // Hiển thị thông tin chi tiết khi mở dropdown
-                    filterOption={
-                      (input, option) =>
-                        option.label.toLowerCase().includes(input.toLowerCase()) // Tìm kiếm theo tên phiếu giảm giá (label)
-                    }
-                  />
+                    filterOption={(input, option) =>
+                      option?.label?.toLowerCase().includes(input.toLowerCase())
+                    } // Tìm kiếm theo tên phiếu giảm giá (label)
+                  >
+                    {/* Option rỗng */}
+                    <Select.Option value="" label="Không chọn phiếu">
+                      <div>
+                        <span>Không chọn phiếu giảm giá</span>
+                      </div>
+                    </Select.Option>
+
+                    {/* Danh sách phiếu giảm giá */}
+                    {danhSachPhieuGiamGia.map((pgg) => (
+                      <Select.Option
+                        key={pgg.id}
+                        value={pgg.id}
+                        label={pgg.tenVoucher}
+                        disabled={
+                          pgg.soLuong === 0 ||
+                          // formatCurrencyToNumber(tongTien) <
+                          //   formatCurrencyToNumber(pgg.giamToiDa) ||
+                          // formatCurrencyToNumber(tongTien) <
+                          //   formatCurrencyToNumber(pgg.mucGiam) ||
+                          formatCurrencyToNumber(tongTien) <
+                            formatCurrencyToNumber(pgg.dieuKienGiamGia)
+                          // Disable option nếu số lượng bằng 0
+                        }
+                      >
+                        <div
+                          onMouseDown={() => setIdPhieuGiamGiaDangChon(pgg.id)} // Gọi khi hover qua từng option
+                        >
+                          <span>Tên: {pgg.tenVoucher}</span> <br />
+                          <span>Điều kiện: {pgg.dieuKienGiamGia}</span> <br />
+                          <span>Mức giảm: {pgg.mucGiam}</span> <br />
+                          <span>Giảm tối đa: {pgg.giamToiDa}</span> <br />
+                          <span className="text-red-600">
+                            Còn: {pgg.soLuong} phiếu
+                          </span>
+                          <hr />
+                        </div>
+                      </Select.Option>
+                    ))}
+                  </Select>
 
                   <Button
                     color="danger"
@@ -984,7 +1012,7 @@ export default function BanHangTaiQuay() {
                 <div className="text-red-500">
                   {formatTien(
                     formatCurrencyToNumber(tienPhaiThanhToan) + phiGiaoHang,
-                  )}{" "}
+                  )}
                 </div>
               </div>
 
@@ -1030,12 +1058,14 @@ export default function BanHangTaiQuay() {
                           setPhiGiaoHang={setPhiGiaoHang}
                           setNgayDuKien={setNgayDuKien}
                           setdiaChiGiaoHang={setdiaChiGiaoHang}
+                          soLuongSanPham={soLuongSanPham}
+                          tongTien={formatCurrencyToNumber(tongTien)}
                         />
                       </span>
                     </div>
                   )}
                 </div>
-                {giaoHang && (
+                {giaoHang && soLuongSanPham >= 1 && (
                   <div>
                     <div className="mx-3 flex items-center gap-4">
                       {" "}
@@ -1232,6 +1262,7 @@ export default function BanHangTaiQuay() {
               <ThemKH
                 idHoaDon={selectedHoaDonId}
                 onadd={LayThongTinThanhToanCuaHoaDon}
+                closeModalThemKH={closeModalThemKH}
               />
             </div>
             <button
@@ -1244,9 +1275,9 @@ export default function BanHangTaiQuay() {
         </div>
       )}
 
-      <ToastContainer
+      {/* <ToastContainer
         position="top-center"
-        autoClose={1000}
+        autoClose={500}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
@@ -1255,7 +1286,7 @@ export default function BanHangTaiQuay() {
         draggable
         theme="light"
         transition={Bounce}
-      />
+      /> */}
       <div style={{ display: "none" }}>
         <ExportPDF idHoaDon={tempHoaDonId} />
       </div>

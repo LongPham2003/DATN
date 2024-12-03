@@ -1,6 +1,7 @@
-import { Popconfirm, Select } from "antd";
+import { Modal, Popconfirm, Select } from "antd";
 import axios from "./../../../api/axiosConfig";
-import { useState, useEffect } from "react";
+import { useContext, useEffect } from "react";
+import { useState } from "react";
 import ThongTinSPCT from "./../GioHang/component/ThongTinSPCT";
 import LayANhTheoIDSP from "./../../admin/SanPham/Product/LayANhTheoIDSP";
 import DiaCHiMacDinhKhachHang from "./../../admin/BanHangTaiQuay/DiaChiMacDinhKhachHang";
@@ -27,8 +28,9 @@ export default function DatHang() {
   const [idPGGDangChon, setIdPhieuGiamGiaDangChon] = useState();
   const [phieuGiamGiaDangChon, setPhieuGiamGiaDangChon] = useState();
   const [phuongThucThanhToan, setPhuongThucThanhToan] = useState("Tiền mặt");
+  const [soLuongSanPham, setSoLuongSanPham] = useState(0);
 
-  let ApiLayTTGHCT = `http://localhost:8080/api/giohang/laygiohangchitiet`;
+  const ApiLayTTGHCT = `http://localhost:8080/api/giohang/laygiohangchitiet`;
   let ApiLayPhieuGiamGia = `http://localhost:8080/api/phieugiamgia/trang-thai-true`; // Danh Sach Phiếu Giam giá
   let ApiLayThongTinPhieuGiamGiaDangChon = `http://localhost:8080/api/phieugiamgia`;
   let ApiDatHangonLine = `http://localhost:8080/api/giohang/dat-hang`;
@@ -58,20 +60,20 @@ export default function DatHang() {
       console.error("Error fetching discount coupons:", error);
     }
   };
-
-  // // Hàm lấy thông tin phiếu giảm giá
+  // Hàm lấy thông tin phiếu giảm giá
   const LayThongTinPhieuGiamGiaDangChon = async (idPGG) => {
     if (!idPGG) {
       setPhieuGiamGiaDangChon(null); // Reset nếu không có phiếu giảm giá được chọn
       return;
     }
+
     try {
       const response = await axios.get(
         `${ApiLayThongTinPhieuGiamGiaDangChon}/${idPGG}`,
       );
       setPhieuGiamGiaDangChon(response.data.result);
-      // console.log(response.data.result);
-      // console.log(response.data.result.mucGiam);
+      console.log(response.data.result);
+      console.log(response.data.result.mucGiam);
       setdieuKienGiam(response.data.result.dieuKienGiamGia);
       setTienDuocGiam(response.data.result.mucGiam);
     } catch (error) {
@@ -83,9 +85,8 @@ export default function DatHang() {
     idSpct: item.idSanPhamChiTiet,
     soLuong: item.soLuong,
   }));
-
-  // // console.log(chiTietSanPhams);
-  // // Hàm DatHang với xác nhận
+  console.log(chiTietSanPhams);
+  // Hàm DatHang với xác nhận
   const DatHang = async (e) => {
     e.preventDefault();
 
@@ -114,8 +115,18 @@ export default function DatHang() {
       toast.error("Có lỗi xảy ra khi đặt hàng");
     }
   };
+  // lấy số lương sản phẩm để tính ship
+  useEffect(() => {
+    if (chiTietSanPhams && Array.isArray(chiTietSanPhams)) {
+      const total = chiTietSanPhams.reduce(
+        (sum, item) => sum + (item.soLuong || 0),
+        0,
+      );
+      setSoLuongSanPham(total);
+    }
+  }, [chiTietSanPhams]);
 
-  // // Gọi hàm khi idPGGDangChon thay đổi
+  // Gọi hàm khi idPGGDangChon thay đổi
   useEffect(() => {
     LayThongTinPhieuGiamGiaDangChon(idPGGDangChon);
   }, [idPGGDangChon]);
@@ -177,7 +188,7 @@ export default function DatHang() {
       return 0;
     }
 
-    //   console.log("Đủ điều kiện áp dụng phiếu giảm giá");
+    console.log("Đủ điều kiện áp dụng phiếu giảm giá");
 
     let tienGiam = 0;
 
@@ -228,7 +239,7 @@ export default function DatHang() {
     return parseInt(value.replace(/[^\d]/g, ""));
   };
 
-  // //Them VND
+  //Them VND
   function formatTien(value) {
     // Loại bỏ dấu phân cách thập phân và chuyển thành số
     const parsedValue = parseFloat(value.toString().replace(",", "."));
@@ -251,7 +262,7 @@ export default function DatHang() {
     return Number(mucGiam); // Đảm bảo trả về kiểu số nếu đã là number
   }
 
-  // // thanh toán vnpay
+  // thanh toán vnpay
   const handlePaymentClick = async () => {
     try {
       const response = await axios.get(
@@ -289,7 +300,7 @@ export default function DatHang() {
           <div className="flex justify-center">
             <span className="text-3xl font-semibold">Đơn Hàng</span>
           </div>
-          <div>
+          <div className="my-5">
             <table className="w-full">
               <thead>
                 <tr>
@@ -331,11 +342,10 @@ export default function DatHang() {
         </div>
         <div className="ml-8 w-1/3">
           <div className="ml-1">
-            <span>Chọn phiếu giảm giá và địa chỉ</span>
             <div className="my-2 flex gap-5">
-              <span>Phieu giam gia</span>
+              <span className="font-bold">Phiếu giảm giá:</span>
               <Select
-                style={{ width: 300, height: "35px" }}
+                style={{ width: 340, height: "35px" }}
                 placeholder="Chọn phiếu giảm giá"
                 value={idPGGDangChon || ""}
                 optionLabelProp="label"
@@ -383,7 +393,7 @@ export default function DatHang() {
                 <span className="ml-auto">{formatTien(tongTien)}</span>
               </div>
               <div className="flex gap-10">
-                <span className="font-semibold">Phí giao hang: </span>
+                <span className="font-semibold">Phí giao hàng: </span>
                 <span className="ml-auto">{formatTien(phiGiaoHang)}</span>
               </div>
               <div className="flex gap-10">
@@ -395,15 +405,15 @@ export default function DatHang() {
                 <span className="ml-auto">{formatTien(thanhTien)}</span>
               </div>
 
-              <div className="my-5 flex gap-10">
+              <div className="flex gap-10">
                 <span className="font-semibold">Ngày nhận dự kiến: </span>
                 <span className="ml-auto">{ngayDuKien}</span>
               </div>
             </div>
           </div>
-          <div>
-            <span>Thông tin người đặt</span>
-            <div className="flex justify-between">
+          <div className="my-3">
+            <span className="font-bold">Thông tin người đặt:</span>
+            <div className="justify-between">
               <div>Họ Tên: {khachHang.hoTen ? khachHang.hoTen : ""}</div>
               <div>
                 Số điện thoại:{" "}
@@ -418,6 +428,8 @@ export default function DatHang() {
               setPhiGiaoHang={setPhiGiaoHang}
               setNgayDuKien={setNgayDuKien}
               setdiaChiGiaoHang={setdiaChiGiaoHang}
+              soLuongSanPham={soLuongSanPham}
+              tongTien={tongTien}
             />
           </div>
           <div>
@@ -469,7 +481,7 @@ export default function DatHang() {
           )}
         </div>
       </div>
-      <ToastContainer position="top-center" hideProgressBar />
+      {/* <ToastContainer position="top-center" hideProgressBar /> */}
     </>
   );
 }

@@ -85,7 +85,7 @@ const XacNhanThanhToan = ({
             placeholder="Nhập ghi chú ..."
           ></textarea>
         </div>
-        <div className="mt-5 flex justify-around">
+        {/* <div className="mt-5 flex justify-around">
           <div
             onClick={() => setPhuongThucThanhToan("Tiền mặt")}
             className="flex items-center justify-center bg-blue-500 hover:bg-blue-600"
@@ -110,7 +110,7 @@ const XacNhanThanhToan = ({
               Chuyển khoản
             </button>
           </div>
-        </div>
+        </div> */}
         <div className="mt-5 flex">
           <button
             onClick={handleSubmit}

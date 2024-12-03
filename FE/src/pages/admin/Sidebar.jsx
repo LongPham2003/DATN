@@ -18,6 +18,8 @@ import {
   PowerIcon,
   PercentBadgeIcon,
   BuildingStorefrontIcon,
+  ReceiptPercentIcon,
+  UserIcon,
 } from "@heroicons/react/24/solid";
 import { ChevronRightIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
 import { Link, useNavigate } from "react-router-dom";
@@ -72,7 +74,7 @@ export function Sidebar() {
         <Link to="/admin/hoadon">
           <ListItem className="ml-3 h-[50px] p-0">
             <ListItemPrefix>
-              <PresentationChartBarIcon className="h-5 w-5" />
+              <ReceiptPercentIcon className="h-5 w-5" />
             </ListItemPrefix>
             <Typography color="blue-gray" className="mr-auto font-normal">
               Hóa Đơn
@@ -228,9 +230,9 @@ export function Sidebar() {
         <Link to="/admin/khachhang">
           <ListItem>
             <ListItemPrefix>
-              <Cog6ToothIcon className="h-5 w-5" />
+              <UserIcon className="h-5 w-5" />
             </ListItemPrefix>
-            Khách hàng
+            Khách Hàng
           </ListItem>
         </Link>
       </List>

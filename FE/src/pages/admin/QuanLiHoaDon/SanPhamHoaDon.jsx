@@ -1,7 +1,7 @@
 import axios from "../../../api/axiosConfig.js";
 import { useEffect, useState } from "react";
 import LayAnhTheoIdSP from "../SanPham/Product/LayANhTheoIDSP";
-import { Button, Input, InputNumber, Modal, Select } from "antd";
+import { Button, Input, Modal, Select } from "antd";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 // import { getAllSPCTBH } from "./SanPhamService.js";
 
@@ -11,11 +11,7 @@ export const getAllSPBH = async (params = {}) => {
   return data.data.result;
 };
 
-export default function SanPhamBanTaiQuay({
-  id,
-  onProductAdded,
-  thayDoiSoLuong,
-}) {
+export default function SanPhamHoaDon({ id, fillHoaDon, fillHoaDonChiTiet }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [SPCTBH, setSPCTBH] = useState([]);
   const [hangs, setHangs] = useState([]);
@@ -34,8 +30,7 @@ export default function SanPhamBanTaiQuay({
   const [soLuongMua, setSoLuongMua] = useState(0);
   const [error, setError] = useState("");
 
-  let ApiThemSPvaoHoaDon = `http://localhost:8080/banhangtaiquay/hoadon/addspct/${id}`;
-  let ApiLaySPCT = `http://localhost:8080/api/sanphamchitiet/getallSPCTBH`;
+  let ApiThemSPvaoHoaDon = `http://localhost:8080/api/giohang/addspct/${id}`;
   const getallSPCTBH = async () => {
     const params = {};
 
@@ -72,8 +67,9 @@ export default function SanPhamBanTaiQuay({
         transition: Bounce,
       });
       // Gọi hàm onProductAdded để báo cho component cha biết và cập nhật giỏ hàng
-      if (onProductAdded) {
-        onProductAdded();
+      if (fillHoaDon) {
+        fillHoaDon();
+        fillHoaDonChiTiet();
       }
 
       getallSPCTBH();
@@ -200,7 +196,6 @@ export default function SanPhamBanTaiQuay({
     selectedIdKichThuoc,
     selectedIdDeGiay,
     selectedIdChatLieu,
-    thayDoiSoLuong,
   ]);
 
   const handleResetSelectedChange = () => {
@@ -214,14 +209,14 @@ export default function SanPhamBanTaiQuay({
 
   return (
     <>
-      <div className="h-[700px]">
-        <div className="bg-slate-300 font-mono">
+      <div className="h-[700px] bg-orange-300">
+        <div className="font-mono">
           <div className="flex justify-center gap-5">
             <div>
-              <p className="font-bold">Tên sản phẩm</p>
+              <p className="font-bold">Mã sản phẩm</p>
               <Input
                 className="h-[38px] w-[250px]"
-                placeholder="Tên sản phẩm ..."
+                placeholder="Mã sản phẩm ..."
                 size="large"
                 onChange={(e) => setMaSanPham(e.target.value)} // Gọi hàm khi có thay đổi
               />
@@ -313,7 +308,7 @@ export default function SanPhamBanTaiQuay({
         </div>
         <div className="mx-5 my-3 font-mono">
           <div className="my-5 flex">
-            <span className="text-xl font-bold">
+            <span className="bg- text-xl font-bold">
               Danh sách sản phẩm chi tiết của sản phẩm:
             </span>
           </div>
@@ -324,6 +319,7 @@ export default function SanPhamBanTaiQuay({
                 <table className="mb-[60px] min-w-full bg-white text-[20px]">
                   <thead className="sticky top-0 z-10 bg-white">
                     <tr className="h-10 border-b-2 border-indigo-500 text-base">
+                      <th>STT</th>
                       <th className="w-20">Mã sản phẩm</th>
                       <th className="w-[230px]">Sản phẩm</th>
                       <th className="w-[100px] border-b">Ảnh</th>
@@ -335,7 +331,8 @@ export default function SanPhamBanTaiQuay({
                   </thead>
                   <tbody className="text-center">
                     {SPCTBH.map((item, index) => (
-                      <tr key={item.id} className="hover:bg-gray-100">
+                      <tr key={index} className="hover:bg-gray-100">
+                        <td>{index + 1}</td>
                         <td className="border-b-[1px] border-indigo-500 px-4 py-2">
                           {item.maSPCT}
                         </td>
@@ -397,7 +394,6 @@ export default function SanPhamBanTaiQuay({
           {error && <p className="text-red-500">{error}</p>}
         </div>
       </Modal>
-      {/* <ToastContainer /> */}
     </>
   );
 }

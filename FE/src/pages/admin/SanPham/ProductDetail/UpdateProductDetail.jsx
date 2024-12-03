@@ -135,29 +135,26 @@ export default function UpdateProductDetail() {
     getData(); // lay dữ liệu\
     console.log(hinhAnh);
   }, []);
-  const formatCurrencyToNumber = (value) => {
-    // Đảm bảo giá trị là chuỗi trước khi sử dụng replace
-    const stringValue = String(value);
-
-    // Loại bỏ tất cả các ký tự không phải là số
-    const formattedValue = stringValue.replace(/[^\d]/g, "");
-
-    // Chuyển chuỗi thành số và trả về kết quả
-    return parseInt(formattedValue, 10);
+  const formatCurrency = (value) => {
+    if (!value) return "";
+    // Xóa ký tự không phải số và định dạng lại
+    const numberValue = value.replace(/[^0-9]/g, "");
+    return new Intl.NumberFormat("vi-VN").format(numberValue);
   };
+
   return (
     <>
       <div className="mx-10 font-mono">
         <div>
           <div className="my-5 flex justify-center">
-            <span className="text-3xl font-bold">Thong tin san pham</span>
+            <span className="text-3xl font-bold">Thông tin sản phẩm chi tiết</span>
           </div>
           <div>
-            <label>Ten San Pham</label>
+            <label>Tên sản phẩm</label>
             <Input size="large" value={SP.tenSanPham} disabled />
           </div>
           <div>
-            <label>Mo Ta</label>
+            <label>Mô tả</label>
             <TextArea size="large" value={SP.moTa} disabled />
           </div>
         </div>
@@ -182,22 +179,21 @@ export default function UpdateProductDetail() {
                   width: "500px",
                   marginLeft: "43px",
                 }}
+                addonAfter={"VNĐ"}
                 size="large"
-                value={
-                  SPCT.donGia
-                    ? `${SPCT.donGia.replace(/\B(?=(\d{3})+(?!\d))/g, ".")} `
-                    : "0 VNĐ"
-                }
+                value={formatCurrency(SPCT.donGia) }
                 onChange={(e) => {
-                  // Lấy giá trị nhập vào và loại bỏ "VNĐ" cùng các ký tự không phải số
-                  const rawValue = e.target.value.replace(/[^0-9]/g, "");
-                  // Cập nhật state với giá trị thô
-                  setSPCT({ ...SPCT, donGia: rawValue });
+                  // Lấy giá trị nhập vào, loại bỏ "VNĐ" và định dạng lại
+                  const valueWithoutVND = e.target.value.replace(" VNĐ", "");
+                  const formattedValue = formatCurrency(valueWithoutVND);
+                  // Cập nhật state với giá trị đã định dạng
+                  setSPCT({ ...SPCT, donGia: formattedValue });
                 }}
               />
+              
             </div>
             <div className="my-4">
-              <label>Thuong Hieu:</label>
+              <label>Thương hiệu:</label>
               <Select
                 style={{
                   width: "500px",
@@ -205,6 +201,7 @@ export default function UpdateProductDetail() {
                 }}
                 size="large"
                 value={SPCT.idThuongHieu}
+                disabled
                 options={hangs.map((item) => ({
                   label: item.ten,
                   value: item.id,
@@ -216,7 +213,7 @@ export default function UpdateProductDetail() {
               />
             </div>
             <div className="my-4">
-              <label htmlFor="">Chat Lieu:</label>
+              <label htmlFor="">Chất liệu:</label>
               <Select
                 style={{
                   width: "500px",
@@ -235,7 +232,7 @@ export default function UpdateProductDetail() {
               />
             </div>
             <div className="my-4">
-              <label htmlFor="">Mau Sac:</label>
+              <label htmlFor="">Màu sắc:</label>
               <Select
                 style={{
                   width: "500px",
@@ -283,7 +280,7 @@ export default function UpdateProductDetail() {
               />
             </div>
             <div className="my-4">
-              <label htmlFor="">Kich Thuoc:</label>
+              <label htmlFor="">Kích thước:</label>
               <Select
                 style={{
                   width: "500px",
@@ -302,7 +299,7 @@ export default function UpdateProductDetail() {
               />
             </div>
             <div className="my-4">
-              <label htmlFor="">De Giay:</label>
+              <label htmlFor="">Đế giày:</label>
               <Select
                 style={{
                   width: "500px",
@@ -322,7 +319,7 @@ export default function UpdateProductDetail() {
             </div>
 
             <div className="my-4">
-              <label htmlFor="">Trang Thai:</label>
+              <label htmlFor="">Trạng thái:</label>
               <Select
                 style={{
                   width: "500px",
@@ -351,7 +348,7 @@ export default function UpdateProductDetail() {
         <div className="h-[200px]">
           <div className="my-5 flex justify-start gap-5">
             <div>
-              <span className="text-3xl font-bold">Anh San Pham:</span>
+              <span className="text-3xl font-bold">Ảnh sản phẩm:</span>
             </div>
             <div>
               <GetImage fileList={hinhAnh} setFileList={setHinhAnh} />
@@ -379,7 +376,7 @@ export default function UpdateProductDetail() {
           </Button>
         </div>
       </div>
-      <ToastContainer />
+      {/* <ToastContainer /> */}
     </>
   );
 }

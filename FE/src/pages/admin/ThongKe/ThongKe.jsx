@@ -10,7 +10,7 @@ export default function ThongKe() {
     <>
       <div className="h-auto overflow-y-auto">
         <div className="mb-5 mt-2 flex justify-center font-mono text-2xl font-bold">
-          Thong ke Doanh Thu
+          Thống kê doanh thu
         </div>
         <div>
           <DoanhThu />

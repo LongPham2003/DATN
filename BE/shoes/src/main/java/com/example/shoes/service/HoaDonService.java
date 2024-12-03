@@ -8,16 +8,14 @@ import com.example.shoes.dto.hoadon.request.HoaDonRequest;
 
 import com.example.shoes.dto.hoadon.request.XacNhanThanhToan;
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
+import com.example.shoes.dto.hoadon.response.HoaDonTheoIDKH;
 import com.example.shoes.dto.hoadon.response.HoaDonTheoIDResponse;
-import com.example.shoes.dto.hoadon.response.HoaDonTheoIdKH;
 import com.example.shoes.dto.hoadonchitiet.request.HoaDonChiTietRequest;
 import com.example.shoes.dto.payment.PaymentRequest;
 import com.example.shoes.dto.phuongthucthanhtoan.request.PhuongThucThanhToanRequest;
 
 import com.example.shoes.entity.HoaDon;
 import com.example.shoes.enums.TrangThai;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 
 import java.time.LocalDate;
@@ -42,12 +40,14 @@ public interface HoaDonService {
  Integer idHoaDon();
  Void updateHoaDonById(Integer idHoaDon , PaymentRequest paymentRequest);
  Void updateTrangThaiHoaDonByIdXacNhan(Integer idHoaDon, GhiChu moTa );
+ Void updateTrangThaiHoaDonByIdChoLayHang(Integer idHoaDon ,GhiChu moTa);
  Void updateTrangThaiHoaDonByIdChoVanChuyen(Integer idHoaDon, GhiChu moTa );
  Void updateTrangThaiHoaDonByIdGiaoHang(Integer idHoaDon ,GhiChu moTa);
  Void updateTrangThaiHoaDonByIdThanhCong(Integer idHoaDon,GhiChu moTa );
  PhanTrangResponse<HoaDonResponse> getHoaDon(int pageNumber,int pageSize,String keyword,String phuongThucGiaoHang,String trangThai);
  Void updateTrangThaiHoaDonById(Integer idHoaDon, DatHangRequest datHangRequest);
  Void xacNhanThanhToan(Integer idHoaDon, XacNhanThanhToan xacNhanThanhToan);
+ Void updateTrangThaiHoaDonByIdHuy (Integer idHoaDon, GhiChu moTa);
 
- List<HoaDonTheoIdKH> getHoaDonTheoKH (Integer idKhachHang, String maHD);
+ List<HoaDonTheoIDKH> getHoaDonTheoKH (Integer idKhachHang, String maHD,String trangThaiDonHang, String ngay);
 }

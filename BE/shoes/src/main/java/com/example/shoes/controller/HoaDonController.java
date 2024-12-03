@@ -5,12 +5,17 @@ import com.example.shoes.dto.hoadon.request.DatHangRequest;
 import com.example.shoes.dto.hoadon.request.GhiChu;
 import com.example.shoes.dto.hoadon.request.XacNhanThanhToan;
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
-import com.example.shoes.dto.hoadon.response.HoaDonTheoIdKH;
+import com.example.shoes.dto.hoadon.response.HoaDonTheoIDKH;
 import com.example.shoes.dto.payment.PaymentRequest;
 import com.example.shoes.entity.HoaDon;
 import com.example.shoes.exception.ApiResponse;
+import com.example.shoes.repository.HoaDonRepo;
 import com.example.shoes.service.HoaDonService;
+import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +25,8 @@ import java.util.List;
 public class HoaDonController {
     @Autowired
     private HoaDonService hoaDonService;
+    @Autowired
+    private HoaDonRepo hoaDonRepo;
 
 
     @GetMapping("/getall")
@@ -39,12 +46,7 @@ public class HoaDonController {
                 .result(hoaDonResponses)
                 .build();
     }
-    @GetMapping("/getAllHDTheoIDKH")
-    public ApiResponse<List<HoaDonTheoIdKH>> getAllHDTheoIDKH( @RequestParam(value = "maHD", required = false) String maHD,
-                                                                @RequestParam(value = "idKhachHang", required = false) Integer idKhachHang ) {
-    List<HoaDonTheoIdKH> hdresq = hoaDonService.getHoaDonTheoKH( idKhachHang,maHD);
-    return ApiResponse.<List<HoaDonTheoIdKH>>builder().result(hdresq).build();
-    }
+
 
     @GetMapping("/getall-dathanhtoan")
     public ApiResponse<List<HoaDonResponse>> getAllDaThanhToan() {
@@ -113,13 +115,26 @@ public class HoaDonController {
     private ApiResponse<Void> updateXacNhan(@PathVariable Integer id,@RequestBody GhiChu moTa) {
         return ApiResponse.<Void>builder().result(hoaDonService.updateTrangThaiHoaDonByIdXacNhan(id,moTa)).build();
     }
+    @PostMapping("/cholayhang/{id}")
+    private ApiResponse<Void> updateChoLayHang(@Valid @PathVariable Integer id, @RequestBody GhiChu moTa, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            throw new ValidationException(bindingResult.getFieldError().getDefaultMessage());
+        }
+        return ApiResponse.<Void>builder().result(hoaDonService.updateTrangThaiHoaDonByIdChoLayHang(id,moTa)).build();
+    }
     @PostMapping("/chogiaohang/{id}")
     private ApiResponse<Void> updateChoGiaoHang(@PathVariable Integer id,@RequestBody GhiChu moTa) {
         return ApiResponse.<Void>builder().result(hoaDonService.updateTrangThaiHoaDonByIdChoVanChuyen(id,moTa)).build();
     }
     @PostMapping("/danggiao/{id}")
     private ApiResponse<Void> updateDangGiao(@PathVariable Integer id,@RequestBody GhiChu moTa) {
+//        System.out.println( id  moTa);
+
         return ApiResponse.<Void>builder().result(hoaDonService.updateTrangThaiHoaDonByIdGiaoHang(id,moTa)).build();
+    }
+    @PostMapping("/huy/{id}")
+    private ApiResponse<Void> updateHuy(@PathVariable Integer id,@RequestBody GhiChu moTa) {
+        return ApiResponse.<Void>builder().result(hoaDonService.updateTrangThaiHoaDonByIdHuy(id,moTa)).build();
     }
     @PostMapping("/hoanthanh/{id}")
     private ApiResponse<Void> updateHoanThanh(@PathVariable Integer id,@RequestBody GhiChu moTa) {
@@ -130,6 +145,48 @@ public class HoaDonController {
         return ApiResponse.<Void>builder().result(hoaDonService.xacNhanThanhToan(id,xacNhanThanhToan)).build();
     }
 
+    @GetMapping("/soluong/hoadon")
+    private ApiResponse<Integer> soluong() {
+        return ApiResponse.<Integer>builder().result(hoaDonRepo.getCountHoaDon()).build();
+    }
+    @GetMapping("/soluong/hoadoncxn")
+    private ApiResponse<Integer> soluongcxn() {
+        return ApiResponse.<Integer>builder().result(hoaDonRepo.getCountHoaDonCXN()).build();
+    }
+    @GetMapping("/soluong/hoadondxn")
+    private ApiResponse<Integer> soluongdxn() {
+        return ApiResponse.<Integer>builder().result(hoaDonRepo.getCountHoaDonDXN()).build();
+    }
+    @GetMapping("/soluong/hoadoncgh")
+    private ApiResponse<Integer> soluongcgh() {
+        return ApiResponse.<Integer>builder().result(hoaDonRepo.getCountHoaDonCGH()).build();
+    }
+    @GetMapping("/soluong/hoadondg")
+    private ApiResponse<Integer> soluongdg() {
+        return ApiResponse.<Integer>builder().result(hoaDonRepo.getCountHoaDonDG()).build();
+    }
+    @GetMapping("/soluong/hoadonht")
+    private ApiResponse<Integer> soluonght() {
+        return ApiResponse.<Integer>builder().result(hoaDonRepo.getCountHoaDonHT()).build();
+    }
+    @GetMapping("/soluong/hoadonhd")
+    private ApiResponse<Integer> soluongHuy() {
+        return ApiResponse.<Integer>builder().result(hoaDonRepo.getCountHoaDonHuy()).build();
+    }
 
+    @GetMapping("/getAllHDTheoIDKH")
+    public ApiResponse<List<HoaDonTheoIDKH>> getAllHDTheoIDKH(
+            @RequestParam(value = "maHD", required = false) String maHD,
+            @RequestParam(value = "idKhachHang", required = true) Integer idKhachHang, // Chuyển `idKhachHang` thành bắt buộc
+            @RequestParam(value = "trangThaiDonHang", required = false) String trangThaiDonHang, // Thêm lọc theo trạng thái
+            @RequestParam(value = "ngay", required = false) String ngay    ) {
+        // Gọi service với các tham số
+        List<HoaDonTheoIDKH> hdresq = hoaDonService.getHoaDonTheoKH(idKhachHang, maHD, trangThaiDonHang, ngay);
+
+        // Trả về kết quả dưới dạng ApiResponse
+        return ApiResponse.<List<HoaDonTheoIDKH>>builder()
+                .result(hdresq)
+                .build();
+    }
 
 }

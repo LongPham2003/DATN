@@ -5,7 +5,6 @@ import DropdownDetail from "../../../DropdownDetail";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import { Modal } from "antd";
 import "react-toastify/dist/ReactToastify.css";
-
 const SanPhamChiTiet = ({ productId, closeModal }) => {
   const id = productId;
   const navigate = useNavigate();
@@ -93,7 +92,6 @@ const SanPhamChiTiet = ({ productId, closeModal }) => {
       },
     });
   };
-
   useEffect(() => {
     getById();
     // getByIdSP();
@@ -217,7 +215,7 @@ const SanPhamChiTiet = ({ productId, closeModal }) => {
           </button>
         </div>
       </form>
-      <ToastContainer
+      {/* <ToastContainer
         position="top-center"
         autoClose={1000}
         hideProgressBar={false}
@@ -229,7 +227,7 @@ const SanPhamChiTiet = ({ productId, closeModal }) => {
         pauseOnHover
         theme="light"
         transition={Bounce}
-      />
+      /> */}
     </div>
   );
 };

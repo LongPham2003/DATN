@@ -49,16 +49,25 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
         phieuGiamGia.setDieuKienGiamGia(request.getDieuKienGiamGia());
         phieuGiamGia.setHinhThucGiam(request.getHinhThucGiam());
         phieuGiamGia.setMa(generateMaPGG());
-        if(request.getHinhThucGiam().equals("%")){
-            if(request.getMucGiam().compareTo(BigDecimal.valueOf(100))>0 ||request.getMucGiam().compareTo(BigDecimal.ZERO)<=0){
-                throw  new AppException(ErrorCode.VALID_PHIEU_GIAM_GIA_MUC_GIAM);
+        if (request.getHinhThucGiam().equals("%")) {
+            if (request.getMucGiam().compareTo(BigDecimal.valueOf(100)) > 0 || request.getMucGiam().compareTo(BigDecimal.ZERO) <= 0) {
+                throw new AppException(ErrorCode.VALID_PHIEU_GIAM_GIA_MUC_GIAM);
             }
         }
-        if(request.getHinhThucGiam().equals("VND")){
-            if(request.getMucGiam().compareTo(BigDecimal.ZERO)<=0){
-                throw  new AppException(ErrorCode.VALID_PHIEU_GIAM_GIA_MUC_GIAM);
+        if (request.getHinhThucGiam().equals("VND")) {
+            if (request.getMucGiam().compareTo(BigDecimal.ZERO) <= 0) {
+                throw new AppException(ErrorCode.VALID_PHIEU_GIAM_GIA_MUC_GIAM);
             }
         }
+
+        int dieuKienGiamGia = Integer.parseInt(request.getDieuKienGiamGia().toString());
+        int giamToiDaValue = Integer.parseInt(request.getGiamToiDa().toString());
+
+        if (dieuKienGiamGia < giamToiDaValue) {
+                throw new AppException(ErrorCode.VALID_PHIEU_GIAM_GIA_DKG_MG);
+        }
+
+
 
         phieuGiamGia.setMucGiam(request.getMucGiam());
         phieuGiamGia.setGiamToiDa(request.getGiamToiDa());
@@ -69,7 +78,7 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
         if (phieuGiamGia.getNgayBatDau().isAfter(LocalDateTime.now())) {
             // Cập nhật trạng thái voucher thành hết hạn
             phieuGiamGia.setTrangThai("Sắp Hoạt Động");
-        }else {
+        } else {
             phieuGiamGia.setTrangThai("Hoạt Động");
         }
 
@@ -87,20 +96,20 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
             throw new AppException(ErrorCode.VALID_PHIEU_GIAM_GIA);
         }
         phieuGiamGia.setTenVoucher(request.getTenVoucher());
-        if(request.getDieuKienGiamGia().compareTo(BigDecimal.ZERO)<=0){
-            throw  new AppException(ErrorCode.VALID_PHIEU_GIAM_GIA_DK_GIAM);
+        if (request.getDieuKienGiamGia().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new AppException(ErrorCode.VALID_PHIEU_GIAM_GIA_DK_GIAM);
         }
         phieuGiamGia.setDieuKienGiamGia(request.getDieuKienGiamGia());
 
         phieuGiamGia.setHinhThucGiam(request.getHinhThucGiam());
-        if(request.getHinhThucGiam().equals("%")){
-            if(request.getMucGiam().compareTo(BigDecimal.valueOf(100))>0 ||request.getMucGiam().compareTo(BigDecimal.ZERO)<=0){
-                throw  new AppException(ErrorCode.VALID_PHIEU_GIAM_GIA_MUC_GIAM_PT);
+        if (request.getHinhThucGiam().equals("%")) {
+            if (request.getMucGiam().compareTo(BigDecimal.valueOf(100)) > 0 || request.getMucGiam().compareTo(BigDecimal.ZERO) <= 0) {
+                throw new AppException(ErrorCode.VALID_PHIEU_GIAM_GIA_MUC_GIAM_PT);
             }
         }
-        if(request.getHinhThucGiam().equals("VND")){
-            if(request.getMucGiam().compareTo(BigDecimal.ZERO)<=0){
-                throw  new AppException(ErrorCode.VALID_PHIEU_GIAM_GIA_MUC_GIAM);
+        if (request.getHinhThucGiam().equals("VND")) {
+            if (request.getMucGiam().compareTo(BigDecimal.ZERO) <= 0) {
+                throw new AppException(ErrorCode.VALID_PHIEU_GIAM_GIA_MUC_GIAM);
             }
         }
         phieuGiamGia.setMucGiam(request.getMucGiam());
@@ -124,12 +133,12 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
 
     @Override
     public List<PhieuGiamGiaResponse> getAllTrangThaiTrue() {
-        List<PhieuGiamGia> listTrangThaiTrue= phieuGiamGiaRepo.getAllByTrangThaiTrue();
-        return  listTrangThaiTrue.stream().map(this::convertToResponse).collect(Collectors.toList());
+        List<PhieuGiamGia> listTrangThaiTrue = phieuGiamGiaRepo.getAllByTrangThaiTrue();
+        return listTrangThaiTrue.stream().map(this::convertToResponse).collect(Collectors.toList());
     }
 
     @Override
-    public PhanTrangResponse<PhieuGiamGiaResponse> getPhieuGiamGia(int pageNumber, int pageSize, String keyword,String tenVoucher, String trangThai, LocalDateTime ngayBatDau, LocalDateTime ngayKetThuc) {
+    public PhanTrangResponse<PhieuGiamGiaResponse> getPhieuGiamGia(int pageNumber, int pageSize, String keyword, String tenVoucher, String trangThai, LocalDateTime ngayBatDau, LocalDateTime ngayKetThuc) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
         Page<PhieuGiamGia> page = phieuGiamGiaRepo.searchPhieuGiamGia(pageable, tenVoucher, trangThai, ngayBatDau, ngayKetThuc);
         List<PhieuGiamGia> phieuGiamGias = page.getContent();
@@ -156,9 +165,9 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
         phieuGiamGiaResponse.setMa(phieuGiamGia.getMa());
         phieuGiamGiaResponse.setTenVoucher(phieuGiamGia.getTenVoucher());
         phieuGiamGiaResponse.setDieuKienGiamGia(formatCurrency(phieuGiamGia.getDieuKienGiamGia()));
-        if(phieuGiamGia.getHinhThucGiam().equals("%")){
+        if (phieuGiamGia.getHinhThucGiam().equals("%")) {
             phieuGiamGiaResponse.setMucGiam(formatPhanTram(phieuGiamGia.getMucGiam()).toString());
-        }else {
+        } else {
             phieuGiamGiaResponse.setMucGiam(formatCurrency(phieuGiamGia.getMucGiam()));
         }
 
@@ -219,7 +228,7 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
 
         // Kiểm tra nếu không có sản phẩm nào thì bắt đầu từ SP01
         if (maNV.isEmpty()) {
-            return "PGG01";
+            return "VC01";
         }
 
         // Lấy mã sản phẩm lớn nhất (ví dụ: SP05)
@@ -232,7 +241,7 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
         int newNumber = maxNumber + 1;
 
         // Trả về mã sản phẩm mới theo định dạng "SPxx" (ví dụ: SP06)
-        return String.format("PGG%02d", newNumber);
+        return String.format("VC%02d", newNumber);
     }
 
 }

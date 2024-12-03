@@ -15,7 +15,7 @@ export default function DetailProduct() {
   const [chatLieus, setChatLieus] = useState([]);
   const [kichThuocs, setKichThuocs] = useState([]);
   const [deGiays, setDeGiays] = useState([]);
-  const [maSp,setMaSp] = useState("");
+  const [maSp, setMaSp] = useState("");
 
   const [trangThai, setTrangThai] = useState(null);
 
@@ -373,7 +373,7 @@ export default function DetailProduct() {
         />
       </div>
 
-      <ToastContainer
+      {/* <ToastContainer
         position="top-right"
         autoClose={3000}
         hideProgressBar={false}
@@ -385,7 +385,7 @@ export default function DetailProduct() {
         pauseOnHover
         theme="light"
         transition={Bounce}
-      />
+      /> */}
     </>
   );
 }

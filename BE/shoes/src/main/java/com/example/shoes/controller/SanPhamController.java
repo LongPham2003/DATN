@@ -113,10 +113,5 @@ public class SanPhamController {
     public SanPhamClient sanPhamTrangChiTietClient(@RequestParam(value = "idSP") Integer idSP){
         return sanPhamService.sanPhamTrangChiTietClient(idSP);
     }
-//
-//    @GetMapping("/SPClient")
-//    public SanPhamClient sanPhamTrangChiTietClient(@RequestParam(value = "idSP") Integer idSP){
-//        return sanPhamService.sanPhamTrangChiTietClient(idSP);
-//    }
 
 }

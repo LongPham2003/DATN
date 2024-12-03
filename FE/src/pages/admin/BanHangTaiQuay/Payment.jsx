@@ -85,12 +85,23 @@ export default function PaymentResult() {
     }
 
     checkPaymentStatus();
-  }, [location.search, navigate]);
+  }, [
+    chiTietSanPhams,
+    diaChiChiTiet,
+    idPhieuGiamGia,
+    location.search,
+    navigate,
+    ngayDuKien,
+    params,
+    phiVanChuyen,
+    soDienThoai,
+    tienPhaiThanhToan,
+  ]);
 
   return (
     <div>
       {/* Thanh toán đã thành công bạn có muốn in hóa đơn không */}
-      <ToastContainer
+      {/* <ToastContainer
         position="top-right"
         autoClose={1000}
         hideProgressBar={false}
@@ -101,7 +112,7 @@ export default function PaymentResult() {
         draggable
         theme="light"
         transition={Bounce}
-      />
+      /> */}
       {/* Hiển thị ExportPDF tạm thời khi showPDF là true
       {showPDF && <ExportPDF idHoaDon={id} />} */}
     </div>

@@ -44,7 +44,6 @@ const Login = () => {
         localStorage.setItem("authToken", authToken);
         localStorage.setItem("userRole", response.data.result.roles);
         localStorage.setItem("email", response.data.result.email);
-        // localStorage.setItem("id", response.data.result.id);
 
         setError("");
         toast.success("Đăng nhập thành công");
@@ -124,7 +123,7 @@ const Login = () => {
             Quên mật khẩu?
           </Link>
         </form>
-        <ToastContainer
+        {/* <ToastContainer
           position="top-right"
           autoClose={3000}
           hideProgressBar={false}
@@ -136,7 +135,7 @@ const Login = () => {
           pauseOnHover
           theme="light"
           transition={Bounce}
-        />
+        /> */}
       </div>
     </div>
   );

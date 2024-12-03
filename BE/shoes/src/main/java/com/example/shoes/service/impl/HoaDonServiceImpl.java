@@ -9,8 +9,8 @@ import com.example.shoes.dto.hoadon.request.GhiChu;
 import com.example.shoes.dto.hoadon.request.HoaDonRequest;
 import com.example.shoes.dto.hoadon.request.XacNhanThanhToan;
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
+import com.example.shoes.dto.hoadon.response.HoaDonTheoIDKH;
 import com.example.shoes.dto.hoadon.response.HoaDonTheoIDResponse;
-import com.example.shoes.dto.hoadon.response.HoaDonTheoIdKH;
 import com.example.shoes.dto.hoadonchitiet.request.HoaDonChiTietRequest;
 import com.example.shoes.dto.payment.PaymentRequest;
 import com.example.shoes.dto.phuongthucthanhtoan.request.PhuongThucThanhToanRequest;
@@ -19,14 +19,8 @@ import com.example.shoes.entity.*;
 import com.example.shoes.enums.TrangThai;
 import com.example.shoes.exception.AppException;
 import com.example.shoes.exception.ErrorCode;
-import com.example.shoes.repository.HoaDonChiTietRepo;
-import com.example.shoes.repository.HoaDonRepo;
-import com.example.shoes.repository.KhachHangRepo;
-import com.example.shoes.repository.LichSuHoaDonRepo;
-import com.example.shoes.repository.NhanVienRepo;
-import com.example.shoes.repository.PhieuGiamGiaRepo;
+import com.example.shoes.repository.*;
 //import com.example.shoes.repository.PhuongThucThanhToanRepo;
-import com.example.shoes.repository.SanPhamChiTietRepo;
 import com.example.shoes.service.HoaDonService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
@@ -77,6 +71,9 @@ public class HoaDonServiceImpl implements HoaDonService {
     private NhanVienRepo nhanVienRepo;
     @Autowired
     private KhachHangRepo khachHangRepo;
+
+    @Autowired
+    private GioHangChiTietRepo gioHangChiTietRepo;
 
     //    @Autowired
 //    private PhuongThucThanhToanRepo phuongThucThanhToanRepo;
@@ -142,6 +139,7 @@ public class HoaDonServiceImpl implements HoaDonService {
         hoaDon.setPhuongThucGiaoHang("Tại quầy");
         hoaDon.setTrangThaiDonHang(TrangThai.CHO_XAC_NHAN); // Chưa thanh toán
         hoaDon.setTrangThaiThanhToan(false);
+
         // Khởi tạo tổng tiền, tiền được giảm và tiền phải trả bằng 0
         hoaDon.setTongTien(BigDecimal.ZERO);
         hoaDon.setTienDuocGiam(BigDecimal.ZERO);
@@ -669,21 +667,13 @@ public class HoaDonServiceImpl implements HoaDonService {
         return phanTrangResponse;
     }
 
-    @Override
-    public List<HoaDonTheoIdKH> getHoaDonTheoKH( Integer idKhachHang , String maHD) {
-
-        List<HoaDonTheoIdKH> page = hoaDonRepo.getHoaDonTheoKH(idKhachHang, maHD);
-
-        return page;
-    }
-
-    //dat hanfg tai quay
+    //dat hang tai quay
     @Override
     public Void updateTrangThaiHoaDonById(Integer idHoaDon, DatHangRequest datHangRequest) {
 
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon).get();
         hoaDon.setTrangThaiDonHang(TrangThai.DA_XAC_NHAN);
-        hoaDon.setPhuongThucGiaoHang("Giao Hàng");
+        hoaDon.setPhuongThucGiaoHang("Tại quầy");
         hoaDon.setTienPhaiThanhToan(datHangRequest.getTienPhaiThanhToan());
         hoaDon.setPhiVanChuyen(datHangRequest.getPhiVanChuyen());
         hoaDon.setDiaChiGiaoHang(datHangRequest.getDiaChiChiTiet());
@@ -694,10 +684,15 @@ public class HoaDonServiceImpl implements HoaDonService {
         LichSuHoaDon lichSuHoaDonXacNhan = new LichSuHoaDon();
         lichSuHoaDonXacNhan.setIdHoaDon(hoaDon);
         lichSuHoaDonXacNhan.setTrangThai(TrangThai.DA_XAC_NHAN);
-        lichSuHoaDonXacNhan.setMoTa("Chờ vận chuyển");
+        lichSuHoaDonXacNhan.setMoTa("Xác nhận");
         lichSuHoaDonRepo.save(lichSuHoaDonXacNhan);
         hoaDonRepo.save(hoaDon);
 
+        List<HoaDonChiTiet> chiTietList = hoaDonChiTietRepo.findByIdHoaDon(hoaDon.getId());
+        for (HoaDonChiTiet chiTiet : chiTietList) {
+            chiTiet.setTrangThai(TrangThai.DA_XAC_NHAN); // Cập nhật trạng thái thành true
+        }
+        hoaDonChiTietRepo.saveAll(chiTietList);
         return null;
     }
 
@@ -715,18 +710,17 @@ public class HoaDonServiceImpl implements HoaDonService {
         lichSuHoaDon.setTrangThai(TrangThai.DA_THANH_TOAN);
         lichSuHoaDon.setMoTa(xacNhanThanhToan.getMoTa());
         lichSuHoaDonRepo.save(lichSuHoaDon);
-        if(hoaDon.getPhuongThucGiaoHang().equals("Tại quầy")){
-            LichSuHoaDon lichSuHoaDon1 = new LichSuHoaDon();
-            lichSuHoaDon1.setIdHoaDon(hoaDon);
-            lichSuHoaDon1.setNguoiThucHien(getCurrentNhanVien().getHoTen());
-            lichSuHoaDon1.setTrangThai(TrangThai.HOAN_THANH);
-            lichSuHoaDon1.setMoTa("Hoàn thành");
-            lichSuHoaDonRepo.save(lichSuHoaDon1);
-        }
+//        if (hoaDon.getPhuongThucGiaoHang().equals("Tại quầy")) {
+//            LichSuHoaDon lichSuHoaDon1 = new LichSuHoaDon();
+//            lichSuHoaDon1.setIdHoaDon(hoaDon);
+//            lichSuHoaDon1.setNguoiThucHien(getCurrentNhanVien().getHoTen());
+//            lichSuHoaDon1.setTrangThai(TrangThai.HOAN_THANH);
+//            lichSuHoaDon1.setMoTa("Hoàn thành");
+//            lichSuHoaDonRepo.save(lichSuHoaDon1);
+//        }
 
         return null;
     }
-
 
 
     @Override
@@ -911,6 +905,7 @@ public class HoaDonServiceImpl implements HoaDonService {
         hoaDon.setPhuongThucThanhToan(paymentRequest.getPhuongThucThanhToan());
         hoaDon.setTienKhachDua(paymentRequest.getTienKhachDua());
         hoaDon.setTrangThaiThanhToan(true);
+        hoaDon.setPhuongThucGiaoHang("Tại quầy");
         hoaDonRepo.save(hoaDon);
         List<HoaDonChiTiet> chiTietList = hoaDonChiTietRepo.findByIdHoaDon(hoaDon.getId());
         for (HoaDonChiTiet chiTiet : chiTietList) {
@@ -939,16 +934,93 @@ public class HoaDonServiceImpl implements HoaDonService {
 
     @Override
     public Void updateTrangThaiHoaDonByIdXacNhan(Integer idHoaDon, GhiChu moTa) {
+        // Lấy hóa đơn từ ID
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon).get();
+        // Cập nhật trạng thái hóa đơn
         hoaDon.setTrangThaiDonHang(TrangThai.DA_XAC_NHAN);
         hoaDonRepo.save(hoaDon);
+        // Lưu lịch sử hóa đơn
         LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
         lichSuHoaDon.setIdHoaDon(hoaDon);
         lichSuHoaDon.setTrangThai(TrangThai.DA_XAC_NHAN);
         lichSuHoaDon.setMoTa(moTa.getGhiChu());
         lichSuHoaDonRepo.save(lichSuHoaDon);
-        HoaDonChiTiet hoaDonChiTiet = hoaDonChiTietRepo.findById(idHoaDon).get();
-        hoaDonChiTiet.setTrangThai(TrangThai.DA_XAC_NHAN);
+
+        // Lấy danh sách chi tiết hóa đơn
+        List<HoaDonChiTiet> chiTietList = hoaDonChiTietRepo.findByIdHoaDon(hoaDon.getId());
+
+        // Lặp qua danh sách chi tiết hóa đơn để cập nhật
+        for (HoaDonChiTiet chiTiet : chiTietList) {
+            // Lấy sản phẩm chi tiết
+            SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepo.findById(chiTiet.getIdSpct().getId())
+                    .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_DETAIL_NOT_FOUND));
+
+            // Kiểm tra tồn kho
+            if (sanPhamChiTiet.getSoLuong() < chiTiet.getSoLuong()) {
+                throw new AppException(ErrorCode.INVALID_QUANTITY);
+            }
+
+            // Giảm tồn kho
+            sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - chiTiet.getSoLuong());
+            sanPhamChiTietRepo.save(sanPhamChiTiet);
+
+            // Cập nhật trạng thái chi tiết hóa đơn
+            chiTiet.setTrangThai(TrangThai.DA_XAC_NHAN);
+        }
+        hoaDonChiTietRepo.saveAll(chiTietList);
+
+
+        return null;
+    }
+
+
+
+    @Override
+    public Void updateTrangThaiHoaDonByIdHuy(Integer idHoaDon, GhiChu moTa) {
+        HoaDon hoaDon = hoaDonRepo.findById(idHoaDon).get();
+        if (hoaDon.getTrangThaiDonHang().getMoTa().equals("Chờ Xác Nhận")) {
+            hoaDon.setTrangThaiDonHang(TrangThai.HUY_DON);
+            hoaDonRepo.save(hoaDon);
+            LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
+            lichSuHoaDon.setIdHoaDon(hoaDon);
+            lichSuHoaDon.setTrangThai(TrangThai.HUY_DON);
+            lichSuHoaDon.setMoTa(moTa.getGhiChu());
+            lichSuHoaDonRepo.save(lichSuHoaDon);
+            List<HoaDonChiTiet> chiTietList = hoaDonChiTietRepo.findByIdHoaDon(hoaDon.getId());
+            for (HoaDonChiTiet chiTiet : chiTietList) {
+                chiTiet.setTrangThai(TrangThai.HUY_DON); // Cập nhật trạng thái thành true
+            }
+            hoaDonChiTietRepo.saveAll(chiTietList);
+        } else {
+            throw new AppException(ErrorCode.HUY_HANG);
+        }
+
+        return null;
+    }
+
+    @Override
+    public List<HoaDonTheoIDKH> getHoaDonTheoKH(Integer idKhachHang, String maHD,String trangThaiDonHang, String ngay) {
+        List<HoaDonTheoIDKH> list = hoaDonRepo.getHoaDonTheoKH(idKhachHang, maHD,trangThaiDonHang, ngay);
+        return list;
+    }
+
+    @Override
+    public Void updateTrangThaiHoaDonByIdChoLayHang(Integer idHoaDon, GhiChu moTa) {
+        HoaDon hoaDon = hoaDonRepo.findById(idHoaDon).get();
+        hoaDon.setTrangThaiDonHang(TrangThai.CHO_LAY_HANG);
+        hoaDonRepo.save(hoaDon);
+        LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
+        lichSuHoaDon.setIdHoaDon(hoaDon);
+        lichSuHoaDon.setTrangThai(TrangThai.CHO_LAY_HANG);
+        lichSuHoaDon.setMoTa(moTa.getGhiChu());
+        lichSuHoaDonRepo.save(lichSuHoaDon);
+//        HoaDonChiTiet hoaDonChiTiet = hoaDonChiTietRepo.findById(idHoaDon).get();
+//        hoaDonChiTiet.setTrangThai(TrangThai.CHO_LAY_HANG);
+        List<HoaDonChiTiet> chiTietList = hoaDonChiTietRepo.findByIdHoaDon(idHoaDon);
+        for (HoaDonChiTiet chiTiet : chiTietList) {
+            chiTiet.setTrangThai(TrangThai.CHO_LAY_HANG); // Cập nhật trạng thái thành true
+        }
+        hoaDonChiTietRepo.saveAll(chiTietList);
         return null;
     }
 
@@ -962,8 +1034,13 @@ public class HoaDonServiceImpl implements HoaDonService {
         lichSuHoaDon.setTrangThai(TrangThai.CHO_GIAO_HANG);
         lichSuHoaDon.setMoTa(moTa.getGhiChu());
         lichSuHoaDonRepo.save(lichSuHoaDon);
-        HoaDonChiTiet hoaDonChiTiet = hoaDonChiTietRepo.findById(idHoaDon).get();
-        hoaDonChiTiet.setTrangThai(TrangThai.CHO_GIAO_HANG);
+//        HoaDonChiTiet hoaDonChiTiet = hoaDonChiTietRepo.findById(idHoaDon).orElseThrow();
+//        hoaDonChiTiet.setTrangThai(TrangThai.CHO_GIAO_HANG);
+        List<HoaDonChiTiet> chiTietList = hoaDonChiTietRepo.findByIdHoaDon(idHoaDon);
+        for (HoaDonChiTiet chiTiet : chiTietList) {
+            chiTiet.setTrangThai(TrangThai.CHO_GIAO_HANG); // Cập nhật trạng thái thành true
+        }
+        hoaDonChiTietRepo.saveAll(chiTietList);
         return null;
     }
 
@@ -977,8 +1054,13 @@ public class HoaDonServiceImpl implements HoaDonService {
         lichSuHoaDon.setTrangThai(TrangThai.DANG_GIAO);
         lichSuHoaDon.setMoTa(moTa.getGhiChu());
         lichSuHoaDonRepo.save(lichSuHoaDon);
-        HoaDonChiTiet hoaDonChiTiet = hoaDonChiTietRepo.findById(idHoaDon).get();
-        hoaDonChiTiet.setTrangThai(TrangThai.DANG_GIAO);
+//        HoaDonChiTiet hoaDonChiTiet = hoaDonChiTietRepo.findById(idHoaDon).get();
+//        hoaDonChiTiet.setTrangThai(TrangThai.DANG_GIAO);
+        List<HoaDonChiTiet> chiTietList = hoaDonChiTietRepo.findByIdHoaDon(idHoaDon);
+        for (HoaDonChiTiet chiTiet : chiTietList) {
+            chiTiet.setTrangThai(TrangThai.DANG_GIAO); // Cập nhật trạng thái thành true
+        }
+        hoaDonChiTietRepo.saveAll(chiTietList);
         return null;
     }
 
@@ -993,8 +1075,11 @@ public class HoaDonServiceImpl implements HoaDonService {
             lichSuHoaDon.setTrangThai(TrangThai.HOAN_THANH);
             lichSuHoaDon.setMoTa(moTa.getGhiChu());
             lichSuHoaDonRepo.save(lichSuHoaDon);
-            HoaDonChiTiet hoaDonChiTiet = hoaDonChiTietRepo.findById(idHoaDon).get();
-            hoaDonChiTiet.setTrangThai(TrangThai.HOAN_THANH);
+            List<HoaDonChiTiet> chiTietList = hoaDonChiTietRepo.findByIdHoaDon(hoaDon.getId());
+            for (HoaDonChiTiet chiTiet : chiTietList) {
+                chiTiet.setTrangThai(TrangThai.HOAN_THANH); // Cập nhật trạng thái thành true
+            }
+            hoaDonChiTietRepo.saveAll(chiTietList);
         } else {
             throw new AppException(ErrorCode.CHUA_THANH_TOAN);
         }
@@ -1081,9 +1166,9 @@ public class HoaDonServiceImpl implements HoaDonService {
         hoaDonResponse.setPhuongThucGiaoHang(hoaDon.getPhuongThucGiaoHang());
         hoaDonResponse.setNgayTao(hoaDon.getCreatedAt());
         hoaDonResponse.setTrangThaiDonHang(hoaDon.getTrangThaiDonHang().getMoTa());
-        hoaDonResponse.setTrangThaiThanhToan(hoaDon.getTrangThaiThanhToan() ? "Đã thanh toán":"Chưa thanh toán");
+        hoaDonResponse.setTrangThaiThanhToan(hoaDon.getTrangThaiThanhToan() ? "Đã thanh toán" : "Chưa thanh toán");
         hoaDonResponse.setTienShip(formatCurrency(hoaDon.getPhiVanChuyen()));
-        hoaDonResponse.setPhieuGiamGia(hoaDon.getIdPhieuGiamGia() != null ? hoaDon.getIdPhieuGiamGia().getMa(): "Không có");
+        hoaDonResponse.setPhieuGiamGia(hoaDon.getIdPhieuGiamGia() != null ? hoaDon.getIdPhieuGiamGia().getMa() : "Không có");
         return hoaDonResponse;
     }
 }

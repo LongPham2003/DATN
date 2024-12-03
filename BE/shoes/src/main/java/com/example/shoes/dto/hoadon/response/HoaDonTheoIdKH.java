@@ -3,7 +3,8 @@ package com.example.shoes.dto.hoadon.response;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.Date;
-public interface HoaDonTheoIdKH {
+
+public interface HoaDonTheoIDKH {
     Integer getIdHoaDon();          // alias: idHoaDon
     String getMaHoaDon();          // alias: maHoaDon
     @JsonFormat(pattern = "dd-MM-yyyy")
@@ -21,5 +22,4 @@ public interface HoaDonTheoIdKH {
     Boolean getTrangThaiThanhToan(); // alias: trangThaiThanhToan
     Integer getTongSoSanPham();    // alias: tongSoSanPham
 }
-
 

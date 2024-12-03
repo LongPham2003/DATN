@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -76,7 +76,7 @@ const RevenueChart = () => {
       },
       title: {
         display: true,
-        text: "Tổng tiền theo tuần",
+        text: "Tổng tiền các ngày trong tuần",
       },
     },
   };

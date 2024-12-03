@@ -1,6 +1,5 @@
 package com.example.shoes.dto.hoadon.response;
 
-import com.example.shoes.enums.TrangThai;
 import lombok.Getter;
 import lombok.Setter;
 
