@@ -8,6 +8,7 @@ import com.example.shoes.dto.hoadon.request.HoaDonRequest;
 
 import com.example.shoes.dto.hoadon.request.XacNhanThanhToan;
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
+import com.example.shoes.dto.hoadon.response.HoaDonTheoIDKH;
 import com.example.shoes.dto.hoadon.response.HoaDonTheoIDResponse;
 import com.example.shoes.dto.hoadonchitiet.request.HoaDonChiTietRequest;
 import com.example.shoes.dto.payment.PaymentRequest;
@@ -47,4 +48,5 @@ public interface HoaDonService {
  Void updateTrangThaiHoaDonById(Integer idHoaDon, DatHangRequest datHangRequest);
  Void xacNhanThanhToan(Integer idHoaDon, XacNhanThanhToan xacNhanThanhToan);
  Void updateTrangThaiHoaDonByIdHuy (Integer idHoaDon, GhiChu moTa);
+ List<HoaDonTheoIDKH> getHoaDonTheoKH (Integer idKhachHang, String maHD, String trangThaiDonHang, String ngay);
 }

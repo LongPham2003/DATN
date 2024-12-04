@@ -394,7 +394,7 @@ export default function SanPhamHoaDon({ id, fillHoaDon, fillHoaDonChiTiet }) {
           {error && <p className="text-red-500">{error}</p>}
         </div>
       </Modal>
-      <ToastContainer
+      {/* <ToastContainer
         position="top-right"
         autoClose={2000}
         hideProgressBar={false}
@@ -406,7 +406,7 @@ export default function SanPhamHoaDon({ id, fillHoaDon, fillHoaDonChiTiet }) {
         pauseOnHover
         theme="light"
         transition={Bounce}
-      />
+      /> */}
     </>
   );
 }

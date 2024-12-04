@@ -97,7 +97,7 @@ export default function SanPhamBanChay() {
   return (
     <>
       <div className="mb-2 text-center text-xl font-semibold">
-        San pham ban chay
+        Sản phẩm bán chạy
       </div>
       <div className="flex gap-2">
         <Button

@@ -14,7 +14,7 @@ public interface ThongKeRepo extends HoaDonRepo{
     // Ngay tuy chinh
     @Query(value = """
 SELECT 
-    (SELECT SUM(hd.tong_tien) - SUM(hd.tien_duoc_giam)
+    (SELECT SUM(hd.tien_phai_thanh_toan) - sum(hd.phi_van_chuyen)
      FROM hoa_don hd 
      WHERE hd.trang_thai_thanh_toan = 1
        AND DATE(hd.update_at) = :date) AS tongTien,
@@ -36,7 +36,7 @@ WHERE
     //Ngay hom nay
     @Query(value = """
     SELECT\s
-   COALESCE((SELECT SUM(hd.tong_tien) - SUM(hd.tien_duoc_giam)
+   COALESCE((SELECT SUM(hd.tien_phai_thanh_toan) - sum(hd.phi_van_chuyen)
    FROM hoa_don hd
      WHERE hd.trang_thai_thanh_toan = 1
      AND DATE(hd.update_at) = CURDATE()), 0) AS tongTien,
@@ -60,7 +60,7 @@ WHERE
     // Tuần này
     @Query(value = """
                 SELECT
-                    (SELECT SUM(hd.tong_tien) - SUM(hd.tien_duoc_giam)
+                    (SELECT SUM(hd.tien_phai_thanh_toan) - sum(hd.phi_van_chuyen)
                      FROM hoa_don hd
                      WHERE hd.trang_thai_thanh_toan = 1
                      AND WEEK(hd.update_at) = WEEK(CURDATE())
@@ -85,7 +85,7 @@ WHERE
     //Tháng này
     @Query(value = """
                SELECT
-                     (SELECT SUM(hd.tong_tien) - SUM(hd.tien_duoc_giam)
+                     (SELECT SUM(hd.tien_phai_thanh_toan) - sum(hd.phi_van_chuyen)
                      FROM hoa_don hd
                      WHERE hd.trang_thai_thanh_toan = 1
                      AND MONTH(hd.update_at) = MONTH(CURDATE())
@@ -111,7 +111,7 @@ WHERE
     // Năm nay
     @Query(value = """
                 SELECT
-                    (SELECT SUM(hd.tong_tien) - SUM(hd.tien_duoc_giam)
+                    (SELECT SUM(hd.tien_phai_thanh_toan) - sum(hd.phi_van_chuyen)
                      FROM hoa_don hd
                      WHERE hd.trang_thai_thanh_toan = 1
                        AND YEAR(hd.update_at) = YEAR(CURDATE())) AS tongTien,
@@ -397,33 +397,32 @@ LIMIT 3;
     // Bieu do
     // SP ban duoc va doan so 1 tuan
     @Query(value = """
-          SELECT
-    weekday.ngayTrongTuan,
-    COALESCE(SUM(CASE\s
-        WHEN hd.trang_thai_thanh_toan = 1 THEN hd.tong_tien - COALESCE(hd.tien_duoc_giam, 0)\s
-        ELSE 0 END), 0) AS tongTien,
-    COALESCE(SUM(COALESCE(hdct.so_luong, 0)), 0) AS sanPhamBanDuoc
-            FROM
-    (SELECT 'Monday' AS ngayTrongTuan UNION ALL
-     SELECT 'Tuesday' UNION ALL
-     SELECT 'Wednesday' UNION ALL
-     SELECT 'Thursday' UNION ALL
-     SELECT 'Friday' UNION ALL
-     SELECT 'Saturday' UNION ALL
-     SELECT 'Sunday') AS weekday
-            LEFT JOIN
-    hoa_don hd\s
-    ON DAYNAME(hd.update_at) = weekday.ngayTrongTuan\s
-       AND YEAR(hd.update_at) = YEAR(CURDATE())
-            LEFT JOIN
-    hoa_don_chi_tiet hdct\s
-    ON hd.id = hdct.id_hoa_don
-            GROUP BY
-    weekday.ngayTrongTuan
-            ORDER BY
-    FIELD(weekday.ngayTrongTuan, 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
-
-
+ SELECT
+     weekday.ngayTrongTuan,
+     COALESCE(SUM(CASE
+         WHEN hd.trang_thai_thanh_toan = 1 THEN hd.tong_tien - COALESCE(hd.tien_duoc_giam, 0)
+         ELSE 0 END), 0) AS tongTien,
+     COALESCE(SUM(COALESCE(hdct.so_luong, 0)), 0) AS sanPhamBanDuoc
+ FROM
+     (SELECT 'Monday' AS ngayTrongTuan UNION ALL
+      SELECT 'Tuesday' UNION ALL
+      SELECT 'Wednesday' UNION ALL
+      SELECT 'Thursday' UNION ALL
+      SELECT 'Friday' UNION ALL
+      SELECT 'Saturday' UNION ALL
+      SELECT 'Sunday') AS weekday
+ LEFT JOIN
+     hoa_don hd
+     ON DAYNAME(hd.update_at) = weekday.ngayTrongTuan
+        AND hd.update_at BETWEEN DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY)
+                            AND DATE_ADD(CURDATE(), INTERVAL (6 - WEEKDAY(CURDATE())) DAY)
+ LEFT JOIN
+     hoa_don_chi_tiet hdct
+     ON hd.id = hdct.id_hoa_don
+ GROUP BY
+     weekday.ngayTrongTuan
+ ORDER BY
+     FIELD(weekday.ngayTrongTuan, 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
 """, nativeQuery = true)
     List<BieuDoNgayTrongTuan> cacNgayTrongTuan();
 

@@ -8,7 +8,7 @@ import LoaiGiay from "./pages/admin/ThuocTinhSP/LoaiGiay/LoaiGiay";
 import MauSac from "./pages/admin/ThuocTinhSP/MauSac/MauSac";
 import ThuongHieu from "./pages/admin/ThuocTinhSP/ThuongHieu/ThuongHieu";
 import ListProduct from "./pages/admin/SanPham/Product/ListProduct";
-
+import TheoDoiDonHang from "./pages/client/TheoDoiDonHang/TheoDoiDonHang.jsx";
 import { Helmet } from "react-helmet";
 import DanhSachNhanVien from "./pages/admin/NhanVien/DanhSachNhanVien";
 import ChiTietNhanVien from "./pages/admin/NhanVien/ChiTietNhanVien";
@@ -146,6 +146,17 @@ function App() {
                     <title>Thông tin cá nhân</title>
                   </Helmet>
                   <ThongTinCaNhan />
+                </>
+              }
+            />
+            <Route
+              path="theodoidonhang"
+              element={
+                <>
+                  <Helmet>
+                    <title>Theo dõi đơn hàng</title>
+                  </Helmet>
+                  <TheoDoiDonHang />
                 </>
               }
             />

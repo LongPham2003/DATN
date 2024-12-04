@@ -340,7 +340,7 @@ export default function DanhSachHoaDon() {
           />
         </div>
       </div>
-      <ToastContainer
+      {/* <ToastContainer
         position="top-right"
         autoClose={2000}
         hideProgressBar={false}
@@ -352,7 +352,7 @@ export default function DanhSachHoaDon() {
         pauseOnHover
         theme="light"
         transition={Bounce}
-      />
+      /> */}
     </>
   );
 }

@@ -9,6 +9,8 @@ export default function DiaCHiMacDinhKhachHang({
   setPhiGiaoHang,
   setNgayDuKien,
   setdiaChiGiaoHang,
+  soLuongSanPham,
+  tongTien,
 }) {
   const [diaChi, setDiaChi] = useState([]);
   const [TP, setTP] = useState([]);
@@ -146,7 +148,7 @@ export default function DiaCHiMacDinhKhachHang({
               to_ward_code: idXa,
               height: 20, // chiều cao
               length: 30, //chiều dài cm
-              weight: 300, // cân nặng g
+              weight: 300 * soLuongSanPham, // cân nặng g
               width: 40, // chiều rộng
             },
             headers: {
@@ -158,13 +160,17 @@ export default function DiaCHiMacDinhKhachHang({
         )
         .then((response) => {
           console.log("phí ship: " + response.data.data.total);
-          setPhiGiaoHang(response.data.data.total);
+          if (tongTien > 5000000) {
+            setPhiGiaoHang(0);
+          } else {
+            setPhiGiaoHang(response.data.data.total);
+          }
         })
         .catch((error) => {
           console.log(error);
         });
     }
-  }, [idQH, idTP, idXa, setPhiGiaoHang, giaoHang]);
+  }, [idQH, idTP, idXa, setPhiGiaoHang, giaoHang, soLuongSanPham, tongTien]);
 
   // thoi gian dự kiến giao hàng
   useEffect(() => {

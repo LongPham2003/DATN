@@ -9,7 +9,6 @@ import {
   FaHourglassStart,
   FaRegTimesCircle,
   FaStackOverflow,
-  FaTimes,
   FaTruck,
 } from "react-icons/fa";
 import { Modal } from "antd";
@@ -35,6 +34,9 @@ const HoaDonChiTiet = () => {
   };
   const closeModalLSHD = async () => {
     setOpenModelLSHD(false);
+    await fillHoaDon();
+    await fillHoaDonChiTiet();
+    await fillLichSuHoaDon();
   };
 
   // model xác nhận thanh toán
@@ -53,6 +55,9 @@ const HoaDonChiTiet = () => {
   };
   const closeModalHuy = async () => {
     setOpenModelHuy(false);
+    await fillHoaDon();
+    await fillHoaDonChiTiet();
+    await fillLichSuHoaDon();
   };
 
   // model update chờ giao
@@ -62,6 +67,9 @@ const HoaDonChiTiet = () => {
   };
   const closeModalXacNhan = async () => {
     setOpenModelXacNhan(false);
+    await fillHoaDon();
+    await fillHoaDonChiTiet();
+    await fillLichSuHoaDon();
   };
   // model update chờ lấy hàng
   const [OpenModelChoLayHang, setOpenModelChoLayHang] = useState(false);
@@ -70,6 +78,9 @@ const HoaDonChiTiet = () => {
   };
   const closeModalChoLayHang = async () => {
     setOpenModelChoLayHang(false);
+    await fillHoaDon();
+    await fillHoaDonChiTiet();
+    await fillLichSuHoaDon();
   };
   // model update chờ giao
   const [OpenModelChoGiao, setOpenModelChoGiao] = useState(false);
@@ -78,6 +89,9 @@ const HoaDonChiTiet = () => {
   };
   const closeModalChoGiao = async () => {
     setOpenModelChoGiao(false);
+    await fillHoaDon();
+    await fillHoaDonChiTiet();
+    await fillLichSuHoaDon();
   };
   // model update  giao
   const [OpenModelGiao, setOpenModelGiao] = useState(false);
@@ -86,6 +100,9 @@ const HoaDonChiTiet = () => {
   };
   const closeModalGiao = async () => {
     setOpenModelGiao(false);
+    await fillHoaDon();
+    await fillHoaDonChiTiet();
+    await fillLichSuHoaDon();
   };
 
   // model update  giao
@@ -95,6 +112,9 @@ const HoaDonChiTiet = () => {
   };
   const closeModalHT = async () => {
     setOpenModelHT(false);
+    await fillHoaDon();
+    await fillHoaDonChiTiet();
+    await fillLichSuHoaDon();
   };
 
   const fillHoaDon = () => {
@@ -173,9 +193,6 @@ const HoaDonChiTiet = () => {
             console.log("Cập nhật thành công:", response.data);
             toast.success("Thành công");
             closeModalXacNhan();
-            fillHoaDon();
-            fillHoaDonChiTiet();
-            fillLichSuHoaDon();
           })
           .catch((error) => {
             closeModalXacNhan();
@@ -202,9 +219,6 @@ const HoaDonChiTiet = () => {
             console.log("Cập nhật thành công:", response.data);
             toast.success("Thành công");
             closeModalChoLayHang();
-            fillHoaDon();
-            fillHoaDonChiTiet();
-            fillLichSuHoaDon();
           })
           .catch((error) => {
             console.error("Lỗi khi cập nhật:", error);
@@ -230,9 +244,6 @@ const HoaDonChiTiet = () => {
             console.log("Cập nhật thành công:", response.data);
             toast.success("Thành công");
             closeModalChoGiao();
-            fillHoaDon();
-            fillHoaDonChiTiet();
-            fillLichSuHoaDon();
           })
           .catch((error) => {
             console.error("Lỗi khi cập nhật:", error);
@@ -258,9 +269,6 @@ const HoaDonChiTiet = () => {
             console.log("Cập nhật thành công:", response.data);
             toast.success("Thành công");
             closeModalGiao();
-            fillHoaDon();
-            fillHoaDonChiTiet();
-            fillLichSuHoaDon();
           })
           .catch((error) => {
             console.error("Lỗi khi cập nhật:", error);
@@ -286,9 +294,6 @@ const HoaDonChiTiet = () => {
             console.log("Cập nhật thành công:", response.data);
             toast.success("Thành công");
             closeModalXacNhan();
-            fillHoaDon();
-            fillHoaDonChiTiet();
-            fillLichSuHoaDon();
           })
           .catch((error) => {
             closeModalXacNhan();
@@ -315,9 +320,6 @@ const HoaDonChiTiet = () => {
             console.log("Cập nhật thành công:", response.data);
             toast.success("Thành công");
             closeModalHT();
-            fillHoaDon();
-            fillHoaDonChiTiet();
-            fillLichSuHoaDon();
           })
           .catch((error) => {
             closeModalHT();
@@ -478,14 +480,15 @@ const HoaDonChiTiet = () => {
           <h2 className="text-[20px] font-bold text-pink-500">
             Thời gian thanh toán
           </h2>
-          {trangThaiThanhToan === "Chưa thanh toán" && (
-            <button
-              onClick={openModalXNTT}
-              className="rounded bg-blue-500 px-2 py-2 text-white"
-            >
-              Xác nhận thanh toán
-            </button>
-          )}
+          {trangThaiThanhToan === "Chưa thanh toán" &&
+            hoaDon.trangThaiDonHang === "Đơn đang trên đường giao hàng" && (
+              <button
+                onClick={openModalXNTT}
+                className="rounded bg-blue-500 px-2 py-2 text-white"
+              >
+                Xác nhận thanh toán
+              </button>
+            )}
         </div>
 
         <div>

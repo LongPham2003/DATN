@@ -43,9 +43,10 @@ export default function DoanhThu() {
   };
 
   const handleDateChange = (date) => {
-    setSelectedDate(date);
     if (date) {
-      const formattedDate = date.toISOString().split("T")[0];
+      const localDate = date.toDate(); // Chuyển từ moment sang Date cục bộ
+      const formattedDate = `${localDate.getFullYear()}-${String(localDate.getMonth() + 1).padStart(2, "0")}-${String(localDate.getDate()).padStart(2, "0")}`;
+      setSelectedDate(date);
       setTitle(`Ngày: ${formattedDate}`);
       fetchData(formattedDate);
     }
@@ -67,45 +68,63 @@ export default function DoanhThu() {
     <>
       <div className="mb-4 ml-10 flex gap-3">
         <DatePicker
-          className="border-blue-600"
+          className="rounded-md border-blue-600 shadow-md"
           onChange={handleDateChange}
           value={selectedDate}
         />
-        <Button className="border-blue-600" onClick={DoanhThu}>
+        <Button
+          className="rounded-md bg-blue-600 text-white shadow-md hover:bg-blue-700"
+          onClick={DoanhThu}
+        >
           Hôm nay
         </Button>
       </div>
-      <div className="mx-10 flex h-auto gap-6">
+      {/* <div className="mx-10 flex h-auto gap-6">
         <div className="w-1/2">
-          {/* Theoo Ngay */}
-          <div className="mb-4 h-[180px] rounded-md bg-blue-600 text-lg font-semibold text-white shadow drop-shadow-2xl">
+          Theoo Ngay
+          <div className="mb-4 h-[180px] rounded-md bg-gradient-to-r from-green-400 to-green-600 text-lg font-semibold text-white shadow-lg drop-shadow-2xl">
             <div className="flex justify-center">{title}</div>
             <div className="flex justify-center">
               {theoNgay ? formatTien(theoNgay.tongTien) : "Loading..."}
-              {/* {theoNgay.tongTien} */}
+              {theoNgay.tongTien}
             </div>
             <div className="mx-2 mt-12 flex justify-between gap-5">
-              <div>San pham da ban</div>
-              <div>Khach hang</div>
-              <div>Khach le</div>
-              <div>Don thanh cong</div>
-              <div>Hoa don huy</div>
+              <div className="text-gray-200">San pham da ban</div>
+              <div className="text-gray-200">Khach hang</div>
+              <div className="text-gray-200">Khach le</div>
+              <div className="text-gray-200">Don thanh cong</div>
+              <div className="text-gray-200">Hoa don huy</div>
             </div>
             <div className="mx-2 mt-2 flex justify-around gap-5">
-              <div> {theoNgay ? theoNgay.sanPhamBanDuoc : "Loading..."}</div>
-              <div> {theoNgay ? theoNgay.tongKhachHang : "Loading..."}</div>
-              <div> {theoNgay ? theoNgay.khachLe : "Loading..."}</div>
-              <div> {theoNgay ? theoNgay.donThanhCong : "Loading..."}</div>
-              <div> {theoNgay ? theoNgay.donHuy : "Loading..."}</div>
+              <div className="text-gray-300">
+                {" "}
+                {theoNgay ? theoNgay.sanPhamBanDuoc : "Loading..."}
+              </div>
+              <div className="text-gray-300">
+                {" "}
+                {theoNgay ? theoNgay.tongKhachHang : "Loading..."}
+              </div>
+              <div className="text-gray-300">
+                {" "}
+                {theoNgay ? theoNgay.khachLe : "Loading..."}
+              </div>
+              <div className="text-gray-300">
+                {" "}
+                {theoNgay ? theoNgay.donThanhCong : "Loading..."}
+              </div>
+              <div className="text-gray-300">
+                {" "}
+                {theoNgay ? theoNgay.donHuy : "Loading..."}
+              </div>
             </div>
           </div>
 
-          {/* Theo Tuan */}
-          <div className="mb-4 h-[180px] rounded-md bg-blue-600 text-lg font-semibold text-white shadow drop-shadow-2xl">
+          Theo Tuan
+          <div className="mb-4 h-[180px] rounded-md bg-gradient-to-r from-blue-400 to-blue-600 text-lg font-semibold text-white shadow drop-shadow-2xl">
             <div className="flex justify-center">Tuan Nay</div>
             <div className="flex justify-center">
               {theoTuan ? formatTien(theoTuan.tongTien) : "Loading..."}
-              {/* {theoTuan.tongTien} */}
+              {theoTuan.tongTien}
             </div>
             <div className="mx-2 mt-12 flex justify-between gap-5">
               <div>San pham da ban</div>
@@ -125,12 +144,12 @@ export default function DoanhThu() {
         </div>
 
         <div className="w-1/2">
-          {/* Theoo Ngay */}
-          <div className="mb-4 h-[180px] rounded-md bg-blue-600 text-lg font-semibold text-white shadow drop-shadow-2xl">
+          Theoo Ngay
+          <div className="mb-4 h-[180px] rounded-md bg-gradient-to-r from-yellow-400 to-yellow-600 text-lg font-semibold text-white shadow drop-shadow-2xl">
             <div className="flex justify-center">Thang Nay</div>
             <div className="flex justify-center">
               {theoThang ? formatTien(theoThang.tongTien) : "Loading..."}
-              {/* {theoThang.tongTien} */}
+              {theoThang.tongTien}
             </div>
             <div className="mx-2 mt-12 flex justify-between gap-5">
               <div>San pham da ban</div>
@@ -148,13 +167,13 @@ export default function DoanhThu() {
             </div>
           </div>
 
-          {/* Theo Tuan */}
-          <div className="mb-4 h-[180px] rounded-md bg-blue-600 text-lg font-semibold text-white shadow drop-shadow-2xl">
+          Theo Tuan
+          <div className="mb-4 h-[180px] rounded-md bg-gradient-to-r from-red-400 to-red-600 text-lg font-semibold text-white shadow drop-shadow-2xl">
             <div className="flex justify-center">Nam Nay</div>
             <div className="flex justify-center">
               {" "}
               {theoNam ? formatTien(theoNam.tongTien) : "Loading..."}
-              {/* {theoNam.tongTien} */}
+              {theoNam.tongTien}
             </div>
             <div className="mx-2 mt-12 flex justify-between gap-5">
               <div>San pham da ban</div>
@@ -169,6 +188,74 @@ export default function DoanhThu() {
               <div> {theoNam ? theoNam.khachLe : "Loading..."}</div>
               <div> {theoNam ? theoNam.donThanhCong : "Loading..."}</div>
               <div> {theoNam ? theoNam.donHuy : "Loading..."}</div>
+            </div>
+          </div>
+        </div>
+      </div>  */}
+
+      <div className="mb-10 flex justify-center rounded-md bg-gray-100 p-4 shadow-md">
+        <div className="mx-10 flex h-auto gap-10">
+          <div className="w-[400px] transition-shadow duration-300 hover:shadow-xl">
+            <div className="card duration-s00 h-24 rounded-lg border-l-4 border-l-purple-500 bg-white shadow-lg transition-shadow hover:shadow-xl">
+              <div className="card-body p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="mb-1 text-xs font-bold uppercase text-purple-500">
+                      Doanh Thu Ngày {title}
+                    </div>
+                    <div className="text-xl font-bold text-gray-800">
+                      {theoNgay ? theoNgay.donThanhCong : "Loading..."} đơn hàng
+                      /{theoNgay ? formatTien(theoNgay.tongTien) : "0 VNĐ"}
+                    </div>
+                  </div>
+                  <div className="text-gray-300">
+                    <i className="fas fa-calendar text-3xl"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="w-[400px] transition-shadow duration-500 hover:shadow-xl">
+            <div className="card h-24 rounded-lg border-l-4 border-l-green-500 bg-white shadow-lg">
+              <div className="card-body p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="mb-1 text-xs font-bold uppercase text-green-500">
+                      Doanh Thu Tháng
+                    </div>
+                    <div className="text-xl font-bold text-gray-800">
+                      {theoThang ? theoThang.donThanhCong : "Loading..."} đơn
+                      hàng /
+                      {theoThang ? formatTien(theoThang.tongTien) : "0 VNĐ"}
+                    </div>
+                  </div>
+                  <div className="text-gray-300">
+                    <i className="fas fa-dollar-sign text-3xl"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="w-[400px] transition-shadow duration-500 hover:shadow-xl">
+            <div className="card h-24 rounded-lg border-l-4 border-l-yellow-500 bg-white shadow-lg">
+              <div className="card-body p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="mb-1 text-xs font-bold uppercase text-yellow-500">
+                      Doanh Thu Năm
+                    </div>
+                    <div className="text-xl font-bold text-gray-800">
+                      {theoNam ? theoNam.donThanhCong : "Loading..."} đơn hàng /
+                      {theoNam ? formatTien(theoNam.tongTien) : "0 VNĐ"}
+                    </div>
+                  </div>
+                  <div className="text-gray-300">
+                    <i className="fas fa-chart-line text-3xl"></i>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

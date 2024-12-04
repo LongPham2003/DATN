@@ -43,8 +43,7 @@ export default function AddProductDetail() {
   const [listSPCT, setListSPCT] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]); // Lưu trữ các sản phẩm được chọn
   const [open, setOpen] = useState(false);
-  const [maSp,setMaSp] = useState("")
-
+  const [maSp, setMaSp] = useState("");
 
   // model them nhan thuong hieu
   const [OpenModelAddBrand, setOpenModelAddBrand] = useState(false);
@@ -143,7 +142,7 @@ export default function AddProductDetail() {
   const layTenSP = async () => {
     const response = await axios.get(ApiGetSPById);
     SetTenSP(response.data.result.tenSanPham);
-    setMaSp(response.data.result.ma)
+    setMaSp(response.data.result.ma);
   };
 
   const layMauSac = async () => {
@@ -622,6 +621,15 @@ export default function AddProductDetail() {
                         </td>
                         <td className="px-4 py-2">
                           <InputNumber
+                            formatter={
+                              (value) =>
+                                `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ".") // Thêm dấu chấm cho hàng nghìn
+                            }
+                            parser={(value) =>
+                              value
+                                .replace(/\./g, "")
+                                .replace(/VNĐ\s?|(,*)/g, "")
+                            } // Xóa dấu chấm trước khi lưu giá trị
                             value={SPCT.donGia}
                             className="w-[150px]"
                             min="1000"
@@ -715,10 +723,9 @@ export default function AddProductDetail() {
 
       {OpenModelAddBrand && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className=" flex justify-between h-[100px] w-[400px] rounded-lg bg-white p-8">
+          <div className="flex h-[100px] w-[400px] justify-between rounded-lg bg-white p-8">
             <div className="">
               <ThemThuongHieu closeModel={closeModalBrand} />
-
             </div>
             <button
               onClick={closeModalBrand}
@@ -732,7 +739,7 @@ export default function AddProductDetail() {
 
       {OpenModelAddChatLieu && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className=" flex justify-between h-[100px] w-[400px] rounded-lg bg-white p-8">
+          <div className="flex h-[100px] w-[400px] justify-between rounded-lg bg-white p-8">
             <div className="">
               <ThemChatLieu closeModel={closeModalChatLieu} />
             </div>
@@ -748,10 +755,9 @@ export default function AddProductDetail() {
 
       {OpenModelAddDeGiay && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className=" flex justify-between h-[100px] w-[400px] rounded-lg bg-white p-8">
+          <div className="flex h-[100px] w-[400px] justify-between rounded-lg bg-white p-8">
             <div className="">
               <ThemDeGiay closeModel={closeModalDeGiay} />
-
             </div>
             <button
               onClick={closeModalDeGiay}
@@ -765,10 +771,9 @@ export default function AddProductDetail() {
 
       {OpenModelAddKichThuoc && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className=" flex justify-between h-[100px] w-[400px] rounded-lg bg-white p-8">
+          <div className="flex h-[100px] w-[400px] justify-between rounded-lg bg-white p-8">
             <div className="">
               <ThemKichThuoc closeModel={closeModalKichThuoc} />
-
             </div>
             <button
               onClick={closeModalKichThuoc}
@@ -782,10 +787,9 @@ export default function AddProductDetail() {
 
       {OpenModelAddMauSac && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className=" flex justify-between h-[100px] w-[400px] rounded-lg bg-white p-8">
+          <div className="flex h-[100px] w-[400px] justify-between rounded-lg bg-white p-8">
             <div className="">
               <ThemMauSac closeModel={closeModalMauSac} />
-
             </div>
             <button
               onClick={closeModalMauSac}

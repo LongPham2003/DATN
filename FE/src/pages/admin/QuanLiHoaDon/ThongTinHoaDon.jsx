@@ -130,7 +130,8 @@ const ThongTinHoaDon = ({
       <div className="mx-4 py-4">
         <div className="mx-5 flex justify-between py-3">
           <h3 className="text-[20px] font-bold">Sản phẩm</h3>
-          {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" ? (
+          {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" &&
+          hoaDon.trangThaiThanhToan === "Chưa thanh toán" ? (
             <button
               onClick={openModalSP}
               className="rounded bg-blue-500 px-2 py-2 text-white"
@@ -145,15 +146,16 @@ const ThongTinHoaDon = ({
         <table className="min-w-full text-center text-sm font-light">
           <thead className="top-0 bg-blue-700 text-xl font-medium text-white">
             <tr>
-              <th className="w-10 px-6 py-4">STT</th>
-              <th className="w-[130px] px-6 py-4">Ảnh</th>
-              <th className="w-52 px-6 py-4">Sản phẩm</th>
-              <th className="w-52 px-6 py-4">Đơn giá</th>
-              <th className="w-52 px-6 py-4">Số lượng</th>
-              <th className="w-52 px-6 py-4">Thành tiền</th>
-              <th className="w-52 px-6 py-4">
-                {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" ? "Hàng động" : ""}
-              </th>
+              <th className="px-6 py-4">STT</th>
+              <th className="px-6 py-4">Ảnh</th>
+              <th className="px-6 py-4">Sản phẩm</th>
+              <th className="px-6 py-4">Đơn giá</th>
+              <th className="px-6 py-4">Số lượng</th>
+              <th className="px-6 py-4">Thành tiền</th>
+              {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" &&
+              hoaDon.trangThaiThanhToan === "Chưa thanh toán" ? (
+                <th className="px-6 py-4">Hành động</th>
+              ) : null}
             </tr>
           </thead>
           <tbody>
@@ -174,8 +176,9 @@ const ThongTinHoaDon = ({
                 <td>{formatTien(SPCT.donGia)}</td>
                 <td>{SPCT.soLuong}</td>
                 <td>{formatTien(SPCT.donGia * SPCT.soLuong)}</td>
-                <td>
-                  {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" ? (
+                {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" &&
+                hoaDon.trangThaiThanhToan === "Chưa thanh toán" ? (
+                  <td>
                     <Popconfirm
                       title="Xóa Sản phẩm"
                       description="Bạn có muốn xóa sản phẩm không?"
@@ -191,10 +194,8 @@ const ThongTinHoaDon = ({
                         Xóa
                       </Button>
                     </Popconfirm>
-                  ) : (
-                    ""
-                  )}
-                </td>
+                  </td>
+                ) : null}
               </tr>
             ))}
           </tbody>

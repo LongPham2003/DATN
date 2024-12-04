@@ -31,9 +31,19 @@ export default function BanHangTaiQuay() {
   const [openThanhToan, setOpenThanhToan] = useState(false);
   const [SPCTChuaThanhToan, setSPCTChuaThanhToan] = useState([]);
   const [selectedHoaDonId, setSelectedHoaDonId] = useState(null); // State lưu trữ id hóa đơn được chọn
+  const [soLuongSanPham, setSoLuongSanPham] = useState(1);
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (SPCTChuaThanhToan && Array.isArray(SPCTChuaThanhToan)) {
+      const total = SPCTChuaThanhToan.reduce(
+        (sum, item) => sum + (item.soLuong || 0),
+        0,
+      );
+      setSoLuongSanPham(total);
+    }
+  }, [SPCTChuaThanhToan]);
   // chon giao hang
   const [phiGiaoHang, setPhiGiaoHang] = useState(0);
   const [giaoHang, setGiaoHang] = useState(false);
@@ -732,7 +742,9 @@ export default function BanHangTaiQuay() {
             </div>
             <Tabs
               activeKey={selectedHoaDonId} // Hiển thị tab tương ứng với hóa đơn được chọn
-              onChange={(key) => setSelectedHoaDonId(key)} // Cập nhật id hóa đơn được chọn khi người dùng chọn tab mới
+              onChange={(key) => {
+                setSelectedHoaDonId(key), setGiaoHang(false);
+              }} // Cập nhật id hóa đơn được chọn khi người dùng chọn tab mới
               defaultActiveKey={hoaDonFalse[0]?.id} // Chọn tab đầu tiên mặc định
               animated={{ inkBar: true, tabPane: true }} // Bật hiệu ứng chuyển tab
               items={hoaDonFalse.map((tab) => ({
@@ -1043,12 +1055,14 @@ export default function BanHangTaiQuay() {
                           setPhiGiaoHang={setPhiGiaoHang}
                           setNgayDuKien={setNgayDuKien}
                           setdiaChiGiaoHang={setdiaChiGiaoHang}
+                          soLuongSanPham={soLuongSanPham}
+                          tongTien={formatCurrencyToNumber(tongTien)}
                         />
                       </span>
                     </div>
                   )}
                 </div>
-                {giaoHang && (
+                {giaoHang && soLuongSanPham >= 1 && (
                   <div>
                     <div className="mx-3 flex items-center gap-4">
                       {" "}

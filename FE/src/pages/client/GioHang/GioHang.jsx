@@ -404,7 +404,7 @@ export default function GioHang() {
                       disabled={tongTien === 0}
                       className={`h-16 w-full rounded-lg border text-2xl font-semibold text-white transition duration-300 ease-in-out ${tongTien === 0 ? "cursor-not-allowed bg-gray-400" : "bg-orange-600 hover:bg-black"}`}
                     >
-                      Tiep tuc mua hang
+                      Tiếp tục mua hàng
                     </button>
                   </Link>
                 </div>

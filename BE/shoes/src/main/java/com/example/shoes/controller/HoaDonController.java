@@ -5,6 +5,7 @@ import com.example.shoes.dto.hoadon.request.DatHangRequest;
 import com.example.shoes.dto.hoadon.request.GhiChu;
 import com.example.shoes.dto.hoadon.request.XacNhanThanhToan;
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
+import com.example.shoes.dto.hoadon.response.HoaDonTheoIDKH;
 import com.example.shoes.dto.payment.PaymentRequest;
 import com.example.shoes.entity.HoaDon;
 import com.example.shoes.exception.ApiResponse;
@@ -163,6 +164,20 @@ public class HoaDonController {
     @GetMapping("/soluong/hoadonhd")
     private ApiResponse<Integer> soluongHuy() {
         return ApiResponse.<Integer>builder().result(hoaDonRepo.getCountHoaDonHuy()).build();
+    }
+    @GetMapping("/getAllHDTheoIDKH")
+    public ApiResponse<List<HoaDonTheoIDKH>> getAllHDTheoIDKH(
+            @RequestParam(value = "maHD", required = false) String maHD,
+            @RequestParam(value = "idKhachHang", required = true) Integer idKhachHang, // Chuyển `idKhachHang` thành bắt buộc
+            @RequestParam(value = "trangThaiDonHang", required = false) String trangThaiDonHang, // Thêm lọc theo trạng thái
+            @RequestParam(value = "ngay", required = false) String ngay    ) {
+        // Gọi service với các tham số
+        List<HoaDonTheoIDKH> hdresq = hoaDonService.getHoaDonTheoKH(idKhachHang, maHD, trangThaiDonHang, ngay);
+
+        // Trả về kết quả dưới dạng ApiResponse
+        return ApiResponse.<List<HoaDonTheoIDKH>>builder()
+                .result(hdresq)
+                .build();
     }
 
 }
