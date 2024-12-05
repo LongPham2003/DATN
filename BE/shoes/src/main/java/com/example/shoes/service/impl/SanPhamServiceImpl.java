@@ -43,7 +43,7 @@ public class SanPhamServiceImpl implements SanPhamService {
         SanPhamResponse response = new SanPhamResponse();
         response.setId(sanPham.getId());
         response.setIdLoai(sanPham.getLoai() != null ? sanPham.getLoai().getId() : null);// Tránh lỗi null pointer
-     // lay ten loai cho de hieu
+        // lay ten loai cho de hieu
         response.setTenLoai(sanPham.getLoai().getTen());
         response.setMa(sanPham.getMa());
         response.setTenSanPham(sanPham.getTenSanPham());
@@ -62,9 +62,7 @@ public class SanPhamServiceImpl implements SanPhamService {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
         Page<SanPham> page = sanPhamRepo.getSanPham(keyword, idLoai, trangThai, pageable);
 
-        List<SanPhamResponse> responses = page.getContent().stream()
-                .map(this::convertToSanPhamResponse)
-                .collect(Collectors.toList());
+        List<SanPhamResponse> responses = page.getContent().stream().map(this::convertToSanPhamResponse).collect(Collectors.toList());
 
         PhanTrangResponse<SanPhamResponse> phanTrangResponse = new PhanTrangResponse<>();
         phanTrangResponse.setPageNumber(page.getNumber() + 1);
@@ -78,10 +76,10 @@ public class SanPhamServiceImpl implements SanPhamService {
 
     @Override
     public SanPhamResponse getById(Integer id) {
-        SanPham sanPham = sanPhamRepo.findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
+        SanPham sanPham = sanPhamRepo.findById(id).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
         return convertToSanPhamResponse(sanPham);
     }
+
     // Hàm để sinh mã sản phẩm tự động
     public String generateMaSanPham() {
         // Lấy mã sản phẩm lớn nhất từ database
@@ -98,11 +96,11 @@ public class SanPhamServiceImpl implements SanPhamService {
             return "SP01";
         }
     }
+
     @Override
     public SanPhamResponse create(SanPhamRequest request) {
         // Lấy đối tượng Loai dựa trên idLoai từ request
-        Loai loai = loaiRepo.findById(request.getIdLoai())
-                .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
+        Loai loai = loaiRepo.findById(request.getIdLoai()).orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
 
         SanPham sanPham = new SanPham();
         sanPham.setLoai(loai); // Gán đối tượng Loai cho SanPham
@@ -120,12 +118,10 @@ public class SanPhamServiceImpl implements SanPhamService {
 
     @Override
     public SanPhamResponse update(Integer id, SanPhamRequest request) {
-        SanPham sanPham = sanPhamRepo.findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
+        SanPham sanPham = sanPhamRepo.findById(id).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
 
         // Lấy đối tượng Loai dựa trên idLoai từ request
-        Loai loai = loaiRepo.findById(request.getIdLoai())
-                .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
+        Loai loai = loaiRepo.findById(request.getIdLoai()).orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
 
         sanPham.setLoai(loai); // Gán đối tượng Loai cho SanPham
         sanPham.setTenSanPham(request.getTenSanPham());
@@ -140,23 +136,19 @@ public class SanPhamServiceImpl implements SanPhamService {
     @Override
     public List<SanPhamResponse> getAll() {
         // Lấy tất cả các ChatLieu từ repository
-        List<SanPham> list =sanPhamRepo.getAllTrangThaiTrue();
+        List<SanPham> list = sanPhamRepo.getAllTrangThaiTrue();
 
         // Chuyển đổi từ ChatLieu sang ChatLieuResponse
-        return list.stream()
-                .map(this::convertToSanPhamResponse)
-                .collect(Collectors.toList());
+        return list.stream().map(this::convertToSanPhamResponse).collect(Collectors.toList());
     }
-
 
 
     @Override
     public void updateTheoTrangThai(Integer id) {
-        SanPham sanPham=sanPhamRepo.findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
-        if(sanPham.getTrangThai()==true) {
+        SanPham sanPham = sanPhamRepo.findById(id).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
+        if (sanPham.getTrangThai() == true) {
             sanPham.setTrangThai(false);
-        }else {
+        } else {
             sanPham.setTrangThai(true);
         }
         sanPhamRepo.save(sanPham);
@@ -171,16 +163,16 @@ public class SanPhamServiceImpl implements SanPhamService {
     public List<SanPhamBanChayResponse> getTop3SanPhamBanChay() {
         List<Object[]> results = sanPhamRepo.findTop3SanPhamBanChayTrongThangHienTai();
 
-        return results.stream()
-                .map(row -> {
-                    SanPhamBanChayResponse response = new SanPhamBanChayResponse();
-                    response.setIdSP(((Number) row[0]).intValue()); // id sản phẩm
-                    response.setMaSanPham((String) row[1]); // mã sản phẩm
-                    response.setTenSanPham((String) row[2]); // tên sản phẩm
-                    response.setTongSoLuongDaBan(((Number) row[3]).intValue()); // tổng số lượng
-                    return response;
-                })
-                .collect(Collectors.toList());
+        return results.stream().map(row -> {
+            SanPhamBanChayResponse response = new SanPhamBanChayResponse();
+            response.setIdSP(((Number) row[0]).intValue()); // id sản phẩm
+            response.setIdSPCT(((Number) row[1]).intValue()); // id sản phẩm
+            response.setMaSanPham((String) row[2]); // mã sản phẩm
+            response.setDonGia((BigDecimal) row[3]);
+            response.setTenSanPham((String) row[4]); // tên sản phẩm
+            response.setTongSoLuongDaBan(((Number) row[5]).intValue()); // tổng số lượng
+            return response;
+        }).collect(Collectors.toList());
     }
 
     @Override
@@ -189,8 +181,8 @@ public class SanPhamServiceImpl implements SanPhamService {
     }
 
     @Override
-    public List<SanPhamClient> sanPhamClient(String tenSP, Integer idLoai, Integer kichThuoc, Integer idMauSac, BigDecimal donGiaMin, BigDecimal donGiaMax) {
-        return sanPhamRepo.sanPhamClient(tenSP, idLoai,kichThuoc,idMauSac,donGiaMin,donGiaMax);
+    public List<SanPhamClient> sanPhamClient(String tenSP, List<Integer> idLoai, List<Integer> kichThuoc, List<Integer> idMauSac, List<Integer> idDeGiay, List<Integer> idChatLieu, List<Integer> idThuongHieu, BigDecimal donGiaMin, BigDecimal donGiaMax) {
+        return sanPhamRepo.sanPhamClient(tenSP, idLoai, kichThuoc, idMauSac, idDeGiay, idChatLieu, idThuongHieu, donGiaMin, donGiaMax);
     }
 
 

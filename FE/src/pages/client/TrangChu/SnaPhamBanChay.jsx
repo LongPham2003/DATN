@@ -7,100 +7,74 @@ import {
 } from "@ant-design/icons";
 import { Avatar, Card } from "antd";
 import Meta from "antd/es/card/Meta";
+import LayANhTheoIdSPCT from "./../../admin/SanPham/Product/LayANhTheoIDSP";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 export default function SnaPhamBanChay() {
+  const [sanPhamBC, setSanPhamBC] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:8080/api/sanpham/top3-ban-chay")
+      .then(async (res) => {
+        const sp = res.data.result;
+        setSanPhamBC(sp);
+        console.log(sanPhamBC);
+      })
+      .catch((error) => {
+        console.error("Lỗi" + error);
+      });
+  }, []);
+
+  function formatTien(value) {
+    if (typeof value !== "number" || isNaN(value)) {
+      return "0 VNĐ"; // Giá trị mặc định nếu `value` không hợp lệ
+    }
+    return value.toLocaleString("vi-VN") + " VNĐ";
+  }
   return (
     <>
-      <div>
-        <div className="flex justify-center gap-4 text-xl">
-          <HeartOutlined className="mt-1 text-red-600" />
-          <span className="text-2xl font-semibold text-red-600">
-            Sản Phẩm Bán Chạy
-          </span>
-          <HeartOutlined className="mt-1 text-red-600" />
+      <div className="my-7 pb-[70px]">
+        {" "}
+        <div>
+          <div className="my-5 flex">
+            <div className="mx-auto">
+              <p className="mt-3 text-center font-mono text-[30px] font-bold">
+                Giày Bán Chạy Nhất
+              </p>
+              <p className="mt-3 text-center leading-8">
+                Khám phá bộ sưu tập giày bán chạy nhất của cửa hàng chúng tôi
+              </p>
+            </div>
+          </div>
         </div>
-        <div className="grid-flow-col-1 my-10 grid justify-items-center lg:grid-cols-7">
-          <Card
-            hoverable
-            style={{
-              width: 300,
-            }}
-            className="col-start-2"
-            cover={
-              <img
-                alt="example"
-                src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                className="transition duration-300 ease-in-out hover:scale-110"
-              />
-            }
-            actions={[
-              <SettingOutlined key="setting" />,
-              <EditOutlined key="edit" />,
-              <EllipsisOutlined key="ellipsis" />,
-            ]}
-          >
-            <Meta
-              avatar={
-                <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=8" />
+        <div className="mx-auto flex items-center justify-center gap-8">
+          {sanPhamBC.map((spct, index) => (
+            <Card
+              key={index}
+              hoverable
+              className="h-[360px]"
+              cover={
+                <Link to={`/chitiet/${spct.idSP}`}>
+                  <div className="transition-transform duration-300 hover:scale-110">
+                    <LayANhTheoIdSPCT
+                      id={spct.idSPCT}
+                      className="h-[350px] w-auto justify-center object-cover"
+                    />
+                  </div>
+                </Link>
               }
-              title="Card title"
-              description="This is the description"
-            />
-          </Card>
-          <Card
-            hoverable
-            style={{
-              width: 300,
-            }}
-            cover={
-              <img
-                alt="example"
-                src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                className="transition duration-300 ease-in-out hover:scale-110"
+            >
+              <Meta
+                title={spct.tenSanPham}
+                description={
+                  <div className="text-red-500">{formatTien(spct.donGia)}</div>
+                }
+                className="text-lg"
               />
-            }
-            className="col-start-4"
-            actions={[
-              <SettingOutlined key="setting" />,
-              <EditOutlined key="edit" />,
-              <EllipsisOutlined key="ellipsis" />,
-            ]}
-          >
-            <Meta
-              avatar={
-                <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=8" />
-              }
-              title="Card title"
-              description="This is the description"
-            />
-          </Card>
-
-          <Card
-            hoverable
-            style={{
-              width: 300,
-            }}
-            cover={
-              <img
-                alt="example"
-                src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                className="transition duration-300 ease-in-out hover:scale-110"
-              />
-            }
-            className="col-start-6"
-            actions={[
-              <SettingOutlined key="setting" />,
-              <EditOutlined key="edit" />,
-              <EllipsisOutlined key="ellipsis" />,
-            ]}
-          >
-            <Meta
-              avatar={
-                <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=8" />
-              }
-              title="Card title"
-              description="This is the description"
-            />
-          </Card>
+            </Card>
+          ))}
         </div>
       </div>
     </>

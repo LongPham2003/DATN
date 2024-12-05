@@ -14,6 +14,7 @@ import com.example.shoes.dto.hoadonchitiet.request.HoaDonChiTietRequest;
 import com.example.shoes.dto.payment.PaymentRequest;
 import com.example.shoes.dto.phuongthucthanhtoan.request.PhuongThucThanhToanRequest;
 
+import com.example.shoes.dto.sanpham.request.SanPhamTraRequest;
 import com.example.shoes.entity.HoaDon;
 import com.example.shoes.enums.TrangThai;
 
@@ -49,4 +50,5 @@ public interface HoaDonService {
  Void xacNhanThanhToan(Integer idHoaDon, XacNhanThanhToan xacNhanThanhToan);
  Void updateTrangThaiHoaDonByIdHuy (Integer idHoaDon, GhiChu moTa);
  List<HoaDonTheoIDKH> getHoaDonTheoKH (Integer idKhachHang, String maHD, String trangThaiDonHang, String ngay);
+ HoaDonResponse traHang(Integer idHoaDon,List<SanPhamTraRequest> sanPhamTraList);
 }

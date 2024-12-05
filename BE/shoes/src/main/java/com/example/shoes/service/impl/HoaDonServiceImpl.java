@@ -14,6 +14,7 @@ import com.example.shoes.dto.hoadon.response.HoaDonTheoIDResponse;
 import com.example.shoes.dto.hoadonchitiet.request.HoaDonChiTietRequest;
 import com.example.shoes.dto.payment.PaymentRequest;
 import com.example.shoes.dto.phuongthucthanhtoan.request.PhuongThucThanhToanRequest;
+import com.example.shoes.dto.sanpham.request.SanPhamTraRequest;
 import com.example.shoes.dto.vnpay.response.TransactionStatus;
 import com.example.shoes.entity.*;
 import com.example.shoes.enums.TrangThai;
@@ -32,6 +33,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -1169,6 +1171,83 @@ public class HoaDonServiceImpl implements HoaDonService {
     public List<HoaDonTheoIDKH> getHoaDonTheoKH(Integer idKhachHang, String maHD,String trangThaiDonHang, String ngay) {
         List<HoaDonTheoIDKH> list = hoaDonRepo.getHoaDonTheoKH(idKhachHang, maHD,trangThaiDonHang, ngay);
         return list;
+    }
+
+    @Override
+    public HoaDonResponse traHang(Integer idHoaDon, List<SanPhamTraRequest> sanPhamTraList) {
+        // Tìm hóa đơn
+        HoaDon hoaDon = hoaDonRepo.findById(idHoaDon)
+                .orElseThrow(() -> new RuntimeException("Hóa đơn không tồn tại"));
+
+        // Chỉ cho phép trả hàng nếu hóa đơn có trạng thái hoàn thành
+        if (!hoaDon.getTrangThaiDonHang().equals(TrangThai.HOAN_THANH)) {
+            throw new RuntimeException("Chỉ có thể trả hàng cho hóa đơn đã hoàn thành");
+        }
+
+        // Biến lưu tổng tiền hoàn trả
+        BigDecimal tongTienTraLai = BigDecimal.ZERO;
+
+        // Duyệt qua từng sản phẩm trong danh sách trả hàng
+        for (SanPhamTraRequest sanPhamTra : sanPhamTraList) {
+            Integer idSpct = sanPhamTra.getIdSpct();
+            Integer soLuongTra = sanPhamTra.getSoLuongTra();
+
+            // Tìm chi tiết hóa đơn tương ứng với sản phẩm
+            List<HoaDonChiTiet> chiTietList = hoaDonChiTietRepo.findByIdHoaDon_IdAndIdSpct_Id(idHoaDon, idSpct);
+
+            // Kiểm tra danh sách rỗng
+            if (chiTietList.isEmpty()) {
+                throw new RuntimeException("Sản phẩm không tồn tại trong hóa đơn");
+            }
+
+            // Lấy phần tử đầu tiên từ danh sách
+            HoaDonChiTiet chiTiet = chiTietList.get(0);
+
+            // Kiểm tra nếu số lượng trả lớn hơn số lượng đã mua
+            if (soLuongTra > chiTiet.getSoLuong()) {
+                throw new RuntimeException("Số lượng trả hàng vượt quá số lượng đã mua cho sản phẩm ID: " + idSpct);
+            }
+
+            // Cập nhật số lượng sản phẩm trong kho
+            SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepo.findById(idSpct)
+                    .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_DETAIL_NOT_FOUND));
+            sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() + soLuongTra);
+            sanPhamChiTietRepo.save(sanPhamChiTiet);
+
+            // Cập nhật số lượng trong chi tiết hóa đơn
+            chiTiet.setSoLuong(chiTiet.getSoLuong() - soLuongTra);
+
+            if (chiTiet.getSoLuong() == 0) {
+                hoaDonChiTietRepo.delete(chiTiet); // Xóa nếu số lượng bằng 0
+            } else {
+                hoaDonChiTietRepo.save(chiTiet); // Cập nhật số lượng mới
+            }
+
+            // Tính tiền hoàn trả cho sản phẩm
+            BigDecimal tienTraLai = chiTiet.getDonGia().multiply(new BigDecimal(soLuongTra));
+            tongTienTraLai = tongTienTraLai.add(tienTraLai);
+        }
+
+        // Cập nhật tổng tiền hóa đơn
+        hoaDon.setTongTien(hoaDon.getTongTien().subtract(tongTienTraLai));
+        hoaDon.setTienPhaiThanhToan(hoaDon.getTienPhaiThanhToan().subtract(tongTienTraLai));
+
+        // Cập nhật trạng thái hóa đơn
+        if (hoaDonChiTietRepo.findByIdHoaDon(hoaDon.getId()).isEmpty()) {
+            hoaDon.setTrangThaiDonHang(TrangThai.HOAN_TRA); // Trả hết sản phẩm
+        } else {
+            hoaDon.setTrangThaiDonHang(TrangThai.TRA_HANG); // Trả một phần
+        }
+
+        // Lưu hóa đơn
+        HoaDon hoaDonUpdated = hoaDonRepo.save(hoaDon);
+        return converToHoaDonResponse(hoaDonUpdated);
+    }
+
+    // Gọi hàm deleteByHoaDonTaiQuay() vào lúc 12h đêm mỗi ngày
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void deleteHoaDonAtMidnight() {
+        hoaDonRepo.deleteByHoaDonTaiQuay();
     }
 
 }

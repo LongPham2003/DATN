@@ -7,6 +7,7 @@ import com.example.shoes.dto.hoadon.request.XacNhanThanhToan;
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
 import com.example.shoes.dto.hoadon.response.HoaDonTheoIDKH;
 import com.example.shoes.dto.payment.PaymentRequest;
+import com.example.shoes.dto.sanpham.request.SanPhamTraRequest;
 import com.example.shoes.entity.HoaDon;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.repository.HoaDonRepo;
@@ -177,6 +178,18 @@ public class HoaDonController {
         // Trả về kết quả dưới dạng ApiResponse
         return ApiResponse.<List<HoaDonTheoIDKH>>builder()
                 .result(hdresq)
+                .build();
+    }
+    // Trả hàng
+    @PostMapping("/tra-hang")
+    public ApiResponse<HoaDonResponse> traHang(
+            @RequestParam("idHoaDon") Integer idHoaDon,
+            @RequestBody List<SanPhamTraRequest> sanPhamTraList) {
+        // Gọi phương thức traHang trong service
+        HoaDonResponse hoaDonResponse = hoaDonService.traHang(idHoaDon, sanPhamTraList);
+        // Trả về kết quả dưới dạng ApiResponse
+        return ApiResponse.<HoaDonResponse>builder()
+                .result(hoaDonResponse)
                 .build();
     }
 

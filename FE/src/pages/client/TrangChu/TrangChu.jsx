@@ -25,7 +25,9 @@ export default function TrangChu() {
       <div className="container">
         <Carousel />
         {/* San Pham ban chay */}
-        {/* <SnaPhamBanChay></SnaPhamBanChay> */}
+        <div className="my-7">
+          <SnaPhamBanChay></SnaPhamBanChay>
+        </div>
         {/* {/* <div className="flex justify-center text-3xl font-bold">
           <span>------- Các Sản Phẩm khác -------</span>
         </div> */}
@@ -37,7 +39,7 @@ export default function TrangChu() {
         </div>
 
         <TinTuc /> */}
-        <div className="mb-7">
+        <div className="my-7">
           <GiayMoiNhat />
         </div>
       </div>

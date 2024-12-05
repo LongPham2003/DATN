@@ -121,4 +121,7 @@ public interface HoaDonRepo extends JpaRepository<HoaDon, Integer> {
                 @Param("trangThaiDonHang") String trangThaiDonHang,
                 @Param("ngay") String ngay // Ngày lọc (YYYY-MM-DD)
         );
+
+        @Query(value = "delete  from hoa_don where phuong_thuc_giao_hang = 'Tại quầy' and trang_thai_don_hang ='CHO_XAC_NHAN'",nativeQuery = true)
+        void deleteByHoaDonTaiQuay();
 }
