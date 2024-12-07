@@ -33,6 +33,7 @@ public class KhachHangRequest {
 
     private String gioiTinh;
 
+    @Min(value = 8,message = "Mật Khẩu Lớn Hơn 8 Kí Tự")
     private String matKhau;
 
     private Boolean trangThai;
@@ -47,6 +48,7 @@ public class KhachHangRequest {
 
     private String diaChiChiTiet;
 
+    @NotBlank(message = "Số nhà không được để trống")
     private String soNhaDuongThonXom;
 
 
