@@ -412,22 +412,25 @@ export default function AddProductDetail() {
                     <span className="mb-9 text-xl font-semibold text-blue-500">
                       Thương hiệu
                     </span>
-                    <Select
-                      className="h-[38px] w-[384px]"
-                      placeholder="Chọn thương hiệu"
-                      size="large"
-                      options={listThuongHieu.map((item) => ({
-                        label: item.ten,
-                        value: item.id,
-                      }))}
-                      onChange={(value) => setGetIdThuongHieu(value)}
-                    />
-                    <button
-                      className="bordered h-[38px] w-[38px] rounded-lg border bg-amber-300"
-                      onClick={openModalBrand}
-                    >
-                      +
-                    </button>
+                    <div className="my-auto flex items-center">
+                      {" "}
+                      <Select
+                        className="h-[38px] w-[384px]"
+                        placeholder="Chọn thương hiệu"
+                        size="large"
+                        options={listThuongHieu.map((item) => ({
+                          label: item.ten,
+                          value: item.id,
+                        }))}
+                        onChange={(value) => setGetIdThuongHieu(value)}
+                      />
+                      <button
+                        className="bordered h-[40px] w-[38px] rounded-lg border bg-amber-300"
+                        onClick={openModalBrand}
+                      >
+                        +
+                      </button>
+                    </div>
                   </div>
                 </div>
                 <div className="mt-10 grid grid-cols-2 gap-6">
@@ -437,22 +440,25 @@ export default function AddProductDetail() {
                         Chất liệu
                       </span>
                     </div>
-                    <Select
-                      className="h-[38px] w-[384px]"
-                      placeholder="Chọn chất liệu"
-                      size="large"
-                      options={listChatLieu.map((item) => ({
-                        label: item.ten,
-                        value: item.id,
-                      }))}
-                      onChange={(value) => setGetIdChatLieu(value)}
-                    />
-                    <button
-                      className="bordered h-[38px] w-[38px] rounded-lg border bg-amber-300"
-                      onClick={openModalChatLieu}
-                    >
-                      +
-                    </button>
+                    <div className="my-auto flex items-center">
+                      {" "}
+                      <Select
+                        className="h-[38px] w-[384px]"
+                        placeholder="Chọn chất liệu"
+                        size="large"
+                        options={listChatLieu.map((item) => ({
+                          label: item.ten,
+                          value: item.id,
+                        }))}
+                        onChange={(value) => setGetIdChatLieu(value)}
+                      />
+                      <button
+                        className="bordered h-[40px] w-[38px] rounded-lg border bg-amber-300"
+                        onClick={openModalChatLieu}
+                      >
+                        +
+                      </button>
+                    </div>
                   </div>
                   <div>
                     <div>
@@ -460,22 +466,25 @@ export default function AddProductDetail() {
                         Đế Giày
                       </span>
                     </div>
-                    <Select
-                      className="h-[38px] w-[384px]"
-                      placeholder="Chọn đế giày"
-                      size="large"
-                      options={listDeGiay.map((item) => ({
-                        label: item.ten,
-                        value: item.id,
-                      }))}
-                      onChange={(value) => setGetIdDeGiay(value)}
-                    />
-                    <button
-                      className="bordered h-[38px] w-[38px] rounded-lg border bg-amber-300"
-                      onClick={openModalDeGiay}
-                    >
-                      +
-                    </button>
+                    <div className="my-auto flex items-center">
+                      {" "}
+                      <Select
+                        className="h-[38px] w-[384px]"
+                        placeholder="Chọn đế giày"
+                        size="large"
+                        options={listDeGiay.map((item) => ({
+                          label: item.ten,
+                          value: item.id,
+                        }))}
+                        onChange={(value) => setGetIdDeGiay(value)}
+                      />
+                      <button
+                        className="bordered h-[40px] w-[38px] rounded-lg border bg-amber-300"
+                        onClick={openModalDeGiay}
+                      >
+                        +
+                      </button>
+                    </div>
                   </div>
                 </div>
                 <div className="mb-10 mt-10 grid grid-cols-2 gap-6">
@@ -483,25 +492,28 @@ export default function AddProductDetail() {
                     <span className="mb-9 text-xl font-semibold text-blue-500">
                       Kích Thước
                     </span>
-                    <Select
-                      mode="multiple"
-                      className="h-[38px] w-[384px]"
-                      placeholder="Chọn kích thước"
-                      size="large"
-                      options={listKichThuoc.map((item) => ({
-                        label: item.kichThuoc,
-                        value: item.id,
-                      }))}
-                      onChange={(value, option) => {
-                        setGetIdKichThuoc(option);
-                      }}
-                    />
-                    <button
-                      className="bordered h-[38px] w-[38px] rounded-lg border bg-amber-300"
-                      onClick={openModalKichThuoc}
-                    >
-                      +
-                    </button>
+                    <div className="my-auto flex items-center">
+                      {" "}
+                      <Select
+                        mode="multiple"
+                        className="h-[38px] w-[384px]"
+                        placeholder="Chọn kích thước"
+                        size="large"
+                        options={listKichThuoc.map((item) => ({
+                          label: item.kichThuoc,
+                          value: item.id,
+                        }))}
+                        onChange={(value, option) => {
+                          setGetIdKichThuoc(option);
+                        }}
+                      />
+                      <button
+                        className="bordered h-[40px] w-[38px] rounded-lg border bg-amber-300"
+                        onClick={openModalKichThuoc}
+                      >
+                        +
+                      </button>
+                    </div>
                   </div>
                   <div>
                     <div>
@@ -509,23 +521,26 @@ export default function AddProductDetail() {
                         Màu Sắc
                       </span>
                     </div>
-                    <Select
-                      mode="multiple"
-                      className="h-[38px] w-[384px]"
-                      placeholder="Chọn màu sắc"
-                      size="large"
-                      options={listMauSac.map((item) => ({
-                        label: item.ten,
-                        value: item.id,
-                      }))}
-                      onChange={(value, option) => setGetIdMauSac(option)}
-                    />
-                    <button
-                      className="bordered h-[38px] w-[38px] rounded-lg border bg-amber-300"
-                      onClick={openModalMauSac}
-                    >
-                      +
-                    </button>
+                    <div className="my-auto flex items-center">
+                      {" "}
+                      <Select
+                        mode="multiple"
+                        className="h-[38px] w-[384px]"
+                        placeholder="Chọn màu sắc"
+                        size="large"
+                        options={listMauSac.map((item) => ({
+                          label: item.ten,
+                          value: item.id,
+                        }))}
+                        onChange={(value, option) => setGetIdMauSac(option)}
+                      />
+                      <button
+                        className="bordered h-[40px] w-[38px] rounded-lg border bg-amber-300"
+                        onClick={openModalMauSac}
+                      >
+                        +
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>

@@ -44,7 +44,7 @@ export default function ThemDeGiay({ closeModel }) {
       <div className="my-auto items-center justify-items-center">
         <input
           type="text"
-          className="bordered h-10 w-[200px] border"
+          className="bordered h-10 w-[200px] border pl-2"
           value={value}
           onChange={(e) => setValue(e.target.value)}
           placeholder="Mời nhập tên đế giày"

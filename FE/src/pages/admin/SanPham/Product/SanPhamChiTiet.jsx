@@ -112,7 +112,7 @@ const SanPhamChiTiet = ({ productId, closeModal }) => {
           <div>
             <div className="my-4">
               <label htmlFor="tenSanPham" className="mb-1 block font-semibold">
-                Ma San Phẩm:
+                Mã Sản Phẩm:
               </label>
               <input
                 type="text"
@@ -124,7 +124,7 @@ const SanPhamChiTiet = ({ productId, closeModal }) => {
             </div>
             <div className="mb-4">
               <label htmlFor="tenSanPham" className="mb-1 block font-semibold">
-                Tên San Phẩm:
+                Tên Sản Phẩm:
               </label>
               <input
                 type="text"

@@ -15,7 +15,7 @@ export default function DetailProduct() {
   const [chatLieus, setChatLieus] = useState([]);
   const [kichThuocs, setKichThuocs] = useState([]);
   const [deGiays, setDeGiays] = useState([]);
-  const [maSp,setMaSp] = useState("");
+  const [maSp, setMaSp] = useState("");
 
   const [trangThai, setTrangThai] = useState(null);
 
@@ -260,7 +260,7 @@ export default function DetailProduct() {
             className="rounded bg-blue-500 px-2 py-1 text-white"
             onClick={handleResetSelectedChange}
           >
-            Reset tất cả
+            Làm mới tất cả
           </button>
         </div>
       </div>

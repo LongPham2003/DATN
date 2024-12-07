@@ -44,9 +44,12 @@ export default function ThemKichThuoc({ closeModel }) {
       <div className="my-auto items-center justify-items-center">
         <input
           type="text"
-          className="bordered h-10 w-[200px] border"
+          className="bordered h-10 w-[200px] border pl-2"
           value={value}
-          onChange={(e) => setValue(e.target.value)}
+          onChange={(e) => {
+            const rawValue = e.target.value.replace(/\D/g, ""); // Loại bỏ ký tự không phải số
+            setValue(rawValue); // Cập nhật giá trị hợp lệ vào state
+          }}
           placeholder="Mời nhập tên kích thước"
         />
         <button
