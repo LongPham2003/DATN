@@ -110,6 +110,26 @@ public class SanPhamServiceImpl
     {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
 
+        if (idLoai == null || idLoai.isEmpty()) {
+            idLoai = loaiRepo.findAllById();
+        }
+        if (idThuongHieu == null || idThuongHieu.isEmpty()) {
+            idThuongHieu = loaiRepo.findAllByIdThuongHieu();
+        }
+        if (idDeGiay == null || idDeGiay.isEmpty()) {
+            idDeGiay = loaiRepo.findAllByIdDeGiay();
+        }
+        if (idChatLieu == null || idChatLieu.isEmpty()) {
+            idChatLieu = loaiRepo.findAllByIdChatLieu();
+        }
+        if (idMauSac == null || idMauSac.isEmpty()) {
+            idMauSac = loaiRepo.findAllByIdMauSac();
+        }
+        if (idKichThuoc == null || idKichThuoc.isEmpty()) {
+            idKichThuoc = loaiRepo.findAllByIdKichThuoc();
+        }
+
+
         Page<SanPhamClient> pageResult = sanPhamRepo.sanPhamClient(tenSP,idLoai,idKichThuoc,idMauSac,idDeGiay,
                 idChatLieu,idThuongHieu,donGiaMin,donGiaMax,pageable);
 
@@ -129,6 +149,25 @@ public class SanPhamServiceImpl
             BigDecimal donGiaMin, BigDecimal donGiaMax)
     {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+
+        if (idLoai == null || idLoai.isEmpty()) {
+            idLoai = loaiRepo.findAllById();
+        }
+        if (idThuongHieu == null || idThuongHieu.isEmpty()) {
+            idThuongHieu = loaiRepo.findAllByIdThuongHieu();
+        }
+        if (idDeGiay == null || idDeGiay.isEmpty()) {
+            idDeGiay = loaiRepo.findAllByIdDeGiay();
+        }
+        if (idChatLieu == null || idChatLieu.isEmpty()) {
+            idChatLieu = loaiRepo.findAllByIdChatLieu();
+        }
+        if (idMauSac == null || idMauSac.isEmpty()) {
+            idMauSac = loaiRepo.findAllByIdMauSac();
+        }
+        if (idKichThuoc == null || idKichThuoc.isEmpty()) {
+            idKichThuoc = loaiRepo.findAllByIdKichThuoc();
+        }
 
         Page<SanPhamClient> pageResult = sanPhamRepo.sanPhamClient(tenSP,idLoai,idKichThuoc,idMauSac,idDeGiay,
                 idChatLieu,idThuongHieu,donGiaMin,donGiaMax,pageable);

@@ -69,7 +69,7 @@ export default function PaymentResult() {
           localStorage.removeItem("tienPhaiThanhToan");
           localStorage.removeItem("sanPhamChon");
         } else {
-          setTimeout(() => navigate("/datHang"), 500);
+          setTimeout(() => navigate("/gioHang"), 500);
           toast.error("Thất bại");
           localStorage.removeItem("chiTietSanPhams");
           localStorage.removeItem("idPhieuGiamGia");

@@ -52,12 +52,12 @@ public interface SanPhamRepo
                   JOIN thuong_hieu th ON th.id = spct.id_thuong_hieu
                 WHERE sp.trang_thai = 1
                   AND (:tenSP IS NULL OR sp.ten_san_pham LIKE CONCAT('%', :tenSP, '%'))
-                  AND (:idLoai IS NULL OR  sp.id_loai IN (:idLoai))
-                  AND (:idKichThuoc IS NULL OR kt.id IN (:idKichThuoc))
-                  AND (:idMauSac IS NULL OR ms.id IN (:idMauSac))
-                  AND (:idDeGiay IS NULL OR dg.id IN (:idDeGiay))
-                  AND (:idChatLieu IS NULL OR cl.id IN (:idChatLieu))
-                  AND (:idThuongHieu IS NULL OR th.id IN (:idThuongHieu))
+                  AND (sp.id_loai IN (:idLoai))
+                  AND (kt.id IN (:idKichThuoc))
+                  AND (ms.id IN (:idMauSac))
+                  AND (dg.id IN (:idDeGiay))
+                  AND (cl.id IN (:idChatLieu))
+                  AND (th.id IN (:idThuongHieu))
                   AND (:donGiaMin IS NULL OR :donGiaMax IS NULL OR spct.don_gia BETWEEN :donGiaMin AND :donGiaMax)
                 GROUP BY sp.id
                 ORDER BY sp.id DESC

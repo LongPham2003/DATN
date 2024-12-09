@@ -269,7 +269,7 @@ export default function SanPham() {
           ))}
         </div>
       </div>
-      <div className="mx-auto mt-5 flex justify-center">
+      <div className="mx-auto my-5 flex justify-center">
         <ReactPaginate
           previousLabel={"< Previous"}
           nextLabel={"Next >"}

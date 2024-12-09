@@ -11,7 +11,7 @@ const GiayMoiNhat = () => {
     axios
       .get("http://localhost:8080/api/sanpham/trangchu")
       .then(async (res) => {
-        const sp = res.data.slice(0, 4);
+        const sp = res.data.result.slice(0, 4);
         setSanPham(sp);
         console.log([sanPham]);
       })

@@ -158,7 +158,7 @@ export default function ChonSizeVSMauSac({ id }) {
       </div>
 
       <div className="my-3">
-        <span>Chon kich thuoc:</span>
+        <span>Chọn kích thước:</span>
         <br />
         {listSize.map((sz) => (
           <Button
@@ -172,7 +172,7 @@ export default function ChonSizeVSMauSac({ id }) {
       </div>
 
       <div className="my-3">
-        <span>Chon màu sắc:</span>
+        <span>Chọn màu sắc:</span>
         <br />
         {ListMauSac.map((ms) => (
           <Button
@@ -186,7 +186,7 @@ export default function ChonSizeVSMauSac({ id }) {
       </div>
 
       <div className="my-3">
-        <span>Nhap so luong mua:</span>
+        <span>Nhập số lượng mua:</span>
         <br />
         <InputNumber
           min={1}

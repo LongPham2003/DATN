@@ -147,9 +147,9 @@ export default function SanPhamBanChay() {
           <thead className="h-10 border-b-2 bg-slate-100">
             <tr className="drop-shadow-2xl">
               <th className="w-12 border-r-[1px]">STT</th>
-              <th className="w-[230px] border-r-[1px]">Anh</th>
-              <th className="w-[360px] border-r-[1px]">San Pham</th>
-              <th className="w-[170px]">So Luong Ban Duoc</th>
+              <th className="w-[230px] border-r-[1px]">Ảnh</th>
+              <th className="w-[360px] border-r-[1px]">Sản phẩm</th>
+              <th className="w-[170px]">Số lượng sản phẩm</th>
             </tr>
           </thead>
           <tbody>

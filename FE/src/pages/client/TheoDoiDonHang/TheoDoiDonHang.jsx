@@ -3,6 +3,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useEffect } from "react";
 import SPMua from "./SPMua";
+import { toast } from "react-toastify";
 
 export default function TheoDoiDonHang() {
   const [idKH, setIdKH] = useState();
@@ -10,6 +11,7 @@ export default function TheoDoiDonHang() {
   const [maHD, setmaHD] = useState();
   const [trangThaiDonHang, setTrangThaiDonHang] = useState("CHO_XAC_NHAN");
   const [ngay, setngay] = useState();
+  const [idHD, setIdHD] = useState();
 
   const laydsHD = async () => {
     let idkh = Number(localStorage.getItem("idKH"));
@@ -33,7 +35,7 @@ export default function TheoDoiDonHang() {
 
     try {
       const resp = await axios.get(url);
-      console.log(resp.data.result); // Log dữ liệu trả về
+      // console.log(resp.data.result); // Log dữ liệu trả về
       setListHoaDon(resp.data.result);
     } catch (error) {
       console.error("Error fetching data:", error); // Log lỗi
@@ -56,46 +58,49 @@ export default function TheoDoiDonHang() {
       return "0 VNĐ"; // Giá trị mặc định nếu `value` không hợp lệ
     }
 
-  //   // Định dạng số và thêm đơn vị VNĐ
+    //   // Định dạng số và thêm đơn vị VNĐ
     return parsedValue.toLocaleString("vi-VN") + " VNĐ";
   }
-  // const [OpenModelHuy, setOpenModelHuy] = useState(false);
-  // const openModalHuy = () => {
-  //   setOpenModelHuy(true);
-  // };
-  // const closeModalHuy = async () => {
-  //   setOpenModelHuy(false);
-  // };
-  // const [ghiChu, setGhiChu] = useState("");
-  // const handleSubmitUpdateHuy = (id) => {
-  //   // e.preventDefault(); // Ngăn chặn hành động mặc định của form
-  //   Modal.confirm({
-  //     title: "Xác nhận cập nhật",
-  //     content: "Bạn có chắc chắn muốn cập  không?",
-  //     onOk() {
-  //       axios
-  //         .post(`http://localhost:8080/api/hoadon/huy/${id}`, {
-  //           ghiChu: ghiChu,
-  //         })
-  //         .then((response) => {
-  //           console.log("Cập nhật thành công:", response.data);
-  //           // toast.success("Thành công");
-  //           openModalHuy();
-  //           // fillHoaDon();
-  //           // fillHoaDonChiTiet();
-  //           // fillLichSuHoaDon();
-  //           laydsHD();
-  //         })
-  //         .catch((error) => {
-  //           openModalHuy();
-  //           // toast.error(error.response.data.message); // Hiển thị thông báo từ server
-  //         });
-  //     },
-  //     onCancel() {
-  //       // Nếu người dùng hủy, có thể không cần làm gì cả
-  //     },
-  //   });
-  // };
+  const [OpenModelHuy, setOpenModelHuy] = useState(false);
+  const openModalHuy = () => {
+    setOpenModelHuy(true);
+  };
+  const closeModalHuy = async () => {
+    setOpenModelHuy(false);
+  };
+  const [ghiChu, setGhiChu] = useState("");
+  const handleSubmitUpdateHuy = (id) => {
+    // e.preventDefault(); // Ngăn chặn hành động mặc định của form
+    Modal.confirm({
+      title: "Xác nhận cập nhật",
+      content: "Bạn có chắc chắn muốn cập  không?",
+      onOk() {
+        axios
+          .post(`http://localhost:8080/api/hoadon/huy/${id}`, {
+            ghiChu: ghiChu,
+          })
+          .then((response) => {
+            // console.log("Cập nhật thành công:", response.data);
+            toast.success("Thành công");
+
+            // fillHoaDon();
+            // fillHoaDonChiTiet();
+            // fillLichSuHoaDon();
+            closeModalHuy();
+            laydsHD();
+          })
+          .catch((error) => {
+            console.log(error);
+            laydsHD();
+
+            // toast.error(error.response.data.message); // Hiển thị thông báo từ server
+          });
+      },
+      onCancel() {
+        // Nếu người dùng hủy, có thể không cần làm gì cả
+      },
+    });
+  };
   return (
     <>
       <div className="my-10">
@@ -221,7 +226,9 @@ export default function TheoDoiDonHang() {
                     <Button
                       color="danger"
                       variant="outlined"
-                      // onClick={() => handleSubmitUpdateHuy(hd.idHoaDon)}
+                      onClick={() => {
+                        setIdHD(hd.idHoaDon), openModalHuy();
+                      }}
                     >
                       Hủy đơn
                     </Button>
@@ -238,24 +245,67 @@ export default function TheoDoiDonHang() {
         ))}
       </div>
       <div></div>
-      {/* {OpenModelHuy && (
+      {OpenModelHuy && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="flex h-[300px] w-[400px] justify-between rounded-lg bg-white p-8">
+          <div className="flex h-auto w-[400px] justify-between rounded-lg bg-white p-8">
             <div className="font-bold">
-              <h3 className="mb-3">Cập nhật hóa đơn</h3>
-              <label className="pt-3">Ghi chú</label>
+              <h3 className="mb-3">Hủy đơn hàng</h3>
+
+              {/* Thêm radio buttons cho lý do hủy */}
+              <div className="mb-4">
+                <div className="mb-2">Chọn lý do hủy:</div>
+                <div className="space-y-2">
+                  <div>
+                    <input
+                      type="radio"
+                      id="reason1"
+                      name="cancelReason"
+                      value="Muốn thay đổi sản phẩm"
+                      onChange={(e) => setGhiChu(e.target.value)}
+                      className="mr-2"
+                    />
+                    <label htmlFor="reason1">Muốn thay đổi sản phẩm</label>
+                  </div>
+                  <div>
+                    <input
+                      type="radio"
+                      id="reason2"
+                      name="cancelReason"
+                      value="Thay đổi địa chỉ giao hàng"
+                      onChange={(e) => setGhiChu(e.target.value)}
+                      className="mr-2"
+                    />
+                    <label htmlFor="reason2">Thay đổi địa chỉ giao hàng</label>
+                  </div>
+                  <div>
+                    <input
+                      type="radio"
+                      id="reason3"
+                      name="cancelReason"
+                      value="Đổi ý không muốn mua nữa"
+                      onChange={(e) => setGhiChu(e.target.value)}
+                      className="mr-2"
+                    />
+                    <label htmlFor="reason3">Đổi ý không muốn mua nữa</label>
+                  </div>
+                </div>
+              </div>
+
+              <label className="pt-3">Ghi chú khác</label>
               <textarea
                 onChange={(e) => setGhiChu(e.target.value)}
                 className="w-full rounded border p-2"
-                rows="4" // Số dòng hiển thị
-                placeholder="Nhập ghi chú tại đây..."
+                rows="4"
+                placeholder="Nhập ghi chú khác tại đây (nếu có)..."
               ></textarea>
               <div className="mx-auto my-3 flex justify-center">
                 <button
-                  onClick={handleSubmitUpdateHuy}
+                  onClick={(e) => {
+                    e.preventDefault(), handleSubmitUpdateHuy(idHD);
+                  }}
                   className="rounded bg-blue-500 px-2 py-2 text-white"
                 >
-                  Cập nhật
+                  Hủy đơn
                 </button>
               </div>
             </div>
@@ -263,11 +313,11 @@ export default function TheoDoiDonHang() {
               onClick={closeModalHuy}
               className="h-10 rounded bg-red-500 px-4 text-white hover:bg-red-600"
             >
-              X
+              Đóng
             </button>
           </div>
         </div>
-      )} */}
+      )}
     </>
   );
 }
