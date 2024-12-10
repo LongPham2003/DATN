@@ -159,12 +159,7 @@ export default function DiaCHiMacDinhKhachHang({
           },
         )
         .then((response) => {
-          console.log("phí ship: " + response.data.data.total);
-          if (tongTien > 5000000) {
-            setPhiGiaoHang(0);
-          } else {
-            setPhiGiaoHang(response.data.data.total);
-          }
+          setPhiGiaoHang(response.data.data.total);
         })
         .catch((error) => {
           console.log(error);

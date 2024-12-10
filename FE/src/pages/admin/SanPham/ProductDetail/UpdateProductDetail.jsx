@@ -72,8 +72,17 @@ export default function UpdateProductDetail() {
       console.error("Lỗi khi tải dữ liệu:", error);
     }
   };
+
   const UpdateProductDetail = async (e) => {
     e.preventDefault();
+
+    // Kiểm tra nếu không có ảnh
+    if (!hinhAnh || hinhAnh.length === 0) {
+      toast.error("Vui lòng thêm ít nhất một ảnh sản phẩm", {
+        autoClose: 1000,
+      });
+      return;
+    }
 
     // Đối tượng chi tiết sản phẩm mới cần cập nhật
     const newProductDetail = {
@@ -89,6 +98,18 @@ export default function UpdateProductDetail() {
     };
 
     try {
+      // Kiểm tra xem có ảnh nào bị null hoặc undefined không
+      const hasInvalidImage = hinhAnh.some(
+        (anh) => !anh.url && !anh.duLieuAnhBase64,
+      );
+
+      if (hasInvalidImage) {
+        toast.error("Có ảnh không hợp lệ, vui lòng kiểm tra lại", {
+          autoClose: 1000,
+        });
+        return;
+      }
+
       await axios.put(
         `http://localhost:8080/api/sanphamchitiet/update/${id}`,
         newProductDetail,
@@ -107,7 +128,7 @@ export default function UpdateProductDetail() {
 
           // Kiểm tra nếu ảnh đã có ID, tức là ảnh cũ => cập nhật
           if (anh.id) {
-            console.log("Cập nhật ảnh cũ:", newAnh);
+            // console.log("Cập nhật ảnh cũ:", newAnh);
             return axios.put(
               `http://localhost:8080/api/hinhanh/update/${anh.id}`,
               newAnh,
@@ -115,16 +136,16 @@ export default function UpdateProductDetail() {
           }
           // Nếu không có ID, tức là ảnh mới => tạo mới
           else {
-            console.log("Tạo ảnh mới:", newAnh);
+            // console.log("Tạo ảnh mới:", newAnh);
             return axios.post(`http://localhost:8080/api/hinhanh/add`, newAnh);
           }
         }),
       );
 
-      toast.success("Cập nhật thành công", { autoClose: 1000 });
+      toast.success("Cập nhật thành công", { autoClose: 700 });
       setTimeout(() => {
         navigate(`/admin/chitietsanpham/${SPCT.idSanPham}`);
-      }, 1700);
+      }, 1200);
     } catch (error) {
       toast.error("Cập nhật thất bại", { autoClose: 1000 });
       console.error(error);
@@ -201,6 +222,7 @@ export default function UpdateProductDetail() {
                   setSPCT({ ...SPCT, idThuongHieu: value }); // Sửa Dữ liệu trược tiếp vào Sate SPCT
                   // console.log(value);
                 }}
+                disabled
               />
             </div>
             <div className="my-4">

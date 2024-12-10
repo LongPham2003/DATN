@@ -195,7 +195,7 @@ export default function DoanhThu() {
 
       <div className="mb-10 flex justify-center rounded-md bg-gray-100 p-4 shadow-md">
         <div className="mx-10 flex h-auto gap-10">
-          <div className="w-[400px] transition-shadow duration-300 hover:shadow-xl">
+          <div className="w-[300px] transition-shadow duration-300 hover:shadow-xl">
             <div className="card duration-s00 h-24 rounded-lg border-l-4 border-l-purple-500 bg-white shadow-lg transition-shadow hover:shadow-xl">
               <div className="card-body p-4">
                 <div className="flex items-center justify-between">
@@ -216,7 +216,7 @@ export default function DoanhThu() {
             </div>
           </div>
 
-          <div className="w-[400px] transition-shadow duration-500 hover:shadow-xl">
+          <div className="w-[300px] transition-shadow duration-500 hover:shadow-xl">
             <div className="card h-24 rounded-lg border-l-4 border-l-green-500 bg-white shadow-lg">
               <div className="card-body p-4">
                 <div className="flex items-center justify-between">
@@ -238,7 +238,27 @@ export default function DoanhThu() {
             </div>
           </div>
 
-          <div className="w-[400px] transition-shadow duration-500 hover:shadow-xl">
+          <div className="w-[300px] transition-shadow duration-500 hover:shadow-xl">
+            <div className="card h-24 rounded-lg border-l-4 border-l-green-500 bg-white shadow-lg">
+              <div className="card-body p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="mb-1 text-xs font-bold uppercase text-green-500">
+                      Sản phẩm bán trong tháng
+                    </div>
+                    <div className="text-xl font-bold text-gray-800">
+                      {theoThang ? theoThang.sanPhamBanDuoc : "Loading..."}
+                    </div>
+                  </div>
+                  <div className="text-gray-300">
+                    <i className="fas fa-dollar-sign text-3xl"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="w-[300px] transition-shadow duration-500 hover:shadow-xl">
             <div className="card h-24 rounded-lg border-l-4 border-l-yellow-500 bg-white shadow-lg">
               <div className="card-body p-4">
                 <div className="flex items-center justify-between">

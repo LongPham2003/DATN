@@ -102,9 +102,7 @@ export const ExportPDF = ({ idHoaDon }) => {
         <div className="my-3">
           <table className="border-collapse border-2 border-solid border-gray-500 text-center">
             <thead>
-
               <tr className="min-h-24 justify-center">
-
                 <th className="w-14 border-collapse border-2 border-solid border-gray-500 p-2 text-center">
                   STT
                 </th>
@@ -123,7 +121,6 @@ export const ExportPDF = ({ idHoaDon }) => {
               </tr>
             </thead>
             <tbody>
-
               {danhSachSP.length > 0 ? (
                 danhSachSP.map((sp, index) => (
                   <tr key={sp.idSpct}>
@@ -152,7 +149,6 @@ export const ExportPDF = ({ idHoaDon }) => {
                   </td>
                 </tr>
               )}
-
             </tbody>
           </table>
           <p className="mt-3 font-bold">Tổng sản phẩm mua:</p>
@@ -161,13 +157,14 @@ export const ExportPDF = ({ idHoaDon }) => {
           <div className="my-2">
             <p>Tổng tiền: {hoadon.tongTien}</p>
             <p>Giảm giá: {hoadon.tienDuocGiam}</p>
+            <p>Phí giao hàng: {hoadon.tienShip}</p>
             <p>Tiền phải thanh toán: {hoadon.tienPhaiThanhToan}</p>
           </div>
           <hr />
           <div>
             <p>Thanh toán: {hoadon.phuongThucThanhToan}</p>
             <p>Giao hàng: {hoadon.phuongThucGiaoHang}</p>
-            <p>Trạng thái: {hoadon.trangThai}</p>
+            <p>Trạng thái: {hoadon.trangThaiThanhToan}</p>
             <p>Tiền khách đưa: {hoadon.tienKhachDua}</p>
             <p>Tiền thừa trả khách: {hoadon.tienThua}</p>
           </div>
