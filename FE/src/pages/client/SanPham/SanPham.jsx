@@ -142,154 +142,182 @@ export default function SanPham() {
   return (
     <>
       {" "}
-      <div className="my-5 grid grid-cols-12 gap-4">
-        {/* Filter Section */}
-        <div className="col-span-3 rounded-lg bg-gray-50 p-5 shadow-md">
-          <span className="mb-4 text-2xl font-semibold">Bộ Lọc</span>
-          <Search
-            placeholder="Nhập từ khóa tìm kiếm"
-            allowClear
-            enterButton="Tìm kiếm"
-            size="large"
-            onChange={(e) => setTenSP(e.target.value)}
-          />
+      <div className="my-5">
+        <div className="my-5 grid grid-cols-12 gap-4">
+          {/* Filter Section */}
+          <div className="col-span-3 rounded-lg p-5 shadow-md">
+            <span className="mb-4 text-2xl font-semibold">Bộ Lọc</span>
+            <Search
+              placeholder="Nhập từ khóa tìm kiếm"
+              allowClear
+              enterButton="Tìm kiếm"
+              size="large"
+              onChange={(e) => setTenSP(e.target.value)}
+            />
 
-          {/* Filters */}
-          {[
-            {
-              title: "Loại giày",
-              items: listLoai,
-              selected: selectedIdLoai,
-              setSelected: setSelectedIdLoai,
-            },
-            {
-              title: "Thương Hiệu",
-              items: thuongHieu,
-              selected: selectedIdThuongHieu,
-              setSelected: setSelectedIdThuongHieu,
-            },
-            {
-              title: "Đế giày",
-              items: deGiay,
-              selected: selectedIdDeGiay,
-              setSelected: setSelectedIdDeGiay,
-            },
-            {
-              title: "Chất Liệu",
-              items: chatLieu,
-              selected: selectedIdChatLieu,
-              setSelected: setSelectedIdChatLieu,
-            },
-            {
-              title: "Màu Sắc",
-              items: listMauSac,
-              selected: selectedIdMauSac,
-              setSelected: setSelectedIdMauSac,
-            },
-            {
-              title: "Size",
-              items: listKichThuoc,
-              selected: selectedIdKichThuoc,
-              setSelected: setSelectedIdKichThuoc,
-            },
-          ].map(({ title, items, selected, setSelected }) => (
-            <Card title={title} key={title} className="mb-5">
-              <div className="grid grid-cols-3 gap-2">
-                {items.map((item) => (
-                  <Button
-                    key={item.id}
-                    onClick={() =>
-                      toggleSelection(item.id, setSelected, selected)
-                    }
-                    className={`m-2 ${selected.includes(item.id) ? "bg-blue-500 text-white" : "bg-gray-200"} transition-all duration-300 hover:bg-blue-400`}
-                  >
-                    {item.ten || item.kichThuoc}
-                  </Button>
-                ))}
-              </div>
-            </Card>
-          ))}
-
-          {/* Price Range */}
-          <Card title="Khoảng Giá">
-            <Radio.Group onChange={handlePriceChange}>
-              <Radio value="0-999999999" className="hover:bg-gray-200">
-                Tất cả
-              </Radio>
-              <Radio value="0-500000" className="hover:bg-gray-200">
-                0đ - 500.000đ
-              </Radio>
-              <Radio value="500001-1000000" className="hover:bg-gray-200">
-                500.000đ - 1.000.000đ
-              </Radio>
-              <Radio value="1000001-1500000" className="hover:bg-gray-200">
-                1.000.000đ - 1.500.000đ
-              </Radio>
-              <Radio value="1500001-9999999" className="hover:bg-gray-200">
-                Từ 1.500.000đ
-              </Radio>
-            </Radio.Group>
-          </Card>
-        </div>
-
-        {/* Product Section */}
-        <div className="col-span-9 grid h-[250px] grid-cols-3 gap-6">
-          {listSanPham.map((spct) => (
-            <Card
-              key={spct.idSpct}
-              hoverable
-              className="flex transform flex-col items-center rounded-lg shadow-lg transition-transform duration-300 hover:scale-105"
-            >
-              <Link
-                to={`/chitiet/${spct.idSP}`}
-                className="transition-transform duration-300 hover:scale-110"
-              >
-                <LayANhTheoIdSPCT
-                  id={spct.idSPCT}
-                  className="h-[200px] w-auto rounded-t-lg object-cover"
-                />
-              </Link>
-              <Meta
-                title={spct.tenSanPham}
-                description={
-                  <div className="flex flex-col gap-2 p-4">
-                    <div className="text-lg font-bold text-red-500">
-                      {formatCurrency(spct.donGia)}
-                    </div>
-                    <Link
-                      to={`/chitiet/${spct.id}`}
-                      className="mt-4 text-center text-xl text-green-500 hover:text-green-700"
+            {/* Filters */}
+            {[
+              {
+                title: "Loại giày",
+                items: listLoai,
+                selected: selectedIdLoai,
+                setSelected: setSelectedIdLoai,
+              },
+              {
+                title: "Thương Hiệu",
+                items: thuongHieu,
+                selected: selectedIdThuongHieu,
+                setSelected: setSelectedIdThuongHieu,
+              },
+              {
+                title: "Đế giày",
+                items: deGiay,
+                selected: selectedIdDeGiay,
+                setSelected: setSelectedIdDeGiay,
+              },
+              {
+                title: "Chất Liệu",
+                items: chatLieu,
+                selected: selectedIdChatLieu,
+                setSelected: setSelectedIdChatLieu,
+              },
+              {
+                title: "Màu Sắc",
+                items: listMauSac,
+                selected: selectedIdMauSac,
+                setSelected: setSelectedIdMauSac,
+              },
+              {
+                title: "Size",
+                items: listKichThuoc,
+                selected: selectedIdKichThuoc,
+                setSelected: setSelectedIdKichThuoc,
+              },
+            ].map(({ title, items, selected, setSelected }) => (
+              <Card title={title} key={title} className="mb-5">
+                <div className="grid grid-cols-3 gap-2">
+                  {items.map((item) => (
+                    <Button
+                      key={item.id}
+                      onClick={() =>
+                        toggleSelection(item.id, setSelected, selected)
+                      }
+                      className={`m-2 ${selected.includes(item.id) ? "bg-black text-white" : "bg-white"} transition-all duration-300 hover:bg-yellow-400`}
                     >
-                      Xem chi tiết
-                    </Link>
-                  </div>
-                }
-              />
+                      {item.ten || item.kichThuoc}
+                    </Button>
+                  ))}
+                </div>
+              </Card>
+            ))}
+
+            {/* Price Range */}
+            <Card title="Khoảng Giá">
+              <Radio.Group onChange={handlePriceChange}>
+                <Radio value="0-999999999" className="hover:bg-gray-200">
+                  Tất cả
+                </Radio>{" "}
+                <br />
+                <Radio value="0-500000" className="hover:bg-gray-200">
+                  0đ - 500.000đ
+                </Radio>{" "}
+                <br />
+                <Radio value="500001-1000000" className="hover:bg-gray-200">
+                  500.000đ - 1.000.000đ
+                </Radio>{" "}
+                <br />
+                <Radio value="1000001-1500000" className="hover:bg-gray-200">
+                  1.000.000đ - 1.500.000đ
+                </Radio>{" "}
+                <br />
+                <Radio value="1500001-9999999" className="hover:bg-gray-200">
+                  Từ 1.500.000đ
+                </Radio>
+              </Radio.Group>
             </Card>
-          ))}
+          </div>
+
+          {/* Product Section */}
+          <div className="col-span-9 grid h-[250px] grid-cols-3 gap-6">
+            {listSanPham.map((spct, index) => (
+              <Card
+                key={spct.idSP}
+                hoverable
+                style={{ width: "100%", position: "relative", height: "420px" }}
+                cover={
+                  <Link to={`/chitiet/${spct.idSP}`}>
+                    <div className="relative">
+                      {/* New Arrival tag */}
+                      {/* <div 
+                      className="absolute left-2 top-2 z-10"
+                      style={{
+                        backgroundColor: '#1B4B33',
+                        color: 'white',
+                        padding: '4px 8px',
+                        borderRadius: '4px'
+                      }}
+                    >
+                      New Arrival
+                    </div> */}
+                      <div className="transition-transform duration-300 hover:scale-105">
+                        <LayANhTheoIdSPCT
+                          id={spct.idSPCT}
+                          className="h-[300px] w-full object-cover"
+                        />
+                      </div>
+                    </div>
+                  </Link>
+                }
+              >
+                <Meta
+                  title={
+                    <Link to={`/chitiet/${spct.idSP}`}>
+                      <div className="flex flex-col gap-1">
+                        <span className="text-sm font-bold uppercase hover:text-orange-500">
+                          {spct.tenSanPham}
+                        </span>
+                        <span className="text-sm text-gray-600">
+                          {spct.tenThuongHieu}
+                        </span>
+                      </div>
+                    </Link>
+                  }
+                  description={
+                    <div className="mt-2">
+                      <div className="text-lg font-semibold text-red-500">
+                        {formatCurrency(spct.donGia)}
+                      </div>
+                    </div>
+                  }
+                />
+              </Card>
+            ))}
+          </div>
         </div>
-      </div>
-      <div className="mx-auto my-5 flex justify-center">
-        <ReactPaginate
-          previousLabel={"< Previous"}
-          nextLabel={"Next >"}
-          breakLabel={"..."}
-          pageCount={tongSoTrang}
-          marginPagesDisplayed={2}
-          pageRangeDisplayed={2}
-          onPageChange={handlePageChange}
-          containerClassName={"flex items-center gap-2"}
-          previousClassName={"mx-1"}
-          previousLinkClassName="px-4 py-2 border border-gray-300 rounded-full hover:bg-gray-200 transition duration-200"
-          nextClassName={"mx-1"}
-          nextLinkClassName="px-4 py-2 border border-gray-300 rounded-full hover:bg-gray-200 transition duration-200"
-          breakClassName={"mx-1"}
-          breakLinkClassName="px-4 py-2 border border-gray-300 rounded-full hover:bg-gray-200 transition duration-200"
-          pageClassName={"mx-1"}
-          pageLinkClassName="px-4 py-2 border-b border-green-300 rounded-full hover:bg-green-500 transition duration-200"
-          activeClassName={"bg-green-500 text-white rounded-full"}
-          activeLinkClassName={"bg-green-500 text-white px-4 py-2 rounded-full"}
-        />
+        <div className="mx-auto mt-10 flex justify-center">
+          <ReactPaginate
+            previousLabel={"< Previous"}
+            nextLabel={"Next >"}
+            breakLabel={"..."}
+            pageCount={tongSoTrang}
+            marginPagesDisplayed={2}
+            pageRangeDisplayed={2}
+            onPageChange={handlePageChange}
+            containerClassName={"flex items-center gap-2"}
+            previousClassName={"mx-1"}
+            previousLinkClassName="px-4 py-2 border border-gray-300 rounded-full hover:bg-gray-200 transition duration-200"
+            nextClassName={"mx-1"}
+            nextLinkClassName="px-4 py-2 border border-gray-300 rounded-full hover:bg-gray-200 transition duration-200"
+            breakClassName={"mx-1"}
+            breakLinkClassName="px-4 py-2 border border-gray-300 rounded-full hover:bg-gray-200 transition duration-200"
+            pageClassName={"mx-1"}
+            pageLinkClassName="px-4 py-2 border-b border-green-300 rounded-full hover:bg-green-500 transition duration-200"
+            activeClassName={"bg-green-500 text-white rounded-full"}
+            activeLinkClassName={
+              "bg-green-500 text-white px-4 py-2 rounded-full"
+            }
+          />
+        </div>
       </div>
     </>
   );

@@ -54,6 +54,8 @@ public enum ErrorCode {
     CUSTOMER_NOT_FOUND(1005,"khong tim khach hang tren he thong  ",HttpStatus.NOT_FOUND),
     CHUA_THANH_TOAN(1005,"Chưa Thanh Toán",HttpStatus.BAD_REQUEST),
     HUY_HANG(1005,"Thao tác chưa thành công",HttpStatus.BAD_REQUEST),
+    KHONG_THE_XOA(1005,"Không thể xóa do phiếu giảm giá của bạn",HttpStatus.BAD_REQUEST),
+    KHONG_THE_XOA_SP(1005,"Không thể xóa sản phẩm duy nhất ",HttpStatus.BAD_REQUEST),
     ;
     private int code;
     private String message;

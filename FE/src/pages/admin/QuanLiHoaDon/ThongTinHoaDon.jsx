@@ -60,7 +60,7 @@ const ThongTinHoaDon = ({
       await fillHoaDonChiTiet();
     } catch (error) {
       console.error("Error:", error);
-      toast.error("Có lỗi xẩy ra");
+      toast.error(error.response.data.message);
     }
   };
 
@@ -72,12 +72,12 @@ const ThongTinHoaDon = ({
       <div className="mx-4 flex gap-10 text-lg">
         {/* Cột trái */}
         <div className="w-1/2 space-y-4 border-r pr-4">
-          <div className="flex items-center justify-between">
+          {/* <div className="flex items-center justify-between">
             <span className="font-medium text-gray-600">Trạng thái:</span>
             <h3 className="font-semibold text-blue-600">
               {hoaDon.trangThaiDonHang}
             </h3>
-          </div>
+          </div> */}
           <div className="flex items-center justify-between">
             <span className="font-medium text-gray-600">Mã đơn hàng:</span>
             <h3 className="font-semibold text-gray-800">{hoaDon.ma}</h3>
@@ -94,10 +94,6 @@ const ThongTinHoaDon = ({
               {formatDate(hoaDon.ngayTao)}
             </h3>
           </div>
-        </div>
-
-        {/* Cột phải */}
-        <div className="w-1/2 space-y-4 pl-4">
           <div className="flex items-center justify-between">
             <span className="font-medium text-gray-600">
               Mã phiếu giảm giá:
@@ -105,6 +101,14 @@ const ThongTinHoaDon = ({
             <h3 className="font-semibold text-gray-800">
               {hoaDon.phieuGiamGia}
             </h3>
+          </div>
+        </div>
+
+        {/* Cột phải */}
+        <div className="w-1/2 space-y-4 pl-4">
+          <div className="flex items-center justify-between">
+            <span className="font-medium text-gray-600">Tổng tiền:</span>
+            <h3 className="font-semibold text-gray-800">{hoaDon.tongTien}</h3>
           </div>
           <div className="flex items-center justify-between">
             <span className="font-medium text-gray-600">Tiền được giảm:</span>

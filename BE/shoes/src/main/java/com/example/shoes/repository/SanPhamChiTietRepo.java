@@ -63,7 +63,7 @@ public interface SanPhamChiTietRepo extends JpaRepository<SanPhamChiTiet, Intege
             "AND (:idThuongHieu IS NULL OR spct.idThuongHieu.id = :idThuongHieu) " +
             "AND (:idDeGiay IS NULL OR spct.idDeGiay.id = :idDeGiay) " +
             "AND (spct.idSanPham.trangThai = true) " +
-            "AND (spct.trangThai = true)")
+            "AND (spct.trangThai = true)" + "order by  spct.id desc ")
     List<SanPhamChiTiet> getAllTrangThaiTrue(@Param("maSanPham") String maSanPham,
                                              @Param("idMauSac") Integer idMauSac,
                                              @Param("idkichThuoc") Integer idkichThuoc,

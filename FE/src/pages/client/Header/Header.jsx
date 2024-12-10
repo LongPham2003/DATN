@@ -1,11 +1,12 @@
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { Badge } from "antd";
-import Search from "antd/es/input/Search";
 
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ThemeContext } from "../../GlobalProvider";
+import { ListItem, ListItemPrefix } from "@material-tailwind/react";
+import { PowerIcon } from "@heroicons/react/24/solid";
 
 export default function Header() {
   const [tenKH, setTenKH] = useState("");
@@ -17,6 +18,8 @@ export default function Header() {
 
   const ApiTongSoSPCT = `http://localhost:8080/api/giohang/tongsanphamnguoidung`;
   const ApiTimKH = `http://localhost:8080/client/khachhang/timtheoEmail?email=${tenKH}`;
+
+  const navigate = useNavigate();
 
   const layTongSoSP = async () => {
     try {
@@ -55,6 +58,11 @@ export default function Header() {
     layTongSoSP();
   }, [reload]);
 
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/login");
+  };
+
   return (
     <>
       <header className="fixed left-0 right-0 top-0 z-50 bg-white shadow-md">
@@ -78,7 +86,7 @@ export default function Header() {
                   d="m15.75 15.75-2.489-2.489m0 0a3.375 3.375 0 1 0-4.773-4.773 3.375 3.375 0 0 0 4.774 4.774ZM21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
                 />
               </svg>
-              <span>Quan li cua hang</span>
+              <span>Quản lí cửa hàng</span>
             </Link>
           )}
           <Link
@@ -102,7 +110,7 @@ export default function Header() {
             <span>Tra cứu đơn hàng</span>
           </Link>
           <Link
-            to="/thongtin"
+            to="/login"
             className="flex items-center space-x-1 hover:text-gray-400"
           >
             {tenKH ? (
@@ -129,9 +137,9 @@ export default function Header() {
           </Link>
           <a
             href="#"
-            className="mt-1 flex items-center space-x-1 hover:text-gray-400"
+            className="flex items-center space-x-1 hover:text-gray-400"
           >
-            <div className="mt-1 flex items-center space-x-2">
+            <div className="flex items-center space-x-2">
               <Link to="/GioHang">
                 <Badge count={soLuong ? soLuong : 0} size="small">
                   <ShoppingCartOutlined
@@ -142,6 +150,14 @@ export default function Header() {
               </Link>
             </div>
           </a>
+          <div className="flex items-center">
+            <ListItem onClick={handleLogout}>
+              <ListItemPrefix>
+                <PowerIcon className="h-5 w-5" />
+              </ListItemPrefix>
+              Đăng xuất
+            </ListItem>
+          </div>
         </div>
 
         <div className="justify-cen mx-9 flex h-[100px] items-center bg-white p-4">

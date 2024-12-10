@@ -380,7 +380,7 @@ export default function BanHangTaiQuay() {
   //Huy Hoa Don
   const huyHoaDon = async () => {
     try {
-      await axios.delete(ApiHuyHoaDon);
+      await axios.put(ApiHuyHoaDon);
       toast.success("Hủy hóa đơn thành công");
       LayDanhSachHoaDonChuaThanhToan();
     } catch (error) {
@@ -433,7 +433,7 @@ export default function BanHangTaiQuay() {
       await axios.delete(
         `${ApiXoaPhieuGiamGiaKhoiHoaDon}/${idPhieuGiamGiaDangChon}`,
       );
-      toast.success("Không áp dụng voucher tahnfh công");
+      toast.success("Xóa phiếu giảm giá thành công");
       LayThongTinThanhToanCuaHoaDon();
       setIsSelectDisabled(false);
     } catch (error) {
@@ -872,10 +872,10 @@ export default function BanHangTaiQuay() {
                           <td>{formatTien(SPCT.donGia * SPCT.soLuong)}</td>
                           <td>
                             <Popconfirm
-                              title="Delete the task"
-                              description="Are you sure to delete this task?"
-                              okText="Yes"
-                              cancelText="No"
+                              title="Xóa sản phẩm"
+                              description="Bạn muốn xóa sản phẩm này?"
+                              okText="Đồng ý"
+                              cancelText="Hủy"
                               onConfirm={(e) => {
                                 e.preventDefault();
                                 XoaSPKhoiGioHang(SPCT.idSpct);
@@ -952,7 +952,7 @@ export default function BanHangTaiQuay() {
                         }
                       >
                         <div
-                          onMouseEnter={() => setIdPhieuGiamGiaDangChon(pgg.id)} // Gọi khi hover qua từng option
+                          onMouseDown={() => setIdPhieuGiamGiaDangChon(pgg.id)} // Gọi khi hover qua từng option
                         >
                           <span>Tên: {pgg.tenVoucher}</span> <br />
                           <span>Điều kiện: {pgg.dieuKienGiamGia}</span> <br />
@@ -1180,13 +1180,24 @@ export default function BanHangTaiQuay() {
             addonAfter={"VNĐ"}
             defaultValue={0}
             formatter={
-              (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ".") // Thêm dấu chấm cho hàng nghìn
+              (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ".") // Định dạng dấu chấm hàng nghìn
             }
-            parser={(value) =>
-              value.replace(/\./g, "").replace(/VNĐ\s?|(,*)/g, "")
-            } // Xóa dấu chấm trước khi lưu giá trị
+            parser={
+              (value) => value.replace(/\./g, "") // Loại bỏ dấu chấm trước khi lưu giá trị
+            }
+            onKeyPress={(e) => {
+              // Chặn ký tự không phải số tại thời điểm nhập
+              if (!/[0-9]/.test(e.key)) {
+                e.preventDefault();
+              }
+            }}
+            onInput={(e) => {
+              // Loại bỏ các ký tự không hợp lệ nếu nhập hoặc dán
+              e.target.value = e.target.value.replace(/[^0-9]/g, "");
+            }}
             onChange={(value) => {
-              tinhTienThua(value || 0); // Gọi hàm với giá trị 0 nếu value là null
+              // Gọi hàm tính tiền thừa với giá trị hợp lệ
+              tinhTienThua(value || 0);
             }}
           />
         </div>

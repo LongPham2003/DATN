@@ -183,7 +183,7 @@ const HoaDonChiTiet = () => {
     e.preventDefault(); // Ngăn chặn hành động mặc định của form
     Modal.confirm({
       title: "Xác nhận cập nhật",
-      content: "Bạn có chắc chắn muốn cập  không?",
+      content: "Bạn có chắc chắn muốn hủy  không?",
       onOk() {
         axios
           .post(`http://localhost:8080/api/hoadon/huy/${id}`, {
@@ -209,7 +209,7 @@ const HoaDonChiTiet = () => {
     e.preventDefault(); // Ngăn chặn hành động mặc định của form
     Modal.confirm({
       title: "Xác nhận cập nhật",
-      content: "Bạn có chắc chắn muốn cập  không?",
+      content: "Bạn có chắc chắn muốn cập nhật trạng thái chờ lấy hàng không?",
       onOk() {
         axios
           .post(`http://localhost:8080/api/hoadon/cholayhang/${id}`, {
@@ -234,7 +234,8 @@ const HoaDonChiTiet = () => {
     e.preventDefault(); // Ngăn chặn hành động mặc định của form
     Modal.confirm({
       title: "Xác nhận cập nhật",
-      content: "Bạn có chắc chắn muốn cập  không?",
+      content:
+        "Bạn có chắc chắn muốn cập nhật sang trạng thái chờ giao hàng không?",
       onOk() {
         axios
           .post(`http://localhost:8080/api/hoadon/chogiaohang/${id}`, {
@@ -259,7 +260,8 @@ const HoaDonChiTiet = () => {
     e.preventDefault(); // Ngăn chặn hành động mặc định của form
     Modal.confirm({
       title: "Xác nhận cập nhật",
-      content: "Bạn có chắc chắn muốn cập  không?",
+      content:
+        "Bạn có chắc chắn muốn nhật cập sang trạng thái đang giao không?",
       onOk() {
         axios
           .post(`http://localhost:8080/api/hoadon/danggiao/${id}`, {
@@ -284,7 +286,8 @@ const HoaDonChiTiet = () => {
     e.preventDefault(); // Ngăn chặn hành động mặc định của form
     Modal.confirm({
       title: "Xác nhận cập nhật",
-      content: "Bạn có chắc chắn muốn cập  không?",
+      content:
+        "Bạn có chắc chắn muốn cập nhật sang trạng thái đã xác nhận  không?",
       onOk() {
         axios
           .post(`http://localhost:8080/api/hoadon/xacnhan/${id}`, {
@@ -310,7 +313,7 @@ const HoaDonChiTiet = () => {
     e.preventDefault(); // Ngăn chặn hành động mặc định của form
     Modal.confirm({
       title: "Xác nhận cập nhật",
-      content: "Bạn có chắc chắn muốn cập  không?",
+      content: "Bạn có chắc chắn muốn cập nhật hoàn thành đơn hàng không?",
       onOk() {
         axios
           .post(`http://localhost:8080/api/hoadon/hoanthanh/${id}`, {

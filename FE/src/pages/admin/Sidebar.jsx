@@ -42,12 +42,7 @@ export function Sidebar() {
   };
 
   const handleLogout = () => {
-    // Xóa quyền khỏi localStorage
-    localStorage.removeItem("userRole");
-    localStorage.removeItem("email");
-    localStorage.removeItem("authToken");
-
-    // Điều hướng về trang đăng nhập
+    localStorage.clear();
     navigate("/login");
   };
 
@@ -248,10 +243,7 @@ export function Sidebar() {
           /> */}
           <div>
             <Typography className="font-bold" variant="small">
-              {localStorage.getItem("email")}
-            </Typography>
-            <Typography variant="small" color="gray" className="font-normal">
-              Web Developer
+              Xin chào: {localStorage.getItem("email")}
             </Typography>
           </div>
         </div>
@@ -260,7 +252,7 @@ export function Sidebar() {
           <ListItemPrefix>
             <PowerIcon className="h-5 w-5" />
           </ListItemPrefix>
-          Log Out
+          Đăng xuất
         </ListItem>
       </div>
     </Card>
