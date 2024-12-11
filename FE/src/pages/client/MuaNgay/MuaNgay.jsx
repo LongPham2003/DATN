@@ -20,7 +20,7 @@ export default function MuaNgay() {
   const [tongTien, setTongTien] = useState(0);
   const [TienDuocGiam, setTienDuocGiam] = useState(0);
   const [thanhTien, setThanhTien] = useState(0);
-
+  const [soLuongSanPham, setSoLuongSanPham] = useState(0);
   // chon giao hang
   const [phiGiaoHang, setPhiGiaoHang] = useState(0);
   // const [giaoHang, setGiaoHang] = useState(true);
@@ -56,8 +56,8 @@ export default function MuaNgay() {
         `${ApiLayThongTinPhieuGiamGiaDangChon}/${idPGG}`,
       );
       setPhieuGiamGiaDangChon(response.data.result); // Giả sử dữ liệu trả về là object
-      console.log("Thông tin phiếu giảm giá:", response.data.result);
-      console.log("Thông tin phiếu giảm giá:", response.data.result.mucGiam);
+      // console.log("Thông tin phiếu giảm giá:", response.data.result);
+      // console.log("Thông tin phiếu giảm giá:", response.data.result.mucGiam);
     } catch (error) {
       console.error("Error fetching selected discount coupon:", error);
     }
@@ -73,7 +73,7 @@ export default function MuaNgay() {
       setMauSac(response.data.result.mauSac);
       setSize(response.data.result.kichThuoc);
       setTenSp(response.data.result.tenSanPham);
-      console.log(response.data.result.donGia);
+      // console.log(response.data.result.donGia);
     } catch (error) {
       console.error("Error fetching product details:", error);
     }
@@ -91,13 +91,13 @@ export default function MuaNgay() {
     // Kiểm tra điều kiện hóa đơn tối thiểu
     const dieuKienGiamGiaValue = formatCurrencyToNumber(dieuKienGiamGia);
     if (tongTien < dieuKienGiamGiaValue) {
-      console.log(
-        `Không đủ điều kiện áp dụng: Tổng tiền (${tongTien}) < Điều kiện tối thiểu (${dieuKienGiamGiaValue})`,
-      );
+      // console.log(
+      //   `Không đủ điều kiện áp dụng: Tổng tiền (${tongTien}) < Điều kiện tối thiểu (${dieuKienGiamGiaValue})`,
+      // );
       return 0;
     }
 
-    console.log("Đủ điều kiện áp dụng phiếu giảm giá");
+    // console.log("Đủ điều kiện áp dụng phiếu giảm giá");
 
     let tienGiam = 0;
 
@@ -105,25 +105,25 @@ export default function MuaNgay() {
       // Nếu giảm theo %, tính toán giá trị giảm
       const mucGiamValue = formatMucGiam(mucGiam);
       tienGiam = (tongTien * mucGiamValue) / 100;
-      console.log(
-        `Giảm theo %: ${mucGiamValue}% của ${tongTien} = ${tienGiam}`,
-      );
+      // console.log(
+      //   `Giảm theo %: ${mucGiamValue}% của ${tongTien} = ${tienGiam}`,
+      // );
     } else if (hinhThucGiam === "VND") {
       // Nếu giảm giá trực tiếp
       tienGiam = formatCurrencyToNumber(mucGiam);
-      console.log(`Giảm trực tiếp: ${tienGiam} VNĐ`);
+      // console.log(`Giảm trực tiếp: ${tienGiam} VNĐ`);
     }
 
     // Giới hạn giảm tối đa
     const giamToiDaValue = formatCurrencyToNumber(giamToiDa);
     if (tienGiam > giamToiDaValue) {
-      console.log(
-        `Giảm tối đa giới hạn: ${tienGiam} > ${giamToiDaValue}, áp dụng giảm tối đa`,
-      );
+      // console.log(
+      //   `Giảm tối đa giới hạn: ${tienGiam} > ${giamToiDaValue}, áp dụng giảm tối đa`,
+      // );
       tienGiam = giamToiDaValue;
     }
 
-    console.log("Tiền giảm sau khi áp dụng tối đa (nếu có):", tienGiam);
+    // console.log("Tiền giảm sau khi áp dụng tối đa (nếu có):", tienGiam);
 
     setTienDuocGiam(tienGiam); // Cập nhật tiền được giảm
     return tienGiam;
@@ -147,6 +147,7 @@ export default function MuaNgay() {
         phiVanChuyen: phiGiaoHang,
         diaChiChiTiet: diaChiGiaoHang,
         ngayDuKien: ngayDuKien,
+        tienPhaiThanhToan: thanhTien,
       });
 
       setTimeout(() => {
@@ -217,6 +218,17 @@ export default function MuaNgay() {
     return parseInt(value.replace(/[^\d]/g, "")); // Loại bỏ tất cả ký tự không phải số
   };
 
+  // lấy số lương sản phẩm để tính ship
+  useEffect(() => {
+    if (chiTietSanPhams && Array.isArray(chiTietSanPhams)) {
+      const total = chiTietSanPhams.reduce(
+        (sum, item) => sum + (item.soLuong || 0),
+        0,
+      );
+      setSoLuongSanPham(total);
+    }
+  }, [chiTietSanPhams]);
+
   //Them VND
   function formatTien(value) {
     // Loại bỏ dấu phân cách thập phân và chuyển thành số
@@ -278,16 +290,16 @@ export default function MuaNgay() {
           <div className="flex justify-center">
             <span className="text-3xl font-semibold">Đơn Hàng</span>
           </div>
-          <div className="mt-5">
+          <div>
             <table className="w-full">
               <thead>
                 <tr>
                   <th>STT</th>
-                  <th>Ảnh</th>
-                  <th>Sản phẩm</th>
-                  <th>Số lượng</th>
-                  <th>Đơn giá</th>
-                  <th>Thành tiền</th>
+                  <th>Anh</th>
+                  <th>San Pham</th>
+                  <th>So luong</th>
+                  <th>Don gia</th>
+                  <th>Thanh tien</th>
                 </tr>
               </thead>
               <tbody className="text-center">
@@ -365,24 +377,24 @@ export default function MuaNgay() {
 
             <div>
               <div className="flex gap-10">
-                <span className="font-semibold">Tổng tiền: </span>
+                <span className="font-semibold">Tong tien: </span>
                 <span className="ml-auto">{formatTien(tongTien)}</span>
               </div>
               <div className="flex gap-10">
-                <span className="font-semibold">Phí giao hàng: </span>
+                <span className="font-semibold">Phi giao hang: </span>
                 <span className="ml-auto">{formatTien(phiGiaoHang)}</span>
               </div>
               <div className="flex gap-10">
-                <span className="font-semibold">Tiền được giảm: </span>
+                <span className="font-semibold">Tien duoc giam: </span>
                 <span className="ml-auto"> {formatTien(TienDuocGiam)}</span>
               </div>
               <div className="flex gap-10">
-                <span className="font-semibold">Thành tiền: </span>
+                <span className="font-semibold">Thanh tien: </span>
                 <span className="ml-auto">{formatTien(thanhTien)}</span>
               </div>
 
               <div className="my-5 flex gap-10">
-                <span className="font-semibold">Ngày nhận dự kiến: </span>
+                <span className="font-semibold">Ngay nhan hang du kien: </span>
                 <span className="ml-auto">{ngayDuKien}</span>
               </div>
             </div>
@@ -394,6 +406,8 @@ export default function MuaNgay() {
               setPhiGiaoHang={setPhiGiaoHang}
               setNgayDuKien={setNgayDuKien}
               setdiaChiGiaoHang={setdiaChiGiaoHang}
+              soLuongSanPham={soLuongSanPham}
+              tongTien={tongTien}
             />
           </div>
           <div>
@@ -440,7 +454,7 @@ export default function MuaNgay() {
           )}
         </div>
       </div>
-      <ToastContainer position="top-center" hideProgressBar />
+      {/* <ToastContainer position="top-center" hideProgressBar /> */}
     </>
   );
 }
