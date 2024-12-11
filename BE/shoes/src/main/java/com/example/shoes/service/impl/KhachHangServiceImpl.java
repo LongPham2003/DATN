@@ -185,10 +185,10 @@ public class KhachHangServiceImpl implements KhachHangService {
 
         diaChi.setDiaChiMacDinh(true);
         diaChi.setTinhThanhPho(request.getTinhThanhPho());
-        diaChi.setXaPhuong(request.getXaPhuong());
         diaChi.setHuyenQuan(request.getHuyenQuan());
-        diaChi.setDiaChiChiTiet(request.getDiaChiChiTiet());
+        diaChi.setXaPhuong(request.getXaPhuong());
         diaChi.setSoNhaDuongThonXom(request.getSoNhaDuongThonXom());
+        diaChi.setDiaChiChiTiet(request.getDiaChiChiTiet());
         diaChi.setKhachHang(khachHang);
         diaChiRepo.save(diaChi);
 

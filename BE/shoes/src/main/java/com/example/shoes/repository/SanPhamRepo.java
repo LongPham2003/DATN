@@ -22,9 +22,7 @@ public interface SanPhamRepo
         extends JpaRepository<SanPham, Integer>, JpaSpecificationExecutor<SanPham>
 {
     // tim kiem va phan trang
-    @Query("SELECT sp FROM SanPham sp JOIN sp.loai lo " + "WHERE (:keyword IS NULL OR sp.tenSanPham LIKE %:keyword%) "
-            + "AND (:idLoai IS NULL OR lo.id= :idLoai) " + "AND (:trangThai IS NULL OR sp.trangThai = :trangThai) " +
-            "ORDER BY sp.trangThai desc , sp.id DESC")
+    @Query("SELECT sp FROM SanPham sp JOIN sp.loai lo " + "WHERE (:keyword IS NULL OR sp.tenSanPham LIKE %:keyword%) " + "AND (:idLoai IS NULL OR lo.id= :idLoai) " + "AND (:trangThai IS NULL OR sp.trangThai = :trangThai) " + "ORDER BY sp.trangThai desc , sp.id DESC")
     Page<SanPham> getSanPham(@Param("keyword") String keyword, @Param("idLoai") Integer idLoai,
             @Param("trangThai") Boolean trangThai, Pageable pageable);
 
@@ -66,7 +64,7 @@ public interface SanPhamRepo
             @Param("idKichThuoc") List<Integer> idKichThuoc, @Param("idMauSac") List<Integer> idMauSac,
             @Param("idDeGiay") List<Integer> idDeGiay, @Param("idChatLieu") List<Integer> idChatLieu,
             @Param("idThuongHieu") List<Integer> idThuongHieu, @Param("donGiaMin") BigDecimal donGiaMin,
-            @Param("donGiaMax") BigDecimal donGiaMax,Pageable pageable);
+            @Param("donGiaMax") BigDecimal donGiaMax, Pageable pageable);
 
     @Query(value = """
                 SELECT

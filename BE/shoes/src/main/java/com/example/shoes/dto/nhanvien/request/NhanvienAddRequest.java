@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -34,15 +36,15 @@ public class NhanvienAddRequest {
 
     @NotBlank(message = "Không được để trống địa chỉ")
     private String diaChi;
-
-    @NotBlank(message = "Không được để trống ngày sinh")
+    @NotNull(message = "Ngày sinh không được để trống")
+    @Past(message = "Ngày sinh không được là ngày trong tương lai")
     @Temporal(TemporalType.DATE)
     private Date ngaySinh;
 
     @Enumerated(EnumType.STRING)
     private Roles roles;
 
-    @Min(value = 8,message = "Mật Khẩu Lớn Hơn 8 Kí Tự")
+    @Min(value = 8,message = "Mật khẩu lớn hơn hoặc bằng 8 kí tự")
     private  String matKhau;
 
 

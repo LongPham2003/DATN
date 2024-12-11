@@ -16,6 +16,7 @@ public class KhachHangRequest {
 
     private String ma;
 
+    @NotBlank(message = "Họ tên không được để trống")
     private String hoTen;
 
     @NotBlank(message = "Số điện thoại không được để trống")
@@ -33,15 +34,16 @@ public class KhachHangRequest {
 
     private String gioiTinh;
 
-    @Min(value = 8,message = "Mật Khẩu Lớn Hơn 8 Kí Tự")
+    @Min(value = 8,message = "Mật khẩu lớn hơn hoặc bằng 8 kí tự")
     private String matKhau;
 
     private Boolean trangThai;
+
+    @NotNull(message = "Tỉnh/Thành phố không được để trống")
+    private String tinhThanhPho;
+
     @NotBlank(message = "Huyện/Quận không được để trống")
     private String huyenQuan;
-
-    @NotBlank(message = "Tỉnh/Thành phố không được để trống")
-    private String tinhThanhPho;
 
     @NotBlank(message = "Xã/Phường không được để trống")
     private String xaPhuong;
