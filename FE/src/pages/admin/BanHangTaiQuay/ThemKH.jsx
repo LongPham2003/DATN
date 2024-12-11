@@ -225,7 +225,7 @@ export default function ThemKH({ idHoaDon, onadd, closeModalThemKH }) {
           />
         </div>
       </div>
-      <ToastContainer
+      {/* <ToastContainer
         position="top-center"
         autoClose={1000}
         hideProgressBar={false}
@@ -237,7 +237,7 @@ export default function ThemKH({ idHoaDon, onadd, closeModalThemKH }) {
         pauseOnHover
         theme="light"
         transition={Bounce}
-      />
+      /> */}
     </div>
   );
 }

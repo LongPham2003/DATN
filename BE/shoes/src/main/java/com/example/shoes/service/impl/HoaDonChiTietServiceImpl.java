@@ -5,11 +5,13 @@ import com.example.shoes.dto.hoadonchitiet.response.HoaDonChiTietBHRespose;
 import com.example.shoes.dto.hoadonchitiet.response.HoaDonChiTietResponse;
 import com.example.shoes.entity.HoaDon;
 import com.example.shoes.entity.HoaDonChiTiet;
+import com.example.shoes.entity.PhieuGiamGia;
 import com.example.shoes.entity.SanPhamChiTiet;
 import com.example.shoes.exception.AppException;
 import com.example.shoes.exception.ErrorCode;
 import com.example.shoes.repository.HoaDonChiTietRepo;
 import com.example.shoes.repository.HoaDonRepo;
+import com.example.shoes.repository.PhieuGiamGiaRepo;
 import com.example.shoes.repository.SanPhamChiTietRepo;
 import com.example.shoes.service.HoaDonChiTietService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,7 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
     private HoaDonRepo hoaDonRepo;
     @Autowired
     private SanPhamChiTietRepo sanPhamChiTietRepo;
+    @Autowired PhieuGiamGiaRepo phieuGiamGiaRepo;
 
     @Override
     public List<HoaDonChiTietResponse> getAllHoaDonCT() {
@@ -71,6 +74,15 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
         hoaDon.setTongTien(hoaDon.getTongTien().subtract(amountToSubtract));
         // Tính lại tiền phải thanh toán: tổng tiền - tiền được giảm
         hoaDon.setTienPhaiThanhToan(hoaDon.getTongTien().subtract(hoaDon.getTienDuocGiam()));
+
+        if(hoaDon.getIdPhieuGiamGia()!=null){
+            PhieuGiamGia phieuGiamGia = phieuGiamGiaRepo.findById(hoaDon.getIdPhieuGiamGia().getId()).orElseThrow(
+                    () -> new AppException(ErrorCode.VOUCHER_NOT_FOUND));
+            if (hoaDon.getTongTien().compareTo(phieuGiamGia.getGiamToiDa()) < 0) {
+               xoaPhieuGiamGiaHoaDon(hoaDon.getId(),hoaDon.getIdPhieuGiamGia().getId());
+            }
+        }
+
         // Xóa chi tiết hóa đơn
         hoaDonChiTietRepo.deleteByIdHoaDonAndIdSpct(idHoaDon, idSpct);
 
@@ -79,6 +91,38 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
         hoaDonRepo.save(hoaDon);
 
 }
+
+    public void xoaPhieuGiamGiaHoaDon(Integer idHoaDon, Integer idPhieuGiamGia) {
+        // Lấy thông tin hóa đơn từ idHoaDon
+        HoaDon hoaDon = hoaDonRepo.findById(idHoaDon)
+                .orElseThrow(() -> new AppException(ErrorCode.BILL_NOT_FOUND));
+
+        // Kiểm tra xem hóa đơn có phiếu giảm giá hay không
+        if (hoaDon.getIdPhieuGiamGia() == null) {
+            throw new AppException(ErrorCode.VOUCHER_NOT_IN_BILL);
+        }
+
+        // Kiểm tra phiếu giảm giá trong hóa đơn có khớp với idPhieuGiamGia đã truyền
+        // vào không
+        if (!hoaDon.getIdPhieuGiamGia().getId().equals(idPhieuGiamGia)) {
+            throw new AppException(ErrorCode.VOUCHER_NOT_IN_BILL); // Báo lỗi nếu phiếu giảm giá không khớp
+        }
+        // Lấy thông tin phiếu giảm giá
+        PhieuGiamGia phieuGiamGia = hoaDon.getIdPhieuGiamGia();
+
+        // Xóa thông tin phiếu giảm giá khỏi hóa đơn
+        hoaDon.setIdPhieuGiamGia(null);
+        hoaDon.setTienDuocGiam(BigDecimal.ZERO);
+        // Tính lại tiền phải thanh toán
+        hoaDon.setTienPhaiThanhToan(hoaDon.getTongTien().subtract(hoaDon.getTienDuocGiam()));
+
+        // Tăng số lượng phiếu giảm giá thêm 1
+        phieuGiamGia.setSoLuong(phieuGiamGia.getSoLuong() + 1);
+
+        // Lưu thay đổi vào cơ sở dữ liệu
+        phieuGiamGiaRepo.save(phieuGiamGia); // Lưu số lượng phiếu giảm giá đã cập nhật
+        hoaDonRepo.save(hoaDon); // Lưu hóa đơn đã cập nhật
+    }
 
 
 //     public List<HoaDonChiTietBHRespose> getSPCTByIdHoaDon(Integer IdhoaDon) {

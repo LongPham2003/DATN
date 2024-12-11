@@ -164,6 +164,11 @@ export default function BanHangTaiQuay() {
       setTienPhaiThanhToan(ttThanhToan.data.result.tienPhaiThanhToan);
       setTienDuocGiam(ttThanhToan.data.result.tienDuocGiam);
       setIdPhieuGiamGiaDangChon(ttThanhToan.data.result.idVoucher);
+      if (ttThanhToan.data.result.idVoucher === null) {
+        setIsSelectDisabled(false);
+      } else {
+        setIsSelectDisabled(true);
+      }
       setIdKhachHangDangChon(ttThanhToan.data.result.idKhachHang);
       if (ttThanhToan.data.result.idKhachHang != null) {
         try {
@@ -464,7 +469,7 @@ export default function BanHangTaiQuay() {
     try {
       await axios.post(`${ApiXoaKhachHangKhoiHoaDon}/${idKhachHang}`);
       await LayThongTinThanhToanCuaHoaDon();
-      toast.success("Thanh cong");
+      toast.success("Thành công");
       setDisableSelectKhachHang(false);
       setGiaoHang(false);
       setPhiGiaoHang(0);
@@ -657,46 +662,50 @@ export default function BanHangTaiQuay() {
 
   // xác nhận thanh toán
   const handleXacNhanThanhToan = async () => {
-    Modal.confirm({
-      title: "Xác nhận cập nhật",
-      content: "Bạn đồng ý xác nhận thanh toán?",
-      onOk() {
-        // Nếu người dùng xác nhận, gửi yêu cầu cập nhật
-        axios
-          .post(
-            `http://localhost:8080/api/hoadon/thanh-toan/tc-vnpay/${selectedHoaDonId}`,
-            {
-              phuongThucThanhToan: "Chuyển khoản",
-              tienKhachDua: formatCurrencyToNumber(tienPhaiThanhToan),
-            },
-          )
-          .then((response) => {
-            console.log("Cập nhật thành công 111:", response.data);
-            setError("");
-            toast.success("Cập nhật thành công");
-            LayDanhSachHoaDonChuaThanhToan();
-            setGiaoHang(false);
-            // navigate(0);
-            setTempHoaDonId(selectedHoaDonId);
-            setTimeout(() => {
-              handleGeneratePDF();
+    if (formatCurrencyToNumber(tienPhaiThanhToan) > 0) {
+      Modal.confirm({
+        title: "Xác nhận cập nhật",
+        content: "Bạn đồng ý xác nhận thanh toán?",
+        onOk() {
+          // Nếu người dùng xác nhận, gửi yêu cầu cập nhật
+          axios
+            .post(
+              `http://localhost:8080/api/hoadon/thanh-toan/tc-vnpay/${selectedHoaDonId}`,
+              {
+                phuongThucThanhToan: "Chuyển khoản",
+                tienKhachDua: formatCurrencyToNumber(tienPhaiThanhToan),
+              },
+            )
+            .then((response) => {
+              console.log("Cập nhật thành công 111:", response.data);
+              setError("");
+              toast.success("Cập nhật thành công");
+              LayDanhSachHoaDonChuaThanhToan();
+              setGiaoHang(false);
+              // navigate(0);
+              setTempHoaDonId(selectedHoaDonId);
               setTimeout(() => {
-                window.location.reload();
-              }, 500);
-            }, 900);
-            // Xóa ID tạm thời sau 1 phút
-            setTimeout(() => {
-              setTempHoaDonId(null); // Xóa ID tạm thời sau 1 phút
-            }, 5000); // 60000 ms = 1 phút
-          })
-          .catch((error) => {
-            setError(error.response.data.message);
-          });
-      },
-      onCancel() {
-        // Nếu người dùng hủy, có thể không cần làm gì cả
-      },
-    });
+                handleGeneratePDF();
+                setTimeout(() => {
+                  window.location.reload();
+                }, 500);
+              }, 900);
+              // Xóa ID tạm thời sau 1 phút
+              setTimeout(() => {
+                setTempHoaDonId(null); // Xóa ID tạm thời sau 1 phút
+              }, 5000); // 60000 ms = 1 phút
+            })
+            .catch((error) => {
+              setError(error.response.data.message);
+            });
+        },
+        onCancel() {
+          // Nếu người dùng hủy, có thể không cần làm gì cả
+        },
+      });
+    } else {
+      toast.error("Không thể thanh toán khi chưa có sản phẩm");
+    }
   };
 
   // //Them VND

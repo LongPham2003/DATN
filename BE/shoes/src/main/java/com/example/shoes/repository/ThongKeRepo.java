@@ -404,7 +404,9 @@ public interface ThongKeRepo
                  COALESCE(SUM(CASE
                      WHEN hd.trang_thai_thanh_toan = 1 THEN hd.tong_tien - COALESCE(hd.tien_duoc_giam, 0)
                      ELSE 0 END), 0) AS tongTien,
-                 COALESCE(SUM(COALESCE(hdct.so_luong, 0)), 0) AS sanPhamBanDuoc
+                 COALESCE(SUM(CASE
+                      WHEN hd.trang_thai_thanh_toan = 1 THEN COALESCE(hdct.so_luong, 0)
+                      ELSE 0 END), 0) AS sanPhamBanDuoc
              FROM
                  (SELECT 'Monday' AS ngayTrongTuan UNION ALL
                   SELECT 'Tuesday' UNION ALL

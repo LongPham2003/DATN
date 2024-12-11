@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import axios from "./../../../api/axiosConfig";
 import { Link } from "react-router-dom";
-// import anh from "./../../../../logo/logohd.png"
+import anh from "./../../../../logo/logohd.png";
 
 export const generatePDF = () => {
   // Tìm phần tử với ID 'main'
