@@ -140,6 +140,8 @@ export default function DetailProduct() {
     setSelectedIdKichThuoc(null);
     setSelectedIdMauSac(null);
     setTrangThai(null);
+    setMinDonGia("");
+    setMaxDonGia("");
   };
 
   return (
@@ -237,20 +239,22 @@ export default function DetailProduct() {
             </select>
           </div>
           <div>
-            <p className="font-bold">Giá min</p>
+            <p className="font-bold">Giá tối thiểu</p>
             <input
               className="h-[38px] w-[250px] rounded border border-gray-300 p-2"
-              type="text"
+              type="number"
               placeholder="Mời nhập giá thấp nhất...."
+              value={minDonGia}
               onChange={(e) => setMinDonGia(e.target.value)}
             />
           </div>
           <div>
-            <p className="font-bold">Giá max</p>
+            <p className="font-bold">Giá tối đa</p>
             <input
               className="h-[38px] w-[250px] rounded border border-gray-300 p-2"
               placeholder="Mời nhập giá cao nhất...."
-              type="text"
+              type="number"
+              value={maxDonGia}
               onChange={(e) => setMaxDonGia(e.target.value)}
             />
           </div>
