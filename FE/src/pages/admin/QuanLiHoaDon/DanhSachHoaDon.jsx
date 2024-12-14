@@ -12,6 +12,8 @@ export default function DanhSachHoaDon() {
   const [phuongThucGiaoHang, setPhuongThucGiaoHang] = useState(null);
   const [trangThai, setTrangThai] = useState(null);
   const [tongSoTrang, setTongSoTrang] = useState(0);
+  const totalRows = 10;
+  const emptyRows = totalRows - hoaDon.length;
 
   //
   const handlePageChange = (selectedPage) => {
@@ -242,6 +244,7 @@ export default function DanhSachHoaDon() {
                 <th className="border-b px-4 py-2">Mã</th>
                 <th className="border-b px-4 py-2">Tên Khách Hàng</th>
                 <th className="border-b px-4 py-2">SDT</th>
+                <th className="border-b px-4 py-2">PTTT</th>
                 <th className="border-b px-4 py-2">Tổng Tiền</th>
                 <th className="border-b px-4 py-2">Loại Đơn Hàng</th>
                 <th className="border-b px-4 py-2">Ngày Tạo</th>
@@ -258,6 +261,9 @@ export default function DanhSachHoaDon() {
                   <td className="border-b px-4 py-2">{item.ma}</td>
                   <td className="border-b px-4 py-2">{item.tenKhachHang}</td>
                   <td className="border-b px-4 py-2">{item.soDienThoai}</td>
+                  <td className="border-b px-4 py-2">
+                    {item.phuongThucThanhToan}
+                  </td>
                   <td className="border-b px-4 py-2">
                     {item.tienPhaiThanhToan}
                   </td>
@@ -304,10 +310,19 @@ export default function DanhSachHoaDon() {
                   </td>
                 </tr>
               ))}
+              {emptyRows > 0 &&
+                Array.from({ length: emptyRows }).map((_, index) => (
+                  <tr key={`empty-${index}`} style={{ height: "61px" }}>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>
-        <div className="mr-14 mt-4 flex justify-center">
+        <div className="mr-14 mt-4 flex justify-end">
           <ReactPaginate
             previousLabel={"< Previous"}
             nextLabel={"Next >"}

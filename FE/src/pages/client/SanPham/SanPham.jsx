@@ -33,12 +33,12 @@ export default function SanPham() {
 
   // API endpoints
   const API = {
-    MauSac: `http://localhost:8080/api/mausac/getall`,
-    Loai: `http://localhost:8080/api/loai/getall`,
-    KichThuoc: `http://localhost:8080/api/kichthuoc/getall`,
-    ThuongHieu: `http://localhost:8080/api/thuonghieu/getall`,
-    ChatLieu: `http://localhost:8080/api/chatlieu/getall`,
-    DeGiay: `http://localhost:8080/api/degiay/getall`,
+    MauSac: `http://localhost:8080/api/mausac/list?pageSize=99`,
+    Loai: `http://localhost:8080/api/loai/list?pageSize=99`,
+    KichThuoc: `http://localhost:8080/api/kichthuoc/list?pageSize=99`,
+    ThuongHieu: `http://localhost:8080/api/thuonghieu/list?pageSize=99`,
+    ChatLieu: `http://localhost:8080/api/chatlieu/list?pageSize=99`,
+    DeGiay: `http://localhost:8080/api/degiay/list?pageSize=99`,
     SanPhamBanHang: `http://localhost:8080/api/sanpham/trangchu`,
   };
 
@@ -55,12 +55,12 @@ export default function SanPham() {
       ]);
 
       // Update state based on API response
-      setListMauSac(responses[0]?.data?.result || []);
-      setListLoai(responses[1]?.data?.result || []);
-      setListKichThuoc(responses[2]?.data?.result || []);
-      setThuongHieu(responses[3]?.data?.result || []);
-      setChatLieu(responses[4]?.data?.result || []);
-      setDeGiay(responses[5]?.data?.result || []);
+      setListMauSac(responses[0]?.data?.result.result || []);
+      setListLoai(responses[1]?.data?.result.result || []);
+      setListKichThuoc(responses[2]?.data?.result.result || []);
+      setThuongHieu(responses[3]?.data?.result.result || []);
+      setChatLieu(responses[4]?.data?.result.result || []);
+      setDeGiay(responses[5]?.data?.result.result || []);
     } catch (error) {
       console.error("Error fetching attributes:", error);
     }

@@ -9,6 +9,7 @@ const SanPhamChiTiet = ({ productId, closeModal }) => {
   const id = productId;
   const navigate = useNavigate();
   const [error, setError] = useState("");
+  const [errorTen, setErrorTen] = useState("");
   const [loaiSelect, setLoaiSelect] = useState([]);
   const [formData, setFormData] = useState({
     ma: "",
@@ -55,7 +56,7 @@ const SanPhamChiTiet = ({ productId, closeModal }) => {
     }));
     // Xóa lỗi khi người dùng nhập giá trị hợp lệ
     if (name === "tenSanPham" && value.trim() !== "") {
-      setError("");
+      setErrorTen("");
     }
   };
   const handleOptionSelect = (selectedOption) => {
@@ -66,6 +67,10 @@ const SanPhamChiTiet = ({ productId, closeModal }) => {
   };
   // eslint-disable-next-line no-unused-vars
   const update = async (e) => {
+    if (formData.tenSanPham.trim() === "") {
+      setErrorTen("Không được để trống tên sản phẩm");
+      return;
+    }
     // Sử dụng Modal.confirm để hiển thị hộp thoại xác nhận
     Modal.confirm({
       title: "Xác nhận cập nhật",
@@ -133,7 +138,7 @@ const SanPhamChiTiet = ({ productId, closeModal }) => {
                 name="tenSanPham"
                 onChange={handleChange}
               />
-              {error && <p className="text-red-500">{error}</p>}
+              {errorTen && <p className="text-red-500">{errorTen}</p>}
             </div>
           </div>
           <div>
@@ -215,7 +220,7 @@ const SanPhamChiTiet = ({ productId, closeModal }) => {
           </button>
         </div>
       </form>
-      <ToastContainer
+      {/* <ToastContainer
         position="top-center"
         autoClose={1000}
         hideProgressBar={false}
@@ -227,7 +232,7 @@ const SanPhamChiTiet = ({ productId, closeModal }) => {
         pauseOnHover
         theme="light"
         transition={Bounce}
-      />
+      /> */}
     </div>
   );
 };

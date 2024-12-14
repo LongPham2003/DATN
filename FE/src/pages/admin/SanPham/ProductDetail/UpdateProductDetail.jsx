@@ -385,13 +385,25 @@ export default function UpdateProductDetail() {
           <Button
             color="danger"
             variant="solid"
-            onClick={(e) => navigate(`/admin/chitietsanpham/${SPCT.idSanPham}`)}
+            onClick={(e) => {
+              // Kiểm tra nếu không có ảnh
+              if (!hinhAnh || hinhAnh.length === 0) {
+                toast.error(
+                  "Vui lòng thêm ít nhất một ảnh sản phẩm trước khi quay lại",
+                  {
+                    autoClose: 1000,
+                  },
+                );
+                return; // Ngăn không cho quay lại
+              }
+              navigate(`/admin/chitietsanpham/${SPCT.idSanPham}`);
+            }}
           >
             <CloseCircleOutlined /> Quay lại
           </Button>
         </div>
       </div>
-      <ToastContainer />
+      {/* <ToastContainer /> */}
     </>
   );
 }

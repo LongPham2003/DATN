@@ -43,6 +43,7 @@ import ThongTinCaNhan from "./pages/client/ThongTinCaNhan/ThongTinCaNhan.jsx";
 import DatHang from "./pages/client/DatHang/DatHang.jsx";
 import MuaNgay from "./pages/client/MuaNgay/MuaNgay.jsx";
 import TraCuuDonHang from "./pages/client/ThongTinCaNhan/TraCuuDonHang.jsx";
+import { Bounce, ToastContainer } from "react-toastify";
 
 function App() {
   return (
@@ -503,6 +504,18 @@ function App() {
           </Route>
         </Routes>
       </BrowserRouter>
+      <ToastContainer
+        position="top-center"
+        autoClose={500}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        theme="light"
+        transition={Bounce}
+      />
     </>
   );
 }

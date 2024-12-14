@@ -24,8 +24,8 @@ export default function DetailProduct() {
   const [selectedIdChatLieu, setSelectedIdChatLieu] = useState(null);
   const [selectedIdKichThuoc, setSelectedIdKichThuoc] = useState(null);
   const [selectedIdDeGiay, setSelectedIdDeGiay] = useState(null);
-  const [minDonGia, setMinDonGia] = useState(0);
-  const [maxDonGia, setMaxDonGia] = useState(10000000000);
+  const [minDonGia, setMinDonGia] = useState("");
+  const [maxDonGia, setMaxDonGia] = useState("");
   const [SP, setSP] = useState([]);
   const [trangHienTai, setTrangHienTai] = useState(1);
   const [tongSoTrang, setTongSoTrang] = useState(0);
@@ -239,22 +239,22 @@ export default function DetailProduct() {
             </select>
           </div>
           <div>
-            <p className="font-bold">Giá tối thiểu</p>
+            <p className="font-bold">Giá min</p>
             <input
-              className="h-[38px] w-[250px] rounded border border-gray-300 p-2"
-              type="number"
-              placeholder="Mời nhập giá thấp nhất...."
               value={minDonGia}
+              className="h-[38px] w-[250px] rounded border border-gray-300 p-2"
+              type="text"
+              placeholder="Mời nhập giá thấp nhất...."
               onChange={(e) => setMinDonGia(e.target.value)}
             />
           </div>
           <div>
-            <p className="font-bold">Giá tối đa</p>
+            <p className="font-bold">Giá max</p>
             <input
+              value={maxDonGia}
               className="h-[38px] w-[250px] rounded border border-gray-300 p-2"
               placeholder="Mời nhập giá cao nhất...."
-              type="number"
-              value={maxDonGia}
+              type="text"
               onChange={(e) => setMaxDonGia(e.target.value)}
             />
           </div>
@@ -286,61 +286,66 @@ export default function DetailProduct() {
           <div className="min-w-full">
             {/* Thêm max-height và overflow-y-auto để tạo thành cuộn */}
             <div className="max-h-[500px] overflow-y-auto">
-              <table className="mb-[60px] min-w-full bg-white text-[20px]">
-                <thead>
-                  <tr className="h-10 border-b-2 border-indigo-500 text-base">
-                    <th className="w-10">STT</th>
-                    <th className="w-[250px]">Sản phẩm</th>
-                    <th className="w-[100px] border-b">Ảnh</th>
-
-                    <th className="w-[100px] border-b">Đơn giá</th>
-                    <th className="w-[100px] border-b">Số lượng</th>
-                    <th className="w-[100px] border-b">Trạng thái</th>
-                    <th className="w-[100px] border-b">Hành động</th>
-                  </tr>
-                </thead>
-                <tbody className="text-center">
-                  {SPCTbyIdSP.map((item, index) => (
-                    <tr key={item.id} className="hover:bg-gray-100">
-                      <td className="border-b-[1px] border-indigo-500 px-4 py-2">
-                        {index + 1 + (trangHienTai - 1) * pageSize}
-                      </td>
-                      <td className="border-b-[1px] border-indigo-500 px-4 py-2">
-                        {SP.tenSanPham} [ {item.kichThuoc}-{item.mauSac}]
-                      </td>
-                      <td className="border-b-[1px] border-indigo-500">
-                        <div className="flex justify-center">
-                          <LayAnhTheoIdSP
-                            id={item.id}
-                            className="h-[70px] w-[70px]"
-                          />
-                        </div>
-                      </td>
-
-                      <td className="border-b-[1px] border-indigo-500">
-                        {item.donGia}
-                      </td>
-                      <td className="border-b-[1px] border-indigo-500">
-                        {item.soLuong}
-                      </td>
-                      <td className="border-b-[1px] border-indigo-500">
-                        {item.trangThai ? (
-                          <span className="text-green-600">Đang bán</span>
-                        ) : (
-                          <span className="text-red-600">Ngừng bán</span>
-                        )}
-                      </td>
-                      <td className="border-b-[1px] border-indigo-500">
-                        <Link to={`/admin/Update-DetailProduct/${item.id}`}>
-                          <Button color="primary" variant="link">
-                            Sửa
-                          </Button>
-                        </Link>
-                      </td>
+              {/* ... existing code ... */}
+              {SPCTbyIdSP.length > 0 ? (
+                <table className="mb-[60px] min-w-full bg-white text-[20px]">
+                  <thead>
+                    <tr className="h-10 border-b-2 border-indigo-500 text-base">
+                      <th className="w-10">STT</th>
+                      <th className="w-[250px]">Sản phẩm</th>
+                      <th className="w-[100px] border-b">Ảnh</th>
+                      <th className="w-[100px] border-b">Đơn giá</th>
+                      <th className="w-[100px] border-b">Số lượng</th>
+                      <th className="w-[100px] border-b">Trạng thái</th>
+                      <th className="w-[100px] border-b">Hành động</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="text-center">
+                    {SPCTbyIdSP.map((item, index) => (
+                      <tr key={item.id} className="hover:bg-gray-100">
+                        <td className="border-b-[1px] border-indigo-500 px-4 py-2">
+                          {index + 1 + (trangHienTai - 1) * pageSize}
+                        </td>
+                        <td className="border-b-[1px] border-indigo-500 px-4 py-2">
+                          {SP.tenSanPham} [ {item.kichThuoc}-{item.mauSac}]
+                        </td>
+                        <td className="border-b-[1px] border-indigo-500">
+                          <div className="flex justify-center">
+                            <LayAnhTheoIdSP
+                              id={item.id}
+                              className="h-[70px] w-[70px]"
+                            />
+                          </div>
+                        </td>
+                        <td className="border-b-[1px] border-indigo-500">
+                          {item.donGia}
+                        </td>
+                        <td className="border-b-[1px] border-indigo-500">
+                          {item.soLuong}
+                        </td>
+                        <td className="border-b-[1px] border-indigo-500">
+                          {item.trangThai ? (
+                            <span className="text-green-600">Đang bán</span>
+                          ) : (
+                            <span className="text-red-600">Ngừng bán</span>
+                          )}
+                        </td>
+                        <td className="border-b-[1px] border-indigo-500">
+                          <Link to={`/admin/Update-DetailProduct/${item.id}`}>
+                            <Button color="primary" variant="link">
+                              Sửa
+                            </Button>
+                          </Link>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                <div className="text-center text-2xl">
+                  Không có sản phẩm nào!
+                </div> // Hiển thị loading nếu không có sản phẩm
+              )}
             </div>
           </div>
         </div>
@@ -377,7 +382,7 @@ export default function DetailProduct() {
         />
       </div>
 
-      <ToastContainer
+      {/* <ToastContainer
         position="top-right"
         autoClose={3000}
         hideProgressBar={false}
@@ -389,7 +394,7 @@ export default function DetailProduct() {
         pauseOnHover
         theme="light"
         transition={Bounce}
-      />
+      /> */}
     </>
   );
 }

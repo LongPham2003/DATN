@@ -176,7 +176,7 @@ export default function TheMoiNhanVien({ button, onAdd }) {
           </button>
         </form>
       </div>
-      <ToastContainer
+      {/* <ToastContainer
         position="top-right"
         autoClose={3000}
         hideProgressBar={false}
@@ -188,7 +188,7 @@ export default function TheMoiNhanVien({ button, onAdd }) {
         pauseOnHover
         theme="light"
         transition={Bounce}
-      />
+      /> */}
     </div>
   );
 }

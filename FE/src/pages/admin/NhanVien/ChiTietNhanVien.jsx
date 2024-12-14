@@ -313,7 +313,7 @@ const ChiTietNhanVien = () => {
           </button>
         </form>
       </div>
-      <ToastContainer
+      {/* <ToastContainer
         position="top-right"
         autoClose={3000}
         hideProgressBar={false}
@@ -325,7 +325,7 @@ const ChiTietNhanVien = () => {
         pauseOnHover
         theme="light"
         transition={Bounce}
-      />
+      /> */}
     </div>
   );
 };

@@ -413,7 +413,7 @@ export default function GioHang() {
           </div>
         </div>
       </div>
-      <ToastContainer
+      {/* <ToastContainer
         position="top-center"
         autoClose={1500}
         hideProgressBar={false}
@@ -425,7 +425,7 @@ export default function GioHang() {
         pauseOnHover
         theme="light"
         transition={Zoom}
-      />
+      /> */}
     </>
   );
 }

@@ -543,7 +543,7 @@ const HoaDonChiTiet = () => {
         ></ThongTinHoaDon>
       </div>
       <hr className="border-s-pink-700" />
-      <ToastContainer
+      {/* <ToastContainer
         position="top-right"
         autoClose={1000}
         hideProgressBar={false}
@@ -555,7 +555,7 @@ const HoaDonChiTiet = () => {
         pauseOnHover
         theme="light"
         transition={Bounce}
-      />
+      /> */}
       {OpenModelLSHD && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="flex h-[525px] max-h-[600px] w-[450px] justify-between overflow-y-auto rounded-lg bg-white p-8">

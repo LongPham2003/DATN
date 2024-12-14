@@ -6,6 +6,18 @@ import axios from "../../../../api/axiosConfig";
 import CustomDropdown from "../../../CustomDropdown";
 import { Link } from "react-router-dom";
 import SanPhamChiTiet from "./SanPhamChiTiet.jsx";
+import {
+  EyeFilled,
+  InfoCircleFilled,
+  PlusCircleFilled,
+  ReloadOutlined,
+  SettingOutlined,
+  UnorderedListOutlined,
+} from "@ant-design/icons";
+import { InformationCircleIcon } from "@heroicons/react/16/solid";
+import { ListConsumer } from "antd/es/list/context.js";
+import { ListBulletIcon, PaperClipIcon } from "@heroicons/react/24/outline";
+import { BiRefresh } from "react-icons/bi";
 
 export default function ListProduct() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -192,10 +204,10 @@ export default function ListProduct() {
           <div onClick={handleReset}>
             <button
               type="button"
-              className="mt-10 h-10 w-32 rounded-md bg-red-400 font-semibold text-white transition-colors duration-300 hover:bg-red-600 focus:bg-red-700 active:bg-red-300" // Thêm margin-left để tạo khoảng cách
+              className="mt-10 h-10 w-32 rounded-md bg-red-500 font-semibold text-white transition-colors duration-300 hover:bg-red-600 focus:bg-red-700 active:bg-red-300" // Thêm margin-left để tạo khoảng cách
               // Gọi hàm reset khi nhấn nút
             >
-              Làm mới
+              <ReloadOutlined /> Làm mới
             </button>
           </div>
         </div>
@@ -211,7 +223,7 @@ export default function ListProduct() {
             onClick={openModal}
             className="mr-16 h-10 rounded-md bg-green-500 px-4 font-semibold text-white transition-colors duration-300 hover:bg-green-600 focus:bg-green-700 active:bg-green-400"
           >
-            Thêm sản phẩm
+            <PlusCircleFilled /> <span> Thêm sản phẩm</span>
           </button>
         </div>
         <div className="flex flex-col">
@@ -219,7 +231,7 @@ export default function ListProduct() {
             <div className="inline-block min-w-full py-2">
               <div className="">
                 <table className="min-w-full text-left text-sm font-light">
-                  <thead className="bg-blue-700 text-xl font-medium text-white">
+                  <thead className="bg-amber-600 text-xl font-medium text-white">
                     <tr>
                       <th className="w-10 px-6 py-4">STT</th>
                       <th className="w-14 px-6 py-4">Mã</th>
@@ -227,7 +239,7 @@ export default function ListProduct() {
                       <th className="w-52 px-6 py-4">Loại</th>
                       <th className="w-52 px-6 py-4">Ngày tạo</th>
                       <th className="w-52 px-6 py-4">Số lượng tồn</th>
-                      <th className="w-52 px-6 py-4">Trạng thái</th>
+                      <th className="w-64 px-6 py-4">Trạng thái</th>
                       <th className="px-6 py-4">Hành động</th>
                     </tr>
                   </thead>
@@ -253,22 +265,29 @@ export default function ListProduct() {
                           {/* Xem detail */}
                           <div className="flex gap-4">
                             <button
-                              className="rounded bg-blue-500 px-2 py-1 text-white"
+                              className="rounded bg-violet-500 px-2 py-1 text-white"
                               onClick={() => openSuaModal(sp.id)}
+                              title="Sửa thông tin sản phẩm"
                             >
-                              Sửa
+                              <SettingOutlined />
                             </button>
 
-                            <button className="rounded bg-blue-500 px-2 py-1 text-white">
+                            <button className="rounded bg-yellow-500 px-2 py-1 text-white">
                               <Link to={`/admin/chitietsanpham/${sp.id}`}>
-                                <div className="flex gap-2 transition-transform duration-500 hover:scale-125">
-                                  <span>Chi tiết</span>
+                                <div
+                                  className="flex gap-2 transition-transform duration-500 hover:scale-125"
+                                  title="Danh sách biến thể"
+                                >
+                                  <EyeFilled />
                                 </div>
                               </Link>
                             </button>
-                            <button className="rounded bg-blue-500 px-2 py-1 text-white">
+                            <button
+                              className="rounded bg-green-500 px-2 py-1 text-white"
+                              title="Thêm mới biến thể"
+                            >
                               <Link to={`/admin/themsanphamchitiet/${sp.id}`}>
-                                <span>Thêm SPCT</span>
+                                <PlusCircleFilled />
                               </Link>
                             </button>
                           </div>
