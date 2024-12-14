@@ -148,7 +148,7 @@ export default function DiaCHiMacDinhKhachHang({
               to_ward_code: idXa,
               height: 20, // chiều cao
               length: 30, //chiều dài cm
-              weight: 300 * soLuongSanPham, // cân nặng g
+              weight: 500 * soLuongSanPham, // cân nặng g
               width: 40, // chiều rộng
             },
             headers: {

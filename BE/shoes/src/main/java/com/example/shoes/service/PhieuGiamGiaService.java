@@ -9,14 +9,18 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-
-public interface PhieuGiamGiaService {
+public interface PhieuGiamGiaService
+{
     PhieuGiamGiaResponse getById(Integer id);
+
     PhieuGiamGiaResponse create(PhieuGiamGiaRequest request);
+
     PhieuGiamGiaResponse update(Integer id, PhieuGiamGiaRequest request);
+
     PhieuGiamGiaResponse delete(Integer id, PhieuGiamGiaRequest request);
 
     List<PhieuGiamGiaResponse> getAllTrangThaiTrue();
 
-    PhanTrangResponse<PhieuGiamGiaResponse> getPhieuGiamGia(int pageNumber, int pageSize, String keyword, String tenVoucher, String trangThai, LocalDateTime ngayBatDau, LocalDateTime ngatKetThuc);
+    PhanTrangResponse<PhieuGiamGiaResponse> getPhieuGiamGia(int pageNumber, int pageSize, String keyword,
+            String tenVoucher, String trangThai, LocalDateTime ngayBatDau, LocalDateTime ngatKetThuc);
 }

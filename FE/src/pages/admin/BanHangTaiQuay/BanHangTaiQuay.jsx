@@ -1082,6 +1082,7 @@ export default function BanHangTaiQuay() {
                       />
                       <div>Ngày giao hàng dự kiến:{ngayDuKien}</div>
                     </div>
+                    <div className="my-3 text-center text-red-500">{error}</div>
                     <div className="flex justify-center">
                       {" "}
                       <button
@@ -1292,7 +1293,7 @@ export default function BanHangTaiQuay() {
         </div>
       )}
 
-      <ToastContainer
+      {/* <ToastContainer
         position="top-center"
         autoClose={500}
         hideProgressBar={false}
@@ -1303,7 +1304,7 @@ export default function BanHangTaiQuay() {
         draggable
         theme="light"
         transition={Bounce}
-      />
+      /> */}
       <div style={{ display: "none" }}>
         <ExportPDF idHoaDon={tempHoaDonId} />
       </div>

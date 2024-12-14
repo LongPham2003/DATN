@@ -38,24 +38,24 @@ public interface ThongKeRepo
 
     //Ngay hom nay
     @Query(value = """
-                SELECT\s
-               COALESCE((SELECT SUM(hd.tien_phai_thanh_toan) - COALESCE(SUM(hd.phi_van_chuyen), 0)
-               FROM hoa_don hd
-                 WHERE hd.trang_thai_thanh_toan = 1
-                 AND DATE(hd.update_at) = CURDATE()), 0) AS tongTien,
-                  COALESCE(COUNT(DISTINCT hd.id_khach_hang), 0) AS tongKhachHang,
-                  COALESCE(SUM(CASE WHEN hdct.id_hoa_don = hd.id AND hd.trang_thai_thanh_toan = 1 THEN hdct.so_luong ELSE 0 END), 0) AS sanPhamBanDuoc,
-                  COALESCE(COUNT(DISTINCT CASE WHEN hd.id_khach_hang IS NULL AND hd.trang_thai_thanh_toan = 1 THEN hd.id END), 0) AS khachLe,
-                  COALESCE(COUNT(CASE WHEN hd.trang_thai_thanh_toan = 1 THEN hd.id END), 0) AS donThanhCong,
-                  COALESCE(COUNT(CASE WHEN hd.trang_thai_don_hang = 'HUY_DON' THEN hd.id END), 0) AS donHuy,
-                  COALESCE(SUM(hd.tien_duoc_giam), 0) AS tongTienGiam,
-                  COUNT(CASE WHEN hd.trang_thai_thanh_toan = 1 AND hd.id_phieu_giam_gia IS NOT NULL THEN hd.id END) AS tongDonApDungPhieuGiamGia
-                  FROM\s
-                  hoa_don hd
-                  LEFT JOIN\s
-                  hoa_don_chi_tiet hdct ON hd.id = hdct.id_hoa_don
-                  WHERE\s
-                  DATE(hd.update_at) = CURDATE();
+              SELECT\s
+                 (SELECT SUM(hd.tien_phai_thanh_toan) - COALESCE(SUM(hd.phi_van_chuyen), 0)
+                 FROM hoa_don hd 
+                 WHERE hd.trang_thai_thanh_toan = 1  AND DATE(hd.update_at) = CURDATE()) AS tongTien,
+                                                     COALESCE(COUNT(DISTINCT hd.id_khach_hang), 0) AS tongKhachHang,
+                                                     COALESCE(SUM(CASE WHEN hd.trang_thai_thanh_toan = 1 THEN hdct.so_luong ELSE 0 END), 0) AS sanPhamBanDuoc,
+                                                     COALESCE(COUNT(DISTINCT CASE WHEN hd.id_khach_hang IS NULL AND hd.trang_thai_thanh_toan = 1 THEN hd.id END), 0) AS khachLe,
+                                                     COALESCE(COUNT(CASE WHEN hd.trang_thai_thanh_toan = 1 THEN hd.id END), 0) AS donThanhCong,
+                                                     COALESCE(COUNT(CASE WHEN hd.trang_thai_don_hang = 'HUY_DON' THEN hd.id END), 0) AS donHuy,
+                                                     COALESCE(SUM(hd.tien_duoc_giam), 0) AS tongTienGiam,
+                                                     COALESCE(COUNT(CASE WHEN hd.trang_thai_thanh_toan = 1 AND hd.id_phieu_giam_gia IS NOT NULL THEN hd.id END), 0) AS tongDonApDungPhieuGiamGia
+                                                 FROM\s
+                                                     hoa_don hd
+                                                 LEFT JOIN\s
+                                                     hoa_don_chi_tiet hdct ON hd.id = hdct.id_hoa_don
+                                                 WHERE\s
+                                                     DATE(hd.update_at) = CURDATE();
+                                                 
             """, nativeQuery = true)
     DoanhThu doanhThuHomNay();
 
@@ -161,8 +161,10 @@ public interface ThongKeRepo
                  GROUP BY th.ten
                  ORDER BY SUM(hdct_inner.so_luong) DESC
                  LIMIT 1) AS tenThuongHieuBanChay,
-                MAX(spct.don_gia) AS giaCaoNhat,
-                MIN(spct.don_gia) AS giaThapNhat,
+                 (select MAX(don_gia) from san_pham_chi_tiet spct
+                  where spct.id_san_pham = sp.id) AS giaCaoNhat,
+                   (select MIN(spct.don_gia) from san_pham_chi_tiet spct
+                    where spct.id_san_pham = sp.id) AS giaThapNhat,
                 SUM(hdct.so_luong) AS tongSoLuongBanDuoc
             FROM
                 san_pham sp
@@ -214,8 +216,10 @@ public interface ThongKeRepo
                  GROUP BY th.ten
                  ORDER BY SUM(hdct_inner.so_luong) DESC
                  LIMIT 1) AS tenThuongHieuBanChay,
-                MAX(spct.don_gia) AS giaCaoNhat,
-                MIN(spct.don_gia) AS giaThapNhat,
+                 (select MAX(don_gia) from san_pham_chi_tiet spct
+                                                 		where spct.id_san_pham = sp.id) AS giaCaoNhat,
+                                                     (select MIN(spct.don_gia) from san_pham_chi_tiet spct
+                                                 		where spct.id_san_pham = sp.id) AS giaThapNhat,
                 SUM(hdct.so_luong) AS tongSoLuongBanDuoc
             FROM
                 san_pham sp
@@ -268,8 +272,10 @@ public interface ThongKeRepo
                  GROUP BY th.ten
                  ORDER BY SUM(hdct_inner.so_luong) DESC
                  LIMIT 1) AS tenThuongHieuBanChay,
-                MAX(spct.don_gia) AS giaCaoNhat,
-                MIN(spct.don_gia) AS giaThapNhat,
+                (select MAX(don_gia) from san_pham_chi_tiet spct
+                                                 		where spct.id_san_pham = sp.id) AS giaCaoNhat,
+                                                     (select MIN(spct.don_gia) from san_pham_chi_tiet spct
+                                                 		where spct.id_san_pham = sp.id) AS giaThapNhat,
                 SUM(hdct.so_luong) AS tongSoLuongBanDuoc
             FROM\s
                 san_pham sp
@@ -321,8 +327,10 @@ public interface ThongKeRepo
                  GROUP BY th.ten
                  ORDER BY SUM(hdct_inner.so_luong) DESC
                  LIMIT 1) AS tenThuongHieuBanChay,
-                MAX(spct.don_gia) AS giaCaoNhat,
-                MIN(spct.don_gia) AS giaThapNhat,
+                 (select MAX(don_gia) from san_pham_chi_tiet spct
+                                                 		where spct.id_san_pham = sp.id) AS giaCaoNhat,
+                                                     (select MIN(spct.don_gia) from san_pham_chi_tiet spct
+                                                 		where spct.id_san_pham = sp.id) AS giaThapNhat,
                 SUM(hdct.so_luong) AS tongSoLuongBanDuoc
             FROM\s
                 san_pham sp

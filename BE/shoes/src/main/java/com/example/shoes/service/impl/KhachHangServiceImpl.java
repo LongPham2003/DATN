@@ -149,6 +149,7 @@ public class KhachHangServiceImpl implements KhachHangService {
     }
 
     @Override
+    @Transactional
     public KhachHang update(Integer id, KhachHangRequest request) {
         Optional<KhachHang> khachHangOptional = khachHangRepo.findById(id);
 

@@ -54,7 +54,7 @@ const ChiTietPhieuGiamGia = () => {
 
     Modal.confirm({
       title: "Xác nhận cập nhật",
-      content: "Bạn có chắc chắn muốn cập nhật voucher này không?",
+      content: "Bạn có chắc chắn muốn cập nhật phiếu giảm giá này không ?",
       onOk() {
         // Nếu người dùng xác nhận, gửi yêu cầu cập nhật
         axios
@@ -322,7 +322,7 @@ const ChiTietPhieuGiamGia = () => {
           </div>
         </form>
       </div>
-      <ToastContainer
+      {/* <ToastContainer
         position="top-center"
         autoClose={3000}
         hideProgressBar={false}
@@ -334,7 +334,7 @@ const ChiTietPhieuGiamGia = () => {
         pauseOnHover
         theme="light"
         transition={Bounce}
-      />
+      /> */}
     </div>
   );
 };

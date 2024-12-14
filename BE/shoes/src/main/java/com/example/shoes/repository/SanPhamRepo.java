@@ -36,7 +36,11 @@ public interface SanPhamRepo
     @Query("SELECT sp FROM SanPham sp WHERE sp.trangThai = true")
     List<SanPham> getAllTrangThaiTrue();
 
-    @Query(value = "SELECT sp.id AS idsp,spct.id, sp.ma, spct.don_gia, sp.ten_san_pham AS tenSanPham, SUM(hdc.so_luong)" + " AS tongSoLuong " + "FROM san_pham sp " + "JOIN san_pham_chi_tiet spct ON sp.id = spct.id_san_pham " + "JOIN hoa_don_chi_tiet hdc ON spct.id = hdc.id_spct " + "JOIN hoa_don hd ON hdc.id_hoa_don = hd.id " + "WHERE MONTH(hd.create_at) = MONTH(CURRENT_DATE) " + "  AND YEAR(hd.create_at) = YEAR(CURRENT_DATE) " + "  AND hd.trang_thai_don_hang = 'HOAN_THANH' " + "GROUP BY sp.id " + "ORDER BY SUM(hdc.so_luong) DESC " + "LIMIT 3", nativeQuery = true)
+    @Query(value = "SELECT sp.id AS idsp,spct.id, sp.ma, spct.don_gia, sp.ten_san_pham AS tenSanPham," +
+            " SUM(hdc.so_luong)" + " AS tongSoLuong " + "FROM san_pham sp " + "JOIN san_pham_chi_tiet spct ON sp.id = spct.id_san_pham " +
+            "JOIN hoa_don_chi_tiet hdc ON spct.id = hdc.id_spct " + "JOIN hoa_don hd ON hdc.id_hoa_don = hd.id " +
+            "WHERE  hd.trang_thai_don_hang = 'HOAN_THANH' " + "GROUP BY sp.id,spct.id " +
+            "ORDER BY SUM(hdc.so_luong) DESC " + "LIMIT 3", nativeQuery = true)
     List<Object[]> findTop3SanPhamBanChayTrongThangHienTai();
 
     @Query(value = """

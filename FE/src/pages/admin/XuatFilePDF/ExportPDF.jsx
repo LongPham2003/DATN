@@ -127,9 +127,13 @@ export const ExportPDF = ({ idHoaDon }) => {
                 })}
               </b>
             </p>
-            <p>Ten khach hàng:{hoadon.tenKhachHang}</p>
+            <p>Tên khách hàng:{hoadon.tenKhachHang}</p>
 
-            {hoadon.soDienThoai !== null ? <p>Sdt:{hoadon.soDienThoai}</p> : ""}
+            {hoadon.soDienThoai !== null ? (
+              <p>Số điện thoại:{hoadon.soDienThoai}</p>
+            ) : (
+              ""
+            )}
             {hoadon.diaChiGiaoHang !== null ? (
               <p>Địa chỉ:{hoadon.diaChiGiaoHang}</p>
             ) : (
@@ -145,16 +149,16 @@ export const ExportPDF = ({ idHoaDon }) => {
                     STT
                   </th>
                   <th className="w-52 border-collapse border-2 border-solid border-gray-500 p-2">
-                    Ten san pham
+                    Tên sản phẩm
                   </th>
                   <th className="w-20 border-collapse border-2 border-solid border-gray-500 p-2">
-                    So luong
+                    Số lượng
                   </th>
                   <th className="w-36 border-collapse border-2 border-solid border-gray-500 p-2">
-                    Don gia
+                    Đơn giá
                   </th>
                   <th className="w-28 border-collapse border-2 border-solid border-gray-500 p-2">
-                    Thanh tien
+                    Thành tiền
                   </th>
                 </tr>
               </thead>
@@ -195,7 +199,7 @@ export const ExportPDF = ({ idHoaDon }) => {
             <div className="my-2">
               <p>Tổng tiền: {hoadon.tongTien}</p>
               <p>Giảm giá: {hoadon.tienDuocGiam}</p>
-              <p>Giảm giá: {hoadon.tienShip}</p>
+              <p>Phí vận chuyển: {hoadon.tienShip}</p>
               <p>Tiền phải thanh toán: {hoadon.tienPhaiThanhToan}</p>
             </div>
             <hr />

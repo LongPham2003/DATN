@@ -51,7 +51,7 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
 
     // Xử lý logic gửi dữ liệu form ở đây
     confirm({
-      title: "Bạn có chắc chắn muốn thêm phiếu giảm giá này?",
+      title: "Bạn có chắc chắn muốn thêm phiếu giảm giá này ?",
       content: "Vui lòng xác nhận trước khi tiếp tục.",
       onOk: async () => {
         try {
@@ -220,9 +220,9 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
           </div>
         </form>
       </div>
-      <ToastContainer
+      {/* <ToastContainer
         position="top-right"
-        autoClose={3000}
+        autoClose={1000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
@@ -232,7 +232,7 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
         pauseOnHover
         theme="light"
         transition={Bounce}
-      />
+      /> */}
     </div>
   );
 };

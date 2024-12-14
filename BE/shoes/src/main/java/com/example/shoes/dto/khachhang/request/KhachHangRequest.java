@@ -39,7 +39,7 @@ public class KhachHangRequest {
 
     private Boolean trangThai;
 
-    @NotNull(message = "Tỉnh/Thành phố không được để trống")
+    @NotBlank(message = "Tỉnh/Thành phố không được để trống")
     private String tinhThanhPho;
 
     @NotBlank(message = "Huyện/Quận không được để trống")

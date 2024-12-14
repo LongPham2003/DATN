@@ -211,11 +211,16 @@ export default function ChonSizeVSMauSac({ id }) {
               >
                 Thêm vào giỏ hàng
               </button>
-              <Link to="/muangay">
-                <button
-                  className="h-[50px] w-[250px] rounded bg-orange-500 px-4 py-2 text-xl text-white hover:bg-orange-600"
-                  onClick={() => console.log("Mua ngay")}
-                >
+              <Link
+                to="/muangay"
+                onClick={(e) => {
+                  if (idMauSac === null || idSize === null) {
+                    e.preventDefault(); // Ngăn chặn chuyển hướng nếu chưa chọn
+                    toast("Bạn chưa chọn size và màu");
+                  }
+                }}
+              >
+                <button className="h-[50px] w-[250px] rounded bg-orange-500 px-4 py-2 text-xl text-white hover:bg-orange-600">
                   Mua ngay
                 </button>
               </Link>

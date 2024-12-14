@@ -12,8 +12,11 @@ import com.example.shoes.entity.HoaDon;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.repository.HoaDonRepo;
 import com.example.shoes.service.HoaDonService;
+import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -106,7 +109,11 @@ public class HoaDonController {
     }
 
     @PostMapping("/dathang/{id}")
-    private ApiResponse<Void> dathang(@PathVariable Integer id, @RequestBody DatHangRequest request) {
+    private ApiResponse<Void> dathang(@PathVariable Integer id,@Valid @RequestBody DatHangRequest request,
+            BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            throw new ValidationException(bindingResult.getFieldError().getDefaultMessage());
+        }
         return ApiResponse.<Void>builder().result(hoaDonService.updateTrangThaiHoaDonById(id, request)).build();
     }
     @PostMapping("/xacnhan/{id}")
