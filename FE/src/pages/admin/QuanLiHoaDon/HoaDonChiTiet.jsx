@@ -192,10 +192,10 @@ const HoaDonChiTiet = () => {
           .then((response) => {
             console.log("Cập nhật thành công:", response.data);
             toast.success("Thành công");
-            closeModalXacNhan();
+            closeModalHuy();
           })
           .catch((error) => {
-            closeModalXacNhan();
+            closeModalHuy();
             toast.error(error.response.data.message); // Hiển thị thông báo từ server
           });
       },
@@ -393,7 +393,7 @@ const HoaDonChiTiet = () => {
                     : item.trangThai === "CHO_LAY_HANG"
                       ? "Chờ lấy hàng"
                       : item.trangThai === "CHO_GIAO_HANG"
-                        ? "Chờ vận chuyển"
+                        ? "Chờ giao hàng"
                         : item.trangThai === "DANG_GIAO"
                           ? "Đang giao hàng"
                           : item.trangThai === "DA_THANH_TOAN"
@@ -407,56 +407,62 @@ const HoaDonChiTiet = () => {
       </Timeline>
       <hr className="mb-2" />
       <div className="mx-10 flex justify-between">
-        <div>
-          {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" && (
-            <button
-              onClick={openModalXacNhan}
-              className="rounded bg-blue-500 px-2 py-1 text-white"
-            >
-              Xác nhận
-            </button>
-          )}
-          {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" && (
-            <button
-              onClick={openModalHuy}
-              className="mx-5 rounded bg-blue-500 px-2 py-1 text-white"
-            >
-              Hủy Hóa Đơn
-            </button>
-          )}
-          {hoaDon.trangThaiDonHang === "Đã xác nhận đơn" && (
-            <button
-              onClick={openModalChoLayHang}
-              className="rounded bg-blue-500 px-2 py-1 text-white"
-            >
-              Chờ lấy hàng
-            </button>
-          )}
-          {hoaDon.trangThaiDonHang === "Chờ lấy hàng" && (
-            <button
-              onClick={openModalChoGiao}
-              className="rounded bg-blue-500 px-2 py-1 text-white"
-            >
-              Chờ vận chuyển
-            </button>
-          )}
+        <div className="flex">
+          {hoaDon.phuongThucGiaoHang === "Tại quầy" ? (
+            ""
+          ) : (
+            <div>
+              {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" && (
+                <button
+                  onClick={openModalXacNhan}
+                  className="rounded bg-blue-500 px-2 py-1 text-white"
+                >
+                  Xác nhận
+                </button>
+              )}
+              {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" && (
+                <button
+                  onClick={openModalHuy}
+                  className="mx-5 rounded bg-blue-500 px-2 py-1 text-white"
+                >
+                  Hủy Hóa Đơn
+                </button>
+              )}
+              {hoaDon.trangThaiDonHang === "Đã xác nhận đơn" && (
+                <button
+                  onClick={openModalChoLayHang}
+                  className="rounded bg-blue-500 px-2 py-1 text-white"
+                >
+                  Chờ lấy hàng
+                </button>
+              )}
+              {hoaDon.trangThaiDonHang === "Chờ lấy hàng" && (
+                <button
+                  onClick={openModalChoGiao}
+                  className="rounded bg-blue-500 px-2 py-1 text-white"
+                >
+                  Chờ vận chuyển
+                </button>
+              )}
 
-          {hoaDon.trangThaiDonHang === "Chờ đơn vị vẫn chuyển" && (
-            <button
-              onClick={openModalGiao}
-              className="rounded bg-blue-500 px-2 py-1 text-white"
-            >
-              Giao hàng
-            </button>
-          )}
+              {hoaDon.trangThaiDonHang === "Chờ đơn vị vẫn chuyển" && (
+                <button
+                  onClick={openModalGiao}
+                  className="rounded bg-blue-500 px-2 py-1 text-white"
+                >
+                  Giao hàng
+                </button>
+              )}
 
-          {hoaDon.trangThaiDonHang === "Đơn đang trên đường giao hàng" && (
-            <button
-              onClick={openModalHT}
-              className="rounded bg-blue-500 px-2 py-1 text-white"
-            >
-              Hoàn thành
-            </button>
+              {hoaDon.trangThaiDonHang === "Đơn đang trên đường giao hàng" && (
+                <button
+                  onClick={openModalHT}
+                  className="rounded bg-blue-500 px-2 py-1 text-white"
+                >
+                  Hoàn thành
+                </button>
+              )}
+            </div>
           )}
 
           <button

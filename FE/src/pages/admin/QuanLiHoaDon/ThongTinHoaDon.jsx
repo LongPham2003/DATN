@@ -134,8 +134,9 @@ const ThongTinHoaDon = ({
       <div className="mx-4 py-4">
         <div className="mx-5 flex justify-between py-3">
           <h3 className="text-[20px] font-bold">Sản phẩm</h3>
-          {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" &&
-          hoaDon.trangThaiThanhToan === "Chưa thanh toán" ? (
+          {/* {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" &&
+          hoaDon.trangThaiThanhToan === "Chưa thanh toán" &&
+          hoaDon.phuongThucGiaoHang !== "Tại quầy" ? (
             <button
               onClick={openModalSP}
               className="rounded bg-blue-500 px-2 py-2 text-white"
@@ -144,7 +145,7 @@ const ThongTinHoaDon = ({
             </button>
           ) : (
             ""
-          )}
+          )} */}
         </div>
 
         <table className="min-w-full text-center text-sm font-light">
@@ -156,10 +157,10 @@ const ThongTinHoaDon = ({
               <th className="px-6 py-4">Đơn giá</th>
               <th className="px-6 py-4">Số lượng</th>
               <th className="px-6 py-4">Thành tiền</th>
-              {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" &&
+              {/* {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" &&
               hoaDon.trangThaiThanhToan === "Chưa thanh toán" ? (
-                <th className="px-6 py-4">Hành động</th>
-              ) : null}
+                // <th className="px-6 py-4">Hành động</th>
+              ) : null} */}
             </tr>
           </thead>
           <tbody>
@@ -180,26 +181,26 @@ const ThongTinHoaDon = ({
                 <td>{formatTien(SPCT.donGia)}</td>
                 <td>{SPCT.soLuong}</td>
                 <td>{formatTien(SPCT.donGia * SPCT.soLuong)}</td>
-                {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" &&
+                {/* {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" &&
                 hoaDon.trangThaiThanhToan === "Chưa thanh toán" ? (
-                  <td>
-                    <Popconfirm
-                      title="Xóa Sản phẩm"
-                      description="Bạn có muốn xóa sản phẩm không?"
-                      okText="Yes"
-                      cancelText="No"
-                      onConfirm={(e) => {
-                        e.preventDefault();
-                        XoaSPKhoiGioHang(SPCT.idSpct);
-                      }}
-                    >
-                      <Button type="primary" danger>
-                        <TrashIcon className="h-5 w-5 text-white" />
-                        Xóa
-                      </Button>
-                    </Popconfirm>
-                  </td>
-                ) : null}
+                  // <td>
+                  //   <Popconfirm
+                  //     title="Xóa Sản phẩm"
+                  //     description="Bạn có muốn xóa sản phẩm không?"
+                  //     okText="Yes"
+                  //     cancelText="No"
+                  //     onConfirm={(e) => {
+                  //       e.preventDefault();
+                  //       XoaSPKhoiGioHang(SPCT.idSpct);
+                  //     }}
+                  //   >
+                  //     <Button type="primary" danger>
+                  //       <TrashIcon className="h-5 w-5 text-white" />
+                  //       Xóa
+                  //     </Button>
+                  //   </Popconfirm>
+                  // </td>
+                ) : null} */}
               </tr>
             ))}
           </tbody>

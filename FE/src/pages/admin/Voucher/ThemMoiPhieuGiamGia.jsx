@@ -220,7 +220,7 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
           </div>
         </form>
       </div>
-      {/* <ToastContainer
+      <ToastContainer
         position="top-right"
         autoClose={1000}
         hideProgressBar={false}
@@ -232,7 +232,7 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
         pauseOnHover
         theme="light"
         transition={Bounce}
-      /> */}
+      />
     </div>
   );
 };

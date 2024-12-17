@@ -29,16 +29,16 @@ export default function TrangChu() {
           <SnaPhamBanChay></SnaPhamBanChay>
         </div>
         {/* {/* <div className="flex justify-center text-3xl font-bold">
-          <span>------- Các Sản Phẩm khác -------</span>
-        </div> */}
+            <span>------- Các Sản Phẩm khác -------</span>
+          </div> */}
         {/* <div className="mb-7">
-          <CacSanPham />
-        </div> */}
+            <CacSanPham />
+          </div> */}
         {/* <div className="flex justify-center text-3xl font-bold">
-          <span>------- Tin tức nổi bật -------</span>
-        </div>
-
-        <TinTuc /> */}
+            <span>------- Tin tức nổi bật -------</span>
+          </div>
+  
+          <TinTuc /> */}
         <div className="my-7">
           <GiayMoiNhat />
         </div>

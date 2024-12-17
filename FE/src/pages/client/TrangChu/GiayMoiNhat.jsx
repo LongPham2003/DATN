@@ -13,7 +13,7 @@ const GiayMoiNhat = () => {
       .then(async (res) => {
         const sp = res.data.result.slice(0, 4);
         setSanPham(sp);
-        console.log([sanPham]);
+        // console.log([sanPham]);
       })
       .catch((error) => {
         console.error("Lỗi" + error);
@@ -30,10 +30,10 @@ const GiayMoiNhat = () => {
       <div>
         <div className="my-5 flex">
           <div className="mx-auto">
-            <p className="mt-3 text-center font-mono text-[30px] font-bold">
+            <p className="my-3 text-center font-mono text-[50px] font-bold">
               Giày mới nhất
             </p>
-            <p className="mt-3 text-center leading-8">
+            <p className="mt-3 text-center text-[20px] leading-8">
               Khám phá bộ sưu tập giày mới nhất của chúng tôi - kết hợp thời
               trang <br /> và chức năng cho mọi bước đi của bạn.
             </p>

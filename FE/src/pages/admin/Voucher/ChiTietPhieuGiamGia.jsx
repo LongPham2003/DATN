@@ -322,7 +322,7 @@ const ChiTietPhieuGiamGia = () => {
           </div>
         </form>
       </div>
-      {/* <ToastContainer
+      <ToastContainer
         position="top-center"
         autoClose={3000}
         hideProgressBar={false}
@@ -334,7 +334,7 @@ const ChiTietPhieuGiamGia = () => {
         pauseOnHover
         theme="light"
         transition={Bounce}
-      /> */}
+      />
     </div>
   );
 };

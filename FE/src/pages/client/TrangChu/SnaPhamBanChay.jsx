@@ -40,7 +40,7 @@ export default function SnaPhamBanChay() {
         <div>
           <div className="my-5 flex">
             <div className="mx-auto">
-              <p className="mt-3 text-center font-mono text-[30px] font-bold">
+              <p className="mt-3 text-center font-mono text-[50px] font-bold">
                 Giày Bán Chạy Nhất
               </p>
               <p className="mt-3 text-center leading-8">
@@ -49,18 +49,18 @@ export default function SnaPhamBanChay() {
             </div>
           </div>
         </div>
-        <div className="mx-auto flex items-center justify-center gap-8">
+        <div className="mx-auto flex items-center justify-center gap-20">
           {sanPhamBC.map((spct, index) => (
             <Card
               key={index}
               hoverable
-              className="h-[360px]"
+              className="h-[450px] w-[400px]"
               cover={
                 <Link to={`/chitiet/${spct.idSP}`}>
                   <div className="transition-transform duration-300 hover:scale-110">
                     <LayANhTheoIdSPCT
                       id={spct.idSPCT}
-                      className="h-[350px] w-auto justify-center object-cover"
+                      className="h-[300px] w-auto justify-center object-cover"
                     />
                   </div>
                 </Link>

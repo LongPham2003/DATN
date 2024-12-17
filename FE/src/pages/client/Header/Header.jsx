@@ -3,7 +3,7 @@ import { Badge } from "antd";
 
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { ThemeContext } from "../../GlobalProvider";
 import { ListItem, ListItemPrefix } from "@material-tailwind/react";
 import { PowerIcon } from "@heroicons/react/24/solid";
@@ -26,7 +26,7 @@ export default function Header() {
       const response = await axios.get(ApiTongSoSPCT);
       // Giả sử API trả về số lượng sản phẩm trong response.data.soLuong
       setSoLuong(response.data.result.tongSoLuong); // Cập nhật state với số lượng nhận được
-      console.log(response.data.result);
+      // console.log(response.data.result);
     } catch (error) {
       console.error("Có lỗi xảy ra khi lấy tổng số sản phẩm:", error);
     }
@@ -110,7 +110,7 @@ export default function Header() {
             <span>Tra cứu đơn hàng</span>
           </Link>
           <Link
-            to="/login"
+            to="/thongtin"
             className="flex items-center space-x-1 hover:text-gray-400"
           >
             {tenKH ? (
@@ -170,30 +170,46 @@ export default function Header() {
           </div>
 
           <nav className="ml-[450px] flex space-x-8 text-2xl font-bold text-black">
-            <Link
+            <NavLink
               to="/trangchu"
-              className="flex items-center rounded px-4 py-2 font-bold text-black transition duration-700 ease-in-out hover:scale-110 hover:text-orange-500 hover:underline"
+              className={({ isActive }) =>
+                `flex items-center rounded px-4 py-2 font-bold transition duration-700 ease-in-out hover:scale-110 hover:text-orange-500 hover:underline ${
+                  isActive ? "text-orange-500" : "text-black"
+                }`
+              }
             >
               Trang chủ
-            </Link>
-            <Link
+            </NavLink>
+            <NavLink
               to="/SanPham"
-              className="flex items-center rounded px-4 py-2 font-bold text-black transition duration-700 ease-in-out hover:scale-110 hover:text-orange-500 hover:underline"
+              className={({ isActive }) =>
+                `flex items-center rounded px-4 py-2 font-bold transition duration-700 ease-in-out hover:scale-110 hover:text-orange-500 hover:underline ${
+                  isActive ? "text-orange-500" : "text-black"
+                }`
+              }
             >
               Sản phẩm
-            </Link>
-            <a
-              href="#"
-              className="flex items-center rounded px-4 py-2 font-bold text-black transition duration-700 ease-in-out hover:scale-110 hover:text-orange-500 hover:underline"
+            </NavLink>
+            <NavLink
+              to="/gioithieu"
+              className={({ isActive }) =>
+                `flex items-center rounded px-4 py-2 font-bold transition duration-700 ease-in-out hover:scale-110 hover:text-orange-500 hover:underline ${
+                  isActive ? "text-orange-500" : "text-black"
+                }`
+              }
             >
               Giới thiệu
-            </a>
-            <Link
+            </NavLink>
+            <NavLink
               to="/LienHe"
-              className="flex items-center rounded px-4 py-2 font-bold text-black transition duration-700 ease-in-out hover:scale-110 hover:text-orange-500 hover:underline"
+              className={({ isActive }) =>
+                `flex items-center rounded px-4 py-2 font-bold transition duration-700 ease-in-out hover:scale-110 hover:text-orange-500 hover:underline ${
+                  isActive ? "text-orange-500" : "text-black"
+                }`
+              }
             >
               Liên hệ
-            </Link>
+            </NavLink>
           </nav>
 
           {/* tìm kiếm */}

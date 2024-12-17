@@ -149,7 +149,6 @@ public class KhachHangServiceImpl implements KhachHangService {
     }
 
     @Override
-    @Transactional
     public KhachHang update(Integer id, KhachHangRequest request) {
         Optional<KhachHang> khachHangOptional = khachHangRepo.findById(id);
 
@@ -186,10 +185,10 @@ public class KhachHangServiceImpl implements KhachHangService {
 
         diaChi.setDiaChiMacDinh(true);
         diaChi.setTinhThanhPho(request.getTinhThanhPho());
-        diaChi.setHuyenQuan(request.getHuyenQuan());
         diaChi.setXaPhuong(request.getXaPhuong());
-        diaChi.setSoNhaDuongThonXom(request.getSoNhaDuongThonXom());
+        diaChi.setHuyenQuan(request.getHuyenQuan());
         diaChi.setDiaChiChiTiet(request.getDiaChiChiTiet());
+        diaChi.setSoNhaDuongThonXom(request.getSoNhaDuongThonXom());
         diaChi.setKhachHang(khachHang);
         diaChiRepo.save(diaChi);
 

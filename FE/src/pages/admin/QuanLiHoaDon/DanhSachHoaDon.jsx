@@ -12,8 +12,6 @@ export default function DanhSachHoaDon() {
   const [phuongThucGiaoHang, setPhuongThucGiaoHang] = useState(null);
   const [trangThai, setTrangThai] = useState(null);
   const [tongSoTrang, setTongSoTrang] = useState(0);
-  const totalRows = 10;
-  const emptyRows = totalRows - hoaDon.length;
 
   //
   const handlePageChange = (selectedPage) => {
@@ -75,22 +73,32 @@ export default function DanhSachHoaDon() {
     dg: 0,
     ht: 0,
     huy: 0,
+    clh: 0,
   });
 
   useEffect(() => {
     const fetchSoluong = async () => {
       try {
         // Gọi tất cả các API song song
-        const [hoadonRes, cxnRes, dxnRes, cghRes, dgRes, htRes, huyRes] =
-          await Promise.all([
-            axios.get("http://localhost:8080/api/hoadon/soluong/hoadon"),
-            axios.get("http://localhost:8080/api/hoadon/soluong/hoadoncxn"),
-            axios.get("http://localhost:8080/api/hoadon/soluong/hoadondxn"),
-            axios.get("http://localhost:8080/api/hoadon/soluong/hoadoncgh"),
-            axios.get("http://localhost:8080/api/hoadon/soluong/hoadondg"),
-            axios.get("http://localhost:8080/api/hoadon/soluong/hoadonht"),
-            axios.get("http://localhost:8080/api/hoadon/soluong/hoadonhd"),
-          ]);
+        const [
+          hoadonRes,
+          cxnRes,
+          dxnRes,
+          clhRes,
+          cghRes,
+          dgRes,
+          htRes,
+          huyRes,
+        ] = await Promise.all([
+          axios.get("http://localhost:8080/api/hoadon/soluong/hoadon"),
+          axios.get("http://localhost:8080/api/hoadon/soluong/hoadoncxn"),
+          axios.get("http://localhost:8080/api/hoadon/soluong/hoadondxn"),
+          axios.get("http://localhost:8080/api/hoadon/soluong/hoadonclh"),
+          axios.get("http://localhost:8080/api/hoadon/soluong/hoadoncgh"),
+          axios.get("http://localhost:8080/api/hoadon/soluong/hoadondg"),
+          axios.get("http://localhost:8080/api/hoadon/soluong/hoadonht"),
+          axios.get("http://localhost:8080/api/hoadon/soluong/hoadonhd"),
+        ]);
 
         // Cập nhật số lượng trong state
         setSoluong({
@@ -101,6 +109,7 @@ export default function DanhSachHoaDon() {
           dg: dgRes.data.result,
           ht: htRes.data.result,
           huy: huyRes.data.result,
+          clh: clhRes.data.result,
         });
       } catch (error) {
         console.error("Lỗi khi gọi API:", error);
@@ -198,6 +207,15 @@ export default function DanhSachHoaDon() {
             </button>
             <button
               className="relative rounded bg-blue-500 px-4 py-2 text-white"
+              onClick={() => setTrangThai("CHO_LAY_HANG")}
+            >
+              <span className="absolute right-0 top-0 flex h-6 w-6 translate-x-[50%] translate-y-[-50%] items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                {soluong.clh}
+              </span>
+              Chờ Lấy Hàng
+            </button>
+            <button
+              className="relative rounded bg-blue-500 px-4 py-2 text-white"
               onClick={() => setTrangThai("CHO_GIAO_HANG")}
             >
               <span className="absolute right-0 top-0 flex h-6 w-6 translate-x-[50%] translate-y-[-50%] items-center justify-center rounded-full bg-red-500 text-xs text-white">
@@ -244,7 +262,6 @@ export default function DanhSachHoaDon() {
                 <th className="border-b px-4 py-2">Mã</th>
                 <th className="border-b px-4 py-2">Tên Khách Hàng</th>
                 <th className="border-b px-4 py-2">SDT</th>
-                <th className="border-b px-4 py-2">PTTT</th>
                 <th className="border-b px-4 py-2">Tổng Tiền</th>
                 <th className="border-b px-4 py-2">Loại Đơn Hàng</th>
                 <th className="border-b px-4 py-2">Ngày Tạo</th>
@@ -261,9 +278,6 @@ export default function DanhSachHoaDon() {
                   <td className="border-b px-4 py-2">{item.ma}</td>
                   <td className="border-b px-4 py-2">{item.tenKhachHang}</td>
                   <td className="border-b px-4 py-2">{item.soDienThoai}</td>
-                  <td className="border-b px-4 py-2">
-                    {item.phuongThucThanhToan}
-                  </td>
                   <td className="border-b px-4 py-2">
                     {item.tienPhaiThanhToan}
                   </td>
@@ -310,19 +324,10 @@ export default function DanhSachHoaDon() {
                   </td>
                 </tr>
               ))}
-              {emptyRows > 0 &&
-                Array.from({ length: emptyRows }).map((_, index) => (
-                  <tr key={`empty-${index}`} style={{ height: "61px" }}>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                  </tr>
-                ))}
             </tbody>
           </table>
         </div>
-        <div className="mr-14 mt-4 flex justify-end">
+        <div className="mr-14 mt-4 flex justify-center">
           <ReactPaginate
             previousLabel={"< Previous"}
             nextLabel={"Next >"}

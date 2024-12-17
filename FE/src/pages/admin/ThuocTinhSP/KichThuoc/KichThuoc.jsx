@@ -78,15 +78,12 @@ export default function KichThuoc() {
   const themkichthuoc = async () => {
     // Hiển thị modal xác nhận trước khi thêm mới
     Modal.confirm({
-      title: "Xác nhận",
-      content: "Bạn có chắc chắn muốn thêm kích thước này không?",
+      title: 'Xác nhận',
+      content: 'Bạn có chắc chắn muốn thêm kích thước này không?',
       onOk: async () => {
         try {
           // Gọi API để thêm kích thước mới
-          await axios.post(
-            `http://localhost:8080/api/kichthuoc/add`,
-            kichthuocMoi,
-          );
+          await axios.post(`http://localhost:8080/api/kichthuoc/add`, kichthuocMoi);
 
           // Sau khi thêm thành công, gọi lại loadkichthuoc để cập nhật bảng
           loadkichthuoc(trangHienTai);
@@ -126,8 +123,8 @@ export default function KichThuoc() {
     // onInputChange();
     try {
       Modal.confirm({
-        title: "Xác nhận",
-        content: "Bạn có chắc chắn muốn sửa sản phẩm này không?",
+        title: 'Xác nhận',
+        content: 'Bạn có chắc chắn muốn sửa sản phẩm này không?',
         onOk: async () => {
           await axios.put(
             `http://localhost:8080/api/kichthuoc/update/${currentId}`,
@@ -152,8 +149,8 @@ export default function KichThuoc() {
   const capNhatTrangThai = async (id) => {
     try {
       Modal.confirm({
-        title: "Xác nhận",
-        content: "Bạn có chắc chắn không?",
+        title: 'Xác nhận',
+        content: 'Bạn có chắc chắn không?',
         onOk: async () => {
           // Gửi yêu cầu cập nhật trạng thái trên server
           await axios.put(
@@ -189,6 +186,8 @@ export default function KichThuoc() {
       await themkichthuoc();
     }
   };
+
+  
 
   const handlePageChange = (newPage) => {
     setTrangHienTai(+newPage.selected + 1);
@@ -239,17 +238,17 @@ export default function KichThuoc() {
                     </label>
                     <input
                       onChange={onInputChange}
+                      onKeyPress={(e) => {
+                        if (e.key === '-') {
+                          e.preventDefault(); // Ngăn chặn nhập dấu '-'
+                        }
+                      }}
                       type="text"
                       id="tenkichthuocMoi"
                       name="kichThuoc"
                       value={kichthuocMoi.kichThuoc} // Sử dụng giá trị từ state kichthuocMoi
                       className="w-[450px] rounded border p-2 transition-colors duration-300 hover:border-blue-500 focus:border-blue-500"
                       placeholder="Nhập tên kích thước"
-                      onKeyPress={(e) => {
-                        if (e.key === "-") {
-                          e.preventDefault(); // Ngăn chặn nhập dấu '-'
-                        }
-                      }}
                     />
                     {error && <p className="text-red-500">{error}</p>}
                   </div>

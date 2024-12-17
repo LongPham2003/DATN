@@ -2,6 +2,7 @@ import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Modal, Upload, message } from "antd";
 import { useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const getBase64 = (file) => {
   return new Promise((resolve, reject) => {
@@ -35,10 +36,10 @@ const GetImage = ({ fileList, setFileList }) => {
       await axios.delete(`http://localhost:8080/api/hinhanh/delete/${file.id}`);
       const updatedFileList = fileList.filter((item) => item.uid !== file.uid);
       setFileList(updatedFileList);
-      message.success("Xóa ảnh thành công!");
+      toast.success("Xóa ảnh thành công!");
     } catch (error) {
-      console.error("Lỗi khi xóa ảnh:", error);
-      message.error("Lỗi khi xóa ảnh.");
+      // console.error("Lỗi khi xóa ảnh:", error);
+      toast.error("Lỗi khi xóa ảnh.");
     }
   };
 
@@ -69,7 +70,6 @@ const GetImage = ({ fileList, setFileList }) => {
         onPreview={handlePreview}
         onChange={handleChange}
         beforeUpload={() => false}
-        multiple
         onRemove={(file) =>
           new Promise((resolve, reject) => {
             Modal.confirm({

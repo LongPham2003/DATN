@@ -43,7 +43,7 @@ public class NhanVienController
 
     @PostMapping("/add")
     public ApiResponse<NhanVien> add(@Valid @RequestBody NhanvienAddRequest nhanvienAddRequest,
-            BindingResult bindingResult)
+                                     BindingResult bindingResult)
     {
         if (bindingResult.hasErrors()) {
             throw new ValidationException(bindingResult.getFieldError().getDefaultMessage());
@@ -61,7 +61,7 @@ public class NhanVienController
 
     @PostMapping("/update/{id}")
     public ApiResponse<NhanVien> update(@Valid @RequestBody NhanVienUpdateRequest request, BindingResult bindingResult,
-            @PathVariable("id") Integer id
+                                        @PathVariable("id") Integer id
     )
     {
         if (bindingResult.hasErrors()) {

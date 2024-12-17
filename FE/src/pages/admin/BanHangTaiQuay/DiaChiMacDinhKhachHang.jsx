@@ -148,7 +148,7 @@ export default function DiaCHiMacDinhKhachHang({
               to_ward_code: idXa,
               height: 20, // chiều cao
               length: 30, //chiều dài cm
-              weight: 500 * soLuongSanPham, // cân nặng g
+              weight: 300 * soLuongSanPham, // cân nặng g
               width: 40, // chiều rộng
             },
             headers: {
@@ -159,6 +159,8 @@ export default function DiaCHiMacDinhKhachHang({
           },
         )
         .then((response) => {
+          // console.log("phí ship: " + response.data.data.total);
+
           setPhiGiaoHang(response.data.data.total);
         })
         .catch((error) => {
@@ -260,7 +262,12 @@ export default function DiaCHiMacDinhKhachHang({
     const tenQH = QH.find((qh) => qh.DistrictID == idQH)?.DistrictName || "";
     const tenXa = xa.find((x) => x.WardCode == idXa)?.WardName || "";
 
-    const diaChiHoanChinh = `${soNha} - ${tenXa} - ${tenQH} - ${tenTP}`;
+    const diaChiHoanChinh = [
+      soNha,
+      tenXa,
+      tenQH,
+      tenTP
+    ].filter(Boolean).join(' - '); // Chỉ thêm vào nếu giá trị không phải null
     setDiaChiGiaoHang(diaChiHoanChinh); // Cập nhật địa chỉ giao hàng trong state
     setdiaChiGiaoHang(diaChiHoanChinh); // Cập nhật địa chỉ giao hàng trong props
   }, [

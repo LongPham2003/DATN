@@ -42,7 +42,12 @@ export function Sidebar() {
   };
 
   const handleLogout = () => {
-    localStorage.clear();
+    // Xóa quyền khỏi localStorage
+    localStorage.removeItem("userRole");
+    localStorage.removeItem("email");
+    localStorage.removeItem("authToken");
+
+    // Điều hướng về trang đăng nhập
     navigate("/login");
   };
 
@@ -123,7 +128,6 @@ export function Sidebar() {
               </Link>
               <hr />
 
-              <hr />
               {/* Mục Thuộc tính */}
               <ListItem
                 onClick={handleAttributeOpen}
@@ -207,7 +211,7 @@ export function Sidebar() {
             <ListItemPrefix>
               <PercentBadgeIcon className="h-5 w-5" />
             </ListItemPrefix>
-            Voucher
+            Phiếu giảm giá
           </ListItem>
         </Link>
 
@@ -243,8 +247,11 @@ export function Sidebar() {
           /> */}
           <div>
             <Typography className="font-bold" variant="small">
-              Xin chào: {localStorage.getItem("email")}
+              {localStorage.getItem("email")}
             </Typography>
+            {/* <Typography variant="small" color="gray" className="font-normal">
+              Web Developer
+            </Typography> */}
           </div>
         </div>
         {/* Phần Log Out */}
@@ -252,7 +259,7 @@ export function Sidebar() {
           <ListItemPrefix>
             <PowerIcon className="h-5 w-5" />
           </ListItemPrefix>
-          Đăng xuất
+          Log Out
         </ListItem>
       </div>
     </Card>

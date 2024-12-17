@@ -378,7 +378,7 @@ export default function ThemMoiKhachHang({ button, onAdd }) {
             Thêm Khách Hàng
           </button>
         </form>
-        {/* <ToastContainer
+        <ToastContainer
           position="top-right"
           autoClose={3000}
           transition={Bounce}
@@ -389,7 +389,7 @@ export default function ThemMoiKhachHang({ button, onAdd }) {
           pauseOnFocusLoss
           draggable
           pauseOnHover
-        /> */}
+        />
       </div>
     </div>
   );

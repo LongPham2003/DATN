@@ -34,9 +34,9 @@ export default function SanPham() {
   // API endpoints
   const API = {
     MauSac: `http://localhost:8080/api/mausac/list?pageSize=99`,
-    Loai: `http://localhost:8080/api/loai/list?pageSize=99`,
+    Loai: `http://localhost:8080/api/loai/getall`,
     KichThuoc: `http://localhost:8080/api/kichthuoc/list?pageSize=99`,
-    ThuongHieu: `http://localhost:8080/api/thuonghieu/list?pageSize=99`,
+    ThuongHieu: `http://localhost:8080/api/thuonghieu/getall`,
     ChatLieu: `http://localhost:8080/api/chatlieu/list?pageSize=99`,
     DeGiay: `http://localhost:8080/api/degiay/list?pageSize=99`,
     SanPhamBanHang: `http://localhost:8080/api/sanpham/trangchu`,
@@ -56,9 +56,9 @@ export default function SanPham() {
 
       // Update state based on API response
       setListMauSac(responses[0]?.data?.result.result || []);
-      setListLoai(responses[1]?.data?.result.result || []);
+      setListLoai(responses[1]?.data?.result || []);
       setListKichThuoc(responses[2]?.data?.result.result || []);
-      setThuongHieu(responses[3]?.data?.result.result || []);
+      setThuongHieu(responses[3]?.data?.result || []);
       setChatLieu(responses[4]?.data?.result.result || []);
       setDeGiay(responses[5]?.data?.result.result || []);
     } catch (error) {
@@ -202,7 +202,7 @@ export default function SanPham() {
                       onClick={() =>
                         toggleSelection(item.id, setSelected, selected)
                       }
-                      className={`m-2 ${selected.includes(item.id) ? "bg-black text-white" : "bg-white"} transition-all duration-300 hover:bg-yellow-400`}
+                      className={`m-2 w-[90px] ${selected.includes(item.id) ? "bg-black text-white" : "bg-white"} transition-all duration-300 hover:bg-yellow-400`}
                     >
                       {item.ten || item.kichThuoc}
                     </Button>
@@ -239,65 +239,63 @@ export default function SanPham() {
 
           {/* Product Section */}
           <div className="col-span-9 grid h-[250px] grid-cols-3 gap-6">
-            {listSanPham.map((spct, index) => (
-              <Card
-                key={spct.idSP}
-                hoverable
-                style={{ width: "100%", position: "relative", height: "420px" }}
-                cover={
-                  <Link to={`/chitiet/${spct.idSP}`}>
-                    <div className="relative">
-                      {/* New Arrival tag */}
-                      {/* <div 
-                      className="absolute left-2 top-2 z-10"
-                      style={{
-                        backgroundColor: '#1B4B33',
-                        color: 'white',
-                        padding: '4px 8px',
-                        borderRadius: '4px'
-                      }}
-                    >
-                      New Arrival
-                    </div> */}
-                      <div className="transition-transform duration-300 hover:scale-105">
-                        <LayANhTheoIdSPCT
-                          id={spct.idSPCT}
-                          className="h-[300px] w-full object-cover"
-                        />
-                      </div>
-                    </div>
-                  </Link>
-                }
-              >
-                <Meta
-                  title={
+            {listSanPham.length > 0 ? (
+              listSanPham.map((spct, index) => (
+                <Card
+                  key={spct.idSP}
+                  hoverable
+                  style={{
+                    width: "100%",
+                    position: "relative",
+                    height: "420px",
+                  }}
+                  cover={
                     <Link to={`/chitiet/${spct.idSP}`}>
-                      <div className="flex flex-col gap-1">
-                        <span className="text-sm font-bold uppercase hover:text-orange-500">
-                          {spct.tenSanPham}
-                        </span>
-                        <span className="text-sm text-gray-600">
-                          {spct.tenThuongHieu}
-                        </span>
+                      <div className="relative">
+                        <div className="transition-transform duration-300 hover:scale-105">
+                          <LayANhTheoIdSPCT
+                            id={spct.idSPCT}
+                            className="h-[300px] w-full object-cover"
+                          />
+                        </div>
                       </div>
                     </Link>
                   }
-                  description={
-                    <div className="mt-2">
-                      <div className="text-lg font-semibold text-red-500">
-                        {formatCurrency(spct.donGia)}
+                >
+                  <Meta
+                    title={
+                      <Link to={`/chitiet/${spct.idSP}`}>
+                        <div className="flex flex-col gap-1">
+                          <span className="text-sm font-bold uppercase hover:text-orange-500">
+                            {spct.tenSanPham}
+                          </span>
+                          <span className="text-sm text-gray-600">
+                            {spct.tenThuongHieu}
+                          </span>
+                        </div>
+                      </Link>
+                    }
+                    description={
+                      <div className="mt-2">
+                        <div className="text-2xl font-semibold text-red-500">
+                          {formatCurrency(spct.donGia)}
+                        </div>
                       </div>
-                    </div>
-                  }
-                />
-              </Card>
-            ))}
+                    }
+                  />
+                </Card>
+              ))
+            ) : (
+              <div className="col-span-3 mt-52 flex justify-center text-center text-3xl font-semibold">
+                Không có sản phẩm nào
+              </div>
+            )}
           </div>
         </div>
-        <div className="mx-auto mt-10 flex justify-center">
+        <div className="mx-auto mt-[-10px] flex justify-center">
           <ReactPaginate
-            previousLabel={"< Previous"}
-            nextLabel={"Next >"}
+            previousLabel={"<"}
+            nextLabel={">"}
             breakLabel={"..."}
             pageCount={tongSoTrang}
             marginPagesDisplayed={2}
@@ -305,16 +303,16 @@ export default function SanPham() {
             onPageChange={handlePageChange}
             containerClassName={"flex items-center gap-2"}
             previousClassName={"mx-1"}
-            previousLinkClassName="px-4 py-2 border border-gray-300 rounded-full hover:bg-gray-200 transition duration-200"
+            previousLinkClassName="px-4 py-2  hover:text-orange-500 transition duration-200"
             nextClassName={"mx-1"}
-            nextLinkClassName="px-4 py-2 border border-gray-300 rounded-full hover:bg-gray-200 transition duration-200"
+            nextLinkClassName="px-4 py-2  hover:text-orange-500 transition duration-200"
             breakClassName={"mx-1"}
-            breakLinkClassName="px-4 py-2 border border-gray-300 rounded-full hover:bg-gray-200 transition duration-200"
+            breakLinkClassName="px-4 py-2 hover:text-orange-500 transition duration-200"
             pageClassName={"mx-1"}
-            pageLinkClassName="px-4 py-2 border-b border-green-300 rounded-full hover:bg-green-500 transition duration-200"
-            activeClassName={"bg-green-500 text-white rounded-full"}
+            pageLinkClassName="px-4 py-2 hover:text-orange-500 transition duration-200"
+            activeClassName={"text-orange-500"}
             activeLinkClassName={
-              "bg-green-500 text-white px-4 py-2 rounded-full"
+              "text-orange-500 font-bold text-xl border border-orange-500 rounded-full"
             }
           />
         </div>

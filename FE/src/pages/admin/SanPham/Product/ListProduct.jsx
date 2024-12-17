@@ -150,7 +150,7 @@ export default function ListProduct() {
               <input
                 type="text"
                 placeholder="Nhập tên Sản Phẩm"
-                className="w-[500px] rounded-md border-2 border-gray-300 p-2 outline-none transition-colors duration-300 hover:border-blue-500 focus:border-blue-500"
+                className="h-[38px] w-[500px] rounded-md border-2 border-gray-300 p-2 outline-none transition-colors duration-300 hover:border-blue-500 focus:border-blue-500"
                 onChange={(e) => setTenTimKiem(e.target.value)}
               />
             </div>

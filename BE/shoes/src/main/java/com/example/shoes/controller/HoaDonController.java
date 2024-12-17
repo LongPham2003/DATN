@@ -12,11 +12,8 @@ import com.example.shoes.entity.HoaDon;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.repository.HoaDonRepo;
 import com.example.shoes.service.HoaDonService;
-import jakarta.validation.Valid;
-import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -109,11 +106,7 @@ public class HoaDonController {
     }
 
     @PostMapping("/dathang/{id}")
-    private ApiResponse<Void> dathang(@PathVariable Integer id,@Valid @RequestBody DatHangRequest request,
-            BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
-            throw new ValidationException(bindingResult.getFieldError().getDefaultMessage());
-        }
+    private ApiResponse<Void> dathang(@PathVariable Integer id, @RequestBody DatHangRequest request) {
         return ApiResponse.<Void>builder().result(hoaDonService.updateTrangThaiHoaDonById(id, request)).build();
     }
     @PostMapping("/xacnhan/{id}")
@@ -149,6 +142,7 @@ public class HoaDonController {
     private ApiResponse<Integer> soluong() {
         return ApiResponse.<Integer>builder().result(hoaDonRepo.getCountHoaDon()).build();
     }
+
     @GetMapping("/soluong/hoadoncxn")
     private ApiResponse<Integer> soluongcxn() {
         return ApiResponse.<Integer>builder().result(hoaDonRepo.getCountHoaDonCXN()).build();
@@ -156,6 +150,10 @@ public class HoaDonController {
     @GetMapping("/soluong/hoadondxn")
     private ApiResponse<Integer> soluongdxn() {
         return ApiResponse.<Integer>builder().result(hoaDonRepo.getCountHoaDonDXN()).build();
+    }
+    @GetMapping("/soluong/hoadonclh")
+    private ApiResponse<Integer> soluongclh() {
+        return ApiResponse.<Integer>builder().result(hoaDonRepo.getCountHoaDonCLH()).build();
     }
     @GetMapping("/soluong/hoadoncgh")
     private ApiResponse<Integer> soluongcgh() {

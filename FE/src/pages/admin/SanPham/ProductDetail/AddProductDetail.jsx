@@ -270,18 +270,7 @@ export default function AddProductDetail() {
     // Kiểm tra điều kiện trước khi thêm sản phẩm, yêu cầu người dùng chọn đầy đủ các thuộc tính
     if (getIdDeGiay === 0 || getIdThuongHieu === 0 || getIdChatLieu === 0) {
       // Hiển thị thông báo lỗi nếu thiếu thuộc tính
-      toast.error("Vui lòng chọn đầy đủ đế giày, thương hiệu, và chất liệu.", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        newestOnTop: false,
-        closeOnClick: true,
-        rtl: false,
-        pauseOnFocusLoss: true,
-        draggable: true,
-        pauseOnHover: true,
-        theme: "light",
-      });
+      toast.error("Vui lòng chọn đầy đủ đế giày, thương hiệu, và chất liệu.");
       return; // Dừng hàm nếu thiếu dữ liệu
     }
 
@@ -322,19 +311,7 @@ export default function AddProductDetail() {
       const res = await Promise.all(requests);
 
       // Hiển thị thông báo thành công khi tất cả sản phẩm chi tiết đã được thêm
-      toast.success("Thêm sản phẩm mới thành công", {
-        position: "top-right",
-        autoClose: 1000,
-        hideProgressBar: false,
-        newestOnTop: false,
-        closeOnClick: true,
-        rtl: false,
-        pauseOnFocusLoss: true,
-        draggable: true,
-        pauseOnHover: true,
-        theme: "light",
-        transition: Bounce,
-      });
+      toast.success("Thêm sản phẩm mới thành công");
 
       // Duyệt qua từng phản hồi từ request và thêm ảnh cho từng sản phẩm chi tiết
       res.forEach(({ response, thumbUrls }) => {
@@ -359,17 +336,7 @@ export default function AddProductDetail() {
     } catch (error) {
       // Xử lý lỗi nếu có bất kỳ request nào thất bại
       console.log(error);
-      toast.error(error.message || "Thêm mới thất bại", {
-        position: "top-right",
-        autoClose: 1000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Bounce,
-      });
+      toast.error("Thêm mới thất bại");
     }
   };
 
@@ -732,6 +699,12 @@ export default function AddProductDetail() {
                 prev.map((item) => ({ ...item, donGia: value })),
               )
             } // Cập nhật giá tiền cho tất cả các sản phẩm được chọn
+            formatter={
+              (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ".") // Thêm dấu chấm cho hàng nghìn
+            }
+            parser={(value) =>
+              value.replace(/\./g, "").replace(/VNĐ\s?|(,*)/g, "")
+            } // Xóa dấu chấm trước khi lưu giá trị
           />
         </div>
       </Modal>

@@ -1,4 +1,5 @@
 import {
+  ArrowRightOutlined,
   CustomerServiceOutlined,
   GiftOutlined,
   TrophyOutlined,
@@ -41,7 +42,7 @@ const Carousel = () => {
   return (
     <>
       <div className="flex">
-        <div className="flex w-[70%] bg-[#CCFFFF]">
+        <div className="flex w-[70%] bg-[#f9ffffb7]">
           <div className="mx-auto my-auto">
             <p className="my-8 font-mono text-[50px] font-bold">
               Tận hưởng sự thoải mái
@@ -98,7 +99,7 @@ const Carousel = () => {
           ))}
         </Row>
       </div>
-      <div className="flex gap-[40px] bg-gray-100 py-8">
+      <div className="flex gap-[40px] py-8">
         <div className="mt-[100px] flex flex-col items-center gap-4">
           <img
             className="h-[200px] w-[250px] rounded-lg object-cover"
@@ -150,12 +151,15 @@ const Carousel = () => {
               đôi giày <br /> không chỉ tôn lên phong cách của bạn mà còn ưu
               tiên sự thoải mái và chất lượng.
             </h3>
-            <button
-              type="button"
-              className="mb-2 me-2 mt-3 rounded-full bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            >
-              <Link to={"/SanPham"}> Xem sản phẩm của chúng tôi</Link>
-            </button>
+            <Link to={"/SanPham"}>
+              <button
+                type="button"
+                className="mb-2 me-2 mt-3 rounded-full bg-violet-700 px-5 py-2.5 text-center text-sm font-medium text-white transition duration-300 ease-in-out hover:bg-violet-800 focus:outline-none focus:ring-4 focus:ring-violet-300 dark:bg-violet-600 dark:hover:bg-violet-700 dark:focus:ring-violet-800"
+              >
+                {" "}
+                Xem sản phẩm của chúng tôi <ArrowRightOutlined />
+              </button>
+            </Link>
           </div>
         </div>
       </div>

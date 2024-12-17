@@ -7,6 +7,7 @@ import LayANhTheoIDSP from "./../../admin/SanPham/Product/LayANhTheoIDSP";
 import DiaCHiMacDinhKhachHang from "./../../admin/BanHangTaiQuay/DiaChiMacDinhKhachHang";
 import { toast, ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { ThemeContext } from "../../GlobalProvider";
 
 export default function DatHang() {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ export default function DatHang() {
   const [TienDuocGiam, setTienDuocGiam] = useState(0);
   const [thanhTien, setThanhTien] = useState(0);
   const [dieuKienGiam, setdieuKienGiam] = useState();
-
+  const { reload, setReload } = useContext(ThemeContext);
   // chon giao hang
   const [phiGiaoHang, setPhiGiaoHang] = useState(0);
   const [soLuongSanPham, setSoLuongSanPham] = useState(0);
@@ -85,7 +86,7 @@ export default function DatHang() {
     idSpct: item.idSanPhamChiTiet,
     soLuong: item.soLuong,
   }));
-  console.log(chiTietSanPhams);
+  // console.log(chiTietSanPhams);
 
   // lấy số lương sản phẩm để tính ship
   useEffect(() => {
@@ -119,9 +120,7 @@ export default function DatHang() {
       toast.success("Đặt hàng thành công");
       setTimeout(() => {
         navigate("/trangchu");
-        setTimeout(() => {
-          window.location.reload();
-        }, 500);
+        setReload(!reload);
       }, 1000);
     } catch (error) {
       console.error("Lỗi khi đặt hàng:", error);
@@ -371,9 +370,7 @@ export default function DatHang() {
                   >
                     <div>
                       <span>Tên: {pgg.tenVoucher}</span> <br />
-                      <span>
-                        Mức giảm: {pgg.mucGiam} {pgg.hinhThucGiam}
-                      </span>
+                      <span>Mức giảm: {pgg.mucGiam}</span>
                       <br />
                       <span>Hóa đơn tối thiểu: {pgg.dieuKienGiamGia}</span>
                       <br />

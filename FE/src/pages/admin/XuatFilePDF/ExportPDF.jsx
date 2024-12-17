@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import axios from "./../../../api/axiosConfig";
 import { Link } from "react-router-dom";
-import anh from "./../../../../logo/logohd.png";
+// import anh from "./../../../../logo/logohd.png"
 
 export const generatePDF = () => {
   // Tìm phần tử với ID 'main'
@@ -50,18 +50,10 @@ export const ExportPDF = ({ idHoaDon }) => {
 
       setHoaDon(hd.data.result);
       setMaHD(hd.data.result.ma);
-      console.log("Dữ liệu sản phẩm nhận được:", sp.data.result);
+      // console.log("Dữ liệu sản phẩm nhận được:", sp.data.result);
       setDanhSachSP(sp.data.result);
     } catch (error) {
       console.error("Có lỗi xảy ra khi lấy dữ liệu:", error.message);
-      if (error.response) {
-        console.error("Dữ liệu lỗi:", error.response.data);
-        console.error("Mã lỗi:", error.response.status);
-      } else if (error.request) {
-        console.error("Không nhận được phản hồi từ server:", error.request);
-      } else {
-        console.error("Lỗi khác:", error.message);
-      }
     }
   };
 
@@ -71,6 +63,18 @@ export const ExportPDF = ({ idHoaDon }) => {
       fetchData(); // Gọi fetchData khi idHoaDon có giá trị
     }
   }, [idHoaDon]); // Chạy lại khi idHoaDon thay đổi
+
+  const formatCurrencyToNumber = (value) => {
+    // Đảm bảo giá trị là chuỗi trước khi sử dụng replace
+    const stringValue = String(value);
+
+    // Loại bỏ tất c các ký tự không phải là số
+    const formattedValue = stringValue.replace(/[^\d]/g, "");
+
+    // Chuyển chuỗi thành số và trả về kết quả
+    return parseInt(formattedValue, 10);
+  };
+
   return (
     <>
       <div
@@ -127,13 +131,9 @@ export const ExportPDF = ({ idHoaDon }) => {
                 })}
               </b>
             </p>
-            <p>Tên khách hàng:{hoadon.tenKhachHang}</p>
+            <p>Tên khách hàng:{hoadon.tenKhachHang}</p>
 
-            {hoadon.soDienThoai !== null ? (
-              <p>Số điện thoại:{hoadon.soDienThoai}</p>
-            ) : (
-              ""
-            )}
+            {hoadon.soDienThoai !== null ? <p>Sdt:{hoadon.soDienThoai}</p> : ""}
             {hoadon.diaChiGiaoHang !== null ? (
               <p>Địa chỉ:{hoadon.diaChiGiaoHang}</p>
             ) : (
@@ -149,16 +149,16 @@ export const ExportPDF = ({ idHoaDon }) => {
                     STT
                   </th>
                   <th className="w-52 border-collapse border-2 border-solid border-gray-500 p-2">
-                    Tên sản phẩm
+                    Tên Sản Phẩm
                   </th>
                   <th className="w-20 border-collapse border-2 border-solid border-gray-500 p-2">
-                    Số lượng
+                    Số Lượng
                   </th>
                   <th className="w-36 border-collapse border-2 border-solid border-gray-500 p-2">
-                    Đơn giá
+                    Đơn Giá
                   </th>
                   <th className="w-28 border-collapse border-2 border-solid border-gray-500 p-2">
-                    Thành tiền
+                    Thành Tiền
                   </th>
                 </tr>
               </thead>
@@ -199,13 +199,20 @@ export const ExportPDF = ({ idHoaDon }) => {
             <div className="my-2">
               <p>Tổng tiền: {hoadon.tongTien}</p>
               <p>Giảm giá: {hoadon.tienDuocGiam}</p>
-              <p>Phí vận chuyển: {hoadon.tienShip}</p>
+
+              <p>Phí giao hàng: {hoadon.tienShip}</p>
+
               <p>Tiền phải thanh toán: {hoadon.tienPhaiThanhToan}</p>
             </div>
             <hr />
             <div>
               <p>Thanh toán: {hoadon.phuongThucThanhToan}</p>
-              <p>Giao hàng: {hoadon.phuongThucGiaoHang}</p>
+              <p>
+                Giao hàng:{" "}
+                {formatCurrencyToNumber(hoadon.tienShip) > 0
+                  ? "Giao Hàng"
+                  : "Tại Quầy"}
+              </p>
               <p>Trạng thái: {hoadon.trangThaiThanhToan}</p>
               <p>Tiền khách đưa: {hoadon.tienKhachDua}</p>
               <p>Tiền thừa trả khách: {hoadon.tienThua}</p>

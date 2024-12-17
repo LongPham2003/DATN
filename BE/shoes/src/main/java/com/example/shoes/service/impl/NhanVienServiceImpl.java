@@ -95,7 +95,6 @@ public class NhanVienServiceImpl implements NhanVienService {
     }
 
     @Override
-    @Transactional
     public NhanVien updateNhanVien(Integer id, NhanVienUpdateRequest request) {
         Optional<NhanVien> nhanVienOptional = nhanVienRepo.findById(id);
         if (!nhanVienOptional.isPresent()) {

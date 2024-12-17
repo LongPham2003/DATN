@@ -63,7 +63,7 @@ export default function ChonSizeVSMauSac({ id }) {
       const data = responSPCT.data.result;
       setSPCT(data); // Lưu toàn bộ dữ liệu SPCT
       console.log(data);
-
+      // if (data === null)
       if (Array.isArray(data) && data.length > 0) {
         setIdSPCT(data[0].id); // Lấy `id` của phần tử đầu tiên
         setDonGia(data[0].donGia);
@@ -136,7 +136,12 @@ export default function ChonSizeVSMauSac({ id }) {
   const [IdSPCTvaoLocal, setIdSPCTvaoLocal] = useState(
     localStorage.getItem("idSPCt") || "",
   );
-  const muaNgay = () => {};
+  const muaNgay = () => {
+    if (idMauSac === null || idSize === null) {
+      toast("Bạn chưa chọn size và màu");
+      return;
+    }
+  };
   useEffect(() => {
     localStorage.setItem("idSPCTCHon", JSON.stringify(IdSPCTvaoLocal));
     localStorage.setItem("soLuong", JSON.stringify(luuSLvaoLocal));
@@ -230,30 +235,33 @@ export default function ChonSizeVSMauSac({ id }) {
       </div>
       <hr className="my-4" />
       <div className="grid grid-cols-3 gap-4">
-        {idSize && idMauSac ? (
-          Ma !== null ||
-          ThuongHieu !== null ||
-          ChatLieu !== null ||
-          DeGiay !== null ||
-          SoLuongTon !== null ? (
-            <>
-              {Ma !== null && <div>Ma: {Ma}</div>}
-              {ThuongHieu !== null && <div>Thuong hieu: {ThuongHieu}</div>}
-              {ChatLieu !== null && <div>Chat lieu: {ChatLieu}</div>}
-              {DeGiay !== null && <div>De giay: {DeGiay}</div>}
-              {SoLuongTon !== null && <div>So luong con: {SoLuongTon}</div>}
-            </>
+        {/* {idSize && idMauSac ? (
+          // Ma !== null ||
+          // ThuongHieu !== null ||
+          // ChatLieu !== null ||
+          // DeGiay !== null ||
+          // SoLuongTon !== null
+          idSPCT ? (
+            <> */}
+        {Ma !== null && <div>Ma: {Ma}</div>}
+        {ThuongHieu !== null && <div>Thuong hieu: {ThuongHieu}</div>}
+        {ChatLieu !== null && <div>Chat lieu: {ChatLieu}</div>}
+        {DeGiay !== null && <div>De giay: {DeGiay}</div>}
+        {SoLuongTon !== null && <div>So luong con: {SoLuongTon}</div>}
+        {/* </>
           ) : (
-            <div className="font-bold text-red-500">Không có sản phẩm này</div>
+            <div className="font-bold text-red-500">Sản phẩm hết hàng</div>
           )
-        ) : null}
+        ) : null} */}
       </div>
 
-      <ToastContainer
+      {/* <ToastContainer
         position="top-center"
         autoClose={1000}
         transition={Zoom}
-      />
+        hideProgressBar={true}
+         className="custom-toast"
+      /> */}
     </>
   );
 }

@@ -22,7 +22,9 @@ public interface SanPhamRepo
         extends JpaRepository<SanPham, Integer>, JpaSpecificationExecutor<SanPham>
 {
     // tim kiem va phan trang
-    @Query("SELECT sp FROM SanPham sp JOIN sp.loai lo " + "WHERE (:keyword IS NULL OR sp.tenSanPham LIKE %:keyword%) " + "AND (:idLoai IS NULL OR lo.id= :idLoai) " + "AND (:trangThai IS NULL OR sp.trangThai = :trangThai) " + "ORDER BY sp.trangThai desc , sp.id DESC")
+    @Query("SELECT sp FROM SanPham sp JOIN sp.loai lo " + "WHERE (:keyword IS NULL OR sp.tenSanPham LIKE %:keyword%) "
+            + "AND (:idLoai IS NULL OR lo.id= :idLoai) " + "AND (:trangThai IS NULL OR sp.trangThai = :trangThai) " +
+            "ORDER BY sp.trangThai desc , sp.id DESC")
     Page<SanPham> getSanPham(@Param("keyword") String keyword, @Param("idLoai") Integer idLoai,
             @Param("trangThai") Boolean trangThai, Pageable pageable);
 
@@ -37,16 +39,16 @@ public interface SanPhamRepo
     List<SanPham> getAllTrangThaiTrue();
 
     @Query(value = "SELECT sp.id AS idsp,spct.id, sp.ma, spct.don_gia, sp.ten_san_pham AS tenSanPham," +
-            " SUM(hdc.so_luong)" + " AS tongSoLuong " + "FROM san_pham sp " + "JOIN san_pham_chi_tiet spct ON sp.id = spct.id_san_pham " +
-            "JOIN hoa_don_chi_tiet hdc ON spct.id = hdc.id_spct " + "JOIN hoa_don hd ON hdc.id_hoa_don = hd.id " +
-            "WHERE  hd.trang_thai_don_hang = 'HOAN_THANH' " + "GROUP BY sp.id,spct.id " +
-            "ORDER BY SUM(hdc.so_luong) DESC " + "LIMIT 3", nativeQuery = true)
+            " SUM(hdc.so_luong)" + " AS tongSoLuong " +
+            "FROM san_pham sp " + "JOIN san_pham_chi_tiet spct ON sp.id = spct.id_san_pham " +
+            "JOIN hoa_don_chi_tiet hdc ON spct.id = hdc.id_spct " +
+            "JOIN hoa_don hd ON hdc.id_hoa_don = hd.id " + "WHERE  hd.trang_thai_don_hang = 'HOAN_THANH' " + "GROUP BY sp.id,spct.id " + "ORDER BY SUM(hdc.so_luong) DESC " + "LIMIT 3", nativeQuery = true)
     List<Object[]> findTop3SanPhamBanChayTrongThangHienTai();
 
     @Query(value = """
                 SELECT sp.id AS idSP, sp.ten_san_pham AS tenSanPham, spct.id AS idSPct, MAX(spct.don_gia) AS donGia
                 FROM san_pham sp
-                JOIN san_pham_chi_tiet spct ON sp.id = spct.id_san_pham
+                LEFT JOIN san_pham_chi_tiet spct ON sp.id = spct.id_san_pham
                   JOIN kich_thuoc kt ON kt.id = spct.id_kich_thuoc
                   JOIN mau_sac ms ON ms.id = spct.id_mau_sac
                   JOIN de_giay dg ON dg.id = spct.id_de_giay
@@ -68,7 +70,7 @@ public interface SanPhamRepo
             @Param("idKichThuoc") List<Integer> idKichThuoc, @Param("idMauSac") List<Integer> idMauSac,
             @Param("idDeGiay") List<Integer> idDeGiay, @Param("idChatLieu") List<Integer> idChatLieu,
             @Param("idThuongHieu") List<Integer> idThuongHieu, @Param("donGiaMin") BigDecimal donGiaMin,
-            @Param("donGiaMax") BigDecimal donGiaMax, Pageable pageable);
+            @Param("donGiaMax") BigDecimal donGiaMax,Pageable pageable);
 
     @Query(value = """
                 SELECT

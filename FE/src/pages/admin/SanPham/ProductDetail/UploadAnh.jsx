@@ -32,7 +32,7 @@ const ImageUpload = ({ fileList, setFileList }) => {
     // setFileList((prevFileList) => [...prevFileList, ...newFileList]); // Append new files to the existing list
     // console.log("Updated fileList:", [...fileList, ...newFileList]); // Debugging log
     setFileList(newFileList);
-    console.log(newFileList);
+    // console.log(newFileList);
   };
 
   const uploadButton = (
@@ -50,7 +50,6 @@ const ImageUpload = ({ fileList, setFileList }) => {
         onPreview={handlePreview}
         onChange={handleChange}
         beforeUpload={() => false}
-        multiple
       >
         {fileList.length >= 5 ? null : uploadButton}
       </Upload>

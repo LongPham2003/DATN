@@ -27,6 +27,6 @@ public interface DeGiayRepo extends JpaRepository<DeGiay, Integer> {
     // Phương thức kiểm tra xem  có tồn tại theo tên không
     boolean existsByTen(String ten);
     // lấy tat ca danh sach sp co trang thai true
-    @Query("SELECT dg FROM DeGiay  dg WHERE dg.trangThai = true order by  dg.id desc")
+    @Query("SELECT dg FROM DeGiay  dg WHERE dg.trangThai = true order by  dg.id desc ")
     List<DeGiay> getAllTrangThaiTrue();
 }

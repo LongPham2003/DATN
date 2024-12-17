@@ -46,12 +46,12 @@ public class SecurityConfiguration {
     private CustomAccessDeniedHandler customAccessDeniedHandler;
 
     private final String[] PUBLIC_ENDPOINTS = {"/auth/signup", "/auth/login",
+
             "/auth/resetpass", "/auth/doimatkhau", "/api/paymentvnpay/**", "/api/paymentvnpay/payment-infor",
             "/banhangonline/**","/api/sanpham/SPClient", "/api/kichthuoc/**", "/api/mausac/**",
             "/api/thuonghieu/**", "/api/degiay/**", "/api/hinhanh/**", "/api/khachhang/**",
             "/api/loai/**", "/api/phieugiamgia/**",  "/api/chatlieu/**",
-            "/api/sanphamchitiet/**","/api/sanpham/**","/api/giohang/**","/client/**",
-            "/diachi/**","/api/hoadon/**"
+            "/api/sanphamchitiet/**"
     };
 
     private final String[] NHANVIEN_ENDPOINTS = {
@@ -59,9 +59,9 @@ public class SecurityConfiguration {
             "/api/paymentvnpay/payment-infor","/banhangonline/**",
     };
 
-    private final String[] ADMIN_ENDPOINTS = {
-            "/**",
-    };
+//    private final String[] ADMIN_ENDPOINTS = {
+//            "/api/**",
+//    };
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -72,7 +72,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(NHANVIEN_ENDPOINTS).hasAnyRole("NHANVIEN", "ADMIN")
-                        .requestMatchers(ADMIN_ENDPOINTS).hasRole("ADMIN")
+                        .requestMatchers("/api/nhanvien/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex.accessDeniedHandler(customAccessDeniedHandler)

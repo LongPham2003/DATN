@@ -295,11 +295,11 @@ export default function MuaNgay() {
               <thead>
                 <tr>
                   <th>STT</th>
-                  <th>Ảnh</th>
-                  <th>Sản phẩm</th>
-                  <th>Số lượng</th>
-                  <th>Đơn giá</th>
-                  <th>Thành tiền</th>
+                  <th>Anh</th>
+                  <th>San Pham</th>
+                  <th>So luong</th>
+                  <th>Don gia</th>
+                  <th>Thanh tien</th>
                 </tr>
               </thead>
               <tbody className="text-center">
@@ -332,7 +332,7 @@ export default function MuaNgay() {
           <div className="ml-1">
             <span>Chọn phiếu giảm giá và địa chỉ</span>
             <div className="my-4 flex gap-5">
-              <span>Phiếu giảm giá</span>
+              <span>Phieu giam gia</span>
               <Select
                 style={{ width: 300, height: "35px" }}
                 placeholder="Chọn phiếu giảm giá"
@@ -377,24 +377,24 @@ export default function MuaNgay() {
 
             <div>
               <div className="flex gap-10">
-                <span className="font-semibold">Tổng tiền: </span>
+                <span className="font-semibold">Tong tien: </span>
                 <span className="ml-auto">{formatTien(tongTien)}</span>
               </div>
               <div className="flex gap-10">
-                <span className="font-semibold">Phí giao hàng: </span>
+                <span className="font-semibold">Phi giao hang: </span>
                 <span className="ml-auto">{formatTien(phiGiaoHang)}</span>
               </div>
               <div className="flex gap-10">
-                <span className="font-semibold">Tiền được giảm: </span>
+                <span className="font-semibold">Tien duoc giam: </span>
                 <span className="ml-auto"> {formatTien(TienDuocGiam)}</span>
               </div>
               <div className="flex gap-10">
-                <span className="font-semibold">Thành tiền: </span>
+                <span className="font-semibold">Thanh tien: </span>
                 <span className="ml-auto">{formatTien(thanhTien)}</span>
               </div>
 
               <div className="my-5 flex gap-10">
-                <span className="font-semibold">Ngày nhận hàng dự kiến: </span>
+                <span className="font-semibold">Ngay nhan hang du kien: </span>
                 <span className="ml-auto">{ngayDuKien}</span>
               </div>
             </div>

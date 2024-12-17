@@ -78,8 +78,8 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
         if(hoaDon.getIdPhieuGiamGia()!=null){
             PhieuGiamGia phieuGiamGia = phieuGiamGiaRepo.findById(hoaDon.getIdPhieuGiamGia().getId()).orElseThrow(
                     () -> new AppException(ErrorCode.VOUCHER_NOT_FOUND));
-            if (hoaDon.getTongTien().compareTo(phieuGiamGia.getGiamToiDa()) < 0) {
-               xoaPhieuGiamGiaHoaDon(hoaDon.getId(),hoaDon.getIdPhieuGiamGia().getId());
+            if (hoaDon.getTongTien().compareTo(phieuGiamGia.getDieuKienGiamGia()) < 0) {
+                xoaPhieuGiamGiaHoaDon(hoaDon.getId(),hoaDon.getIdPhieuGiamGia().getId());
             }
         }
 
@@ -90,7 +90,7 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
         sanPhamChiTietRepo.save(sanPhamChiTiet);
         hoaDonRepo.save(hoaDon);
 
-}
+    }
 
     public void xoaPhieuGiamGiaHoaDon(Integer idHoaDon, Integer idPhieuGiamGia) {
         // Lấy thông tin hóa đơn từ idHoaDon

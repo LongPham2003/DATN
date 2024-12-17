@@ -67,7 +67,7 @@ public class KhachHangController
 
     @PostMapping("/update/{id}")
     public ApiResponse<KhachHang> update(@Valid @RequestBody KhachHangRequest request, BindingResult bindingResult,
-            @PathVariable("id") Integer id)
+                                         @PathVariable("id") Integer id)
     {
         if (bindingResult.hasErrors()) {
             throw new ValidationException(bindingResult.getFieldError().getDefaultMessage());
