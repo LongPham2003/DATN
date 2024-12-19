@@ -40,6 +40,7 @@ public interface SanPhamService
 
     SanPhamClient sanPhamTrangChiTietClient(Integer idSP);
 
+
     PhanTrangResponse<SanPhamClient> sanPhamClient(String tenSP, List<Integer> idLoai, List<Integer> idKichThuoc,
             List<Integer> idMauSac, List<Integer> idDeGiay, List<Integer> idChatLieu, List<Integer> idThuongHieu,
             BigDecimal donGiaMin, BigDecimal donGiaMax,int pageNumber, int pageSize);
@@ -47,5 +48,6 @@ public interface SanPhamService
     PhanTrangResponse<SanPhamResponse> finAll(int pageNumber, int pageSize, String tenSP, List<Integer> idLoai,
             List<Integer> idKichThuoc, List<Integer> idMauSac, List<Integer> idDeGiay, List<Integer> idChatLieu,
             List<Integer> idThuongHieu, BigDecimal donGiaMin, BigDecimal donGiaMax);
+
 
 }

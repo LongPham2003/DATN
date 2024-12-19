@@ -62,8 +62,10 @@ export default function ChonSizeVSMauSac({ id }) {
 
       const data = responSPCT.data.result;
       setSPCT(data); // Lưu toàn bộ dữ liệu SPCT
+
       console.log(data);
       // if (data === null)
+
       if (Array.isArray(data) && data.length > 0) {
         setIdSPCT(data[0].id); // Lấy `id` của phần tử đầu tiên
         setDonGia(data[0].donGia);

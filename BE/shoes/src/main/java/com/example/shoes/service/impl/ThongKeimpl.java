@@ -19,7 +19,7 @@ public class ThongKeimpl implements ThongKeService {
 
 
     @Override
-    public DoanhThu ngayTuyChinh(String date) {
+    public DoanhThu ngayTuyChinh(LocalDate date) {
         return thongKeRepo.ngayTuyChinh(date);
     }
 

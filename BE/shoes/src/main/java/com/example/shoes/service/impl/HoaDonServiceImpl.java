@@ -11,6 +11,7 @@ import com.example.shoes.dto.hoadon.request.XacNhanThanhToan;
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
 import com.example.shoes.dto.hoadon.response.HoaDonTheoIDKH;
 import com.example.shoes.dto.hoadon.response.HoaDonTheoIDResponse;
+import com.example.shoes.dto.hoadon.response.HoaDonTheoIdKH;
 import com.example.shoes.dto.hoadonchitiet.request.HoaDonChiTietRequest;
 import com.example.shoes.dto.payment.PaymentRequest;
 import com.example.shoes.dto.phuongthucthanhtoan.request.PhuongThucThanhToanRequest;
@@ -561,6 +562,8 @@ public class HoaDonServiceImpl implements HoaDonService {
         return converToHoaDonResponse(hoaDon);
     }
 
+
+
     public BigDecimal apDungVoucher(BigDecimal tongTienDonHang, PhieuGiamGia phieuGiamGia) {
         // Kiểm tra điều kiện áp dụng voucher
         if (tongTienDonHang.compareTo(phieuGiamGia.getDieuKienGiamGia()) < 0) {
@@ -757,6 +760,14 @@ public class HoaDonServiceImpl implements HoaDonService {
         // Lưu thay đổi vào cơ sở dữ liệu
         phieuGiamGiaRepo.save(phieuGiamGia); // Lưu số lượng phiếu giảm giá đã cập nhật
         hoaDonRepo.save(hoaDon); // Lưu hóa đơn đã cập nhật
+    }
+
+    @Override
+    public List<HoaDonTheoIdKH> getHoaDonTheoKH(Integer idKhachHang , String maHD) {
+
+        List<HoaDonTheoIdKH> page = hoaDonRepo.getHoaDonTheoKH(idKhachHang, maHD);
+
+        return page;
     }
 
     @Override

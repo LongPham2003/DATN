@@ -1,6 +1,6 @@
+import { Modal } from "antd";
 import axios from "../../../../api/axiosConfig";
 import { useEffect, useState } from "react";
-import { Modal } from "antd";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 
 export default function AddProduct() {
@@ -51,7 +51,6 @@ export default function AddProduct() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       if (tenSanPham.trim() === "") {
         setErrorTenSP("Tên sản phẩm không được để trống");
@@ -61,6 +60,7 @@ export default function AddProduct() {
         return;
       }
 
+      // Sử dụng Modal.confirm để hiển thị hộp thoại xác nhận
       Modal.confirm({
         title: "Xác nhận thêm sản phẩm",
         content: "Bạn có chắc chắn muốn thêm sản phẩm này không?",

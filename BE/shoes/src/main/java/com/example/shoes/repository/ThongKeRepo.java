@@ -15,7 +15,9 @@ public interface ThongKeRepo extends HoaDonRepo{
     // Ngay tuy chinh
     @Query(value = """
 SELECT 
+
     (SELECT SUM(hd.tien_phai_thanh_toan) - COALESCE(SUM(hd.phi_van_chuyen), 0)
+
      FROM hoa_don hd 
      WHERE hd.trang_thai_thanh_toan = 1
        AND DATE(hd.update_at) = :date) AS tongTien,
@@ -33,9 +35,10 @@ LEFT JOIN
 WHERE 
     DATE(hd.update_at) = :date;
 """, nativeQuery = true)
-    DoanhThu ngayTuyChinh(@Param("date") String date);
+    DoanhThu ngayTuyChinh(@Param("date") LocalDate date);
     //Ngay hom nay
     @Query(value = """
+
   SELECT\s
      (SELECT SUM(hd.tien_phai_thanh_toan) - COALESCE(SUM(hd.phi_van_chuyen), 0)
      FROM hoa_don hd 
@@ -54,6 +57,7 @@ WHERE
                                      WHERE\s
                                          DATE(hd.update_at) = CURDATE();
                                      
+
 """, nativeQuery = true)
     DoanhThu doanhThuHomNay();
 
@@ -61,7 +65,9 @@ WHERE
     // Tuần này
     @Query(value = """
                 SELECT
+
                     (SELECT SUM(hd.tien_phai_thanh_toan) - COALESCE(SUM(hd.phi_van_chuyen), 0)
+
                      FROM hoa_don hd
                      WHERE hd.trang_thai_thanh_toan = 1
                      AND WEEK(hd.update_at) = WEEK(CURDATE())
@@ -83,10 +89,12 @@ WHERE
             """, nativeQuery = true)
     DoanhThu doanhThuTuan();
 
-    //Tháng này
-    @Query(value = """
+//Tháng này
+@Query(value = """
                SELECT
+
                      (SELECT SUM(hd.tien_phai_thanh_toan) - COALESCE(SUM(hd.phi_van_chuyen), 0)
+
                      FROM hoa_don hd
                      WHERE hd.trang_thai_thanh_toan = 1
                      AND MONTH(hd.update_at) = MONTH(CURDATE())
@@ -107,12 +115,14 @@ WHERE
                AND YEAR(hd.update_at) = YEAR(CURDATE());
                                                             
             """, nativeQuery = true)
-    DoanhThu doanhThuThang();
+DoanhThu doanhThuThang();
 
-    // Năm nay
-    @Query(value = """
+// Năm nay
+@Query(value = """
                 SELECT
+
                     (SELECT SUM(hd.tien_phai_thanh_toan) - COALESCE(SUM(hd.phi_van_chuyen), 0)
+
                      FROM hoa_don hd
                      WHERE hd.trang_thai_thanh_toan = 1
                        AND YEAR(hd.update_at) = YEAR(CURDATE())) AS tongTien,
@@ -131,9 +141,9 @@ WHERE
                     YEAR(hd.update_at) = YEAR(CURDATE());
                 
             """, nativeQuery = true)
-    DoanhThu doanhThuNam();
+DoanhThu doanhThuNam();
 
-    //Top 3 San Pham ban chay
+//Top 3 San Pham ban chay
     // Hom nay
     @Query(value = """
             SELECT
@@ -406,6 +416,7 @@ LIMIT 3;
     // Bieu do
     // SP ban duoc va doan so 1 tuan
     @Query(value = """
+
 SELECT
     weekday.ngayTrongTuan,
     COALESCE(SUM(CASE
@@ -415,6 +426,7 @@ SELECT
          WHEN hd.trang_thai_thanh_toan = 1 THEN COALESCE(hdct.so_luong, 0)
          ELSE 0 END), 0) AS sanPhamBanDuoc
 FROM
+
     (SELECT 'Monday' AS ngayTrongTuan UNION ALL
      SELECT 'Tuesday' UNION ALL
      SELECT 'Wednesday' UNION ALL
@@ -422,12 +434,14 @@ FROM
      SELECT 'Friday' UNION ALL
      SELECT 'Saturday' UNION ALL
      SELECT 'Sunday') AS weekday
+
 LEFT JOIN
     hoa_don hd
     ON DAYNAME(hd.update_at) = weekday.ngayTrongTuan
        AND hd.update_at BETWEEN DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY)
                            AND DATE_ADD(CURDATE(), INTERVAL (6 - WEEKDAY(CURDATE())) DAY) + INTERVAL 1 DAY - INTERVAL 1 SECOND
 LEFT JOIN
+
     hoa_don_chi_tiet hdct
     ON hd.id = hdct.id_hoa_don
 GROUP BY

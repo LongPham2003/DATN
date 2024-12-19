@@ -38,12 +38,15 @@ import TrangChu from "./pages/client/TrangChu/TrangChu.jsx";
 import GioHang from "./pages/client/GioHang/GioHang.jsx";
 
 import ChiTietSanPham from "./pages/client/ChiTietSanPham/ChiTietSanPham.jsx";
+
 import HoaDonChiTiet from "./pages/admin/QuanLiHoaDon/HoaDonChiTiet.jsx";
 import ThongTinCaNhan from "./pages/client/ThongTinCaNhan/ThongTinCaNhan.jsx";
 import DatHang from "./pages/client/DatHang/DatHang.jsx";
 import MuaNgay from "./pages/client/MuaNgay/MuaNgay.jsx";
+
 import TraCuuDonHang from "./pages/client/ThongTinCaNhan/TraCuuDonHang.jsx";
 import { Bounce, ToastContainer } from "react-toastify";
+
 
 function App() {
   return (
@@ -118,17 +121,6 @@ function App() {
               }
             />
             <Route
-              path="tracuudonhang"
-              element={
-                <>
-                  <Helmet>
-                    <title>Đơn hàng</title>
-                  </Helmet>
-                  <TraCuuDonHang />
-                </>
-              }
-            />
-            <Route
               path="muangay"
               element={
                 <>
@@ -147,6 +139,17 @@ function App() {
                     <title>Thông tin cá nhân</title>
                   </Helmet>
                   <ThongTinCaNhan />
+                </>
+              }
+            />
+            <Route
+              path="theodoidonhang"
+              element={
+                <>
+                  <Helmet>
+                    <title>Theo dõi đơn hàng</title>
+                  </Helmet>
+                  <TheoDoiDonHang />
                 </>
               }
             />

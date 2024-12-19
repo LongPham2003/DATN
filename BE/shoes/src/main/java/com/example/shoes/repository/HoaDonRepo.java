@@ -7,6 +7,7 @@ import com.example.shoes.dto.hoadon.response.HoaDonResponse;
 import com.example.shoes.dto.hoadon.response.HoaDonTheoIDKH;
 import com.example.shoes.dto.hoadon.response.HoaDonTheoIDResponse;
 
+import com.example.shoes.dto.hoadon.response.HoaDonTheoIdKH;
 import com.example.shoes.entity.HoaDon;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,10 +20,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface HoaDonRepo extends JpaRepository<HoaDon, Integer> {
+
         @Query("SELECT hd FROM HoaDon  hd WHERE hd.trangThaiDonHang = 'DA_THANH_TOAN'")
         List<HoaDon> getAllTrangThaiDaThanhToan();
 
-        @Query("SELECT hd FROM HoaDon  hd WHERE hd.trangThaiThanhToan = false and hd.phuongThucGiaoHang= 'Tại quầy' and hd.trangThaiDonHang='CHO_XAC_NHAN' ")
+        @Query("SELECT hd FROM HoaDon  hd WHERE hd.trangThaiThanhToan = false and hd.phuongThucGiaoHang= 'Tại quầy' and hd.trangThaiDonHang='CHO_XAC_NHAN'")
         List<HoaDon> getAllTrangThaiChuaThanhToan();
 
         // Query để lấy mã hóa đơn lớn nhất
@@ -76,7 +78,9 @@ public interface HoaDonRepo extends JpaRepository<HoaDon, Integer> {
         SELECT 
             hd.id AS idHoaDon,
             hd.ma AS maHoaDon,
+
             hd.create_at AS ngayDatHang,
+
             hd.dia_chi_giao_hang AS diaChiGiaoHang,
             hd.ngay_du_kien AS ngayGiaoHang,
             hd.phi_van_chuyen AS phiVanChuyen,
@@ -96,10 +100,12 @@ public interface HoaDonRepo extends JpaRepository<HoaDon, Integer> {
             hoa_don_chi_tiet hdct ON hdct.id_hoa_don = hd.id
         WHERE 
             hd.id_khach_hang = :idKhachHang
+
             AND (:maHD IS NULL OR hd.ma LIKE CONCAT('%', :maHD, '%'))
             AND (:trangThaiDonHang IS NULL OR hd.trang_thai_don_hang = :trangThaiDonHang)
             AND hd.phuong_thuc_giao_hang = 'Giao Hàng'
             AND (:ngay IS NULL OR DATE(hd.create_at) = :ngay)
+
         GROUP BY 
             hd.id, 
             hd.ma, 
@@ -114,6 +120,7 @@ public interface HoaDonRepo extends JpaRepository<HoaDon, Integer> {
             hd.tien_phai_thanh_toan, 
             hd.trang_thai_don_hang, 
             hd.trang_thai_thanh_toan
+
         ORDER BY 
             hd.create_at DESC
         """, nativeQuery = true)
@@ -126,4 +133,5 @@ public interface HoaDonRepo extends JpaRepository<HoaDon, Integer> {
 
         @Query(value = "delete  from hoa_don where phuong_thuc_giao_hang = 'Tại quầy' and trang_thai_don_hang ='CHO_XAC_NHAN'",nativeQuery = true)
         void deleteByHoaDonTaiQuay();
+
 }

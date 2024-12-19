@@ -1,7 +1,9 @@
-import { Modal, Popconfirm, Select } from "antd";
+import { Popconfirm, Select } from "antd";
 import axios from "./../../../api/axiosConfig";
+
 import { useContext, useEffect } from "react";
 import { useState } from "react";
+
 import ThongTinSPCT from "./../GioHang/component/ThongTinSPCT";
 import LayANhTheoIDSP from "./../../admin/SanPham/Product/LayANhTheoIDSP";
 import DiaCHiMacDinhKhachHang from "./../../admin/BanHangTaiQuay/DiaChiMacDinhKhachHang";
@@ -31,7 +33,7 @@ export default function DatHang() {
   const [phieuGiamGiaDangChon, setPhieuGiamGiaDangChon] = useState();
   const [phuongThucThanhToan, setPhuongThucThanhToan] = useState("Tiền mặt");
 
-  const ApiLayTTGHCT = `http://localhost:8080/api/giohang/laygiohangchitiet`;
+  let ApiLayTTGHCT = `http://localhost:8080/api/giohang/laygiohangchitiet`;
   let ApiLayPhieuGiamGia = `http://localhost:8080/api/phieugiamgia/trang-thai-true`; // Danh Sach Phiếu Giam giá
   let ApiLayThongTinPhieuGiamGiaDangChon = `http://localhost:8080/api/phieugiamgia`;
   let ApiDatHangonLine = `http://localhost:8080/api/giohang/dat-hang`;
@@ -61,20 +63,20 @@ export default function DatHang() {
       console.error("Error fetching discount coupons:", error);
     }
   };
-  // Hàm lấy thông tin phiếu giảm giá
+
+  // // Hàm lấy thông tin phiếu giảm giá
   const LayThongTinPhieuGiamGiaDangChon = async (idPGG) => {
     if (!idPGG) {
       setPhieuGiamGiaDangChon(null); // Reset nếu không có phiếu giảm giá được chọn
       return;
     }
-
     try {
       const response = await axios.get(
         `${ApiLayThongTinPhieuGiamGiaDangChon}/${idPGG}`,
       );
       setPhieuGiamGiaDangChon(response.data.result);
-      console.log(response.data.result);
-      console.log(response.data.result.mucGiam);
+      // console.log(response.data.result);
+      // console.log(response.data.result.mucGiam);
       setdieuKienGiam(response.data.result.dieuKienGiamGia);
       setTienDuocGiam(response.data.result.mucGiam);
     } catch (error) {
@@ -86,6 +88,7 @@ export default function DatHang() {
     idSpct: item.idSanPhamChiTiet,
     soLuong: item.soLuong,
   }));
+
   // console.log(chiTietSanPhams);
 
   // lấy số lương sản phẩm để tính ship
@@ -101,6 +104,7 @@ export default function DatHang() {
   // setSoLuongSanPham(total);
 
   // Hàm DatHang với xác nhận
+
   const DatHang = async (e) => {
     e.preventDefault();
 
@@ -128,7 +132,7 @@ export default function DatHang() {
     }
   };
 
-  // Gọi hàm khi idPGGDangChon thay đổi
+  // // Gọi hàm khi idPGGDangChon thay đổi
   useEffect(() => {
     LayThongTinPhieuGiamGiaDangChon(idPGGDangChon);
   }, [idPGGDangChon]);
@@ -190,7 +194,7 @@ export default function DatHang() {
       return 0;
     }
 
-    console.log("Đủ điều kiện áp dụng phiếu giảm giá");
+    //   console.log("Đủ điều kiện áp dụng phiếu giảm giá");
 
     let tienGiam = 0;
 
@@ -241,7 +245,7 @@ export default function DatHang() {
     return parseInt(value.replace(/[^\d]/g, ""));
   };
 
-  //Them VND
+  // //Them VND
   function formatTien(value) {
     // Loại bỏ dấu phân cách thập phân và chuyển thành số
     const parsedValue = parseFloat(value.toString().replace(",", "."));
@@ -264,7 +268,7 @@ export default function DatHang() {
     return Number(mucGiam); // Đảm bảo trả về kiểu số nếu đã là number
   }
 
-  // thanh toán vnpay
+  // // thanh toán vnpay
   const handlePaymentClick = async () => {
     try {
       const response = await axios.get(
@@ -365,6 +369,7 @@ export default function DatHang() {
                     label={pgg.tenVoucher}
                     disabled={
                       tongTien < formatCurrencyToNumber(pgg.dieuKienGiamGia) ||
+                      tongTien < formatCurrencyToNumber(pgg.mucGiam) ||
                       pgg.soLuong === 0
                     }
                   >

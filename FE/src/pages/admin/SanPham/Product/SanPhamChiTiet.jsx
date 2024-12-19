@@ -67,6 +67,7 @@ const SanPhamChiTiet = ({ productId, closeModal }) => {
   };
   // eslint-disable-next-line no-unused-vars
   const update = async (e) => {
+
     if (formData.tenSanPham.trim() === "") {
       setErrorTen("Không được để trống tên sản phẩm");
       return;
@@ -96,6 +97,7 @@ const SanPhamChiTiet = ({ productId, closeModal }) => {
         console.log("Cập nhật đã bị hủy");
       },
     });
+
   };
   useEffect(() => {
     getById();
@@ -103,7 +105,7 @@ const SanPhamChiTiet = ({ productId, closeModal }) => {
     // layAnh();
   }, []);
   return (
-    <div className="mx-auto mt-3 flex w-auto">
+    <div className="flex mx-auto mt-3 w-auto">
       <form
         action=""
         className="mx-auto my-2"
@@ -220,19 +222,7 @@ const SanPhamChiTiet = ({ productId, closeModal }) => {
           </button>
         </div>
       </form>
-      {/* <ToastContainer
-        position="top-center"
-        autoClose={1000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        transition={Bounce}
-      /> */}
+
     </div>
   );
 };

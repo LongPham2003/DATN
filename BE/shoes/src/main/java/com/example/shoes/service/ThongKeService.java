@@ -9,7 +9,7 @@ import java.util.List;
 
 
 public interface ThongKeService {
-    DoanhThu ngayTuyChinh(String date);
+    DoanhThu ngayTuyChinh(LocalDate date);
     DoanhThu doanhThuHomNay();
     DoanhThu doanhThuTuan();
     DoanhThu doanhThuThang();

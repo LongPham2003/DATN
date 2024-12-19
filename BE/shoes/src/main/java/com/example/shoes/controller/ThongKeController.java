@@ -22,7 +22,8 @@ public class ThongKeController {
 
     @GetMapping("/ngay-tuy-chinh")
     public  DoanhThu ngayTuyChinh( @RequestParam("date") String date){
-        return thongkeService.ngayTuyChinh(date);
+        LocalDate localDate = LocalDate.parse(date);
+        return thongkeService.ngayTuyChinh(localDate);
     }
 
     @GetMapping("/ngay-hom-nay")

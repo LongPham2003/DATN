@@ -260,7 +260,7 @@ public class SanPhamServiceImpl
 
         sanPham.setLoai(loai); // Gán đối tượng Loai cho SanPham
         sanPham.setTenSanPham(request.getTenSanPham());
-        sanPham.setNgayTao(LocalDate.now());
+        sanPham.setNgayTao(sanPham.getNgayTao());
         sanPham.setMoTa(request.getMoTa());
         sanPham.setTrangThai(request.getTrangThai());
 
@@ -302,6 +302,7 @@ public class SanPhamServiceImpl
     {
         List<Object[]> results = sanPhamRepo.findTop3SanPhamBanChayTrongThangHienTai();
 
+
         return results.stream().map(row -> {
             SanPhamBanChayResponse response = new SanPhamBanChayResponse();
             response.setIdSP(((Number) row[0]).intValue()); // id sản phẩm
@@ -312,6 +313,7 @@ public class SanPhamServiceImpl
             response.setTongSoLuongDaBan(((Number) row[5]).intValue()); // tổng số lượng
             return response;
         }).collect(Collectors.toList());
+
     }
 
     // Phương thức chuyển đổi BigDecimal sang định dạng tiền tệ Việt Nam

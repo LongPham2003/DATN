@@ -831,10 +831,12 @@ public class GioHangChiTietServiceImpl
         return hoaDonResponse;
     }
 
+
     // chỉnh sửa hóa đơn
     @Override
     public HoaDonResponse addSanPhamChiTietToHoaDon(Integer idHoaDon, HoaDonChiTietRequest chiTietRequest)
     {
+
         // Tìm hóa đơn theo ID
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon)
                 .orElseThrow(() -> new AppException(ErrorCode.BILL_NOT_FOUND));
@@ -860,8 +862,10 @@ public class GioHangChiTietServiceImpl
 
             // Lưu lại chi tiết hóa đơn đã cập nhật
             hoaDonChiTietRepo.save(existingChiTiet);
+
         }
         else {
+
             // Nếu chi tiết hóa đơn chưa tồn tại, tạo mới
             HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
             hoaDonChiTiet.setIdHoaDon(hoaDon); // Liên kết với hóa đơn
@@ -884,27 +888,31 @@ public class GioHangChiTietServiceImpl
         hoaDon.setTongTien(tongTien.add(tongTienChiTiet));
 
         // Tính lại tiền phải thanh toán
+
         hoaDon.setTienPhaiThanhToan(
                 hoaDon.getTongTien().subtract(hoaDon.getTienDuocGiam()).add(hoaDon.getPhiVanChuyen()));
+
 
         // Lưu lại hóa đơn đã cập nhật
         hoaDonRepo.save(hoaDon);
         // Cập nhật số lượng sản phẩm chi tiết
         sanPhamChiTietRepo.save(spct); // Lưu thay đổi số lượng SPCT
 
-        // Trả về kết quả
         return converToHoaDonResponse(hoaDon);
     }
 
     //delete
     @Override
+
     public void deleteByIdHoaDonAndIdSpct(Integer idHoaDon, Integer idSpct)
     {
+
         // Kiểm tra tồn tại của hóa đơn
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon)
                 .orElseThrow(() -> new AppException(ErrorCode.BILL_NOT_FOUND));
 
         // Kiểm tra tồn tại của sản phẩm chi tiết trong hóa đơn chi tiết
+
         HoaDonChiTiet hoaDonChiTiet = hoaDonChiTietRepo.findByHoaDonAndSanPhamChiTiet(hoaDon,
                 sanPhamChiTietRepo.findById(idSpct)
                         .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_DETAIL_NOT_FOUND)));
@@ -917,10 +925,12 @@ public class GioHangChiTietServiceImpl
             throw new AppException(ErrorCode.KHONG_THE_XOA_SP);
         }
 
+
         // Cộng lại số lượng sản phẩm chi tiết
         //     sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() + hoaDonChiTiet.getSoLuong());
 
         // Trừ số tiền từ hóa đơn dựa trên đơn giá và số lượng của sản phẩm chi tiết
+
         BigDecimal amountToSubtract = hoaDonChiTiet.getDonGia().multiply(
                 BigDecimal.valueOf(hoaDonChiTiet.getSoLuong()));
         hoaDon.setTongTien(hoaDon.getTongTien().subtract(amountToSubtract));
@@ -976,4 +986,5 @@ public class GioHangChiTietServiceImpl
         phieuGiamGiaRepo.save(phieuGiamGia); // Lưu số lượng phiếu giảm giá đã cập nhật
         hoaDonRepo.save(hoaDon); // Lưu hóa đơn đã cập nhật
     }
+
 }

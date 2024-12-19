@@ -46,6 +46,7 @@ public interface SanPhamRepo
     List<Object[]> findTop3SanPhamBanChayTrongThangHienTai();
 
     @Query(value = """
+
                 SELECT sp.id AS idSP, sp.ten_san_pham AS tenSanPham, spct.id AS idSPct, MAX(spct.don_gia) AS donGia
                 FROM san_pham sp
                 LEFT JOIN san_pham_chi_tiet spct ON sp.id = spct.id_san_pham
@@ -71,6 +72,7 @@ public interface SanPhamRepo
             @Param("idDeGiay") List<Integer> idDeGiay, @Param("idChatLieu") List<Integer> idChatLieu,
             @Param("idThuongHieu") List<Integer> idThuongHieu, @Param("donGiaMin") BigDecimal donGiaMin,
             @Param("donGiaMax") BigDecimal donGiaMax,Pageable pageable);
+
 
     @Query(value = """
                 SELECT

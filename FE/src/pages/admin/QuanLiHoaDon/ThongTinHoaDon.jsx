@@ -60,7 +60,9 @@ const ThongTinHoaDon = ({
       await fillHoaDonChiTiet();
     } catch (error) {
       console.error("Error:", error);
+
       toast.error(error.response.data.message);
+
     }
   };
 
@@ -134,23 +136,15 @@ const ThongTinHoaDon = ({
       <div className="mx-4 py-4">
         <div className="mx-5 flex justify-between py-3">
           <h3 className="text-[20px] font-bold">Sản phẩm</h3>
-          {/* {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" &&
-          hoaDon.trangThaiThanhToan === "Chưa thanh toán" &&
-          hoaDon.phuongThucGiaoHang !== "Tại quầy" ? (
-            <button
-              onClick={openModalSP}
-              className="rounded bg-blue-500 px-2 py-2 text-white"
-            >
-              Sửa hóa đơn
-            </button>
-          ) : (
-            ""
-          )} */}
+
+
+
         </div>
 
         <table className="min-w-full text-center text-sm font-light">
           <thead className="top-0 bg-blue-700 text-xl font-medium text-white">
             <tr>
+
               <th className="px-6 py-4">STT</th>
               <th className="px-6 py-4">Ảnh</th>
               <th className="px-6 py-4">Sản phẩm</th>
@@ -161,6 +155,8 @@ const ThongTinHoaDon = ({
               hoaDon.trangThaiThanhToan === "Chưa thanh toán" ? (
                 // <th className="px-6 py-4">Hành động</th>
               ) : null} */}
+
+
             </tr>
           </thead>
           <tbody>
@@ -181,32 +177,15 @@ const ThongTinHoaDon = ({
                 <td>{formatTien(SPCT.donGia)}</td>
                 <td>{SPCT.soLuong}</td>
                 <td>{formatTien(SPCT.donGia * SPCT.soLuong)}</td>
-                {/* {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" &&
-                hoaDon.trangThaiThanhToan === "Chưa thanh toán" ? (
-                  // <td>
-                  //   <Popconfirm
-                  //     title="Xóa Sản phẩm"
-                  //     description="Bạn có muốn xóa sản phẩm không?"
-                  //     okText="Yes"
-                  //     cancelText="No"
-                  //     onConfirm={(e) => {
-                  //       e.preventDefault();
-                  //       XoaSPKhoiGioHang(SPCT.idSpct);
-                  //     }}
-                  //   >
-                  //     <Button type="primary" danger>
-                  //       <TrashIcon className="h-5 w-5 text-white" />
-                  //       Xóa
-                  //     </Button>
-                  //   </Popconfirm>
-                  // </td>
-                ) : null} */}
+
+
               </tr>
             ))}
           </tbody>
         </table>
       </div>
       {OpenModelSP && (
+
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="relative w-full max-w-[1150px] rounded-lg bg-white p-6 shadow-lg">
             {/* Nội dung của modal */}
@@ -224,6 +203,7 @@ const ThongTinHoaDon = ({
               X
             </button>
           </div>
+
         </div>
       )}
     </div>

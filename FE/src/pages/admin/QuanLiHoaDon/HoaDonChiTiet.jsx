@@ -454,6 +454,7 @@ const HoaDonChiTiet = () => {
                 </button>
               )}
 
+
               {hoaDon.trangThaiDonHang === "Đơn đang trên đường giao hàng" && (
                 <button
                   onClick={openModalHT}
@@ -464,6 +465,7 @@ const HoaDonChiTiet = () => {
               )}
             </div>
           )}
+
 
           <button
             className="ml-4 rounded bg-blue-500 px-2 py-1 text-white"

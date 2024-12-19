@@ -156,7 +156,16 @@ export default function UpdateProductDetail() {
     getData(); // lay dữ liệu\
     console.log(hinhAnh);
   }, []);
+  const formatCurrencyToNumber = (value) => {
+    // Đảm bảo giá trị là chuỗi trước khi sử dụng replace
+    const stringValue = String(value);
 
+    // Loại bỏ tất cả các ký tự không phải là số
+    const formattedValue = stringValue.replace(/[^\d]/g, "");
+
+    // Chuyển chuỗi thành số và trả về kết quả
+    return parseInt(formattedValue, 10);
+  };
   return (
     <>
       <div className="mx-10 font-mono">
@@ -195,13 +204,19 @@ export default function UpdateProductDetail() {
                   marginLeft: "43px",
                 }}
                 size="large"
-                value={SPCT.donGia}
+                value={
+                  SPCT.donGia
+                    ? `${SPCT.donGia.replace(/\B(?=(\d{3})+(?!\d))/g, ".")} `
+                    : "0 VNĐ"
+                }
                 onChange={(e) => {
+
                   const rawValue = e.target.value.replace(/\D/g, ""); // Loại bỏ tất cả ký tự không phải số
                   const formattedValue = new Intl.NumberFormat("vi-VN").format(
                     rawValue,
                   ); // Định dạng số theo kiểu Việt Nam
                   setSPCT({ ...SPCT, donGia: formattedValue }); // Cập nhật giá trị đã định dạng vào state SPCT
+
                 }}
               />
             </div>

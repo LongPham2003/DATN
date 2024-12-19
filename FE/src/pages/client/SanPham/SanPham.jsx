@@ -1,6 +1,7 @@
 import { Button, Card, Radio } from "antd";
 import Meta from "antd/es/card/Meta";
 import axios from "./../../../api/axiosConfig";
+
 import { useState, useEffect } from "react";
 import LayANhTheoIdSPCT from "./../../admin/SanPham/Product/LayANhTheoIDSP";
 import { Link } from "react-router-dom";
@@ -9,10 +10,12 @@ import ReactPaginate from "react-paginate";
 
 export default function SanPham() {
   // State definitions
+
   const [listMauSac, setListMauSac] = useState([]);
   const [listKichThuoc, setListKichThuoc] = useState([]);
   const [listLoai, setListLoai] = useState([]);
   const [listSanPham, setListSanPham] = useState([]);
+
   const [tenSP, setTenSP] = useState(null);
   const [chatLieu, setChatLieu] = useState([]);
   const [thuongHieu, setThuongHieu] = useState([]);
@@ -95,10 +98,12 @@ export default function SanPham() {
       });
       setListSanPham(response.data.result || []);
       setTongSoTrang(response.data.totalPages);
+
     } catch (error) {
       console.error("Error fetching products:", error);
     }
   };
+
 
   // Format currency
   const formatCurrency = (value) => {
@@ -147,11 +152,13 @@ export default function SanPham() {
           {/* Filter Section */}
           <div className="col-span-3 rounded-lg p-5 shadow-md">
             <span className="mb-4 text-2xl font-semibold">Bộ Lọc</span>
+
             <Search
               placeholder="Nhập từ khóa tìm kiếm"
               allowClear
               enterButton="Tìm kiếm"
               size="large"
+
               onChange={(e) => setTenSP(e.target.value)}
             />
 
@@ -315,6 +322,7 @@ export default function SanPham() {
               "text-orange-500 font-bold text-xl border border-orange-500 rounded-full"
             }
           />
+
         </div>
       </div>
     </>

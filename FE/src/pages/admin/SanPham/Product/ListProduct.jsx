@@ -97,10 +97,16 @@ export default function ListProduct() {
     setIsModalOpen(false);
   };
 
-  const closeSuaModal = async () => {
-    setSelectedProductId(null);
+  const dongModalSua = () => {
     setIsModalSuaOpen(false);
-    await loadSanPham(trangHienTai); // Gọi lại danh sách sản phẩm sau khi sửa
+  };
+
+  const closeSuaModal = async () => {
+    setTimeout(async () => {
+      setSelectedProductId(null);
+      setIsModalSuaOpen(false);
+      await loadSanPham(trangHienTai); // Gọi lại danh sách sản phẩm sau khi sửa
+    }, 1500);
   };
 
   const handlePageChange = (selectedPage) => {
@@ -366,7 +372,7 @@ export default function ListProduct() {
               closeModal={closeSuaModal}
             />
             <button
-              onClick={closeSuaModal}
+              onClick={dongModalSua}
               className="mt-4 rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600"
             >
               Đóng

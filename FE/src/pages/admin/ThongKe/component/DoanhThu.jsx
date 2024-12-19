@@ -67,6 +67,7 @@ export default function DoanhThu() {
   return (
     <>
       <div className="mb-4 ml-10 flex gap-3">
+
         <DatePicker
           className="rounded-md border-blue-600 shadow-md"
           onChange={handleDateChange}
@@ -76,6 +77,7 @@ export default function DoanhThu() {
           className="rounded-md bg-blue-600 text-white shadow-md hover:bg-blue-700"
           onClick={DoanhThu}
         >
+
           Hôm nay
         </Button>
       </div>
@@ -89,11 +91,13 @@ export default function DoanhThu() {
               {theoNgay.tongTien}
             </div>
             <div className="mx-2 mt-12 flex justify-between gap-5">
+
               <div className="text-gray-200">San pham da ban</div>
               <div className="text-gray-200">Khach hang</div>
               <div className="text-gray-200">Khach le</div>
               <div className="text-gray-200">Don thanh cong</div>
               <div className="text-gray-200">Hoa don huy</div>
+
             </div>
             <div className="mx-2 mt-2 flex justify-around gap-5">
               <div className="text-gray-300">
@@ -127,11 +131,11 @@ export default function DoanhThu() {
               {theoTuan.tongTien}
             </div>
             <div className="mx-2 mt-12 flex justify-between gap-5">
-              <div>San pham da ban</div>
-              <div>Khach hang</div>
-              <div>Khach le</div>
-              <div>Don thanh cong</div>
-              <div>Hoa don huy</div>
+              <div>Sản phẩm đã bán</div>
+              <div>Khách hàng</div>
+              <div>Khách lẻ</div>
+              <div>Đơn thành công</div>
+              <div>Hóa đơn hủy</div>
             </div>
             <div className="mx-2 mt-2 flex justify-around gap-5">
               <div> {theoTuan ? theoTuan.sanPhamBanDuoc : "Loading..."}</div>
@@ -152,11 +156,11 @@ export default function DoanhThu() {
               {theoThang.tongTien}
             </div>
             <div className="mx-2 mt-12 flex justify-between gap-5">
-              <div>San pham da ban</div>
-              <div>Khach hang</div>
-              <div>Khach le</div>
-              <div>Don thanh cong</div>
-              <div>Hoa don huy</div>
+              <div>Sản phẩm đã bán</div>
+              <div>Khách hàng</div>
+              <div>Khách lẻ</div>
+              <div>Đơn thành công</div>
+              <div>Hóa đơn hủy</div>
             </div>
             <div className="mx-2 mt-2 flex justify-around gap-5">
               <div> {theoThang ? theoThang.sanPhamBanDuoc : "Loading..."}</div>
@@ -176,11 +180,11 @@ export default function DoanhThu() {
               {theoNam.tongTien}
             </div>
             <div className="mx-2 mt-12 flex justify-between gap-5">
-              <div>San pham da ban</div>
-              <div>Khach hang</div>
-              <div>Khach le</div>
-              <div>Don thanh cong</div>
-              <div>Hoa don huy</div>
+              <div>Sản phẩm đã bán</div>
+              <div>Khách hàng</div>
+              <div>Khách lẻ</div>
+              <div>Đơn thành công</div>
+              <div>Hóa đơn hủy</div>
             </div>
             <div className="mx-2 mt-2 flex justify-around gap-5">
               <div> {theoNam ? theoNam.sanPhamBanDuoc : "Loading..."}</div>

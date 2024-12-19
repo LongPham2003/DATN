@@ -17,15 +17,19 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class KhachHangControllerClient {
     private final KhachHangService khachHangService;
+
     private final HoaDonChiTietServiceImpl hoaDonChiTietServiceImpl;
+
 
     @GetMapping("/timtheoEmail")
     public Optional<KhachHang> timtheoEmail(@RequestParam("email") String email) {
             return khachHangService.timTheoEmail(email);
     }
+
     @GetMapping("/SPCTbyidHD/{idHoaDon}")
     public ApiResponse<List<HoaDonChiTietBHRespose>> getSPCTbyidHD(@PathVariable("idHoaDon") Integer idHoaDon) {
         List<HoaDonChiTietBHRespose> hdbh = hoaDonChiTietServiceImpl.getSPCTByIdHoaDon(idHoaDon);
+
 
         return ApiResponse.<List<HoaDonChiTietBHRespose>>builder().result(hdbh).build();
     }

@@ -18,6 +18,7 @@ export default function TrangChu() {
   useEffect(() => {
     localStorage.removeItem("soLuong");
     localStorage.removeItem("idSPCTCHon");
+    // window.location.reload();
   }, []);
 
   return (

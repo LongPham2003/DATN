@@ -73,13 +73,16 @@ export default function DanhSachHoaDon() {
     dg: 0,
     ht: 0,
     huy: 0,
+
     clh: 0,
+
   });
 
   useEffect(() => {
     const fetchSoluong = async () => {
       try {
         // Gọi tất cả các API song song
+
         const [
           hoadonRes,
           cxnRes,
@@ -115,6 +118,7 @@ export default function DanhSachHoaDon() {
         console.error("Lỗi khi gọi API:", error);
       }
     };
+
 
     fetchSoluong();
   }, []);
@@ -207,6 +211,7 @@ export default function DanhSachHoaDon() {
             </button>
             <button
               className="relative rounded bg-blue-500 px-4 py-2 text-white"
+
               onClick={() => setTrangThai("CHO_LAY_HANG")}
             >
               <span className="absolute right-0 top-0 flex h-6 w-6 translate-x-[50%] translate-y-[-50%] items-center justify-center rounded-full bg-red-500 text-xs text-white">
@@ -216,6 +221,7 @@ export default function DanhSachHoaDon() {
             </button>
             <button
               className="relative rounded bg-blue-500 px-4 py-2 text-white"
+
               onClick={() => setTrangThai("CHO_GIAO_HANG")}
             >
               <span className="absolute right-0 top-0 flex h-6 w-6 translate-x-[50%] translate-y-[-50%] items-center justify-center rounded-full bg-red-500 text-xs text-white">

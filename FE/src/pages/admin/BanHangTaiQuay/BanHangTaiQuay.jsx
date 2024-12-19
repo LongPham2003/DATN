@@ -420,10 +420,12 @@ export default function BanHangTaiQuay() {
   //Huy Hoa Don
   const huyHoaDon = async () => {
     try {
+
       await axios.put(ApiHuyHoaDon);
       toast.success("Hủy hóa đơn thành công");
       LayDanhSachHoaDonChuaThanhToan();
       window.location.reload();
+
     } catch (error) {
       console.log(error);
       toast.error("Không thành công, có lỗi xảy ra");
@@ -474,7 +476,9 @@ export default function BanHangTaiQuay() {
       await axios.delete(
         `${ApiXoaPhieuGiamGiaKhoiHoaDon}/${idPhieuGiamGiaDangChon}`,
       );
+
       toast.success("Xóa phiếu giảm giá thành công");
+
       LayThongTinThanhToanCuaHoaDon();
       setIsSelectDisabled(false);
     } catch (error) {
@@ -973,6 +977,7 @@ export default function BanHangTaiQuay() {
               <div className="my-4 flex items-center justify-between">
                 <div>Mã giảm giá</div>
                 <div className="flex items-center">
+
                   {selectedHoaDonId && (
                     <Select
                       showSearch
@@ -1027,6 +1032,7 @@ export default function BanHangTaiQuay() {
                     </Select>
                   )}
 
+
                   <Button
                     color="danger"
                     variant="solid"
@@ -1061,7 +1067,7 @@ export default function BanHangTaiQuay() {
                     />
                   </div>
                 </div>
-                <div>{giaoHang && <div>{formatTien(phiGiaoHang)}</div>}</div>
+                <div>{giaoHang && <div>{phiGiaoHang}</div>}</div>
               </div>
 
               <div className="my-4 flex items-center justify-between">
