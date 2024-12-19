@@ -1,10 +1,28 @@
 /* eslint-disable no-unused-vars */
 
+import { Button, Popconfirm } from "antd";
 import LayAnhTheoIdSP from "../SanPham/Product/LayANhTheoIDSP";
+import { TrashIcon } from "@heroicons/react/16/solid";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useState } from "react";
+import SanPhamHoaDon from "./SanPhamHoaDon";
 
 /* eslint-disable react/prop-types */
-const ThongTinHoaDon = ({ hoaDon, hoaDonChiTiet }) => {
+const ThongTinHoaDon = ({
+  hoaDon,
+  hoaDonChiTiet,
+  fillHoaDon,
+  fillHoaDonChiTiet,
+}) => {
   console.log(hoaDonChiTiet);
+  const [OpenModelSP, setOpenModelSP] = useState(false);
+  const openModalSP = () => {
+    setOpenModelSP(true);
+  };
+  const closeModalSP = async () => {
+    setOpenModelSP(false);
+  };
   const formatDate = (dateTimeString) => {
     const date = new Date(dateTimeString);
 
@@ -31,6 +49,21 @@ const ThongTinHoaDon = ({ hoaDon, hoaDonChiTiet }) => {
     // Định dạng số và thêm đơn vị VNĐ
     return parsedValue.toLocaleString("vi-VN") + " VNĐ";
   }
+
+  const XoaSPKhoiGioHang = async (idSPCT) => {
+    try {
+      await axios.delete(
+        `http://localhost:8080/api/giohang/${hoaDon.id}/spct/${idSPCT}`,
+      );
+      toast.success("Xóa thành công");
+      await fillHoaDon();
+      await fillHoaDonChiTiet();
+    } catch (error) {
+      console.error("Error:", error);
+      toast.error(error.response.data.message);
+    }
+  };
+
   return (
     <div>
       <h3 className="text-[20px] font-bold text-pink-500">
@@ -39,12 +72,12 @@ const ThongTinHoaDon = ({ hoaDon, hoaDonChiTiet }) => {
       <div className="mx-4 flex gap-10 text-lg">
         {/* Cột trái */}
         <div className="w-1/2 space-y-4 border-r pr-4">
-          <div className="flex items-center justify-between">
+          {/* <div className="flex items-center justify-between">
             <span className="font-medium text-gray-600">Trạng thái:</span>
             <h3 className="font-semibold text-blue-600">
               {hoaDon.trangThaiDonHang}
             </h3>
-          </div>
+          </div> */}
           <div className="flex items-center justify-between">
             <span className="font-medium text-gray-600">Mã đơn hàng:</span>
             <h3 className="font-semibold text-gray-800">{hoaDon.ma}</h3>
@@ -61,10 +94,6 @@ const ThongTinHoaDon = ({ hoaDon, hoaDonChiTiet }) => {
               {formatDate(hoaDon.ngayTao)}
             </h3>
           </div>
-        </div>
-
-        {/* Cột phải */}
-        <div className="w-1/2 space-y-4 pl-4">
           <div className="flex items-center justify-between">
             <span className="font-medium text-gray-600">
               Mã phiếu giảm giá:
@@ -72,6 +101,14 @@ const ThongTinHoaDon = ({ hoaDon, hoaDonChiTiet }) => {
             <h3 className="font-semibold text-gray-800">
               {hoaDon.phieuGiamGia}
             </h3>
+          </div>
+        </div>
+
+        {/* Cột phải */}
+        <div className="w-1/2 space-y-4 pl-4">
+          <div className="flex items-center justify-between">
+            <span className="font-medium text-gray-600">Tổng tiền:</span>
+            <h3 className="font-semibold text-gray-800">{hoaDon.tongTien}</h3>
           </div>
           <div className="flex items-center justify-between">
             <span className="font-medium text-gray-600">Tiền được giảm:</span>
@@ -93,18 +130,37 @@ const ThongTinHoaDon = ({ hoaDon, hoaDonChiTiet }) => {
           </div>
         </div>
       </div>
+      <hr />
       <div className="mx-4 py-4">
-        <h3 className="text-[20px] font-bold">Sản phẩm</h3>
+        <div className="mx-5 flex justify-between py-3">
+          <h3 className="text-[20px] font-bold">Sản phẩm</h3>
+          {/* {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" &&
+          hoaDon.trangThaiThanhToan === "Chưa thanh toán" &&
+          hoaDon.phuongThucGiaoHang !== "Tại quầy" ? (
+            <button
+              onClick={openModalSP}
+              className="rounded bg-blue-500 px-2 py-2 text-white"
+            >
+              Sửa hóa đơn
+            </button>
+          ) : (
+            ""
+          )} */}
+        </div>
 
         <table className="min-w-full text-center text-sm font-light">
           <thead className="top-0 bg-blue-700 text-xl font-medium text-white">
             <tr>
-              <th className="w-10 px-6 py-4">STT</th>
-              <th className="w-[130px] px-6 py-4">Ảnh</th>
-              <th className="w-52 px-6 py-4">Sản phẩm</th>
-              <th className="w-52 px-6 py-4">Đơn giá</th>
-              <th className="w-52 px-6 py-4">Số lượng</th>
-              <th className="w-52 px-6 py-4">Thành tiền</th>
+              <th className="px-6 py-4">STT</th>
+              <th className="px-6 py-4">Ảnh</th>
+              <th className="px-6 py-4">Sản phẩm</th>
+              <th className="px-6 py-4">Đơn giá</th>
+              <th className="px-6 py-4">Số lượng</th>
+              <th className="px-6 py-4">Thành tiền</th>
+              {/* {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" &&
+              hoaDon.trangThaiThanhToan === "Chưa thanh toán" ? (
+                // <th className="px-6 py-4">Hành động</th>
+              ) : null} */}
             </tr>
           </thead>
           <tbody>
@@ -125,12 +181,53 @@ const ThongTinHoaDon = ({ hoaDon, hoaDonChiTiet }) => {
                 <td>{formatTien(SPCT.donGia)}</td>
                 <td>{SPCT.soLuong}</td>
                 <td>{formatTien(SPCT.donGia * SPCT.soLuong)}</td>
+                {/* {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" &&
+                hoaDon.trangThaiThanhToan === "Chưa thanh toán" ? (
+                  // <td>
+                  //   <Popconfirm
+                  //     title="Xóa Sản phẩm"
+                  //     description="Bạn có muốn xóa sản phẩm không?"
+                  //     okText="Yes"
+                  //     cancelText="No"
+                  //     onConfirm={(e) => {
+                  //       e.preventDefault();
+                  //       XoaSPKhoiGioHang(SPCT.idSpct);
+                  //     }}
+                  //   >
+                  //     <Button type="primary" danger>
+                  //       <TrashIcon className="h-5 w-5 text-white" />
+                  //       Xóa
+                  //     </Button>
+                  //   </Popconfirm>
+                  // </td>
+                ) : null} */}
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+      {OpenModelSP && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="relative w-full max-w-[1150px] rounded-lg bg-white p-6 shadow-lg">
+            {/* Nội dung của modal */}
+            <SanPhamHoaDon
+              id={hoaDon.id}
+              fillHoaDon={fillHoaDon}
+              fillHoaDonChiTiet={fillHoaDonChiTiet}
+            />
+
+            {/* Nút đóng modal */}
+            <button
+              onClick={closeModalSP}
+              className="absolute right-2 top-2 rounded bg-red-500 px-3 py-1 text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300"
+            >
+              X
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
+
 export default ThongTinHoaDon;

@@ -1,12 +1,13 @@
 import { Modal, Popconfirm, Select } from "antd";
 import axios from "./../../../api/axiosConfig";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useState } from "react";
 import ThongTinSPCT from "./../GioHang/component/ThongTinSPCT";
 import LayANhTheoIDSP from "./../../admin/SanPham/Product/LayANhTheoIDSP";
 import DiaCHiMacDinhKhachHang from "./../../admin/BanHangTaiQuay/DiaChiMacDinhKhachHang";
 import { toast, ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { ThemeContext } from "../../GlobalProvider";
 
 export default function DatHang() {
   const navigate = useNavigate();
@@ -18,9 +19,10 @@ export default function DatHang() {
   const [TienDuocGiam, setTienDuocGiam] = useState(0);
   const [thanhTien, setThanhTien] = useState(0);
   const [dieuKienGiam, setdieuKienGiam] = useState();
-
+  const { reload, setReload } = useContext(ThemeContext);
   // chon giao hang
   const [phiGiaoHang, setPhiGiaoHang] = useState(0);
+  const [soLuongSanPham, setSoLuongSanPham] = useState(0);
   // const [giaoHang, setGiaoHang] = useState(true);
   const [ngayDuKien, setNgayDuKien] = useState(null);
   const [diaChiGiaoHang, setdiaChiGiaoHang] = useState("");
@@ -84,7 +86,20 @@ export default function DatHang() {
     idSpct: item.idSanPhamChiTiet,
     soLuong: item.soLuong,
   }));
-  console.log(chiTietSanPhams);
+  // console.log(chiTietSanPhams);
+
+  // lấy số lương sản phẩm để tính ship
+  useEffect(() => {
+    if (chiTietSanPhams && Array.isArray(chiTietSanPhams)) {
+      const total = chiTietSanPhams.reduce(
+        (sum, item) => sum + (item.soLuong || 0),
+        0,
+      );
+      setSoLuongSanPham(total);
+    }
+  }, [chiTietSanPhams]);
+  // setSoLuongSanPham(total);
+
   // Hàm DatHang với xác nhận
   const DatHang = async (e) => {
     e.preventDefault();
@@ -105,9 +120,7 @@ export default function DatHang() {
       toast.success("Đặt hàng thành công");
       setTimeout(() => {
         navigate("/trangchu");
-        setTimeout(() => {
-          window.location.reload();
-        }, 500);
+        setReload(!reload);
       }, 1000);
     } catch (error) {
       console.error("Lỗi khi đặt hàng:", error);
@@ -289,7 +302,7 @@ export default function DatHang() {
           <div className="flex justify-center">
             <span className="text-3xl font-semibold">Đơn Hàng</span>
           </div>
-          <div>
+          <div className="my-5">
             <table className="w-full">
               <thead>
                 <tr>
@@ -331,11 +344,10 @@ export default function DatHang() {
         </div>
         <div className="ml-8 w-1/3">
           <div className="ml-1">
-            <span>Chọn phiếu giảm giá và địa chỉ</span>
             <div className="my-2 flex gap-5">
-              <span>Phieu giam gia</span>
+              <span className="font-bold">Phiếu giảm giá:</span>
               <Select
-                style={{ width: 300, height: "35px" }}
+                style={{ width: 340, height: "35px" }}
                 placeholder="Chọn phiếu giảm giá"
                 value={idPGGDangChon || ""}
                 optionLabelProp="label"
@@ -358,9 +370,7 @@ export default function DatHang() {
                   >
                     <div>
                       <span>Tên: {pgg.tenVoucher}</span> <br />
-                      <span>
-                        Mức giảm: {pgg.mucGiam} {pgg.hinhThucGiam}
-                      </span>
+                      <span>Mức giảm: {pgg.mucGiam}</span>
                       <br />
                       <span>Hóa đơn tối thiểu: {pgg.dieuKienGiamGia}</span>
                       <br />
@@ -383,7 +393,7 @@ export default function DatHang() {
                 <span className="ml-auto">{formatTien(tongTien)}</span>
               </div>
               <div className="flex gap-10">
-                <span className="font-semibold">Phí giao hang: </span>
+                <span className="font-semibold">Phí giao hàng: </span>
                 <span className="ml-auto">{formatTien(phiGiaoHang)}</span>
               </div>
               <div className="flex gap-10">
@@ -395,15 +405,15 @@ export default function DatHang() {
                 <span className="ml-auto">{formatTien(thanhTien)}</span>
               </div>
 
-              <div className="my-5 flex gap-10">
+              <div className="flex gap-10">
                 <span className="font-semibold">Ngày nhận dự kiến: </span>
                 <span className="ml-auto">{ngayDuKien}</span>
               </div>
             </div>
           </div>
-          <div>
-            <span>Thông tin người đặt</span>
-            <div className="flex justify-between">
+          <div className="my-3">
+            <span className="font-bold">Thông tin người đặt:</span>
+            <div className="justify-between">
               <div>Họ Tên: {khachHang.hoTen ? khachHang.hoTen : ""}</div>
               <div>
                 Số điện thoại:{" "}
@@ -418,6 +428,8 @@ export default function DatHang() {
               setPhiGiaoHang={setPhiGiaoHang}
               setNgayDuKien={setNgayDuKien}
               setdiaChiGiaoHang={setdiaChiGiaoHang}
+              soLuongSanPham={soLuongSanPham}
+              tongTien={tongTien}
             />
           </div>
           <div>
@@ -469,7 +481,7 @@ export default function DatHang() {
           )}
         </div>
       </div>
-      <ToastContainer position="top-center" hideProgressBar />
+      {/* <ToastContainer position="top-center" hideProgressBar /> */}
     </>
   );
 }

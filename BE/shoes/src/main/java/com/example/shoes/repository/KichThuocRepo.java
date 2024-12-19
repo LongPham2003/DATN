@@ -37,7 +37,7 @@ public interface KichThuocRepo extends JpaRepository<KichThuoc, Integer> {
                 SELECT kt 
                 FROM KichThuoc kt 
                 JOIN SanPhamChiTiet spct ON spct.idKichThuoc.id = kt.id 
-                WHERE spct.idSanPham.id = :idSanPham
+                WHERE spct.idSanPham.id = :idSanPham and spct.trangThai=true 
             """)
     List<KichThuoc> getKichThuocByIdSP(@Param("idSanPham") Integer idSanPham);
 

@@ -12,8 +12,6 @@ export default function UpdateProductDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-
-
   const [idSanPham, setIdSanPham] = useState();
   const [SPCT, setSPCT] = useState({});
   const [SP, setSP] = useState({});
@@ -74,8 +72,17 @@ export default function UpdateProductDetail() {
       console.error("Lỗi khi tải dữ liệu:", error);
     }
   };
+
   const UpdateProductDetail = async (e) => {
     e.preventDefault();
+
+    // Kiểm tra nếu không có ảnh
+    if (!hinhAnh || hinhAnh.length === 0) {
+      toast.error("Vui lòng thêm ít nhất một ảnh sản phẩm", {
+        autoClose: 1000,
+      });
+      return;
+    }
 
     // Đối tượng chi tiết sản phẩm mới cần cập nhật
     const newProductDetail = {
@@ -91,6 +98,18 @@ export default function UpdateProductDetail() {
     };
 
     try {
+      // Kiểm tra xem có ảnh nào bị null hoặc undefined không
+      const hasInvalidImage = hinhAnh.some(
+        (anh) => !anh.url && !anh.duLieuAnhBase64,
+      );
+
+      if (hasInvalidImage) {
+        toast.error("Có ảnh không hợp lệ, vui lòng kiểm tra lại", {
+          autoClose: 1000,
+        });
+        return;
+      }
+
       await axios.put(
         `http://localhost:8080/api/sanphamchitiet/update/${id}`,
         newProductDetail,
@@ -109,7 +128,7 @@ export default function UpdateProductDetail() {
 
           // Kiểm tra nếu ảnh đã có ID, tức là ảnh cũ => cập nhật
           if (anh.id) {
-            console.log("Cập nhật ảnh cũ:", newAnh);
+            // console.log("Cập nhật ảnh cũ:", newAnh);
             return axios.put(
               `http://localhost:8080/api/hinhanh/update/${anh.id}`,
               newAnh,
@@ -117,16 +136,16 @@ export default function UpdateProductDetail() {
           }
           // Nếu không có ID, tức là ảnh mới => tạo mới
           else {
-            console.log("Tạo ảnh mới:", newAnh);
+            // console.log("Tạo ảnh mới:", newAnh);
             return axios.post(`http://localhost:8080/api/hinhanh/add`, newAnh);
           }
         }),
       );
 
-      toast.success("Cập nhật thành công", { autoClose: 1000 });
+      toast.success("Cập nhật thành công", { autoClose: 700 });
       setTimeout(() => {
         navigate(`/admin/chitietsanpham/${SPCT.idSanPham}`);
-      }, 1700);
+      }, 1200);
     } catch (error) {
       toast.error("Cập nhật thất bại", { autoClose: 1000 });
       console.error(error);
@@ -143,14 +162,14 @@ export default function UpdateProductDetail() {
       <div className="mx-10 font-mono">
         <div>
           <div className="my-5 flex justify-center">
-            <span className="text-3xl font-bold">Thong tin san pham</span>
+            <span className="text-3xl font-bold">Thông tin sản phẩm</span>
           </div>
           <div>
-            <label>Ten San Pham</label>
+            <label>Tên sản phẩm</label>
             <Input size="large" value={SP.tenSanPham} disabled />
           </div>
           <div>
-            <label>Mo Ta</label>
+            <label>Mô tả</label>
             <TextArea size="large" value={SP.moTa} disabled />
           </div>
         </div>
@@ -178,13 +197,16 @@ export default function UpdateProductDetail() {
                 size="large"
                 value={SPCT.donGia}
                 onChange={(e) => {
-                  setSPCT({ ...SPCT, donGia: e.target.value }); // Sửa Dữ liệu trược tiếp vào Sate SPCT
-                  // console.log(value);
+                  const rawValue = e.target.value.replace(/\D/g, ""); // Loại bỏ tất cả ký tự không phải số
+                  const formattedValue = new Intl.NumberFormat("vi-VN").format(
+                    rawValue,
+                  ); // Định dạng số theo kiểu Việt Nam
+                  setSPCT({ ...SPCT, donGia: formattedValue }); // Cập nhật giá trị đã định dạng vào state SPCT
                 }}
               />
             </div>
             <div className="my-4">
-              <label>Thuong Hieu:</label>
+              <label>Thương hiệu:</label>
               <Select
                 style={{
                   width: "500px",
@@ -200,10 +222,11 @@ export default function UpdateProductDetail() {
                   setSPCT({ ...SPCT, idThuongHieu: value }); // Sửa Dữ liệu trược tiếp vào Sate SPCT
                   // console.log(value);
                 }}
+                disabled
               />
             </div>
             <div className="my-4">
-              <label htmlFor="">Chat Lieu:</label>
+              <label htmlFor="">Chất liệu:</label>
               <Select
                 style={{
                   width: "500px",
@@ -222,7 +245,7 @@ export default function UpdateProductDetail() {
               />
             </div>
             <div className="my-4">
-              <label htmlFor="">Mau Sac:</label>
+              <label htmlFor="">Màu sắc:</label>
               <Select
                 style={{
                   width: "500px",
@@ -264,13 +287,15 @@ export default function UpdateProductDetail() {
                 size="large"
                 value={SPCT.soLuong}
                 onChange={(e) => {
-                  setSPCT({ ...SPCT, soLuong: e.target.value }); // Sửa Dữ liệu trược tiếp vào Sate SPCT
-                  // console.log(value);
+                  const rawValue = e.target.value.replace(/\D/g, ""); // Loại bỏ ký tự không phải số
+                  if (!isNaN(rawValue) && Number(rawValue) >= 0) {
+                    setSPCT({ ...SPCT, soLuong: rawValue }); // Cập nhật nếu giá trị >= 0
+                  }
                 }}
               />
             </div>
             <div className="my-4">
-              <label htmlFor="">Kich Thuoc:</label>
+              <label htmlFor="">Kích thước:</label>
               <Select
                 style={{
                   width: "500px",
@@ -289,7 +314,7 @@ export default function UpdateProductDetail() {
               />
             </div>
             <div className="my-4">
-              <label htmlFor="">De Giay:</label>
+              <label htmlFor="">Đế giày:</label>
               <Select
                 style={{
                   width: "500px",
@@ -309,7 +334,7 @@ export default function UpdateProductDetail() {
             </div>
 
             <div className="my-4">
-              <label htmlFor="">Trang Thai:</label>
+              <label htmlFor="">Trạng thái:</label>
               <Select
                 style={{
                   width: "500px",
@@ -338,7 +363,7 @@ export default function UpdateProductDetail() {
         <div className="h-[200px]">
           <div className="my-5 flex justify-start gap-5">
             <div>
-              <span className="text-3xl font-bold">Anh San Pham:</span>
+              <span className="text-3xl font-bold">Ảnh sản phẩm:</span>
             </div>
             <div>
               <GetImage fileList={hinhAnh} setFileList={setHinhAnh} />
@@ -354,19 +379,28 @@ export default function UpdateProductDetail() {
             onConfirm={UpdateProductDetail}
           >
             <Button type="primary">
-              <CheckCircleOutlined /> Luu
+              <CheckCircleOutlined /> Lưu
             </Button>
           </Popconfirm>
           <Button
             color="danger"
             variant="solid"
-            onClick={(e) => navigate(`/admin/chitietsanpham/${SPCT.idSanPham}`)}
+            onClick={(e) => {
+              // Kiểm tra nếu không có ảnh
+              if (!hinhAnh || hinhAnh.length === 0) {
+                toast.error("Vui lòng thêm ít nhất một ảnh sản phẩm trước khi quay lại", {
+                  autoClose: 1000,
+                });
+                return; // Ngăn không cho quay lại
+              }
+              navigate(`/admin/chitietsanpham/${SPCT.idSanPham}`);
+            }}
           >
-            <CloseCircleOutlined /> Quay lai
+            <CloseCircleOutlined /> Quay lại
           </Button>
         </div>
       </div>
-      <ToastContainer />
+      {/* <ToastContainer /> */}
     </>
   );
 }

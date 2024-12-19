@@ -59,7 +59,7 @@ const ChiTietNhanVien = () => {
           .catch((error) => {
             console.log(formData);
             console.error("Lỗi khi cập nhật:", error);
-            setError("Cập nhật thất bại. Vui lòng thử lại.");
+            setError(error.response?.data?.message || error.message);
           });
       },
       onCancel() {

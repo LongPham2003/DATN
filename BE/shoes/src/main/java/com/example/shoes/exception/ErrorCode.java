@@ -43,6 +43,7 @@ public enum ErrorCode {
     VALID_PHIEU_GIAM_GIA(1002,"Ngày kết thúc phải sau ngày bắt đầu.",HttpStatus.BAD_REQUEST),
     VALID_PHIEU_GIAM_GIA_MUC_GIAM_PT(1002,"Mức giảm không hợp lệ phải từ 0 -> 100",HttpStatus.BAD_REQUEST),
     VALID_PHIEU_GIAM_GIA_MUC_GIAM(1002,"Mức giảm không hợp lệ",HttpStatus.BAD_REQUEST),
+    VALID_PHIEU_GIAM_GIA_DKG_MG(1002,"Điều kiện giảm phải lớn hơn giảm tối đa hoặc mức giảm",HttpStatus.BAD_REQUEST),
     VALID_PHIEU_GIAM_GIA_DK_GIAM(1002,"Điều kiện giảm không hợp lệ",HttpStatus.BAD_REQUEST),
     BILL_NOT_FOUND_h(1005,"Dữ liệu không đúng",HttpStatus.NOT_FOUND),
     INSUFFICIENT_PAYMENT(1002,"Số tiền khách đưa không đủ để thanh toán.",HttpStatus.BAD_REQUEST),
@@ -53,6 +54,12 @@ public enum ErrorCode {
     CUSTOMER_NOT_FOUND(1005,"khong tim khach hang tren he thong  ",HttpStatus.NOT_FOUND),
     CHUA_THANH_TOAN(1005,"Chưa Thanh Toán",HttpStatus.BAD_REQUEST),
     HUY_HANG(1005,"Thao tác chưa thành công",HttpStatus.BAD_REQUEST),
+    KHONG_THE_XOA(1005,"Không thể xóa do phiếu giảm giá của bạn",HttpStatus.BAD_REQUEST),
+    KHONG_THE_XOA_SP(1005,"Không thể xóa sản phẩm duy nhất ",HttpStatus.BAD_REQUEST),
+    SAN_PHAM_NGUNG_KINH_DOANH(1005,"San phẩm ngừng kinh doanh ",HttpStatus.BAD_REQUEST),
+    SO_LUONG_VUOT_QUA(1005,"Số lượng vượt quá trong kho",HttpStatus.BAD_REQUEST),
+    CHUA_CHON_SAN_PHAM(1001,"Bạn chưa chọn size hoặc màu hoặc số lượng",HttpStatus.BAD_REQUEST),
+    PRODUCT_EXISTED(1005,"Sản phẩm chi tiết đã tồn tại",HttpStatus.NOT_FOUND),
     ;
     private int code;
     private String message;

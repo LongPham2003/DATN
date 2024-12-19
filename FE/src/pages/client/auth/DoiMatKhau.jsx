@@ -122,7 +122,7 @@ const DoiMatKhau = () => {
           Đổi mật khẩu
         </button>
       </form>
-      <ToastContainer
+      {/* <ToastContainer
         position="top-right"
         autoClose={1000}
         hideProgressBar={false}
@@ -134,7 +134,7 @@ const DoiMatKhau = () => {
         pauseOnHover
         theme="light"
         transition={Bounce}
-      />
+      /> */}
     </div>
   );
 };

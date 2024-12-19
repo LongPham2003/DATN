@@ -3,6 +3,7 @@ import TheMoiNhanVien from "./TheMoiNhanVien";
 import ReactPaginate from "react-paginate";
 import axios from "../../../api/axiosConfig";
 import { Link } from "react-router-dom";
+import { EyeFilled, PlusCircleFilled, ReloadOutlined } from "@ant-design/icons";
 
 export default function DanhSachNhanVien() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -17,6 +18,8 @@ export default function DanhSachNhanVien() {
   const [keyword, setKeyword] = useState("");
   const [trangThai, setTrangThai] = useState(null);
   const pageSize = 5;
+  const totalRows = pageSize;
+  const emptyRows = totalRows - nhanvien.length;
 
   const handlePageChange = (selectedPage) => {
     setTrangHienTai(selectedPage.selected + 1);
@@ -49,16 +52,6 @@ export default function DanhSachNhanVien() {
   return (
     <div className="p-4">
       <h1 className="mb-4 text-2xl font-bold">Quản Lý Nhân Viên</h1>
-
-      {/* Nút thêm mới nhân viên */}
-      <div className="mb-4">
-        <button
-          onClick={openModal}
-          className="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-600"
-        >
-          Thêm Mới Nhân Viên
-        </button>
-      </div>
 
       {/* Modal Thêm Mới Nhân Viên */}
       {isModalOpen && (
@@ -124,14 +117,27 @@ export default function DanhSachNhanVien() {
 
       <button
         onClick={handleLamMoi}
-        className="mx-auto flex rounded bg-blue-500 px-2 py-1 text-white"
+        className="mx-auto flex items-center gap-2 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-600"
       >
-        Làm mới
+        <ReloadOutlined /> Làm mới
       </button>
 
       {/* Danh sách nhân viên */}
       <div className="rounded bg-white p-4 shadow">
-        <h2 className="mb-4 text-xl font-semibold">Danh Sách Nhân Viên</h2>
+        <div className="flex justify-between">
+          <h2 className="mb-4 text-xl font-semibold">Danh Sách Nhân Viên</h2>
+          {/* Nút thêm mới nhân viên */}
+          <div className="mb-4">
+            <button
+              type="button"
+              onClick={openModal}
+              className="mr-16 h-10 rounded-md bg-green-500 px-4 font-semibold text-white transition-colors duration-300 hover:bg-green-600 focus:bg-green-700 active:bg-green-400"
+            >
+              <PlusCircleFilled /> <span> Thêm Mới Nhân Viên</span>
+            </button>
+          </div>
+        </div>
+
         <div className="overflow-x-auto">
           <table className="min-w-full border border-gray-300 bg-white">
             <thead>
@@ -171,16 +177,32 @@ export default function DanhSachNhanVien() {
                     </button>
                   </td>
                   <td>
-                    <button className="rounded bg-blue-500 px-2 py-1 text-white">
-                      <Link to={`/admin/nhanvien/${item.id}`}>Chi Tiết</Link>
+                    <button className="rounded bg-yellow-500 px-2 py-1 text-white">
+                      <Link to={`/admin/nhanvien/${item.id}`}>
+                        <div
+                          className="flex gap-2 transition-transform duration-500 hover:scale-125"
+                          title="Chi tiết nhân viên"
+                        >
+                          <EyeFilled />
+                        </div>
+                      </Link>
                     </button>
                   </td>
                 </tr>
               ))}
+              {emptyRows > 0 &&
+                Array.from({ length: emptyRows }).map((_, index) => (
+                  <tr key={`empty-${index}`} style={{ height: "61px" }}>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>
-        <div className="mr-14 mt-4 flex justify-center">
+        <div className="mr-14 mt-4 flex justify-end">
           <ReactPaginate
             previousLabel={"< Previous"}
             nextLabel={"Next >"}

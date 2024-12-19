@@ -128,7 +128,6 @@ export function Sidebar() {
               </Link>
               <hr />
 
-              <hr />
               {/* Mục Thuộc tính */}
               <ListItem
                 onClick={handleAttributeOpen}
@@ -212,7 +211,7 @@ export function Sidebar() {
             <ListItemPrefix>
               <PercentBadgeIcon className="h-5 w-5" />
             </ListItemPrefix>
-            Voucher
+            Phiếu giảm giá
           </ListItem>
         </Link>
 
@@ -250,9 +249,9 @@ export function Sidebar() {
             <Typography className="font-bold" variant="small">
               {localStorage.getItem("email")}
             </Typography>
-            <Typography variant="small" color="gray" className="font-normal">
+            {/* <Typography variant="small" color="gray" className="font-normal">
               Web Developer
-            </Typography>
+            </Typography> */}
           </div>
         </div>
         {/* Phần Log Out */}

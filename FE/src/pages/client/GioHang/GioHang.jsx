@@ -1,12 +1,12 @@
 import { TrashIcon, XMarkIcon } from "@heroicons/react/16/solid";
 import { Button, Checkbox, Input, Popconfirm, Select } from "antd";
 import axios from "./../../../api/axiosConfig";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import ThongTinSPCT from "./component/ThongTinSPCT";
 import LayANhTheoIDSp from "./../../admin/SanPham/Product/LayANhTheoIDSP";
 import { toast, ToastContainer, Zoom } from "react-toastify";
 import { Link } from "react-router-dom";
-
+import { ThemeContext } from "../../GlobalProvider";
 export default function GioHang() {
   const [ListSPCT, setListSPCT] = useState([]);
   const [soLuong, setSoLuong] = useState(0); // State để lưu tổng số lượng
@@ -15,6 +15,8 @@ export default function GioHang() {
   const [IdGH, setIdGH] = useState();
   const [soLuongTon, setSoLuongTon] = useState();
   const [IdGioHangChiTiet, setIdGioHangChiTiet] = useState(0);
+
+  const { reload, setReload } = useContext(ThemeContext);
 
   const ApiLayDanhSachSPCT = `http://localhost:8080/api/giohang/laytatcagiohangchitiet`;
   const ApiCapNhatSoLuongMua = `http://localhost:8080/api/giohang/capnhatgiohangchitiet`;
@@ -107,6 +109,7 @@ export default function GioHang() {
       await axios.delete(`${ApiXoaSPKhoiGioHang}/${IdGioHangChiTiet}`);
       toast.success("Đã xóa SP khỏi Giỏ hàng");
       LayDanhSachSP();
+      setReload(!reload);
     } catch (error) {
       console.log(error);
 
@@ -192,6 +195,7 @@ export default function GioHang() {
   // useEffect để lưu sản phẩm được chọn vào localStorage
   useEffect(() => {
     localStorage.setItem("sanPhamChon", JSON.stringify(sanPhamChon));
+    // setTatCaChecked(false);
   }, [sanPhamChon]);
 
   return (
@@ -401,7 +405,7 @@ export default function GioHang() {
                       disabled={tongTien === 0}
                       className={`h-16 w-full rounded-lg border text-2xl font-semibold text-white transition duration-300 ease-in-out ${tongTien === 0 ? "cursor-not-allowed bg-gray-400" : "bg-orange-600 hover:bg-black"}`}
                     >
-                      Tiep tuc mua hang
+                      Tiếp tục mua hàng
                     </button>
                   </Link>
                 </div>
@@ -410,7 +414,7 @@ export default function GioHang() {
           </div>
         </div>
       </div>
-      <ToastContainer
+      {/* <ToastContainer
         position="top-center"
         autoClose={1500}
         hideProgressBar={false}
@@ -422,7 +426,7 @@ export default function GioHang() {
         pauseOnHover
         theme="light"
         transition={Zoom}
-      />
+      /> */}
     </>
   );
 }

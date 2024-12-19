@@ -3,6 +3,7 @@ import axios from "../../../../api/axiosConfig";
 import { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
 import { Bounce, toast, ToastContainer } from "react-toastify";
+import { Modal } from "antd";
 
 export default function chatlieu() {
   const [listchatlieu, setListchatlieu] = useState([]);
@@ -74,62 +75,39 @@ export default function chatlieu() {
     }
   };
 
-  const themchatlieu = async () => {
-    // Nếu không, gọi hàm thêm mới
+  const themchatlieu = async () => {  
+    // Sử dụng Modal.confirm để xác nhận trước khi thêm chất liệu mới
+    Modal.confirm({
+      title: "Xác nhận",
+      content: "Bạn có chắc chắn muốn thêm chất liệu mới?",
+      onOk: async () => {
+        try {
+          // Gọi API để thêm chất liệu mới
+          await axios.post(`http://localhost:8080/api/chatlieu/add`, chatlieuMoi);
 
-    // Xác nhận người dùng có muốn thêm chất liệu mới hay không
-    if (!window.confirm("Bạn có chắc chắn không?")) {
-      return; // Nếu người dùng chọn Cancel, dừng thao tác
-    }
+          // Sau khi thêm thành công, gọi lại loadchatlieu để cập nhật bảng
+          loadchatlieu(trangHienTai);
 
-    try {
-      // Gọi API để thêm chất liệu mới
-      await axios.post(`http://localhost:8080/api/chatlieu/add`, chatlieuMoi);
+          // Hiển thị thông báo thành công
+          toast.success("Thêm chất liệu mới thành công");
 
-      // Sau khi thêm thành công, gọi lại loadchatlieu để cập nhật bảng
-      loadchatlieu(trangHienTai);
+          // Reset form sau khi thêm mới thành công
+          setchatlieuMoi({ ten: "", trangThai: true });
 
-      // Hiển thị thông báo thành công
-      toast.success("Thêm chất liệu mới thành công", {
-        position: "top-right",
-        autoClose: 1000,
-        hideProgressBar: false,
-        newestOnTop: false,
-        closeOnClick: true,
-        rtl: false,
-        pauseOnFocusLoss: true,
-        draggable: true,
-        pauseOnHover: true,
-        theme: "light",
-        transition: Bounce,
-        style: {
-          zIndex: 9999,
-          overflowY: "hidden",
-        },
-      });
-
-      // Reset form sau khi thêm mới thành công
-      setchatlieuMoi({ ten: "", trangThai: true });
-
-      // Đặt lại giá trị ô tìm kiếm
-      const addInput = document.querySelector('input[type="text"]');
-      if (addInput) {
-        addInput.value = "";
-      }
-    } catch (error) {
-      // Hiển thị thông báo lỗi nếu xảy ra lỗi trong quá trình thêm
-      toast.error("Thêm mới thất bại", {
-        position: "top-right",
-        autoClose: 1000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Bounce,
-      });
-    }
+          // Đặt lại giá trị ô tìm kiếm
+          const addInput = document.querySelector('input[type="text"]');
+          if (addInput) {
+            addInput.value = "";
+          }
+        } catch (error) {
+          // Hiển thị thông báo lỗi nếu xảy ra lỗi trong quá trình thêm
+          toast.error("Thêm mới thất bại");
+        }
+      },
+      onCancel() {
+        // Hành động khi người dùng chọn Cancel (không cần làm gì ở đây)
+      },
+    });
   };
 
   const capNhatchatlieu = async () => {
@@ -142,40 +120,31 @@ export default function chatlieu() {
       setError("Tên đã tồn tại");
       return;
     }
-    // onInputChange();
-    try {
-      await axios.put(
-        `http://localhost:8080/api/chatlieu/update/${currentId}`,
-        chatlieuMoi,
-      );
-      if (!window.confirm("Bạn có chắc chắn muốn sửa sản phẩm này không?")) {
-        return; // Nếu người dùng chọn Cancel, dừng thao tác
-      }
-      toast.success("Cập nhật chất liệu thành công", {
-        position: "top-right",
-        autoClose: 1000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: "light",
-      });
-      loadchatlieu(trangHienTai); // Tải lại danh sách chất liệu
-      setchatlieuMoi({ ten: "", trangThai: true }); // Đặt lại giá trị ô nhập liệu
-      setIsEditing(false); // Đặt lại chế độ về thêm mới
-      setCurrentId(null); // Đặt lại id
-    } catch (error) {
-      console.error("Cập nhật chất liệu thất bại", error);
-      toast.error("Cập nhật chất liệu thất bại", {
-        position: "top-right",
-        autoClose: 1000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: "light",
-      });
-    }
+
+    // Sử dụng Modal.confirm để xác nhận trước khi cập nhật chất liệu
+    Modal.confirm({
+      title: "Xác nhận",
+      content: "Bạn có chắc chắn muốn cập nhật chất liệu này?",
+      onOk: async () => {
+        try {
+          await axios.put(
+            `http://localhost:8080/api/chatlieu/update/${currentId}`,
+            chatlieuMoi,
+          );
+          toast.success("Cập nhật chất liệu thành công");
+          loadchatlieu(trangHienTai); // Tải lại danh sách chất liệu
+          setchatlieuMoi({ ten: "", trangThai: true }); // Đặt lại giá trị ô nhập liệu
+          setIsEditing(false); // Đặt lại chế độ về thêm mới
+          setCurrentId(null); // Đặt lại id
+        } catch (error) {
+          console.error("C���p nhật chất liệu thất bại", error);
+          toast.error("Cập nhật chất liệu thất bại");
+        }
+      },
+      onCancel() {
+        // Hành động khi người dùng chọn Cancel (không cần làm gì ở đây)
+      },
+    });
   };
 
   const themMoichatlieu = async (e) => {
@@ -193,42 +162,30 @@ export default function chatlieu() {
   };
 
   const capNhatTrangThai = async (id) => {
-    try {
-      if (!window.confirm("Bạn có chắc chắn không?")) {
-        return; // Nếu người dùng chọn Cancel, dừng thao tác
-      }
+    Modal.confirm({
+      title: "Xác nhận",
+      content: "Bạn có chắc chắn muốn cập nhật trạng thái này?",
+      onOk: async () => {
+        try {
+          // Gửi yêu cầu cập nhật trạng thái trên server
+          await axios.put(
+            `http://localhost:8080/api/chatlieu/updatetrangthai/${id}`,
+          );
 
-      // Gửi yêu cầu cập nhật trạng thái trên server
-      await axios.put(
-        `http://localhost:8080/api/chatlieu/updatetrangthai/${id}`,
-      );
-
-      loadchatlieu(trangHienTai);
-      setchatlieuMoi({ ten: "", trangThai: true }); // Reset the form to initial state
-      setIsEditing(false); // Set editing mode to false
-      setCurrentId(null); // Clear the current ID
-      toast.success("Cập nhật trạng thái thành công", {
-        position: "top-right",
-        autoClose: 1000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: "light",
-      });
-    } catch (error) {
-      console.log(error);
-
-      toast.error("Cập nhật trạng thái thất bại", {
-        position: "top-right",
-        autoClose: 1000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: "light",
-      });
-    }
+          loadchatlieu(trangHienTai);
+          setchatlieuMoi({ ten: "", trangThai: true }); // Reset the form to initial state
+          setIsEditing(false); // Set editing mode to false
+          setCurrentId(null); // Clear the current ID
+          toast.success("Cập nhật trạng thái thành công");
+        } catch (error) {
+          console.log(error);
+          toast.error("Cập nhật trạng thái thất bại");
+        }
+      },
+      onCancel() {
+        // Hành động khi người dùng chọn Cancel (không cần làm gì ở đây)
+      },
+    });
   };
 
   const handlePageChange = (newPage) => {
@@ -434,7 +391,7 @@ export default function chatlieu() {
         </div>
         {/* Modal */}
 
-        <ToastContainer />
+        {/* <ToastContainer /> */}
       </div>
     </>
   );
