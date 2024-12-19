@@ -68,8 +68,8 @@ public class ThongKeController {
 
     @GetMapping("/sanphambanchay/khoangngay")
     public List<SanPhamBanChay> khoangNgay(
-            @RequestParam("startDate") String startDate,
-            @RequestParam("endDate") String endDate) {
+            @RequestParam("startDate") LocalDate startDate,
+            @RequestParam("endDate") LocalDate endDate) {
         return thongkeService.khoangNgay(startDate, endDate);
     }
 

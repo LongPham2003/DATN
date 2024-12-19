@@ -163,8 +163,7 @@ export default function ChiTietKhachHang() {
           })
 
           .catch((error) => {
-            toast.error("Cập nhật thông tin không thành công.");
-            console.error("Error updating customer data", error);
+            setError(error.response?.data?.message || error.message);
           });
       },
       onCancel() {

@@ -19,7 +19,7 @@ public interface ThongKeService {
     List<SanPhamBanChay> TuanNay();
     List<SanPhamBanChay> ThangNay();
     List<SanPhamBanChay> NamNay();
-    List<SanPhamBanChay> khoangNgay(String startdate, String enddate);
+    List<SanPhamBanChay> khoangNgay(LocalDate startdate, LocalDate enddate);
 
     List<BieuDoNgayTrongTuan> cacNgayTrongTuan();
 }

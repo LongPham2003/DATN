@@ -69,7 +69,7 @@ export default function PaymentResult() {
           localStorage.removeItem("tienPhaiThanhToan");
           localStorage.removeItem("sanPhamChon");
         } else {
-          setTimeout(() => navigate("/datHang"), 500);
+          setTimeout(() => navigate("/gioHang"), 500);
           toast.error("Thất bại");
           localStorage.removeItem("chiTietSanPhams");
           localStorage.removeItem("idPhieuGiamGia");
@@ -101,7 +101,7 @@ export default function PaymentResult() {
   return (
     <div>
       {/* Thanh toán đã thành công bạn có muốn in hóa đơn không */}
-      <ToastContainer
+      {/* <ToastContainer
         position="top-right"
         autoClose={1000}
         hideProgressBar={false}
@@ -112,7 +112,7 @@ export default function PaymentResult() {
         draggable
         theme="light"
         transition={Bounce}
-      />
+      /> */}
       {/* Hiển thị ExportPDF tạm thời khi showPDF là true
       {showPDF && <ExportPDF idHoaDon={id} />} */}
     </div>

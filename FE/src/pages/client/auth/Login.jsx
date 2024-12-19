@@ -124,7 +124,7 @@ const Login = () => {
             Quên mật khẩu?
           </Link>
         </form>
-        <ToastContainer
+        {/* <ToastContainer
           position="top-right"
           autoClose={3000}
           hideProgressBar={false}
@@ -136,7 +136,7 @@ const Login = () => {
           pauseOnHover
           theme="light"
           transition={Bounce}
-        />
+        /> */}
       </div>
     </div>
   );

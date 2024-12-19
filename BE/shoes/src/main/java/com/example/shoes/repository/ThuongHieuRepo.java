@@ -28,6 +28,6 @@ public interface ThuongHieuRepo extends JpaRepository<ThuongHieu, Integer> {
     // Phương thức kiểm tra xem  có tồn tại theo tên không
     boolean existsByTen(String ten);
     // lấy tat ca danh sach sp co trang thai true
-    @Query("SELECT th FROM ThuongHieu  th WHERE th.trangThai = true")
+    @Query("SELECT th FROM ThuongHieu  th WHERE th.trangThai = true order by th.id desc ")
     List<ThuongHieu> getAllTrangThaiTrue();
 }

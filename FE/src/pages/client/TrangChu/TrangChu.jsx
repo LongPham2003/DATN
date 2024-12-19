@@ -11,6 +11,8 @@ import Carousel from "../Carousel/Carousel";
 import CacSanPham from "./CacSanPham";
 import TinTuc from "./TinTuc";
 import { useEffect } from "react";
+import GiayMoiNhat from "./GiayMoiNhat";
+import SnaPhamBanChay from "./SnaPhamBanChay";
 
 export default function TrangChu() {
   useEffect(() => {
@@ -18,26 +20,29 @@ export default function TrangChu() {
     localStorage.removeItem("idSPCTCHon");
     // window.location.reload();
   }, []);
+
   return (
     <>
       <div className="container">
         <Carousel />
         {/* San Pham ban chay */}
-        {/* <SnaPhamBanChay /> */}
-
-        <div className="flex justify-center text-3xl font-bold">
-          <span>------- Các Sản Phẩm khác -------</span>
+        <div className="my-7">
+          <SnaPhamBanChay></SnaPhamBanChay>
         </div>
-
-        <div className="mb-7">
-          <CacSanPham />
+        {/* {/* <div className="flex justify-center text-3xl font-bold">
+            <span>------- Các Sản Phẩm khác -------</span>
+          </div> */}
+        {/* <div className="mb-7">
+            <CacSanPham />
+          </div> */}
+        {/* <div className="flex justify-center text-3xl font-bold">
+            <span>------- Tin tức nổi bật -------</span>
+          </div>
+  
+          <TinTuc /> */}
+        <div className="my-7">
+          <GiayMoiNhat />
         </div>
-
-        <div className="flex justify-center text-3xl font-bold">
-          <span>------- Tin tức nổi bật -------</span>
-        </div>
-
-        <TinTuc />
       </div>
     </>
   );

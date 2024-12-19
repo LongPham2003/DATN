@@ -3,6 +3,7 @@ package com.example.shoes.entity;
 import com.example.shoes.entity.base.CrudByAt;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -51,6 +53,10 @@ public class SanPham extends CrudByAt {
     @NotNull
     @Column(name = "trang_thai")
     private Boolean trangThai;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "idSanPham", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<SanPhamChiTiet> sanPhamChiTiet;
 
     public SanPham(Integer idSanPham) {
         this.id = idSanPham;

@@ -1,11 +1,12 @@
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { Badge } from "antd";
-import Search from "antd/es/input/Search";
 
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { ThemeContext } from "../../GlobalProvider";
+import { ListItem, ListItemPrefix } from "@material-tailwind/react";
+import { PowerIcon } from "@heroicons/react/24/solid";
 
 export default function Header() {
   const [tenKH, setTenKH] = useState("");
@@ -18,12 +19,14 @@ export default function Header() {
   const ApiTongSoSPCT = `http://localhost:8080/api/giohang/tongsanphamnguoidung`;
   const ApiTimKH = `http://localhost:8080/client/khachhang/timtheoEmail?email=${tenKH}`;
 
+  const navigate = useNavigate();
+
   const layTongSoSP = async () => {
     try {
       const response = await axios.get(ApiTongSoSPCT);
       // Giả sử API trả về số lượng sản phẩm trong response.data.soLuong
       setSoLuong(response.data.result.tongSoLuong); // Cập nhật state với số lượng nhận được
-      console.log(response.data.result);
+      // console.log(response.data.result);
     } catch (error) {
       console.error("Có lỗi xảy ra khi lấy tổng số sản phẩm:", error);
     }
@@ -55,6 +58,11 @@ export default function Header() {
     layTongSoSP();
   }, [reload]);
 
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/login");
+  };
+
   return (
     <>
       <header className="fixed left-0 right-0 top-0 z-50 bg-white shadow-md">
@@ -78,7 +86,7 @@ export default function Header() {
                   d="m15.75 15.75-2.489-2.489m0 0a3.375 3.375 0 1 0-4.773-4.773 3.375 3.375 0 0 0 4.774 4.774ZM21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
                 />
               </svg>
-              <span>Quan li cua hang</span>
+              <span>Quản lí cửa hàng</span>
             </Link>
           )}
           <Link
@@ -133,9 +141,9 @@ export default function Header() {
 
           <a
             href="#"
-            className="mt-1 flex items-center space-x-1 hover:text-gray-400"
+            className="flex items-center space-x-1 hover:text-gray-400"
           >
-            <div className="mt-1 flex items-center space-x-2">
+            <div className="flex items-center space-x-2">
               <Link to="/GioHang">
                 <Badge count={soLuong ? soLuong : 0} size="small">
                   <ShoppingCartOutlined
@@ -146,6 +154,14 @@ export default function Header() {
               </Link>
             </div>
           </a>
+          <div className="flex items-center">
+            <ListItem onClick={handleLogout}>
+              <ListItemPrefix>
+                <PowerIcon className="h-5 w-5" />
+              </ListItemPrefix>
+              Đăng xuất
+            </ListItem>
+          </div>
         </div>
 
         <div className="justify-cen mx-9 flex h-[100px] items-center bg-white p-4">
@@ -158,30 +174,46 @@ export default function Header() {
           </div>
 
           <nav className="ml-[450px] flex space-x-8 text-2xl font-bold text-black">
-            <Link
+            <NavLink
               to="/trangchu"
-              className="flex items-center rounded px-4 py-2 font-bold text-black transition duration-700 ease-in-out hover:scale-110 hover:text-orange-500 hover:underline"
+              className={({ isActive }) =>
+                `flex items-center rounded px-4 py-2 font-bold transition duration-700 ease-in-out hover:scale-110 hover:text-orange-500 hover:underline ${
+                  isActive ? "text-orange-500" : "text-black"
+                }`
+              }
             >
               Trang chủ
-            </Link>
-            <Link
+            </NavLink>
+            <NavLink
               to="/SanPham"
-              className="flex items-center rounded px-4 py-2 font-bold text-black transition duration-700 ease-in-out hover:scale-110 hover:text-orange-500 hover:underline"
+              className={({ isActive }) =>
+                `flex items-center rounded px-4 py-2 font-bold transition duration-700 ease-in-out hover:scale-110 hover:text-orange-500 hover:underline ${
+                  isActive ? "text-orange-500" : "text-black"
+                }`
+              }
             >
               Sản phẩm
-            </Link>
-            <a
-              href="#"
-              className="flex items-center rounded px-4 py-2 font-bold text-black transition duration-700 ease-in-out hover:scale-110 hover:text-orange-500 hover:underline"
+            </NavLink>
+            <NavLink
+              to="/gioithieu"
+              className={({ isActive }) =>
+                `flex items-center rounded px-4 py-2 font-bold transition duration-700 ease-in-out hover:scale-110 hover:text-orange-500 hover:underline ${
+                  isActive ? "text-orange-500" : "text-black"
+                }`
+              }
             >
               Giới thiệu
-            </a>
-            <Link
+            </NavLink>
+            <NavLink
               to="/LienHe"
-              className="flex items-center rounded px-4 py-2 font-bold text-black transition duration-700 ease-in-out hover:scale-110 hover:text-orange-500 hover:underline"
+              className={({ isActive }) =>
+                `flex items-center rounded px-4 py-2 font-bold transition duration-700 ease-in-out hover:scale-110 hover:text-orange-500 hover:underline ${
+                  isActive ? "text-orange-500" : "text-black"
+                }`
+              }
             >
               Liên hệ
-            </Link>
+            </NavLink>
           </nav>
 
           {/* tìm kiếm */}

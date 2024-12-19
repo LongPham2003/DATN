@@ -5,6 +5,7 @@ import com.example.shoes.entity.KhachHang;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.service.HoaDonChiTietService;
 import com.example.shoes.service.KhachHangService;
+import com.example.shoes.service.impl.HoaDonChiTietServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +17,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class KhachHangControllerClient {
     private final KhachHangService khachHangService;
-    private final HoaDonChiTietService hoaDonChiTietService;
+
+    private final HoaDonChiTietServiceImpl hoaDonChiTietServiceImpl;
+
+
     @GetMapping("/timtheoEmail")
     public Optional<KhachHang> timtheoEmail(@RequestParam("email") String email) {
             return khachHangService.timTheoEmail(email);
@@ -24,7 +28,8 @@ public class KhachHangControllerClient {
 
     @GetMapping("/SPCTbyidHD/{idHoaDon}")
     public ApiResponse<List<HoaDonChiTietBHRespose>> getSPCTbyidHD(@PathVariable("idHoaDon") Integer idHoaDon) {
-        List<HoaDonChiTietBHRespose> hdbh = hoaDonChiTietService.getSPCTByIdHoaDon(idHoaDon);
+        List<HoaDonChiTietBHRespose> hdbh = hoaDonChiTietServiceImpl.getSPCTByIdHoaDon(idHoaDon);
+
 
         return ApiResponse.<List<HoaDonChiTietBHRespose>>builder().result(hdbh).build();
     }

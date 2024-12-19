@@ -17,13 +17,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/khachhang")
-public class KhachHangController {
+public class KhachHangController
+{
     @Autowired
     KhachHangService khachHangService;
 
-
     @GetMapping("/getall")
-    public ApiResponse<List<KhachHangResponse>> getAll(){
+    public ApiResponse<List<KhachHangResponse>> getAll()
+    {
 
         return ApiResponse.<List<KhachHangResponse>>builder()
                 .result(khachHangService.findAll())
@@ -31,7 +32,8 @@ public class KhachHangController {
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<KhachHang> getById(@PathVariable int id){
+    public ApiResponse<KhachHang> getById(@PathVariable int id)
+    {
         return ApiResponse.<KhachHang>builder()
                 .result(khachHangService.getById(id))
                 .build();
@@ -43,19 +45,20 @@ public class KhachHangController {
             @RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber,
             @RequestParam(value = "pageSize", defaultValue = "5") int pageSize,
             @RequestParam(value = "trangThai", required = false) Boolean trangThai
-    ) {
+    )
+    {
 
-        PhanTrangResponse<KhachHang> list = khachHangService.getKhachHang(pageNumber, pageSize, keyword,trangThai);
+        PhanTrangResponse<KhachHang> list = khachHangService.getKhachHang(pageNumber, pageSize, keyword, trangThai);
 
         return ApiResponse.<PhanTrangResponse<KhachHang>>builder()
                 .result(list).build();
     }
 
-
     @PostMapping("/add")
-    public ApiResponse<KhachHang> add(@Valid @RequestBody  KhachHangRequest request , BindingResult bindingResult){
-        if(bindingResult.hasErrors()){
-            throw  new ValidationException(bindingResult.getFieldError().getDefaultMessage());
+    public ApiResponse<KhachHang> add(@Valid @RequestBody KhachHangRequest request, BindingResult bindingResult)
+    {
+        if (bindingResult.hasErrors()) {
+            throw new ValidationException(bindingResult.getFieldError().getDefaultMessage());
         }
         return ApiResponse.<KhachHang>builder()
                 .result(khachHangService.add(request))
@@ -63,12 +66,14 @@ public class KhachHangController {
     }
 
     @PostMapping("/update/{id}")
-    public ApiResponse<KhachHang> update ( @Valid @PathVariable("id") Integer id, @RequestBody  KhachHangRequest request,BindingResult bindingResult){
-        if(bindingResult.hasErrors()){
-            throw  new ValidationException(bindingResult.getFieldError().getDefaultMessage());
+    public ApiResponse<KhachHang> update(@Valid @RequestBody KhachHangRequest request, BindingResult bindingResult,
+                                         @PathVariable("id") Integer id)
+    {
+        if (bindingResult.hasErrors()) {
+            throw new ValidationException(bindingResult.getFieldError().getDefaultMessage());
         }
         return ApiResponse.<KhachHang>builder()
-                .result(khachHangService.update(id,request))
+                .result(khachHangService.update(id, request))
                 .build();
     }
 }

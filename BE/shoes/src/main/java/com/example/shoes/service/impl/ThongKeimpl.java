@@ -64,7 +64,7 @@ public class ThongKeimpl implements ThongKeService {
     }
 
     @Override
-    public List<SanPhamBanChay> khoangNgay(String startdate, String enddate) {
+    public List<SanPhamBanChay> khoangNgay(LocalDate startdate, LocalDate enddate) {
         return thongKeRepo.khoangNgay(startdate, enddate);
     }
 

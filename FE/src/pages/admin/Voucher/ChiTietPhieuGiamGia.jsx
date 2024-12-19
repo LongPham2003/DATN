@@ -54,7 +54,7 @@ const ChiTietPhieuGiamGia = () => {
 
     Modal.confirm({
       title: "Xác nhận cập nhật",
-      content: "Bạn có chắc chắn muốn cập nhật voucher này không?",
+      content: "Bạn có chắc chắn muốn cập nhật phiếu giảm giá này không ?",
       onOk() {
         // Nếu người dùng xác nhận, gửi yêu cầu cập nhật
         axios
@@ -63,7 +63,10 @@ const ChiTietPhieuGiamGia = () => {
             dieuKienGiamGia: formatCurrencyToNumber(formData.dieuKienGiamGia),
             hinhThucGiam: formData.hinhThucGiam,
             mucGiam: formatCurrencyToNumber(formData.mucGiam),
-            giamToiDa: formatCurrencyToNumber(formData.giamToiDa),
+            giamToiDa:
+              formData.hinhThucGiam === "%"
+                ? formatCurrencyToNumber(formData.giamToiDa)
+                : formatCurrencyToNumber(formData.mucGiam),
             soLuong: formData.soLuong,
             ngayBatDau: formData.ngayBatDau,
             ngayKetThuc: formData.ngayKetThuc,
@@ -187,17 +190,19 @@ const ChiTietPhieuGiamGia = () => {
                 type="text"
               />
             </div>
-            <div className="w-full p-2 sm:w-1/2">
-              <label className="block">Giảm tối đa:</label>
-              <input
-                name="giamToiDa"
-                value={formData.giamToiDa}
-                onChange={handleChange}
-                className="block w-full rounded-md border border-slate-300 bg-white py-2 pl-2 shadow-sm"
-                placeholder="Giảm tối đa..."
-                type="text"
-              />
-            </div>
+            {formData.hinhThucGiam === "%" && (
+              <div className="w-full p-2 sm:w-1/2">
+                <label className="block">Giảm tối đa:</label>
+                <input
+                  name="giamToiDa"
+                  value={formData.giamToiDa}
+                  onChange={handleChange}
+                  className="block w-full rounded-md border border-slate-300 bg-white py-2 pl-2 shadow-sm"
+                  placeholder="Giảm tối đa..."
+                  type="text"
+                />
+              </div>
+            )}
             <div className="w-full p-2 sm:w-1/2">
               <label className="block">Số lượng:</label>
               <input
@@ -318,7 +323,7 @@ const ChiTietPhieuGiamGia = () => {
         </form>
       </div>
       <ToastContainer
-        position="top-right"
+        position="top-center"
         autoClose={3000}
         hideProgressBar={false}
         newestOnTop={false}
