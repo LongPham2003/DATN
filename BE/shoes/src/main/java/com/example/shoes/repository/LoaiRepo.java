@@ -27,25 +27,4 @@ public interface LoaiRepo extends JpaRepository<Loai, Integer> {
     // lấy tat ca danh sach sp co trang thai true
     @Query("SELECT l FROM Loai  l WHERE l.trangThai = true")
     List<Loai> getAllTrangThaiTrue();
-
-    @Query(value = "select id from  loai",nativeQuery = true)
-    List<Integer> getIds();
-
-    @Query(value = "select id from  loai",nativeQuery = true)
-    List<Integer> findAllById();
-
-    @Query(value = "select id from  thuong_hieu",nativeQuery = true)
-    List<Integer> findAllByIdThuongHieu();
-
-    @Query(value = "select id from  de_giay",nativeQuery = true)
-    List<Integer> findAllByIdDeGiay();
-
-    @Query(value = "select id from  chat_lieu",nativeQuery = true)
-    List<Integer> findAllByIdChatLieu();
-
-    @Query(value = "select id from  mau_sac",nativeQuery = true)
-    List<Integer> findAllByIdMauSac();
-
-    @Query(value = "select id from  kich_thuoc",nativeQuery = true)
-    List<Integer> findAllByIdKichThuoc();
 }

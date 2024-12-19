@@ -4,9 +4,9 @@ import { useNavigate } from "react-router-dom";
 import axios from "../../../api/axiosConfig.js";
 import ThemMoiKhachHang from "../KhachHang/ThemMoiKhachHang.jsx";
 import ReactPaginate from "react-paginate";
-import { Bounce, toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 
-export default function ThemKH({ idHoaDon, onadd, closeModalThemKH }) {
+export default function ThemKH({ idHoaDon, onadd }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [added, setAdded] = useState(false);
@@ -56,11 +56,8 @@ export default function ThemKH({ idHoaDon, onadd, closeModalThemKH }) {
       await axios.post(
         `http://localhost:8080/api/hoadon/${idHoaDon}/addkhachhang/${idKH}`,
       );
-      toast.success("Thêm khách hàng thành công");
+      toast.success("Thêm khach hàng thành công");
       onadd();
-      setTimeout(() => {
-        closeModalThemKH();
-      }, 500);
     } catch (error) {
       console.log(error);
       toast.error("Co loi xay ra!");
@@ -225,19 +222,6 @@ export default function ThemKH({ idHoaDon, onadd, closeModalThemKH }) {
           />
         </div>
       </div>
-      {/* <ToastContainer
-        position="top-center"
-        autoClose={1000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        transition={Bounce}
-      /> */}
     </div>
   );
 }

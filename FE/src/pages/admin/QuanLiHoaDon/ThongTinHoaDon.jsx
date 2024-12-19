@@ -60,9 +60,7 @@ const ThongTinHoaDon = ({
       await fillHoaDonChiTiet();
     } catch (error) {
       console.error("Error:", error);
-
-      toast.error(error.response.data.message);
-
+      toast.error("Có lỗi xẩy ra");
     }
   };
 
@@ -74,12 +72,12 @@ const ThongTinHoaDon = ({
       <div className="mx-4 flex gap-10 text-lg">
         {/* Cột trái */}
         <div className="w-1/2 space-y-4 border-r pr-4">
-          {/* <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between">
             <span className="font-medium text-gray-600">Trạng thái:</span>
             <h3 className="font-semibold text-blue-600">
               {hoaDon.trangThaiDonHang}
             </h3>
-          </div> */}
+          </div>
           <div className="flex items-center justify-between">
             <span className="font-medium text-gray-600">Mã đơn hàng:</span>
             <h3 className="font-semibold text-gray-800">{hoaDon.ma}</h3>
@@ -96,6 +94,10 @@ const ThongTinHoaDon = ({
               {formatDate(hoaDon.ngayTao)}
             </h3>
           </div>
+        </div>
+
+        {/* Cột phải */}
+        <div className="w-1/2 space-y-4 pl-4">
           <div className="flex items-center justify-between">
             <span className="font-medium text-gray-600">
               Mã phiếu giảm giá:
@@ -103,14 +105,6 @@ const ThongTinHoaDon = ({
             <h3 className="font-semibold text-gray-800">
               {hoaDon.phieuGiamGia}
             </h3>
-          </div>
-        </div>
-
-        {/* Cột phải */}
-        <div className="w-1/2 space-y-4 pl-4">
-          <div className="flex items-center justify-between">
-            <span className="font-medium text-gray-600">Tổng tiền:</span>
-            <h3 className="font-semibold text-gray-800">{hoaDon.tongTien}</h3>
           </div>
           <div className="flex items-center justify-between">
             <span className="font-medium text-gray-600">Tiền được giảm:</span>
@@ -136,27 +130,30 @@ const ThongTinHoaDon = ({
       <div className="mx-4 py-4">
         <div className="mx-5 flex justify-between py-3">
           <h3 className="text-[20px] font-bold">Sản phẩm</h3>
-
-
-
+          {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" ? (
+            <button
+              onClick={openModalSP}
+              className="rounded bg-blue-500 px-2 py-2 text-white"
+            >
+              Sửa hóa đơn
+            </button>
+          ) : (
+            ""
+          )}
         </div>
 
         <table className="min-w-full text-center text-sm font-light">
           <thead className="top-0 bg-blue-700 text-xl font-medium text-white">
             <tr>
-
-              <th className="px-6 py-4">STT</th>
-              <th className="px-6 py-4">Ảnh</th>
-              <th className="px-6 py-4">Sản phẩm</th>
-              <th className="px-6 py-4">Đơn giá</th>
-              <th className="px-6 py-4">Số lượng</th>
-              <th className="px-6 py-4">Thành tiền</th>
-              {/* {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" &&
-              hoaDon.trangThaiThanhToan === "Chưa thanh toán" ? (
-                // <th className="px-6 py-4">Hành động</th>
-              ) : null} */}
-
-
+              <th className="w-10 px-6 py-4">STT</th>
+              <th className="w-[130px] px-6 py-4">Ảnh</th>
+              <th className="w-52 px-6 py-4">Sản phẩm</th>
+              <th className="w-52 px-6 py-4">Đơn giá</th>
+              <th className="w-52 px-6 py-4">Số lượng</th>
+              <th className="w-52 px-6 py-4">Thành tiền</th>
+              <th className="w-52 px-6 py-4">
+                {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" ? "Hàng động" : ""}
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -177,33 +174,45 @@ const ThongTinHoaDon = ({
                 <td>{formatTien(SPCT.donGia)}</td>
                 <td>{SPCT.soLuong}</td>
                 <td>{formatTien(SPCT.donGia * SPCT.soLuong)}</td>
-
-
+                <td>
+                  {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" ? (
+                    <Popconfirm
+                      title="Xóa Sản phẩm"
+                      description="Bạn có muốn xóa sản phẩm không?"
+                      okText="Yes"
+                      cancelText="No"
+                      onConfirm={(e) => {
+                        e.preventDefault();
+                        XoaSPKhoiGioHang(SPCT.idSpct);
+                      }}
+                    >
+                      <Button type="primary" danger>
+                        <TrashIcon className="h-5 w-5 text-white" />
+                        Xóa
+                      </Button>
+                    </Popconfirm>
+                  ) : (
+                    ""
+                  )}
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
       {OpenModelSP && (
-
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="relative w-full max-w-[1150px] rounded-lg bg-white p-6 shadow-lg">
-            {/* Nội dung của modal */}
-            <SanPhamHoaDon
-              id={hoaDon.id}
-              fillHoaDon={fillHoaDon}
-              fillHoaDonChiTiet={fillHoaDonChiTiet}
-            />
-
-            {/* Nút đóng modal */}
-            <button
-              onClick={closeModalSP}
-              className="absolute right-2 top-2 rounded bg-red-500 px-3 py-1 text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300"
-            >
-              X
-            </button>
-          </div>
-
+        <div className="fixed inset-0 flex items-center justify-center bg-opacity-50">
+          <SanPhamHoaDon
+            id={hoaDon.id}
+            fillHoaDon={fillHoaDon}
+            fillHoaDonChiTiet={fillHoaDonChiTiet}
+          ></SanPhamHoaDon>
+          <button
+            onClick={closeModalSP}
+            className="h-10 rounded bg-red-500 px-4 text-white hover:bg-red-600"
+          >
+            X
+          </button>
         </div>
       )}
     </div>

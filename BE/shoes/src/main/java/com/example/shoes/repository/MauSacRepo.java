@@ -24,14 +24,14 @@ public interface MauSacRepo extends JpaRepository<MauSac, Integer> {
     // Phương thức kiểm tra xem  có tồn tại theo tên không
     boolean existsByTen(String ten);
     // lấy tat ca danh sach sp co trang thai true
-    @Query("SELECT ms FROM MauSac  ms WHERE ms.trangThai = true order by ms.id desc ")
+    @Query("SELECT ms FROM MauSac  ms WHERE ms.trangThai = true")
     List<MauSac> getAllTrangThaiTrue();
 //   lay ra danh sach mau sac theo id san pham
     @Query("""
                 SELECT ms 
                 FROM MauSac ms
                 JOIN SanPhamChiTiet spct ON spct.idMauSac.id = ms.id 
-                WHERE spct.idSanPham.id = :idSanPham and spct.trangThai=true
+                WHERE spct.idSanPham.id = :idSanPham
             """)
     List<MauSac> getMauSacByIdSP(@Param("idSanPham") Integer idSanPham);
 }

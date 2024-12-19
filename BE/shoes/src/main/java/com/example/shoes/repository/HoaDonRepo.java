@@ -4,7 +4,6 @@ import com.example.shoes.dto.BaoCaoThongKeResponse;
 
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
 
-import com.example.shoes.dto.hoadon.response.HoaDonTheoIDKH;
 import com.example.shoes.dto.hoadon.response.HoaDonTheoIDResponse;
 
 import com.example.shoes.dto.hoadon.response.HoaDonTheoIdKH;
@@ -57,30 +56,13 @@ public interface HoaDonRepo extends JpaRepository<HoaDon, Integer> {
         Page<HoaDon> getAll(Pageable pageable, String keyword, String phuongThucGiaoHang, String trangThai);
 
 
-        @Query(value = "select count(id) from hoa_don",nativeQuery = true)
-        Integer getCountHoaDon();
-        @Query(value = "select count(id) from hoa_don where trang_thai_don_hang = 'CHO_XAC_NHAN'",nativeQuery = true)
-        Integer getCountHoaDonCXN();
-        @Query(value = "select count(id) from hoa_don where trang_thai_don_hang = 'DA_XAC_NHAN'",nativeQuery = true)
-        Integer getCountHoaDonDXN();
-        @Query(value = "select count(id) from hoa_don where trang_thai_don_hang = 'CHO_LAY_HANG'",nativeQuery = true)
-        Integer getCountHoaDonCLH();
-        @Query(value = "select count(id) from hoa_don where trang_thai_don_hang = 'CHO_GIAO_HANG'",nativeQuery = true)
-        Integer getCountHoaDonCGH();
-        @Query(value = "select count(id) from hoa_don where trang_thai_don_hang = 'DANG_GIAO'",nativeQuery = true)
-        Integer getCountHoaDonDG();
-        @Query(value = "select count(id) from hoa_don where trang_thai_don_hang = 'HOAN_THANH'",nativeQuery = true)
-        Integer getCountHoaDonHT();
-        @Query(value = "select count(id) from hoa_don where trang_thai_don_hang = 'HUY_DON'",nativeQuery = true)
-        Integer getCountHoaDonHuy();
+
 
         @Query(value = """
         SELECT 
             hd.id AS idHoaDon,
             hd.ma AS maHoaDon,
-
-            hd.create_at AS ngayDatHang,
-
+             hd.create_at as ngayDatHang,
             hd.dia_chi_giao_hang AS diaChiGiaoHang,
             hd.ngay_du_kien AS ngayGiaoHang,
             hd.phi_van_chuyen AS phiVanChuyen,
@@ -100,12 +82,8 @@ public interface HoaDonRepo extends JpaRepository<HoaDon, Integer> {
             hoa_don_chi_tiet hdct ON hdct.id_hoa_don = hd.id
         WHERE 
             hd.id_khach_hang = :idKhachHang
-
-            AND (:maHD IS NULL OR hd.ma LIKE CONCAT('%', :maHD, '%'))
-            AND (:trangThaiDonHang IS NULL OR hd.trang_thai_don_hang = :trangThaiDonHang)
-            AND hd.phuong_thuc_giao_hang = 'Giao Hàng'
-            AND (:ngay IS NULL OR DATE(hd.create_at) = :ngay)
-
+          and (:maHD IS NULL OR hd.ma LIKE CONCAT('%', :maHD, '%'))
+           and hd.phuong_thuc_giao_hang ='Giao Hàng'
         GROUP BY 
             hd.id, 
             hd.ma, 
@@ -120,18 +98,32 @@ public interface HoaDonRepo extends JpaRepository<HoaDon, Integer> {
             hd.tien_phai_thanh_toan, 
             hd.trang_thai_don_hang, 
             hd.trang_thai_thanh_toan
-
-        ORDER BY 
-            hd.create_at DESC
+                ORDER BY\s
+            CASE hd.trang_thai_don_hang
+                WHEN 'CHO_XAC_NHAN' THEN 1
+                WHEN 'DA_XAC_NHAN' THEN 2
+                WHEN 'CHO_GIAO_HANG' THEN 3
+                WHEN 'DANG_GIAO' THEN 4
+                WHEN 'HOAN_THANH' THEN 5
+                WHEN 'HUY_DON' THEN 6
+                ELSE 6 -- Các trạng thái khác sẽ xếp cuối
+            END;
         """, nativeQuery = true)
-        List<HoaDonTheoIDKH> getHoaDonTheoKH(
-                @Param("idKhachHang") Integer idKhachHang,
-                @Param("maHD") String maHD,
-                @Param("trangThaiDonHang") String trangThaiDonHang,
-                @Param("ngay") String ngay // Ngày lọc (YYYY-MM-DD)
-        );
+        List<HoaDonTheoIdKH> getHoaDonTheoKH(@Param("idKhachHang") Integer idKhachHang, @Param("maHD") String maHD);
 
-        @Query(value = "delete  from hoa_don where phuong_thuc_giao_hang = 'Tại quầy' and trang_thai_don_hang ='CHO_XAC_NHAN'",nativeQuery = true)
-        void deleteByHoaDonTaiQuay();
 
+        @Query(value = "select count(id) from hoa_don",nativeQuery = true)
+        Integer getCountHoaDon();
+        @Query(value = "select count(id) from hoa_don where trang_thai_don_hang = 'CHO_XAC_NHAN'",nativeQuery = true)
+        Integer getCountHoaDonCXN();
+        @Query(value = "select count(id) from hoa_don where trang_thai_don_hang = 'DA_XAC_NHAN'",nativeQuery = true)
+        Integer getCountHoaDonDXN();
+        @Query(value = "select count(id) from hoa_don where trang_thai_don_hang = 'CHO_GIAO_HANG'",nativeQuery = true)
+        Integer getCountHoaDonCGH();
+        @Query(value = "select count(id) from hoa_don where trang_thai_don_hang = 'DANG_GIAO'",nativeQuery = true)
+        Integer getCountHoaDonDG();
+        @Query(value = "select count(id) from hoa_don where trang_thai_don_hang = 'HOAN_THANH'",nativeQuery = true)
+        Integer getCountHoaDonHT();
+        @Query(value = "select count(id) from hoa_don where trang_thai_don_hang = 'HUY_DON'",nativeQuery = true)
+        Integer getCountHoaDonHuy();
 }

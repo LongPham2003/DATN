@@ -8,7 +8,7 @@ import LoaiGiay from "./pages/admin/ThuocTinhSP/LoaiGiay/LoaiGiay";
 import MauSac from "./pages/admin/ThuocTinhSP/MauSac/MauSac";
 import ThuongHieu from "./pages/admin/ThuocTinhSP/ThuongHieu/ThuongHieu";
 import ListProduct from "./pages/admin/SanPham/Product/ListProduct";
-import TheoDoiDonHang from "./pages/client/TheoDoiDonHang/TheoDoiDonHang.jsx";
+
 import { Helmet } from "react-helmet";
 import DanhSachNhanVien from "./pages/admin/NhanVien/DanhSachNhanVien";
 import ChiTietNhanVien from "./pages/admin/NhanVien/ChiTietNhanVien";
@@ -43,10 +43,7 @@ import HoaDonChiTiet from "./pages/admin/QuanLiHoaDon/HoaDonChiTiet.jsx";
 import ThongTinCaNhan from "./pages/client/ThongTinCaNhan/ThongTinCaNhan.jsx";
 import DatHang from "./pages/client/DatHang/DatHang.jsx";
 import MuaNgay from "./pages/client/MuaNgay/MuaNgay.jsx";
-
-import TraCuuDonHang from "./pages/client/ThongTinCaNhan/TraCuuDonHang.jsx";
-import { Bounce, ToastContainer } from "react-toastify";
-
+import TheoDoiDonHang from "./pages/client/TheoDoiDonHang/TheoDoiDonHang.jsx";
 
 function App() {
   return (
@@ -139,17 +136,6 @@ function App() {
                     <title>Thông tin cá nhân</title>
                   </Helmet>
                   <ThongTinCaNhan />
-                </>
-              }
-            />
-            <Route
-              path="theodoidonhang"
-              element={
-                <>
-                  <Helmet>
-                    <title>Theo dõi đơn hàng</title>
-                  </Helmet>
-                  <TheoDoiDonHang />
                 </>
               }
             />
@@ -507,18 +493,6 @@ function App() {
           </Route>
         </Routes>
       </BrowserRouter>
-      <ToastContainer
-        position="top-center"
-        autoClose={500}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        theme="light"
-        transition={Bounce}
-      />
     </>
   );
 }

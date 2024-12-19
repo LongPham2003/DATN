@@ -270,7 +270,18 @@ export default function AddProductDetail() {
     // Kiểm tra điều kiện trước khi thêm sản phẩm, yêu cầu người dùng chọn đầy đủ các thuộc tính
     if (getIdDeGiay === 0 || getIdThuongHieu === 0 || getIdChatLieu === 0) {
       // Hiển thị thông báo lỗi nếu thiếu thuộc tính
-      toast.error("Vui lòng chọn đầy đủ đế giày, thương hiệu, và chất liệu.");
+      toast.error("Vui lòng chọn đầy đủ đế giày, thương hiệu, và chất liệu.", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        newestOnTop: false,
+        closeOnClick: true,
+        rtl: false,
+        pauseOnFocusLoss: true,
+        draggable: true,
+        pauseOnHover: true,
+        theme: "light",
+      });
       return; // Dừng hàm nếu thiếu dữ liệu
     }
 
@@ -311,7 +322,19 @@ export default function AddProductDetail() {
       const res = await Promise.all(requests);
 
       // Hiển thị thông báo thành công khi tất cả sản phẩm chi tiết đã được thêm
-      toast.success("Thêm sản phẩm mới thành công");
+      toast.success("Thêm sản phẩm mới thành công", {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        newestOnTop: false,
+        closeOnClick: true,
+        rtl: false,
+        pauseOnFocusLoss: true,
+        draggable: true,
+        pauseOnHover: true,
+        theme: "light",
+        transition: Bounce,
+      });
 
       // Duyệt qua từng phản hồi từ request và thêm ảnh cho từng sản phẩm chi tiết
       res.forEach(({ response, thumbUrls }) => {
@@ -336,7 +359,17 @@ export default function AddProductDetail() {
     } catch (error) {
       // Xử lý lỗi nếu có bất kỳ request nào thất bại
       console.log(error);
-      toast.error(error.response.data.message);
+      toast.error(error.message || "Thêm mới thất bại", {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
     }
   };
 
@@ -379,25 +412,22 @@ export default function AddProductDetail() {
                     <span className="mb-9 text-xl font-semibold text-blue-500">
                       Thương hiệu
                     </span>
-                    <div className="my-auto flex items-center">
-                      {" "}
-                      <Select
-                        className="h-[38px] w-[384px]"
-                        placeholder="Chọn thương hiệu"
-                        size="large"
-                        options={listThuongHieu.map((item) => ({
-                          label: item.ten,
-                          value: item.id,
-                        }))}
-                        onChange={(value) => setGetIdThuongHieu(value)}
-                      />
-                      <button
-                        className="bordered h-[40px] w-[38px] rounded-lg border bg-amber-300"
-                        onClick={openModalBrand}
-                      >
-                        +
-                      </button>
-                    </div>
+                    <Select
+                      className="h-[38px] w-[384px]"
+                      placeholder="Chọn thương hiệu"
+                      size="large"
+                      options={listThuongHieu.map((item) => ({
+                        label: item.ten,
+                        value: item.id,
+                      }))}
+                      onChange={(value) => setGetIdThuongHieu(value)}
+                    />
+                    <button
+                      className="bordered h-[38px] w-[38px] rounded-lg border bg-amber-300"
+                      onClick={openModalBrand}
+                    >
+                      +
+                    </button>
                   </div>
                 </div>
                 <div className="mt-10 grid grid-cols-2 gap-6">
@@ -407,25 +437,22 @@ export default function AddProductDetail() {
                         Chất liệu
                       </span>
                     </div>
-                    <div className="my-auto flex items-center">
-                      {" "}
-                      <Select
-                        className="h-[38px] w-[384px]"
-                        placeholder="Chọn chất liệu"
-                        size="large"
-                        options={listChatLieu.map((item) => ({
-                          label: item.ten,
-                          value: item.id,
-                        }))}
-                        onChange={(value) => setGetIdChatLieu(value)}
-                      />
-                      <button
-                        className="bordered h-[40px] w-[38px] rounded-lg border bg-amber-300"
-                        onClick={openModalChatLieu}
-                      >
-                        +
-                      </button>
-                    </div>
+                    <Select
+                      className="h-[38px] w-[384px]"
+                      placeholder="Chọn chất liệu"
+                      size="large"
+                      options={listChatLieu.map((item) => ({
+                        label: item.ten,
+                        value: item.id,
+                      }))}
+                      onChange={(value) => setGetIdChatLieu(value)}
+                    />
+                    <button
+                      className="bordered h-[38px] w-[38px] rounded-lg border bg-amber-300"
+                      onClick={openModalChatLieu}
+                    >
+                      +
+                    </button>
                   </div>
                   <div>
                     <div>
@@ -433,25 +460,22 @@ export default function AddProductDetail() {
                         Đế Giày
                       </span>
                     </div>
-                    <div className="my-auto flex items-center">
-                      {" "}
-                      <Select
-                        className="h-[38px] w-[384px]"
-                        placeholder="Chọn đế giày"
-                        size="large"
-                        options={listDeGiay.map((item) => ({
-                          label: item.ten,
-                          value: item.id,
-                        }))}
-                        onChange={(value) => setGetIdDeGiay(value)}
-                      />
-                      <button
-                        className="bordered h-[40px] w-[38px] rounded-lg border bg-amber-300"
-                        onClick={openModalDeGiay}
-                      >
-                        +
-                      </button>
-                    </div>
+                    <Select
+                      className="h-[38px] w-[384px]"
+                      placeholder="Chọn đế giày"
+                      size="large"
+                      options={listDeGiay.map((item) => ({
+                        label: item.ten,
+                        value: item.id,
+                      }))}
+                      onChange={(value) => setGetIdDeGiay(value)}
+                    />
+                    <button
+                      className="bordered h-[38px] w-[38px] rounded-lg border bg-amber-300"
+                      onClick={openModalDeGiay}
+                    >
+                      +
+                    </button>
                   </div>
                 </div>
                 <div className="mb-10 mt-10 grid grid-cols-2 gap-6">
@@ -459,28 +483,25 @@ export default function AddProductDetail() {
                     <span className="mb-9 text-xl font-semibold text-blue-500">
                       Kích Thước
                     </span>
-                    <div className="my-auto flex items-center">
-                      {" "}
-                      <Select
-                        mode="multiple"
-                        className="h-[38px] w-[384px]"
-                        placeholder="Chọn kích thước"
-                        size="large"
-                        options={listKichThuoc.map((item) => ({
-                          label: item.kichThuoc,
-                          value: item.id,
-                        }))}
-                        onChange={(value, option) => {
-                          setGetIdKichThuoc(option);
-                        }}
-                      />
-                      <button
-                        className="bordered h-[40px] w-[38px] rounded-lg border bg-amber-300"
-                        onClick={openModalKichThuoc}
-                      >
-                        +
-                      </button>
-                    </div>
+                    <Select
+                      mode="multiple"
+                      className="h-[38px] w-[384px]"
+                      placeholder="Chọn kích thước"
+                      size="large"
+                      options={listKichThuoc.map((item) => ({
+                        label: item.kichThuoc,
+                        value: item.id,
+                      }))}
+                      onChange={(value, option) => {
+                        setGetIdKichThuoc(option);
+                      }}
+                    />
+                    <button
+                      className="bordered h-[38px] w-[38px] rounded-lg border bg-amber-300"
+                      onClick={openModalKichThuoc}
+                    >
+                      +
+                    </button>
                   </div>
                   <div>
                     <div>
@@ -488,26 +509,23 @@ export default function AddProductDetail() {
                         Màu Sắc
                       </span>
                     </div>
-                    <div className="my-auto flex items-center">
-                      {" "}
-                      <Select
-                        mode="multiple"
-                        className="h-[38px] w-[384px]"
-                        placeholder="Chọn màu sắc"
-                        size="large"
-                        options={listMauSac.map((item) => ({
-                          label: item.ten,
-                          value: item.id,
-                        }))}
-                        onChange={(value, option) => setGetIdMauSac(option)}
-                      />
-                      <button
-                        className="bordered h-[40px] w-[38px] rounded-lg border bg-amber-300"
-                        onClick={openModalMauSac}
-                      >
-                        +
-                      </button>
-                    </div>
+                    <Select
+                      mode="multiple"
+                      className="h-[38px] w-[384px]"
+                      placeholder="Chọn màu sắc"
+                      size="large"
+                      options={listMauSac.map((item) => ({
+                        label: item.ten,
+                        value: item.id,
+                      }))}
+                      onChange={(value, option) => setGetIdMauSac(option)}
+                    />
+                    <button
+                      className="bordered h-[38px] w-[38px] rounded-lg border bg-amber-300"
+                      onClick={openModalMauSac}
+                    >
+                      +
+                    </button>
                   </div>
                 </div>
               </div>
@@ -603,15 +621,6 @@ export default function AddProductDetail() {
                         </td>
                         <td className="px-4 py-2">
                           <InputNumber
-                            formatter={
-                              (value) =>
-                                `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ".") // Thêm dấu chấm cho hàng nghìn
-                            }
-                            parser={(value) =>
-                              value
-                                .replace(/\./g, "")
-                                .replace(/VNĐ\s?|(,*)/g, "")
-                            } // Xóa dấu chấm trước khi lưu giá trị
                             value={SPCT.donGia}
                             className="w-[150px]"
                             min="1000"
@@ -702,12 +711,6 @@ export default function AddProductDetail() {
                 prev.map((item) => ({ ...item, donGia: value })),
               )
             } // Cập nhật giá tiền cho tất cả các sản phẩm được chọn
-            formatter={
-              (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ".") // Thêm dấu chấm cho hàng nghìn
-            }
-            parser={(value) =>
-              value.replace(/\./g, "").replace(/VNĐ\s?|(,*)/g, "")
-            } // Xóa dấu chấm trước khi lưu giá trị
           />
         </div>
       </Modal>
@@ -792,7 +795,7 @@ export default function AddProductDetail() {
         </div>
       )}
 
-      {/* <ToastContainer /> */}
+      <ToastContainer />
     </>
   );
 }

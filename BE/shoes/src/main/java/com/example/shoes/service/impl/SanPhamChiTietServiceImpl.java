@@ -152,20 +152,6 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         DeGiay deGiay = deGiayRepo.findById(request.getIdDeGiay())
                 .orElseThrow(() -> new AppException(ErrorCode.SHOE_SOLE_NOT_FOUND));
 
-        List<SanPhamChiTiet> sanPhamChiTietList = sanPhamChiTietRepo.findAll();
-        for (SanPhamChiTiet spct : sanPhamChiTietList) {
-            if (
-                    spct.getIdDeGiay().getId() == request.getIdDeGiay() &&
-                            spct.getIdThuongHieu().getId() == request.getIdThuongHieu() &&
-                            spct.getIdKichThuoc().getId() == request.getIdKichThuoc() &&
-                            spct.getIdMauSac().getId() == request.getIdMauSac() &&
-                            spct.getIdChatLieu().getId() == request.getIdChatLieu()
-            ) {
-                throw new AppException((ErrorCode.PRODUCT_EXISTED));
-
-            }
-        }
-
         SanPhamChiTiet spct = new SanPhamChiTiet();
         String ma = generateMaSanPhamChiTiet();
         spct.setMa(ma);
@@ -195,7 +181,6 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
             gioHangChiTietRepo.save(gioHangChiTiet);
         }
     }
-
     private void capNhatDonGiaHoaDonChiTiet(SanPhamChiTiet sanPhamChiTiet) {
         // Lấy danh sách hóa đơn chi tiết liên quan có trạng thái "CHO_XAC_NHAN" hoặc "CHUA_THANH_TOAN"
         List<HoaDonChiTiet> hoaDonChiTietList = hoaDonChiTietRepo.findByIdSpctAndTrangThaiIn(
@@ -248,8 +233,6 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         DeGiay deGiay = deGiayRepo.findById(request.getIdDeGiay())
                 .orElseThrow(() -> new AppException(ErrorCode.SHOE_SOLE_NOT_FOUND));
 
-
-
         sanPhamChiTiet.setIdSanPham(sanPham);
         sanPhamChiTiet.setIdChatLieu(chatLieu);
         sanPhamChiTiet.setIdMauSac(mauSac);
@@ -263,7 +246,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         sanPhamChiTiet.setNgayCapNhat(LocalDate.now());
         SanPhamChiTiet updatedSpct = sanPhamChiTietRepo.save(sanPhamChiTiet);
         capNhatDonGiaGioHangChiTiet(sanPhamChiTiet);
-//        capNhatDonGiaHoaDonChiTiet(sanPhamChiTiet);
+        capNhatDonGiaHoaDonChiTiet(sanPhamChiTiet);
         return converToResponse(updatedSpct);
     }
 

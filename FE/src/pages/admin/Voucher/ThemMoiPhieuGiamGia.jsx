@@ -42,8 +42,7 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
 
   // hàm format lại định dạng khi gửi về be
   const formatCurrencyToNumber = (value) => {
-    if (!value) return 0; // Trả về 0 nếu giá trị rỗng
-    return parseInt(value.replace(/\./g, ""), 10); // Loại bỏ dấu "." và chuyển thành số
+    return parseInt(value.replace(/[^\d]/g, ""));
   };
 
   const handleSubmit = async (e) => {
@@ -51,7 +50,7 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
 
     // Xử lý logic gửi dữ liệu form ở đây
     confirm({
-      title: "Bạn có chắc chắn muốn thêm phiếu giảm giá này ?",
+      title: "Bạn có chắc chắn muốn thêm phiếu giảm giá này?",
       content: "Vui lòng xác nhận trước khi tiếp tục.",
       onOk: async () => {
         try {
@@ -66,12 +65,11 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
                 formData.hinhThucGiam === "%"
                   ? formatCurrencyToNumber(formData.giamToiDa)
                   : formatCurrencyToNumber(formData.mucGiam),
-              soLuong: parseInt(formData.soLuong),
+              soLuong: formData.soLuong,
               ngayBatDau: formData.ngayBatDau,
               ngayKetThuc: formData.ngayKetThuc,
               // trangThai: true
             },
-            console.log(formData),
           );
 
           if (response.status === 200) {
@@ -222,7 +220,7 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
       </div>
       <ToastContainer
         position="top-right"
-        autoClose={1000}
+        autoClose={3000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick

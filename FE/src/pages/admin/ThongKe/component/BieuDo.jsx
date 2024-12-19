@@ -76,7 +76,7 @@ const RevenueChart = () => {
       },
       title: {
         display: true,
-        text: "Tổng tiền các ngày trong tuần",
+        text: "Tổng tiền theo tuần",
       },
     },
   };

@@ -3,7 +3,6 @@ import ReactPaginate from "react-paginate";
 import axios from "../../../api/axiosConfig";
 import { Link, useNavigate } from "react-router-dom";
 import ThemMoiKhachHang from "../KhachHang/ThemMoiKhachHang";
-import { EyeFilled, PlusCircleFilled, ReloadOutlined } from "@ant-design/icons";
 
 export default function DanhSachNhanVien() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -19,8 +18,6 @@ export default function DanhSachNhanVien() {
   const [keyword, setKeyword] = useState("");
   const [trangThai, setTrangThai] = useState(null);
   const pageSize = 5;
-  const totalRows = pageSize;
-  const emptyRows = totalRows - nhanvien.length;
 
   const navigate = useNavigate();
 
@@ -60,6 +57,16 @@ export default function DanhSachNhanVien() {
   return (
     <div className="p-4">
       <h1 className="mb-4 text-2xl font-bold">Quản Lý Khách Hàng</h1>
+
+      {/* Nút thêm mới nhân viên */}
+      <div className="mb-4">
+        <button
+          onClick={openModal}
+          className="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-600"
+        >
+          Thêm Mới Khách Hàng
+        </button>
+      </div>
 
       {/* Modal Thêm Mới  */}
       {isModalOpen && (
@@ -125,27 +132,14 @@ export default function DanhSachNhanVien() {
       </div>
       <button
         onClick={handleLamMoi}
-        className="mx-auto flex items-center gap-2 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-600"
+        className="mx-auto flex rounded bg-blue-500 px-2 py-1 text-white"
       >
-        <ReloadOutlined /> Làm mới
+        Làm mới
       </button>
 
       {/* Danh sách  */}
       <div className="rounded bg-white p-4 shadow">
-        <div className="flex justify-between">
-          <h2 className="mb-4 text-xl font-semibold">Danh Sách Khách Hàng</h2>
-          {/* Nút thêm mới nhân viên */}
-          <div className="mb-4">
-            <button
-              type="button"
-              onClick={openModal}
-              className="mr-16 h-10 rounded-md bg-green-500 px-4 font-semibold text-white transition-colors duration-300 hover:bg-green-600 focus:bg-green-700 active:bg-green-400"
-            >
-              <PlusCircleFilled /> <span> Thêm Mới Khách Hàng</span>
-            </button>
-          </div>
-        </div>
-
+        <h2 className="mb-4 text-xl font-semibold">Danh Sách Khách Hàng</h2>
         <div className="overflow-x-auto">
           <table className="min-w-full border border-gray-300 bg-white">
             <thead>
@@ -185,32 +179,21 @@ export default function DanhSachNhanVien() {
                     </button>
                   </td>
                   <td>
-                    <button className="rounded bg-yellow-500 px-2 py-1 text-white">
-                      <Link to={`/admin/khachhang/${item.id}`}>
-                        <div
-                          className="flex gap-2 transition-transform duration-500 hover:scale-125"
-                          title="Chi tiết khách hàng"
-                        >
-                          <EyeFilled />
-                        </div>
+                    <button className="rounded bg-blue-500 px-2 py-1 text-white">
+                      <Link
+                        to={`/admin/khachhang/${item.id}`}
+                        className="text-white"
+                      >
+                        Chi Tiết
                       </Link>
                     </button>
                   </td>
                 </tr>
-              ))}{" "}
-              {emptyRows > 0 &&
-                Array.from({ length: emptyRows }).map((_, index) => (
-                  <tr key={`empty-${index}`} style={{ height: "61px" }}>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                  </tr>
-                ))}
+              ))}
             </tbody>
           </table>
         </div>
-        <div className="mr-14 mt-4 flex justify-end">
+        <div className="mr-14 mt-4 flex justify-center">
           <ReactPaginate
             previousLabel={"< Previous"}
             nextLabel={"Next >"}

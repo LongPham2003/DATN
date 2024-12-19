@@ -71,19 +71,39 @@ export default function AddProduct() {
             const result = await add(newProduct); // Chờ kết quả từ hàm add
             // Hiển thị thông báo thành công
             if (result) {
-              toast.success("Thêm sản phẩm mới thành công");
+              toast.success("Thêm sản phẩm mới thành công", {
+                position: "top-center",
+                autoClose: 1000,
+                hideProgressBar: false,
+                newestOnTop: false,
+                closeOnClick: true,
+                rtl: false,
+                pauseOnFocusLoss: true,
+                draggable: true,
+                pauseOnHover: true,
+                theme: "light",
+                transition: Bounce,
+              });
               // Load lại trang sau 1 giây
               setTimeout(() => {
                 window.location.reload();
-              }, 1000);
+              }, 1700);
             } else {
               throw new Error("Thêm mới thất bại");
             }
           } catch (error) {
             console.log(newProduct);
-            console.log(error);
-
-            toast.error("Thêm mới thất bại");
+            toast.error(error.message || "Thêm mới thất bại", {
+              position: "top-right",
+              autoClose: 1000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+              transition: Bounce,
+            });
           }
         },
         onCancel() {
@@ -92,7 +112,17 @@ export default function AddProduct() {
       });
     } catch (error) {
       console.log(newProduct);
-      toast.error("Thêm mới thất bại");
+      toast.error(error.message || "Thêm mới thất bại", {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
     }
   };
 
@@ -126,7 +156,7 @@ export default function AddProduct() {
         </div>
         <div>
           <label htmlFor="idLoai" className="mb-1 block">
-            Loại:
+            Danh mục:
           </label>
           <select
             id="idLoai"
@@ -166,7 +196,7 @@ export default function AddProduct() {
           Thêm sản phẩm
         </button>
       </form>
-      {/* <ToastContainer /> */}
+      <ToastContainer />
     </div>
   );
 }

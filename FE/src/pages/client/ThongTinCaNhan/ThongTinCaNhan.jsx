@@ -460,11 +460,11 @@ export default function ThongTinCaNhan() {
           </div>
         </div>
       </div>
-      {/* <ToastContainer
+      <ToastContainer
         position="top-center"
         autoClose={3000}
         transition={Bounce}
-      /> */}
+      />
     </div>
   );
 }

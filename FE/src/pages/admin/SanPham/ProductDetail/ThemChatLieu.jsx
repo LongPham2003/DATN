@@ -1,9 +1,9 @@
-import { useState } from "react";
+import {  useState } from "react";
 import axios from "../../../../api/axiosConfig.js";
 import { toast } from "react-toastify";
 import { Modal } from "antd";
 
-export default function ThemChatLieu({ closeModel }) {
+export default function ThemChatLieu({closeModel}) {
   const [value, setValue] = useState("");
   const [error, setError] = useState("");
 
@@ -18,8 +18,8 @@ export default function ThemChatLieu({ closeModel }) {
             "http://localhost:8080/api/chatlieu/add",
             {
               ten: value,
-              trangThai: true,
-            },
+              trangThai: true
+            }
           );
 
           if (response.status === 200) {
@@ -27,6 +27,7 @@ export default function ThemChatLieu({ closeModel }) {
             toast.success("Thành công");
             setValue("");
             closeModel();
+
           }
         } catch (error) {
           // Xử lý lỗi nếu có
@@ -35,26 +36,17 @@ export default function ThemChatLieu({ closeModel }) {
       },
       onCancel() {
         console.log("Hủy bỏ thao tác thêm chất liệu");
-      },
+      }
     });
   };
 
   return (
     <>
-      <div className="my-auto items-center justify-items-center">
-        <input
-          type="text"
-          className="bordered h-10 w-[200px] border pl-2"
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          placeholder="Mời nhập tên chất liệu"
-        />
-        <button
-          onClick={them}
-          className="bordered h-10 rounded-lg border bg-blue-400"
-        >
-          Thêm
-        </button>
+      <div className="justify-items-center items-center my-auto">
+        <input type="text" className="bordered border h-10 w-[200px]"
+               value={value} onChange={(e) => setValue(e.target.value)}
+               placeholder="Mời nhập tên chất liệu" />
+        <button onClick={them} className="border bordered bg-blue-400 h-10 rounded-lg">Thêm</button>
       </div>
       {error && <p className="mb-4 text-sm text-red-500">{error}</p>}
     </>

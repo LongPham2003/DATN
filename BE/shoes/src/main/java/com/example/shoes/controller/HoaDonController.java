@@ -5,17 +5,13 @@ import com.example.shoes.dto.hoadon.request.DatHangRequest;
 import com.example.shoes.dto.hoadon.request.GhiChu;
 import com.example.shoes.dto.hoadon.request.XacNhanThanhToan;
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
-
-import com.example.shoes.dto.hoadon.response.HoaDonTheoIDKH;
-
+import com.example.shoes.dto.hoadon.response.HoaDonTheoIdKH;
 import com.example.shoes.dto.payment.PaymentRequest;
-import com.example.shoes.dto.sanpham.request.SanPhamTraRequest;
 import com.example.shoes.entity.HoaDon;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.repository.HoaDonRepo;
 import com.example.shoes.service.HoaDonService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,9 +22,7 @@ public class HoaDonController {
     @Autowired
     private HoaDonService hoaDonService;
     @Autowired
-
-    private HoaDonRepo hoaDonRepo;
-
+private HoaDonRepo hoaDonRepo;
 
     @GetMapping("/getall")
     public ApiResponse<PhanTrangResponse<HoaDonResponse>> getAllHoaDon(
@@ -121,10 +115,6 @@ public class HoaDonController {
     private ApiResponse<Void> updateXacNhan(@PathVariable Integer id,@RequestBody GhiChu moTa) {
         return ApiResponse.<Void>builder().result(hoaDonService.updateTrangThaiHoaDonByIdXacNhan(id,moTa)).build();
     }
-    @PostMapping("/cholayhang/{id}")
-    private ApiResponse<Void> updateChoLayHang(@PathVariable Integer id,@RequestBody GhiChu moTa) {
-        return ApiResponse.<Void>builder().result(hoaDonService.updateTrangThaiHoaDonByIdChoLayHang(id,moTa)).build();
-    }
     @PostMapping("/chogiaohang/{id}")
     private ApiResponse<Void> updateChoGiaoHang(@PathVariable Integer id,@RequestBody GhiChu moTa) {
         return ApiResponse.<Void>builder().result(hoaDonService.updateTrangThaiHoaDonByIdChoVanChuyen(id,moTa)).build();
@@ -151,7 +141,6 @@ public class HoaDonController {
     private ApiResponse<Integer> soluong() {
         return ApiResponse.<Integer>builder().result(hoaDonRepo.getCountHoaDon()).build();
     }
-
     @GetMapping("/soluong/hoadoncxn")
     private ApiResponse<Integer> soluongcxn() {
         return ApiResponse.<Integer>builder().result(hoaDonRepo.getCountHoaDonCXN()).build();
@@ -160,12 +149,6 @@ public class HoaDonController {
     private ApiResponse<Integer> soluongdxn() {
         return ApiResponse.<Integer>builder().result(hoaDonRepo.getCountHoaDonDXN()).build();
     }
-
-    @GetMapping("/soluong/hoadonclh")
-    private ApiResponse<Integer> soluongclh() {
-        return ApiResponse.<Integer>builder().result(hoaDonRepo.getCountHoaDonCLH()).build();
-    }
-
     @GetMapping("/soluong/hoadoncgh")
     private ApiResponse<Integer> soluongcgh() {
         return ApiResponse.<Integer>builder().result(hoaDonRepo.getCountHoaDonCGH()).build();
@@ -182,33 +165,4 @@ public class HoaDonController {
     private ApiResponse<Integer> soluongHuy() {
         return ApiResponse.<Integer>builder().result(hoaDonRepo.getCountHoaDonHuy()).build();
     }
-
-    @GetMapping("/getAllHDTheoIDKH")
-    public ApiResponse<List<HoaDonTheoIDKH>> getAllHDTheoIDKH(
-            @RequestParam(value = "maHD", required = false) String maHD,
-            @RequestParam(value = "idKhachHang", required = true) Integer idKhachHang, // Chuyển `idKhachHang` thành bắt buộc
-            @RequestParam(value = "trangThaiDonHang", required = false) String trangThaiDonHang, // Thêm lọc theo trạng thái
-            @RequestParam(value = "ngay", required = false) String ngay    ) {
-        // Gọi service với các tham số
-        List<HoaDonTheoIDKH> hdresq = hoaDonService.getHoaDonTheoKH(idKhachHang, maHD, trangThaiDonHang, ngay);
-
-        // Trả về kết quả dưới dạng ApiResponse
-        return ApiResponse.<List<HoaDonTheoIDKH>>builder()
-                .result(hdresq)
-                .build();
-    }
-    // Trả hàng
-    @PostMapping("/tra-hang")
-    public ApiResponse<HoaDonResponse> traHang(
-            @RequestParam("idHoaDon") Integer idHoaDon,
-            @RequestBody List<SanPhamTraRequest> sanPhamTraList) {
-        // Gọi phương thức traHang trong service
-        HoaDonResponse hoaDonResponse = hoaDonService.traHang(idHoaDon, sanPhamTraList);
-        // Trả về kết quả dưới dạng ApiResponse
-        return ApiResponse.<HoaDonResponse>builder()
-                .result(hoaDonResponse)
-                .build();
-    }
-
-
 }

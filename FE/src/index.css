@@ -42,20 +42,3 @@ body {
 /* .ant-select-item-option-content {
   pointer-events: none;
 } */
-/* .react-paginate {
-  display: flex;
-  align-items: center;
-}
-
-.react-paginate a {
-  text-decoration: none;
-}
-
-.react-paginate .active {
-  background-color: white;
-  border: 2px solid blue; 
-} */
-.custom-toast {
-  font-weight: bold; /* Đặt chữ đậm */
-  color: #000000; /* Màu chữ đỏ (hoặc màu bạn muốn) */
-}

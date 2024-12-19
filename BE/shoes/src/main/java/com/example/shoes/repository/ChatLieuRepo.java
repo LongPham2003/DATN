@@ -29,7 +29,7 @@ public interface ChatLieuRepo extends JpaRepository<ChatLieu, Integer> {
     // Phương thức kiểm tra xem  có tồn tại theo tên không
     boolean existsByTen(String ten);
     // lấy tat ca danh sach sp co trang thai true
-    @Query("SELECT cl FROM ChatLieu  cl WHERE cl.trangThai = true order by cl.id desc ")
+    @Query("SELECT cl FROM ChatLieu  cl WHERE cl.trangThai = true")
     List<ChatLieu> getAllTrangThaiTrue();
 
 }

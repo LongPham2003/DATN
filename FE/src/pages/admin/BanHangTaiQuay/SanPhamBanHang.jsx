@@ -58,7 +58,19 @@ export default function SanPhamBanTaiQuay({
       };
 
       await axios.post(ApiThemSPvaoHoaDon, newSPCT);
-      toast.success("Thêm sản phẩm thành công");
+      toast.success("Thêm sản phẩm thành công", {
+        position: "top-right",
+        autoClose: 600,
+        hideProgressBar: false,
+        newestOnTop: false,
+        closeOnClick: true,
+        rtl: false,
+        pauseOnFocusLoss: true,
+        draggable: true,
+        pauseOnHover: true,
+        theme: "light",
+        transition: Bounce,
+      });
       // Gọi hàm onProductAdded để báo cho component cha biết và cập nhật giỏ hàng
       if (onProductAdded) {
         onProductAdded();
@@ -68,7 +80,17 @@ export default function SanPhamBanTaiQuay({
       setModalVisible(false);
     } catch (error) {
       console.log(error);
-      toast.error("Thêm mới thất bại");
+      toast.error(error.message || "Thêm mới thất bại", {
+        position: "top-right",
+        autoClose: 600,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
     }
   };
 
@@ -196,10 +218,10 @@ export default function SanPhamBanTaiQuay({
         <div className="bg-slate-300 font-mono">
           <div className="flex justify-center gap-5">
             <div>
-              <p className="font-bold">Tên sản phẩm</p>
+              <p className="font-bold">Mã sản phẩm</p>
               <Input
                 className="h-[38px] w-[250px]"
-                placeholder="Tên sản phẩm ..."
+                placeholder="Ma san pham ..."
                 size="large"
                 onChange={(e) => setMaSanPham(e.target.value)} // Gọi hàm khi có thay đổi
               />
@@ -343,7 +365,7 @@ export default function SanPhamBanTaiQuay({
                             }}
                             disabled={item.soLuong === 0}
                           >
-                            Thêm sản phẩm
+                            Thêm sản
                           </Button>
                         </td>
                       </tr>
@@ -375,7 +397,7 @@ export default function SanPhamBanTaiQuay({
           {error && <p className="text-red-500">{error}</p>}
         </div>
       </Modal>
-      {/* <ToastContainer /> */}
+      <ToastContainer />
     </>
   );
 }

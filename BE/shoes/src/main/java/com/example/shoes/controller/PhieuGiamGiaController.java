@@ -59,7 +59,7 @@ public class PhieuGiamGiaController {
     }
 
     @PostMapping("/update/{id}")
-    public ApiResponse<PhieuGiamGiaResponse> update( @Valid  @RequestBody PhieuGiamGiaRequest request,BindingResult bindingResult,@PathVariable Integer id) {
+    public ApiResponse<PhieuGiamGiaResponse> update( @Valid @PathVariable Integer id, @RequestBody PhieuGiamGiaRequest request,BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             throw new ValidationException(bindingResult.getFieldError().getDefaultMessage());
         }

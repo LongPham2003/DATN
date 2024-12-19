@@ -3,7 +3,6 @@ import ReactPaginate from "react-paginate";
 import axios from "../../../api/axiosConfig";
 import { Link } from "react-router-dom";
 import ThemMoiPhieuGiamGia from "./ThemMoiPhieuGiamGia";
-import { EyeFilled, PlusCircleFilled, ReloadOutlined } from "@ant-design/icons";
 
 export default function ListPhieuGiamGia() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -12,14 +11,12 @@ export default function ListPhieuGiamGia() {
   const closeModal = () => setIsModalOpen(false);
   const [added, setAdded] = useState(false);
 
-  const [phieugiamgia, setPhieuGiamGia] = useState([]);
+  const [nhanvien, setNhanVien] = useState([]);
   const [trangHienTai, setTrangHienTai] = useState(1);
   const [tongSoTrang, setTongSoTrang] = useState(0);
   const [tenVoucher, setTenVoucher] = useState("");
   const [trangThai, setTrangThai] = useState(null);
   const pageSize = 5;
-  const totalRows = pageSize;
-  const emptyRows = totalRows - phieugiamgia.length;
 
   const [ngayBatDau, setNgayBatDau] = useState("");
   const [ngayKetThuc, setNgayKetThuc] = useState("");
@@ -52,7 +49,7 @@ export default function ListPhieuGiamGia() {
         })
         .then(async (res) => {
           const data = res.data;
-          setPhieuGiamGia(data.result.result);
+          setNhanVien(data.result.result);
           setTongSoTrang(data.result.totalPages);
         })
         .catch((error) => {
@@ -144,9 +141,9 @@ export default function ListPhieuGiamGia() {
         </div>
         <button
           onClick={handleLamMoi}
-          className="mx-auto flex items-center gap-2 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-600"
+          className="mx-auto flex rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-600"
         >
-          <ReloadOutlined /> Làm mới
+          Làm mới
         </button>
       </div>
 
@@ -160,11 +157,10 @@ export default function ListPhieuGiamGia() {
             {/* Nút thêm mới */}
             <div className="mb-4">
               <button
-                type="button"
                 onClick={openModal}
-                className="mr-16 h-10 rounded-md bg-green-500 px-4 font-semibold text-white transition-colors duration-300 hover:bg-green-600 focus:bg-green-700 active:bg-green-400"
+                className="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-600"
               >
-                <PlusCircleFilled /> <span> Thêm Mới Phiếu Giảm Giá</span>
+                Thêm Mới Phiếu Giảm Giá
               </button>
             </div>
             {/* Modal Thêm Mới */}
@@ -223,7 +219,7 @@ export default function ListPhieuGiamGia() {
               </tr>
             </thead>
             <tbody className="text-center">
-              {phieugiamgia.map((item, index) => (
+              {nhanvien.map((item, index) => (
                 <tr key={index}>
                   <td className="border-b px-4 py-2">
                     {index + 1 + (trangHienTai - 1) * pageSize}
@@ -251,32 +247,18 @@ export default function ListPhieuGiamGia() {
                     </button>
                   </td>
                   <td>
-                    <button className="rounded bg-yellow-500 px-2 py-1 text-white">
+                    <button className="rounded bg-blue-500 px-2 py-1 text-white">
                       <Link to={`/admin/phieugiamgia/${item.id}`}>
-                        <div
-                          className="flex gap-2 transition-transform duration-500 hover:scale-125"
-                          title="Chi tiết phiếu giảm giá"
-                        >
-                          <EyeFilled />
-                        </div>
+                        Chi Tiết
                       </Link>
                     </button>
                   </td>
                 </tr>
               ))}
-              {emptyRows > 0 &&
-                Array.from({ length: emptyRows }).map((_, index) => (
-                  <tr key={`empty-${index}`} style={{ height: "61px" }}>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                  </tr>
-                ))}
             </tbody>
           </table>
         </div>
-        <div className="mr-14 mt-4 flex justify-end">
+        <div className="mr-14 mt-4 flex justify-center">
           <ReactPaginate
             previousLabel={"< Previous"}
             nextLabel={"Next >"}

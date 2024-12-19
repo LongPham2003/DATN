@@ -9,7 +9,6 @@ const SanPhamChiTiet = ({ productId, closeModal }) => {
   const id = productId;
   const navigate = useNavigate();
   const [error, setError] = useState("");
-  const [errorTen, setErrorTen] = useState("");
   const [loaiSelect, setLoaiSelect] = useState([]);
   const [formData, setFormData] = useState({
     ma: "",
@@ -56,7 +55,7 @@ const SanPhamChiTiet = ({ productId, closeModal }) => {
     }));
     // Xóa lỗi khi người dùng nhập giá trị hợp lệ
     if (name === "tenSanPham" && value.trim() !== "") {
-      setErrorTen("");
+      setError("");
     }
   };
   const handleOptionSelect = (selectedOption) => {
@@ -67,37 +66,20 @@ const SanPhamChiTiet = ({ productId, closeModal }) => {
   };
   // eslint-disable-next-line no-unused-vars
   const update = async (e) => {
+    try {
+      const res = await axios.put(
+        `http://localhost:8080/api/sanpham/update/${id}`,
+        formData,
+      );
+      toast.success("Sửa thành công");
+      navigate("/admin/sanpham");
+      closeModal();
+      console.log("Update response:", res);
 
-    if (formData.tenSanPham.trim() === "") {
-      setErrorTen("Không được để trống tên sản phẩm");
-      return;
+    } catch (error) {
+      console.log("Error during update:", error);
+      toast.error("Có lỗi sảy ra");
     }
-    // Sử dụng Modal.confirm để hiển thị hộp thoại xác nhận
-    Modal.confirm({
-      title: "Xác nhận cập nhật",
-      content: "Bạn có chắc chắn muốn cập nhật không?",
-      okText: "Có",
-      cancelText: "Không",
-      onOk: async () => {
-        try {
-          const res = await axios.put(
-            `http://localhost:8080/api/sanpham/update/${id}`,
-            formData,
-          );
-          toast.success("Sửa thành công");
-          // navigate("/admin/sanpham");
-          closeModal();
-          // console.log("Update response:", res);
-        } catch (error) {
-          console.log("Error during update:", error);
-          toast.error("Có lỗi sảy ra");
-        }
-      },
-      onCancel() {
-        console.log("Cập nhật đã bị hủy");
-      },
-    });
-
   };
   useEffect(() => {
     getById();
@@ -119,7 +101,7 @@ const SanPhamChiTiet = ({ productId, closeModal }) => {
           <div>
             <div className="my-4">
               <label htmlFor="tenSanPham" className="mb-1 block font-semibold">
-                Mã Sản Phẩm:
+                Ma San Phẩm:
               </label>
               <input
                 type="text"
@@ -131,7 +113,7 @@ const SanPhamChiTiet = ({ productId, closeModal }) => {
             </div>
             <div className="mb-4">
               <label htmlFor="tenSanPham" className="mb-1 block font-semibold">
-                Tên Sản Phẩm:
+                Tên San Phẩm:
               </label>
               <input
                 type="text"
@@ -140,7 +122,7 @@ const SanPhamChiTiet = ({ productId, closeModal }) => {
                 name="tenSanPham"
                 onChange={handleChange}
               />
-              {errorTen && <p className="text-red-500">{errorTen}</p>}
+              {error && <p className="text-red-500">{error}</p>}
             </div>
           </div>
           <div>
@@ -222,7 +204,19 @@ const SanPhamChiTiet = ({ productId, closeModal }) => {
           </button>
         </div>
       </form>
-
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
     </div>
   );
 };

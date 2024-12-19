@@ -2,7 +2,6 @@ import axios from "../../../../api/axiosConfig";
 import { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
 import { Bounce, toast, ToastContainer } from "react-toastify";
-import { Modal } from 'antd'; // Import Modal from Ant Design
 
 export default function MauSac() {
   const [listMauSac, setListMauSac] = useState([]);
@@ -75,75 +74,107 @@ export default function MauSac() {
   };
 
   const themMauSac = async () => {
-    Modal.confirm({
-      title: 'Xác nhận thêm màu sắc',
-      content: 'Bạn có chắc chắn muốn thêm màu sắc này không?',
-      onOk: async () => {
-        try {
-          await axios.post(`http://localhost:8080/api/mausac/add`, mauSacMoi);
-          loadMauSac(trangHienTai);
-          toast.success("Thêm màu sắc mới thành công");
-          setMauSacMoi({ ten: "", trangThai: true });
-          const addInput = document.querySelector('input[type="text"]');
-          if (addInput) {
-            addInput.value = "";
-          }
-        } catch (error) {
-          toast.error("Thêm mới thất bại");
-        }
-      },
-    });
+    // Nếu không, gọi hàm thêm mới
+
+    // Xác nhận người dùng có muốn thêm màu sắc mới hay không
+    if (!window.confirm("Bạn có chắc chắn muốn thêm sản phẩm này không?")) {
+      return; // Nếu người dùng chọn Cancel, dừng thao tác
+    }
+
+    try {
+      // Gọi API để thêm màu sắc mới
+      await axios.post(`http://localhost:8080/api/mausac/add`, mauSacMoi);
+
+      // Sau khi thêm thành công, gọi lại loadMauSac để cập nhật bảng
+      loadMauSac(trangHienTai);
+
+      // Hiển thị thông báo thành công
+      toast.success("Thêm màu sắc mới thành công", {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        newestOnTop: false,
+        closeOnClick: true,
+        rtl: false,
+        pauseOnFocusLoss: true,
+        draggable: true,
+        pauseOnHover: true,
+        theme: "light",
+        transition: Bounce,
+        style: {
+          zIndex: 9999,
+          overflowY: "hidden",
+        },
+      });
+
+      // Reset form sau khi thêm mới thành công
+      setMauSacMoi({ ten: "", trangThai: true });
+
+      // Đặt lại giá trị ô tìm kiếm
+      const addInput = document.querySelector('input[type="text"]');
+      if (addInput) {
+        addInput.value = "";
+      }
+    } catch (error) {
+      // Hiển thị thông báo lỗi nếu xảy ra lỗi trong quá trình thêm
+      toast.error("Thêm mới thất bại", {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
+    }
   };
 
   const capNhatMauSac = async () => {
     if (mauSacMoi.ten.trim() === "") {
       setError("Tên không được để trống");
-      return;
+      return; // Ngăn không cho tiếp tục nếu tên trống
     }
 
     if (tenMauSac.includes(mauSacMoi.ten)) {
       setError("Ten da ton tai");
       return;
     }
-
-    Modal.confirm({
-      title: 'Xác nhận cập nhật màu sắc',
-      content: 'Bạn có chắc chắn muốn cập nhật màu sắc này không?',
-      onOk: async () => {
-        try {
-          await axios.put(
-            `http://localhost:8080/api/mausac/update/${currentId}`,
-            mauSacMoi,
-          );
-          toast.success("Cập nhật màu sắc thành công");
-          loadMauSac(trangHienTai);
-          setMauSacMoi({ ten: "", trangThai: true });
-          setIsEditing(false);
-          setCurrentId(null);
-        } catch (error) {
-          toast.error("Cập nhật màu sắc thất bại");
-        }
-      },
-    });
-  };
-
-  const capNhatTrangThai = async (id) => {
-    Modal.confirm({
-      title: 'Xác nhận thay đổi trạng thái',
-      content: 'Bạn có chắc chắn muốn thay đổi trạng thái màu sắc này không?',
-      onOk: async () => {
-        try {
-          await axios.put(`http://localhost:8080/api/mausac/updatetrangthai/${id}`);
-          loadMauSac(trangHienTai);
-          setMauSacMoi({ ten: "", trangThai: true });
-          setIsEditing(false);
-          setCurrentId(null);
-          toast.success("Cập nhật trạng thái thành công");
-        } catch (error) {
-          toast.error("Cập nhật trạng thái thất bại");
-        }
-      },
-    });
+    // onInputChange();
+    try {
+      await axios.put(
+        `http://localhost:8080/api/mausac/update/${currentId}`,
+        mauSacMoi,
+      );
+      if (!window.confirm("Bạn có chắc chắn muốn sửa sản phẩm này không?")) {
+        return; // Nếu người dùng chọn Cancel, dừng thao tác
+      }
+      toast.success("Cập nhật màu sắc thành công", {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+      });
+      loadMauSac(trangHienTai); // Tải lại danh sách màu sắc
+      setMauSacMoi({ ten: "", trangThai: true }); // Đặt lại giá trị ô nhập liệu
+      setIsEditing(false); // Đặt lại chế độ về thêm mới
+      setCurrentId(null); // Đặt lại id
+    } catch (error) {
+      console.error("Cập nhật màu sắc thất bại", error);
+      toast.error("Cập nhật màu sắc thất bại", {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+      });
+    }
   };
 
   const themMoiMauSac = async (e) => {
@@ -160,7 +191,42 @@ export default function MauSac() {
     }
   };
 
- 
+  const capNhatTrangThai = async (id) => {
+    try {
+      if (!window.confirm("Bạn có chắc chắn không?")) {
+        return; // Nếu người dùng chọn Cancel, dừng thao tác
+      }
+
+      // Gửi yêu cầu cập nhật trạng thái trên server
+      await axios.put(`http://localhost:8080/api/mausac/updatetrangthai/${id}`);
+
+      loadMauSac(trangHienTai);
+      setMauSacMoi({ ten: "", trangThai: true }); // Reset the form to initial state
+      setIsEditing(false); // Set editing mode to false
+      setCurrentId(null); // Clear the current ID
+      toast.success("Cập nhật trạng thái thành công", {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+      });
+    } catch (error) {
+      console.log(error);
+
+      toast.error("Cập nhật trạng thái thất bại", {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+      });
+    }
+  };
 
   const handlePageChange = (newPage) => {
     setTrangHienTai(+newPage.selected + 1);
@@ -362,7 +428,7 @@ export default function MauSac() {
         </div>
         {/* Modal */}
 
-        {/* <ToastContainer /> */}
+        <ToastContainer />
       </div>
     </>
   );

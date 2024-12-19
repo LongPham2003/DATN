@@ -33,10 +33,6 @@ public interface HoaDonChiTietRepo extends JpaRepository<HoaDonChiTiet, Integer>
     void deleteByIdHoaDonAndIdSpct(@Param("idHoaDon") Integer idHoaDon, @Param("idSpct") Integer idSpct);
 
     List<HoaDonChiTiet> findByIdSpctAndTrangThaiIn(SanPhamChiTiet sanPhamChiTiet, List<TrangThai> trangThaiList);
-    List<HoaDonChiTiet> findByIdHoaDon_IdAndIdSpct_Id(Integer idHoaDon, Integer idSpct);
-//
-//    @Query(value = """
-//    select hdct from HoaDonChiTiet hdct join
-//""")
-//    List<HoaDonChiTiet> khongupdate();
+
+
 }

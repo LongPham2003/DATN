@@ -22,7 +22,7 @@ const CustomDropdown = ({ options, selectedValue, onSelect }) => {
   }, [selectedValue]);
 
   return (
-    <div className="relative inline-block w-[530px] text-left">
+    <div className="relative inline-block w-96 text-left">
       <button
         onClick={toggleDropdown}
         className="inline-flex w-full justify-between rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:border-blue-500 hover:bg-gray-50"

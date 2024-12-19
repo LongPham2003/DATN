@@ -120,26 +120,6 @@ public class GioHangController {
                 .build();
     }
 
-    @PostMapping("/addspct/{id}")
-    public ApiResponse<HoaDonResponse> addSanPhamChiTietToHoaDon(
-            @PathVariable Integer id,
-            @RequestBody HoaDonChiTietRequest chiTietRequest) {
-        HoaDonResponse hoaDonResponse =gioHangChiTietService.addSanPhamChiTietToHoaDon(id, chiTietRequest);
-        return ApiResponse.<HoaDonResponse>builder()
-                .result(hoaDonResponse)
-                .build();
-    }
-
-    @DeleteMapping("/{idHoaDon}/spct/{idSpct}")
-    public ApiResponse<String> deleteHoaDonChiTiet(
-            @PathVariable Integer idHoaDon,
-            @PathVariable Integer idSpct) {
-        gioHangChiTietService.deleteByIdHoaDonAndIdSpct(idHoaDon, idSpct);
-        return ApiResponse.<String>builder()
-                .message("Xóa chi tiết hóa đơn thành công")
-                .build();
-    }
-
 //    @GetMapping("/findById/{idHDCT}")
 //    public ApiResponse<GioHangResponse> findById(@PathVariable("idHDCT") Integer idHDCT) {
 //        GioHangChiTietResponse res = gioHangChiTietService.fibindIdGHCT(idHDCT);
