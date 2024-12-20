@@ -49,6 +49,14 @@ export default function AddProduct() {
     getAllLoai();
   }, []);
 
+  const validateTenSanPhamtu3den50 = (ten) => {
+    return ten.length >= 3 && ten.length <= 50; // Chỉ kiểm tra độ dài
+  };
+  
+  const validateTenSanPhamkhongchuakytudacbiet = (ten) => {
+    const regex = /^[a-zA-Z0-9\s]+$/; // Chỉ cho phép chữ cái, số và khoảng trắng
+    return regex.test(ten); // Kiểm tra ký tự đặc biệt
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -59,7 +67,14 @@ export default function AddProduct() {
       } else if (idLoai === 0) {
         setErrorLoai("Bạn phải chọn một loại sản phẩm");
         return;
+      } else if (!validateTenSanPhamtu3den50(tenSanPham)) {
+        setErrorTenSP("Tên sản phẩm phải từ 3-50 ký tự");
+        return;
+      }else if (!validateTenSanPhamkhongchuakytudacbiet(tenSanPham)) {
+        setErrorTenSP("Tên sản phẩm không dược chưa ký tự đặc biệt");
+        return;
       }
+
 
       Modal.confirm({
         title: "Xác nhận thêm sản phẩm",

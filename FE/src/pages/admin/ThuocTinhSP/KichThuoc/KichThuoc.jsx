@@ -51,6 +51,16 @@ export default function KichThuoc() {
       console.log(error);
     }
   };
+
+  const validateTenSanPhamtu3den50 = (ten) => {
+    return ten.length >= 2 && ten.length <= 50; // Chỉ kiểm tra độ dài
+  };
+
+  const validateTenSanPhamkhongchuakytudacbiet = (ten) => {
+    const regex = /^[0-9\s]+$/; // Chỉ cho phép chữ cái, số và khoảng trắng
+    return regex.test(ten); // Kiểm tra ký tự đặc biệt
+  };
+
   const onInputChange = (e) => {
     const { name, value } = e.target;
     setkichthuocMoi({ ...kichthuocMoi, [name]: value });
@@ -61,6 +71,12 @@ export default function KichThuoc() {
       // Check trong
       if (input === "") {
         setError("Tên kích thước không được để trống");
+        return;
+      } else if (!validateTenSanPhamtu3den50(input)) {
+        setError("Kích thước từ 2 đến 50 ký tự");
+        return;
+      } else if (!validateTenSanPhamkhongchuakytudacbiet(input)) {
+        setError("Kích thước không chứa kí tự khác ngoài số");
         return;
       }
 
@@ -78,12 +94,15 @@ export default function KichThuoc() {
   const themkichthuoc = async () => {
     // Hiển thị modal xác nhận trước khi thêm mới
     Modal.confirm({
-      title: 'Xác nhận',
-      content: 'Bạn có chắc chắn muốn thêm kích thước này không?',
+      title: "Xác nhận",
+      content: "Bạn có chắc chắn muốn thêm kích thước này không?",
       onOk: async () => {
         try {
           // Gọi API để thêm kích thước mới
-          await axios.post(`http://localhost:8080/api/kichthuoc/add`, kichthuocMoi);
+          await axios.post(
+            `http://localhost:8080/api/kichthuoc/add`,
+            kichthuocMoi,
+          );
 
           // Sau khi thêm thành công, gọi lại loadkichthuoc để cập nhật bảng
           loadkichthuoc(trangHienTai);
@@ -123,8 +142,8 @@ export default function KichThuoc() {
     // onInputChange();
     try {
       Modal.confirm({
-        title: 'Xác nhận',
-        content: 'Bạn có chắc chắn muốn sửa sản phẩm này không?',
+        title: "Xác nhận",
+        content: "Bạn có chắc chắn muốn sửa sản phẩm này không?",
         onOk: async () => {
           await axios.put(
             `http://localhost:8080/api/kichthuoc/update/${currentId}`,
@@ -149,8 +168,8 @@ export default function KichThuoc() {
   const capNhatTrangThai = async (id) => {
     try {
       Modal.confirm({
-        title: 'Xác nhận',
-        content: 'Bạn có chắc chắn không?',
+        title: "Xác nhận",
+        content: "Bạn có chắc chắn không?",
         onOk: async () => {
           // Gửi yêu cầu cập nhật trạng thái trên server
           await axios.put(
@@ -186,8 +205,6 @@ export default function KichThuoc() {
       await themkichthuoc();
     }
   };
-
-  
 
   const handlePageChange = (newPage) => {
     setTrangHienTai(+newPage.selected + 1);
@@ -239,7 +256,7 @@ export default function KichThuoc() {
                     <input
                       onChange={onInputChange}
                       onKeyPress={(e) => {
-                        if (e.key === '-') {
+                        if (e.key === "-") {
                           e.preventDefault(); // Ngăn chặn nhập dấu '-'
                         }
                       }}

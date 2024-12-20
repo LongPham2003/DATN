@@ -53,6 +53,16 @@ export default function ThuongHieu() {
       console.log(error);
     }
   };
+
+  const validateTenSanPhamtu3den50 = (ten) => {
+    return ten.length >= 2 && ten.length <= 50; // Chỉ kiểm tra độ dài
+  };
+
+  const validateTenSanPhamkhongchuakytudacbiet = (ten) => {
+    const regex = /^[a-zA-Z0-9\s]+$/; // Chỉ cho phép chữ cái, số và khoảng trắng
+    return regex.test(ten); // Kiểm tra ký tự đặc biệt
+  };
+
   const onInputChange = (e) => {
     const { name, value } = e.target;
     setthuongHieuMoi({ ...thuongHieuMoi, [name]: value });
@@ -63,6 +73,12 @@ export default function ThuongHieu() {
       // Check trong
       if (input === "") {
         setError("Tên thương hiệu không được để trống");
+        return;
+      }else if(!validateTenSanPhamtu3den50(input)){
+        setError("Tên thương hiệu từ 2 đến 50 ký tự");
+        return;
+      }else if(!validateTenSanPhamkhongchuakytudacbiet(input)){
+        setError("Tên thương hiệu không được chưa kí tự đặc biệt");
         return;
       }
 

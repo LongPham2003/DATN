@@ -62,6 +62,12 @@ export default function chatlieu() {
       if (input === "") {
         setError("Tên chất liệu không được để trống");
         return;
+      }else if(!validateTenSanPhamtu3den50(input)){
+        setError("Tên chất liệu từ 2 đến 50 ký tự");
+        return;
+      }else if(!validateTenSanPhamkhongchuakytudacbiet(input)){
+        setError("Tên chất liệu không được chưa kí tự đặc biệt");
+        return;
       }
 
       // Check ton tai
@@ -75,7 +81,18 @@ export default function chatlieu() {
     }
   };
 
+  const validateTenSanPhamkhongchuakytudacbiet = (ten) => {
+    const regex = /^[a-zA-Z0-9\s]+$/; // Chỉ cho phép chữ cái, số và khoảng trắng
+    return regex.test(ten); // Kiểm tra ký tự đặc biệt
+  };
+
+  const validateTenSanPhamtu3den50 = (ten) => {
+    return ten.length >= 2 && ten.length <= 50; // Chỉ kiểm tra độ dài
+  };
+
   const themchatlieu = async () => {  
+    
+
     // Sử dụng Modal.confirm để xác nhận trước khi thêm chất liệu mới
     Modal.confirm({
       title: "Xác nhận",

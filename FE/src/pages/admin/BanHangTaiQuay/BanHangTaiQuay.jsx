@@ -522,7 +522,7 @@ export default function BanHangTaiQuay() {
       tienPhaiThanhToan.replace(/[.VNĐ]/g, "").trim(),
     );
 
-    console.log(tienPhaiThanhToanNum);
+    // console.log(tienPhaiThanhToanNum);
 
     setTienKhachDua(value);
 

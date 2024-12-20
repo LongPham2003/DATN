@@ -7,6 +7,8 @@ import { Modal } from "antd";
 export default function TheMoiNhanVien({ button, onAdd }) {
   const { confirm } = Modal;
   const [error, setError] = useState("");
+  const [disabled, setDisabled] = useState(false);
+  const [errorTen, setErrorTen] = useState("");
 
   const [formData, setFormData] = useState({
     hoTen: "",
@@ -17,12 +19,39 @@ export default function TheMoiNhanVien({ button, onAdd }) {
     diaChi: "",
   });
 
+  const validateTentu3den50 = (ten) => {
+    return ten.length >= 3 && ten.length <= 50; // Chỉ kiểm tra độ dài
+  };
+
+  const validateTenkhongchuakytudacbiet = (ten) => {
+    const regex = /^[a-zA-Z\s]+$/; // Chỉ cho phép chữ cái, số và khoảng trắng
+    return regex.test(ten); // Kiểm tra ký tự đặc biệt
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
       ...prevState,
       [name]: value,
     }));
+
+    const input = document.getElementById("hoTen").value;
+    if (input === "") {
+      setErrorTen("Tên  không được để trống");
+      setDisabled(true);
+      return;
+    } else if (!validateTentu3den50(input)) {
+      setErrorTen("Tên từ 3 đến 50 ký tự");
+      setDisabled(true);
+      return;
+    } else if (!validateTenkhongchuakytudacbiet(input)) {
+      setErrorTen("Tên không chứa kí tự đặc biệt và số");
+      setDisabled(true);
+      return;
+    } else {
+      setErrorTen("");
+      setDisabled(false);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -168,15 +197,17 @@ export default function TheMoiNhanVien({ button, onAdd }) {
             />
           </div>
           {error && <p className="mb-4 text-sm text-red-500">{error}</p>}
+          {errorTen && <p className="mb-4 text-sm text-red-500">{errorTen}</p>}
           <button
             type="submit"
             className="w-full rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+            disabled={disabled}
           >
             Thêm Mới Nhân Viên
           </button>
         </form>
       </div>
-      <ToastContainer
+      {/* <ToastContainer
         position="top-right"
         autoClose={3000}
         hideProgressBar={false}
@@ -188,7 +219,7 @@ export default function TheMoiNhanVien({ button, onAdd }) {
         pauseOnHover
         theme="light"
         transition={Bounce}
-      />
+      /> */}
     </div>
   );
 }

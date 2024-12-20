@@ -7,7 +7,25 @@ export default function ThemKichThuoc({ closeModel }) {
   const [value, setValue] = useState("");
   const [error, setError] = useState("");
 
+  const validateTenSanPhamtu3den50 = (ten) => {
+    return ten.length >= 2 && ten.length <= 50; // Chỉ kiểm tra độ dài
+  };
+
+  const validateTenSanPhamkhongchuakytudacbiet = (ten) => {
+    const regex = /^[0-9\s]+$/; // Chỉ cho phép số và khoảng trắng
+    return regex.test(ten); // Kiểm tra ký tự đặc biệt
+  };
   const them = async (e) => {
+    if (value === "") {
+      setError("Tên kích thước không được để trống");
+      return;
+    } else if (!validateTenSanPhamtu3den50(value)) {
+      setError("Tên kích thước từ 2 đến 50 ký tự");
+      return;
+    } else if (!validateTenSanPhamkhongchuakytudacbiet(value)) {
+      setError("Tên kích thước không được chưa kí tự đặc biệt");
+      return;
+    }
     e.preventDefault();
     Modal.confirm({
       title: "Bạn có chắc chắn muốn thêm kích thước mới mới?",

@@ -51,6 +51,15 @@ export default function Loai() {
       console.log(error);
     }
   };
+
+  const validateTenSanPhamtu3den50 = (ten) => {
+    return ten.length >= 2 && ten.length <= 50; // Chỉ kiểm tra độ dài
+  };
+
+  const validateTenSanPhamkhongchuakytudacbiet = (ten) => {
+    const regex = /^[a-zA-Z0-9\s]+$/; // Chỉ cho phép chữ cái, số và khoảng trắng
+    return regex.test(ten); // Kiểm tra ký tự đặc biệt
+  };
   const onInputChange = (e) => {
     const { name, value } = e.target;
     setloaiMoi({ ...loaiMoi, [name]: value });
@@ -61,6 +70,12 @@ export default function Loai() {
       // Check trong
       if (input === "") {
         setError("Tên loại không được để trống");
+        return;
+      }else if(!validateTenSanPhamtu3den50(input)){
+        setError("Tên loại từ 2 đến 50 ký tự");
+        return;
+      }else if(!validateTenSanPhamkhongchuakytudacbiet(input)){
+        setError("Tên loại không được chưa kí tự đặc biệt");
         return;
       }
 
