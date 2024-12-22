@@ -208,19 +208,23 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
                 type="datetime-local"
               />
             </div>
+          </div>
+          <div className="text-center">
+            {" "}
             {error && <p className="mb-4 text-sm text-red-500">{error}</p>}
-            <div className="w-full p-2">
-              <button
-                type="submit"
-                className="mx-auto flex rounded-md border border-transparent bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
-              >
-                Thêm
-              </button>
-            </div>
+          </div>
+
+          <div className="w-full p-2">
+            <button
+              type="submit"
+              className="mx-auto flex rounded-md border border-transparent bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+            >
+              Thêm
+            </button>
           </div>
         </form>
       </div>
-      <ToastContainer
+      {/* <ToastContainer
         position="top-right"
         autoClose={1000}
         hideProgressBar={false}
@@ -232,7 +236,7 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
         pauseOnHover
         theme="light"
         transition={Bounce}
-      />
+      /> */}
     </div>
   );
 };

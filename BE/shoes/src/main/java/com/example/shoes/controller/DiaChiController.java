@@ -7,8 +7,11 @@ import com.example.shoes.entity.DiaChi;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.repository.DiaChiRepo;
 import com.example.shoes.service.DiaChiService;
+import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,7 +30,11 @@ public class DiaChiController {
     }
 
     @PostMapping("/addbyidkhachhang/{id}")
-    public ApiResponse<DiaChi> addByIdKhachHang(@PathVariable("id") Integer id, @RequestBody CreateDiaChiRequest request) {
+    public ApiResponse<DiaChi> addByIdKhachHang(@PathVariable("id") Integer id,@Valid @RequestBody CreateDiaChiRequest request,
+            BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            throw new ValidationException(bindingResult.getFieldError().getDefaultMessage());
+        }
         return ApiResponse.<DiaChi>builder()
                 .result(diaChiService.addDiaChiByIdKhachHang(id,request)).build();
     }

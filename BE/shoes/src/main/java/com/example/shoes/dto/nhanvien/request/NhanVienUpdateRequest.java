@@ -28,6 +28,11 @@ public class NhanVienUpdateRequest
     private String ma;
 
     @NotBlank(message = "Họ tên không được để trống")
+    @Size(min = 3, max = 50, message = "Tên phải có độ dài từ 3 đến 50 ký tự")
+    @Pattern(
+            regexp = "^[a-zA-Z\\s]+$",
+            message = "Tên chỉ được chứa chữ cái và khoảng trắng"
+    )
     private String hoTen;
 
     @NotBlank(message = "Số điện thoại không được để trống")
@@ -37,8 +42,10 @@ public class NhanVienUpdateRequest
 
     private String gioiTinh;
     @Email(message = "Không đúng định dạng email")
+    @Size(min = 15, max = 50, message = "Tài khoản phải có độ dài từ 15 đến 50 ký tự")
     private String email;
     @NotBlank(message = "Không được để trống địa chỉ")
+    @Size(min = 30, max = 255, message = "Địa chỉ có độ dài từ 30 đến 255 ký tự")
     private String diaChi;
 
     @NotNull(message = "Ngày sinh không được để trống")
@@ -47,7 +54,7 @@ public class NhanVienUpdateRequest
     private Date ngaySinh;
 
     private String chucVu;
-    @Min(value = 8,message = "Mật khẩu lớn hơn hoặc bằng 8 kí tự")
+    @Size(min = 8,max = 50,message = "Mật khẩu lớn hơn 8 kí tự và nhỏ hơn 50 kí tự")
     private String matKhau;
 
     private Boolean trangThai;

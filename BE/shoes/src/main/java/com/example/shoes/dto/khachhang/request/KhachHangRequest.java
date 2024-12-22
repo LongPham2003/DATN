@@ -17,6 +17,11 @@ public class KhachHangRequest {
     private String ma;
 
     @NotBlank(message = "Họ tên không được để trống")
+    @Size(min = 3, max = 50, message = "Tên phải có độ dài từ 3 đến 50 ký tự")
+    @Pattern(
+            regexp = "^[a-zA-Z\\s]+$",
+            message = "Tên chỉ được chứa chữ cái và khoảng trắng"
+    )
     private String hoTen;
 
     @NotBlank(message = "Số điện thoại không được để trống")
@@ -24,17 +29,19 @@ public class KhachHangRequest {
     @Pattern(regexp = "0[0-9]{9}", message = "Số điện thoại phải bao gồm 10 chữ số và bắt đầu bằng số 0")
     private String sdt;
 
-    @Email(message = "Email không hợp lệ")
+    @Email(message = "Không đúng định dạng email")
+    @Size(min = 15, max = 50, message = "Tài khoản phải có độ dài từ 15 đến 50 ký tự")
     private String email;
 
     @Temporal(TemporalType.DATE)
+    @NotNull(message = "Ngày sinh không được để trống")
     @Past(message = "Ngày sinh phải là ngày trong quá khứ")
     private Date ngaySinh;
 
-
+    @Size(min = 3,message = "Vui lòng chọn giới tính")
     private String gioiTinh;
 
-    @Min(value = 8,message = "Mật khẩu lớn hơn hoặc bằng 8 kí tự")
+    @Size(min = 8,max = 50,message = "Mật khẩu lớn hơn 8 kí tự và nhỏ hơn 50 kí tự")
     private String matKhau;
 
     private Boolean trangThai;
