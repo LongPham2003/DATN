@@ -26,7 +26,7 @@ const DoiMatKhau = () => {
     e.preventDefault();
 
     if (formData.newPassword !== formData.nhaplaimatkhaumoi) {
-      setError("Passwords do not match!");
+      setError("Mật khẩu không trùng nhau");
       return;
     }
 
@@ -67,7 +67,7 @@ const DoiMatKhau = () => {
         <h2 className="mb-6 text-center text-2xl font-bold">Đổi mật khẩu</h2>
 
         <div className="mb-4">
-          <label className="block text-gray-700">Email</label>
+          <label className="block text-black">Tài khoản</label>
           <input
             type="email"
             name="email"
@@ -79,7 +79,7 @@ const DoiMatKhau = () => {
         </div>
 
         <div className="mb-4">
-          <label className="block text-gray-700">Mật khẩu hiện tại</label>
+          <label className="block text-black">Mật khẩu hiện tại</label>
           <input
             type="password"
             name="password"
@@ -91,7 +91,7 @@ const DoiMatKhau = () => {
         </div>
 
         <div className="mb-4">
-          <label className="block text-gray-700">Mật khẩu mới</label>
+          <label className="block text-black">Mật khẩu mới</label>
           <input
             type="password"
             name="newPassword"
@@ -103,7 +103,7 @@ const DoiMatKhau = () => {
         </div>
 
         <div className="mb-4">
-          <label className="block text-gray-700">Nhập lại mật khẩu</label>
+          <label className="block text-black">Nhập lại mật khẩu</label>
           <input
             type="password"
             name="nhaplaimatkhaumoi"

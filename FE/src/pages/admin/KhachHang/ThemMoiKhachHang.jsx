@@ -236,7 +236,7 @@ export default function ThemMoiKhachHang({ button, onAdd }) {
               />
             </div>
             <div className="w-full p-2 sm:w-1/2">
-              <label className="mb-1 block">Email:</label>
+              <label className="mb-1 block">Tài khoản:</label>
               <input
                 type="email"
                 id="email"
@@ -360,7 +360,7 @@ export default function ThemMoiKhachHang({ button, onAdd }) {
               />
             </div>
             <div className="w-full p-2">
-              <label className="mb-1 block">Địa Chỉ chi tiết:</label>
+              <label className="mb-1 block">Địa chỉ chi tiết:</label>
               <input
                 type="text"
                 value={fullAddress}

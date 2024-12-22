@@ -96,7 +96,7 @@ export default function TheMoiNhanVien({ button, onAdd }) {
           </div>
           <div>
             <label htmlFor="hoTen" className="mb-1 block">
-              Email:
+              Tài khoản:
             </label>
             <input
               type="email"

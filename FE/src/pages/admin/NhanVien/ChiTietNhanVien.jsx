@@ -138,7 +138,7 @@ const ChiTietNhanVien = () => {
             </div>
             <div className="w-full p-2 sm:w-1/2">
               <label htmlFor="email" className="mb-1 block">
-                Email:
+                Tài khoản:
               </label>
               <input
                 type="email"
