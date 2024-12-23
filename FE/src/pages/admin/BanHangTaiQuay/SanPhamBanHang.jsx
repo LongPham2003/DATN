@@ -51,6 +51,10 @@ export default function SanPhamBanTaiQuay({
   };
 
   const ThemSP = async () => {
+    if (soLuongMua === 0) {
+      toast.error("Số lượng mua phải lớn hơn 0");
+      return;
+    }
     try {
       const newSPCT = {
         idSpct: idSPCT,
