@@ -5,12 +5,13 @@ import DropdownDetail from "../../../DropdownDetail";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import { Modal } from "antd";
 import "react-toastify/dist/ReactToastify.css";
+import { set } from "react-hook-form";
 const SanPhamChiTiet = ({ productId, closeModal }) => {
   const id = productId;
-  const navigate = useNavigate();
-  const [error, setError] = useState("");
+  const [disable, setDisable] = useState(false);
   const [errorTen, setErrorTen] = useState("");
   const [loaiSelect, setLoaiSelect] = useState([]);
+  const [danhSachTenSP, setDanhSachTenSP] = useState("");
   const [formData, setFormData] = useState({
     ma: "",
     tenSanPham: "",
@@ -24,6 +25,8 @@ const SanPhamChiTiet = ({ productId, closeModal }) => {
 
   let ApiGetAllLoai = `http://localhost:8080/api/loai/getall`;
 
+  let ApiGetAllten = `http://localhost:8080/api/sanpham/ten`;
+
   // const [anh, setAnh] = useState([]);
 
   const getById = async () => {
@@ -31,10 +34,10 @@ const SanPhamChiTiet = ({ productId, closeModal }) => {
       const res = await axios.get(ApiGetById);
       const loai = await axios.get(ApiGetAllLoai);
       // console.log(res.data.result.tenSanPham);
-
+      const SP = await axios.get(ApiGetAllten);
       setLoaiSelect(loai.data.result);
       // console.log(loai.data.result);
-
+      setDanhSachTenSP(SP.data);
       setFormData({
         ma: res.data.result.ma || "",
         tenSanPham: res.data.result.tenSanPham || "",
@@ -48,15 +51,51 @@ const SanPhamChiTiet = ({ productId, closeModal }) => {
     }
   };
 
+  const validateTenSanPhamtu3den50 = (ten) => {
+    return ten.length >= 3 && ten.length <= 50; // Chỉ kiểm tra độ dài
+  };
+
+  const validateTenSanPhamkhongchuakytudacbiet = (ten) => {
+    const regex = /^[a-zA-Z0-9\s]+$/; // Chỉ cho phép chữ cái, số và khoảng trắng
+    return regex.test(ten); // Kiểm tra ký tự đặc biệt
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
       ...prevState,
       [name]: value,
     }));
+
+    const tenDaTonTai = danhSachTenSP.includes(e.target.value);
+    if (tenDaTonTai) {
+      setErrorTen("Tên đã tồn tại");
+    } else {
+      setErrorTen("");
+    }
+
     // Xóa lỗi khi người dùng nhập giá trị hợp lệ
     if (name === "tenSanPham" && value.trim() !== "") {
       setErrorTen("");
+    }
+
+    const input = name === "tenSanPham" && value.trim();
+
+    if (input === "") {
+      setErrorTen("Tên sản phẩm không được để trống");
+      setDisable(true);
+      return;
+    } else if (!validateTenSanPhamtu3den50(input)) {
+      setErrorTen("Tên sản phẩm phải từ 3-50 ký tự");
+      setDisable(true);
+      return;
+    } else if (!validateTenSanPhamkhongchuakytudacbiet(input)) {
+      setErrorTen("Tên sản phẩm không dược chưa ký tự đặc biệt");
+      setDisable(true);
+      return;
+    } else {
+      setErrorTen("");
+      setDisable(false);
     }
   };
   const handleOptionSelect = (selectedOption) => {
@@ -71,6 +110,13 @@ const SanPhamChiTiet = ({ productId, closeModal }) => {
       setErrorTen("Không được để trống tên sản phẩm");
       return;
     }
+
+    const tenDaTonTai = danhSachTenSP.includes(formData.tenSanPham);
+    if (tenDaTonTai) {
+      setErrorTen("Tên đã tồn tại, không thể cập nhật");
+      return; // Ngăn không cho cập nhật nếu tên đã tồn tại
+    }
+
     // Sử dụng Modal.confirm để hiển thị hộp thoại xác nhận
     Modal.confirm({
       title: "Xác nhận cập nhật",
@@ -84,9 +130,7 @@ const SanPhamChiTiet = ({ productId, closeModal }) => {
             formData,
           );
           toast.success("Sửa thành công");
-          // navigate("/admin/sanpham");
           closeModal();
-          // console.log("Update response:", res);
         } catch (error) {
           console.log("Error during update:", error);
           toast.error("Có lỗi sảy ra");
@@ -215,7 +259,10 @@ const SanPhamChiTiet = ({ productId, closeModal }) => {
           </div>
         </div>
         <div className="flex justify-center">
-          <button className="h-[40px] w-[100px] rounded-xl border-2 border-green-500 font-semibold shadow-inner duration-300 hover:bg-green-500">
+          <button
+            className="h-[40px] w-[100px] rounded-xl border-2 border-green-500 font-semibold shadow-inner duration-300 hover:bg-green-500"
+            disabled={disable}
+          >
             Sửa
           </button>
         </div>

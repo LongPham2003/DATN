@@ -51,6 +51,16 @@ export default function degiay() {
       console.log(error);
     }
   };
+
+  const validateTenSanPhamtu3den50 = (ten) => {
+    return ten.length >= 2 && ten.length <= 50; // Chỉ kiểm tra độ dài
+  };
+
+  const validateTenSanPhamkhongchuakytudacbiet = (ten) => {
+    const regex = /^[\p{L}\p{M}\d\s]+$/u; // Cho phép tất cả các ký tự chữ (có dấu), số và khoảng trắng
+    return regex.test(ten); // Kiểm tra ký tự đặc biệt
+  };
+
   const onInputChange = (e) => {
     const { name, value } = e.target;
     setdegiayMoi({ ...degiayMoi, [name]: value });
@@ -61,6 +71,12 @@ export default function degiay() {
       // Check trong
       if (input === "") {
         setError("Tên đế giày không được để trống");
+        return;
+      } else if (!validateTenSanPhamtu3den50(input)) {
+        setError("Tên đế giày từ 2 đến 50 ký tự");
+        return;
+      } else if (!validateTenSanPhamkhongchuakytudacbiet(input)) {
+        setError("Tên đế giày không chứa kí tự dặc biệt");
         return;
       }
 
@@ -77,8 +93,8 @@ export default function degiay() {
 
   const themdegiay = async () => {
     Modal.confirm({
-      title: 'Xác nhận',
-      content: 'Bạn có chắc chắn muốn thêm đế giày mới?',
+      title: "Xác nhận",
+      content: "Bạn có chắc chắn muốn thêm đế giày mới?",
       onOk: async () => {
         try {
           // Gọi API để thêm đế giày mới
@@ -108,8 +124,8 @@ export default function degiay() {
 
   const capNhatdegiay = async () => {
     Modal.confirm({
-      title: 'Xác nhận',
-      content: 'Bạn có chắc chắn muốn cập nhật đế giày?',
+      title: "Xác nhận",
+      content: "Bạn có chắc chắn muốn cập nhật đế giày?",
       onOk: async () => {
         if (degiayMoi.ten.trim() === "") {
           setError("Tên không được để trống");
@@ -141,12 +157,14 @@ export default function degiay() {
 
   const capNhatTrangThai = async (id) => {
     Modal.confirm({
-      title: 'Xác nhận',
-      content: 'Bạn có chắc chắn muốn cập nhật trạng thái?',
+      title: "Xác nhận",
+      content: "Bạn có chắc chắn muốn cập nhật trạng thái?",
       onOk: async () => {
         try {
           // Gửi yêu cầu cập nhật trạng thái trên server
-          await axios.put(`http://localhost:8080/api/degiay/updatetrangthai/${id}`);
+          await axios.put(
+            `http://localhost:8080/api/degiay/updatetrangthai/${id}`,
+          );
 
           loaddegiay(trangHienTai);
           setdegiayMoi({ ten: "", trangThai: true }); // Reset the form to initial state
@@ -174,8 +192,6 @@ export default function degiay() {
       await themdegiay();
     }
   };
-
-  
 
   const handlePageChange = (newPage) => {
     setTrangHienTai(+newPage.selected + 1);

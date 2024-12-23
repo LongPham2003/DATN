@@ -7,7 +7,25 @@ export default function ThemMauSac({ closeModel }) {
   const [value, setValue] = useState("");
   const [error, setError] = useState("");
 
+  const validateTenSanPhamtu3den50 = (ten) => {
+    return ten.length >= 2 && ten.length <= 50; // Chỉ kiểm tra độ dài
+  };
+
+  const validateTenSanPhamkhongchuakytudacbiet = (ten) => {
+    const regex = /^[\p{L}\p{M}\d\s]+$/u; // Cho phép tất cả các ký tự chữ (có dấu), số và khoảng trắng
+    return regex.test(ten); // Kiểm tra ký tự đặc biệt
+  };
   const them = async (e) => {
+    if (value === "") {
+      setError("Tên màu sắc không được để trống");
+      return;
+    } else if (!validateTenSanPhamtu3den50(value)) {
+      setError("Tên màu sắc từ 2 đến 50 ký tự");
+      return;
+    } else if (!validateTenSanPhamkhongchuakytudacbiet(value)) {
+      setError("Tên màu sắc không được chưa kí tự đặc biệt");
+      return;
+    }
     e.preventDefault();
     Modal.confirm({
       title: "Bạn có chắc chắn muốn thêm màu sắc mới mới?",

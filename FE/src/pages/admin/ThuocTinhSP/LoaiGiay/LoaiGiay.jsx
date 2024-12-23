@@ -51,6 +51,15 @@ export default function Loai() {
       console.log(error);
     }
   };
+
+  const validateTenSanPhamtu3den50 = (ten) => {
+    return ten.length >= 2 && ten.length <= 50; // Chỉ kiểm tra độ dài
+  };
+
+  const validateTenSanPhamkhongchuakytudacbiet = (ten) => {
+    const regex = /^[\p{L}\p{M}\d\s]+$/u; // Cho phép tất cả các ký tự chữ (có dấu), số và khoảng trắng
+    return regex.test(ten); // Kiểm tra ký tự đặc biệt
+  };
   const onInputChange = (e) => {
     const { name, value } = e.target;
     setloaiMoi({ ...loaiMoi, [name]: value });
@@ -61,6 +70,12 @@ export default function Loai() {
       // Check trong
       if (input === "") {
         setError("Tên loại không được để trống");
+        return;
+      } else if (!validateTenSanPhamtu3den50(input)) {
+        setError("Tên loại từ 2 đến 50 ký tự");
+        return;
+      } else if (!validateTenSanPhamkhongchuakytudacbiet(input)) {
+        setError("Tên loại không được chưa kí tự đặc biệt");
         return;
       }
 
@@ -78,8 +93,8 @@ export default function Loai() {
   const themloai = async () => {
     // Xác nhận người dùng có muốn thêm loại mới hay không
     Modal.confirm({
-      title: 'Xác nhận',
-      content: 'Bạn có chắc chắn muốn thêm loại mới?',
+      title: "Xác nhận",
+      content: "Bạn có chắc chắn muốn thêm loại mới?",
       onOk: async () => {
         try {
           // Gọi API để thêm loại mới
@@ -120,8 +135,8 @@ export default function Loai() {
 
     // Xác nhận người dùng có muốn cập nhật loại không
     Modal.confirm({
-      title: 'Xác nhận',
-      content: 'Bạn có chắc chắn muốn cập nhật loại này?',
+      title: "Xác nhận",
+      content: "Bạn có chắc chắn muốn cập nhật loại này?",
       onOk: async () => {
         try {
           await axios.put(
@@ -144,12 +159,14 @@ export default function Loai() {
   const capNhatTrangThai = async (id) => {
     // Xác nhận người dùng có muốn cập nhật trạng thái không
     Modal.confirm({
-      title: 'Xác nhận',
-      content: 'Bạn có chắc chắn muốn cập nhật trạng thái này?',
+      title: "Xác nhận",
+      content: "Bạn có chắc chắn muốn cập nhật trạng thái này?",
       onOk: async () => {
         try {
           // Gửi yêu cầu cập nhật trạng thái trên server
-          await axios.put(`http://localhost:8080/api/loai/updatetrangthai/${id}`);
+          await axios.put(
+            `http://localhost:8080/api/loai/updatetrangthai/${id}`,
+          );
 
           loadloai(trangHienTai);
           setloaiMoi({ ten: "", trangThai: true }); // Reset the form to initial state
@@ -177,8 +194,6 @@ export default function Loai() {
       await themloai();
     }
   };
-
-  
 
   const handlePageChange = (newPage) => {
     setTrangHienTai(+newPage.selected + 1);

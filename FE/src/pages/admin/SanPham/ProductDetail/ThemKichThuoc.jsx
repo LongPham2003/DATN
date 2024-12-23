@@ -7,7 +7,31 @@ export default function ThemKichThuoc({ closeModel }) {
   const [value, setValue] = useState("");
   const [error, setError] = useState("");
 
+  const validateTenSanPhamtu35den45 = (ten) => {
+    const value = parseFloat(ten); // Chuyển đổi giá trị nhập vào thành số
+    return value >= 35 && value <= 45; // Kiểm tra giá trị từ 35 đến 45
+  };
+
+  const validateTenSanPhamkhongchuakytudacbiet = (ten) => {
+    const regex = /^[0-9\s]+$/; // Chỉ cho phép số và khoảng trắng
+    return regex.test(ten); // Kiểm tra ký tự đặc biệt
+  };
   const them = async (e) => {
+    if (value === "") {
+      setError("Tên kích thước không được để trống");
+      return;
+    } else if (!validateTenSanPhamtu35den45(value)) {
+      setError("Kích thước phải từ 35 đến 45");
+      return;
+    } else if (!validateTenSanPhamkhongchuakytudacbiet(value)) {
+      setError("Tên kích thước không được chưa kí tự đặc biệt");
+      return;
+    }else if (value.startsWith("0") && value.length > 1) {
+      setError("Kích thước không được bắt đầu bằng số 0");
+      return;
+    }
+
+
     e.preventDefault();
     Modal.confirm({
       title: "Bạn có chắc chắn muốn thêm kích thước mới mới?",
