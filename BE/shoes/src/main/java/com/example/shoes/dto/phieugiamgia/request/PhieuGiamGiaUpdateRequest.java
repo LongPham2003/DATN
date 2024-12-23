@@ -1,19 +1,22 @@
 package com.example.shoes.dto.phieugiamgia.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-
 @Getter
 @Setter
-public class PhieuGiamGiaRequest
+public class PhieuGiamGiaUpdateRequest
 {
-
     @NotBlank(message = "Tên voucher không được để trống")
     @Size(min = 2, max = 50, message = "Tên phải có độ dài từ 2 đến 50 ký tự")
     @Pattern(
@@ -38,8 +41,6 @@ public class PhieuGiamGiaRequest
     @PositiveOrZero(message = "Số lượng phải là số không âm")
     private Integer soLuong;
 
-    @NotNull(message = "Ngày bắt đầu không được để trống")
-    @FutureOrPresent(message = "Ngày bắt đầu không được là quá khứ")
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm[:ss]")
     private LocalDateTime ngayBatDau;
 

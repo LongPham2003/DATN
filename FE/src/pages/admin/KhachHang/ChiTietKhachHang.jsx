@@ -424,7 +424,7 @@ export default function ChiTietKhachHang() {
                 />
               </div>
             </div>
-            {error && <div className="text-red-600">{error}</div>}
+            {error && <div className="text-center text-red-600">{error}</div>}
             <button
               type="submit"
               onClick={handleUpdate}

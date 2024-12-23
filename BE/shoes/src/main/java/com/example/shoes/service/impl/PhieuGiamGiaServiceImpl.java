@@ -2,6 +2,7 @@ package com.example.shoes.service.impl;
 
 import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.phieugiamgia.request.PhieuGiamGiaRequest;
+import com.example.shoes.dto.phieugiamgia.request.PhieuGiamGiaUpdateRequest;
 import com.example.shoes.dto.phieugiamgia.response.PhieuGiamGiaResponse;
 import com.example.shoes.entity.PhieuGiamGia;
 import com.example.shoes.exception.AppException;
@@ -91,7 +92,7 @@ public class PhieuGiamGiaServiceImpl
     }
 
     @Override
-    public PhieuGiamGiaResponse update(Integer id, PhieuGiamGiaRequest request)
+    public PhieuGiamGiaResponse update(Integer id, PhieuGiamGiaUpdateRequest request)
     {
         PhieuGiamGia phieuGiamGia = phieuGiamGiaRepo.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.VOUCHER_NOT_FOUND));
@@ -128,6 +129,15 @@ public class PhieuGiamGiaServiceImpl
         phieuGiamGia.setSoLuong(request.getSoLuong());
         phieuGiamGia.setNgayBatDau(request.getNgayBatDau());
         phieuGiamGia.setNgayKetThuc(request.getNgayKetThuc());
+//        if (phieuGiamGia.getNgayBatDau().isAfter(LocalDateTime.now())) {
+//            phieuGiamGia.setTrangThai("Sắp Hoạt Động");
+//        }
+//        else if (phieuGiamGia.getNgayKetThuc().isBefore(LocalDateTime.now())) {
+//            phieuGiamGia.setTrangThai("Ngừng Hoạt Động");
+//        }
+//        else {
+//            phieuGiamGia.setTrangThai("Hoạt Động");
+//        }
         phieuGiamGia.setTrangThai(request.getTrangThai());
         PhieuGiamGia updated = phieuGiamGiaRepo.save(phieuGiamGia);
         return convertToResponse(updated);

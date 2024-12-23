@@ -317,7 +317,7 @@ const ChiTietPhieuGiamGia = () => {
           <div className="w-full p-2">
             <button
               type="submit"
-              className="mx-auto flex rounded-md border border-transparent bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+              className="mx-auto flex h-10 w-[225px] rounded-md border border-transparent bg-blue-500 px-4 py-2 text-center text-white hover:bg-blue-600"
             >
               Cập nhật phiếu giảm giá
             </button>

@@ -370,7 +370,7 @@ export default function ThemMoiKhachHang({ button, onAdd }) {
               />
             </div>
           </div>
-          {error && <div className="text-red-600">{error}</div>}
+          {error && <div className="text-center text-red-600">{error}</div>}
           <button
             type="submit"
             className="mt-4 w-full rounded bg-blue-600 p-2 text-white hover:bg-blue-700"

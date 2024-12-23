@@ -167,7 +167,9 @@ export default function TheMoiNhanVien({ button, onAdd }) {
               required
             />
           </div>
-          {error && <p className="mb-4 text-sm text-red-500">{error}</p>}
+          {error && (
+            <p className="mb-4 text-center text-sm text-red-500">{error}</p>
+          )}
           <button
             type="submit"
             className="w-full rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
