@@ -24,10 +24,9 @@ export default function TheMoiNhanVien({ button, onAdd }) {
   };
 
   const validateTenkhongchuakytudacbiet = (ten) => {
-    const regex = /^[a-zA-Z\s]+$/; // Chỉ cho phép chữ cái, số và khoảng trắng
+    const regex = /^[\p{L}\p{M}\s]+$/u; // Chỉ cho phép tất cả các ký tự chữ (có dấu) và khoảng trắng
     return regex.test(ten); // Kiểm tra ký tự đặc biệt
   };
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({

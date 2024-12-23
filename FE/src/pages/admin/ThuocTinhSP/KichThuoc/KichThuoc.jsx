@@ -52,8 +52,9 @@ export default function KichThuoc() {
     }
   };
 
-  const validateTenSanPhamtu3den50 = (ten) => {
-    return ten.length >= 2 && ten.length <= 50; // Chỉ kiểm tra độ dài
+  const validateTenSanPhamtu35den45 = (ten) => {
+    const value = parseFloat(ten); // Chuyển đổi giá trị nhập vào thành số
+    return value >= 35 && value <= 45; // Kiểm tra giá trị từ 35 đến 45
   };
 
   const validateTenSanPhamkhongchuakytudacbiet = (ten) => {
@@ -68,12 +69,18 @@ export default function KichThuoc() {
     if (name === "kichThuoc") {
       const input = value.trim();
 
+      // Check nếu số 0 đứng đầu
+      if (input.startsWith("0") && input.length > 1) {
+        setError("Kích thước không được bắt đầu bằng số 0");
+        return;
+      }
+
       // Check trong
       if (input === "") {
         setError("Tên kích thước không được để trống");
         return;
-      } else if (!validateTenSanPhamtu3den50(input)) {
-        setError("Kích thước từ 2 đến 50 ký tự");
+      } else if (!validateTenSanPhamtu35den45(input)) {
+        setError("Kích thước phải từ 35 đến 45");
         return;
       } else if (!validateTenSanPhamkhongchuakytudacbiet(input)) {
         setError("Kích thước không chứa kí tự khác ngoài số");

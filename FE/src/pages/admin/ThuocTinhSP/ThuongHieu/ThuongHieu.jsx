@@ -59,7 +59,7 @@ export default function ThuongHieu() {
   };
 
   const validateTenSanPhamkhongchuakytudacbiet = (ten) => {
-    const regex = /^[a-zA-Z0-9\s]+$/; // Chỉ cho phép chữ cái, số và khoảng trắng
+    const regex = /^[\p{L}\p{M}\d\s]+$/u; // Cho phép tất cả các ký tự chữ (có dấu), số và khoảng trắng
     return regex.test(ten); // Kiểm tra ký tự đặc biệt
   };
 
@@ -74,10 +74,10 @@ export default function ThuongHieu() {
       if (input === "") {
         setError("Tên thương hiệu không được để trống");
         return;
-      }else if(!validateTenSanPhamtu3den50(input)){
+      } else if (!validateTenSanPhamtu3den50(input)) {
         setError("Tên thương hiệu từ 2 đến 50 ký tự");
         return;
-      }else if(!validateTenSanPhamkhongchuakytudacbiet(input)){
+      } else if (!validateTenSanPhamkhongchuakytudacbiet(input)) {
         setError("Tên thương hiệu không được chưa kí tự đặc biệt");
         return;
       }
@@ -95,8 +95,8 @@ export default function ThuongHieu() {
 
   const themThuongHieu = async () => {
     Modal.confirm({
-      title: 'Xác nhận',
-      content: 'Bạn có chắc chắn muốn thêm thương hiệu này?',
+      title: "Xác nhận",
+      content: "Bạn có chắc chắn muốn thêm thương hiệu này?",
       onOk: async () => {
         try {
           // Gọi API để thêm thương hiệu mới
@@ -129,8 +129,8 @@ export default function ThuongHieu() {
 
   const capNhatThuongHieu = async () => {
     Modal.confirm({
-      title: 'Xác nhận',
-      content: 'Bạn có chắc chắn muốn cập nhật thương hiệu này?',
+      title: "Xác nhận",
+      content: "Bạn có chắc chắn muốn cập nhật thương hiệu này?",
       onOk: async () => {
         if (thuongHieuMoi.ten.trim() === "") {
           setError("Tên không được để trống");
@@ -163,8 +163,8 @@ export default function ThuongHieu() {
 
   const capNhatTrangThai = async (id) => {
     Modal.confirm({
-      title: 'Xác nhận',
-      content: 'Bạn có chắc chắn muốn cập nhật trạng thái này?',
+      title: "Xác nhận",
+      content: "Bạn có chắc chắn muốn cập nhật trạng thái này?",
       onOk: async () => {
         try {
           // Gửi yêu cầu cập nhật trạng thái trên server
@@ -198,8 +198,6 @@ export default function ThuongHieu() {
       await themThuongHieu();
     }
   };
-
- 
 
   const handlePageChange = (newPage) => {
     setTrangHienTai(+newPage.selected + 1);

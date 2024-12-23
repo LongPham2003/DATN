@@ -32,8 +32,8 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
     return ten.length >= 10 && ten.length <= 50; // Chỉ kiểm tra độ dài
   };
 
-  const validateTenkhongchuakytudacbiet = (ten) => {
-    const regex = /^[a-zA-Z0-9\s]+$/; // Chỉ cho phép chữ cái, số và khoảng trắng
+  const validateTenSanPhamkhongchuakytudacbiet = (ten) => {
+    const regex = /^[\p{L}\p{M}\d\s]+$/u; // Cho phép tất cả các ký tự chữ (có dấu), số và khoảng trắng
     return regex.test(ten); // Kiểm tra ký tự đặc biệt
   };
   const handleChange = (e) => {

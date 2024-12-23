@@ -2,7 +2,7 @@ import axios from "../../../../api/axiosConfig";
 import { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
 import { Bounce, toast, ToastContainer } from "react-toastify";
-import { Modal } from 'antd'; // Import Modal from Ant Design
+import { Modal } from "antd"; // Import Modal from Ant Design
 
 export default function MauSac() {
   const [listMauSac, setListMauSac] = useState([]);
@@ -56,7 +56,7 @@ export default function MauSac() {
   };
 
   const validateTenSanPhamkhongchuakytudacbiet = (ten) => {
-    const regex = /^[a-zA-Z0-9\s]+$/; // Chỉ cho phép chữ cái, số và khoảng trắng
+    const regex = /^[\p{L}\p{M}\d\s]+$/u; // Cho phép tất cả các ký tự chữ (có dấu), số và khoảng trắng
     return regex.test(ten); // Kiểm tra ký tự đặc biệt
   };
   const onInputChange = (e) => {
@@ -70,10 +70,10 @@ export default function MauSac() {
       if (input === "") {
         setError("Tên màu sắc không được để trống");
         return;
-      }else if(!validateTenSanPhamtu3den50(input)){
+      } else if (!validateTenSanPhamtu3den50(input)) {
         setError("Tên màu sắc từ 2 đến 50 ký tự");
         return;
-      }else if(!validateTenSanPhamkhongchuakytudacbiet(input)){
+      } else if (!validateTenSanPhamkhongchuakytudacbiet(input)) {
         setError("Tên màu sắc không được chưa kí tự đặc biệt");
         return;
       }
@@ -91,8 +91,8 @@ export default function MauSac() {
 
   const themMauSac = async () => {
     Modal.confirm({
-      title: 'Xác nhận thêm màu sắc',
-      content: 'Bạn có chắc chắn muốn thêm màu sắc này không?',
+      title: "Xác nhận thêm màu sắc",
+      content: "Bạn có chắc chắn muốn thêm màu sắc này không?",
       onOk: async () => {
         try {
           await axios.post(`http://localhost:8080/api/mausac/add`, mauSacMoi);
@@ -122,8 +122,8 @@ export default function MauSac() {
     }
 
     Modal.confirm({
-      title: 'Xác nhận cập nhật màu sắc',
-      content: 'Bạn có chắc chắn muốn cập nhật màu sắc này không?',
+      title: "Xác nhận cập nhật màu sắc",
+      content: "Bạn có chắc chắn muốn cập nhật màu sắc này không?",
       onOk: async () => {
         try {
           await axios.put(
@@ -144,11 +144,13 @@ export default function MauSac() {
 
   const capNhatTrangThai = async (id) => {
     Modal.confirm({
-      title: 'Xác nhận thay đổi trạng thái',
-      content: 'Bạn có chắc chắn muốn thay đổi trạng thái màu sắc này không?',
+      title: "Xác nhận thay đổi trạng thái",
+      content: "Bạn có chắc chắn muốn thay đổi trạng thái màu sắc này không?",
       onOk: async () => {
         try {
-          await axios.put(`http://localhost:8080/api/mausac/updatetrangthai/${id}`);
+          await axios.put(
+            `http://localhost:8080/api/mausac/updatetrangthai/${id}`,
+          );
           loadMauSac(trangHienTai);
           setMauSacMoi({ ten: "", trangThai: true });
           setIsEditing(false);
@@ -174,8 +176,6 @@ export default function MauSac() {
       await themMauSac();
     }
   };
-
- 
 
   const handlePageChange = (newPage) => {
     setTrangHienTai(+newPage.selected + 1);

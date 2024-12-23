@@ -62,10 +62,10 @@ export default function chatlieu() {
       if (input === "") {
         setError("Tên chất liệu không được để trống");
         return;
-      }else if(!validateTenSanPhamtu3den50(input)){
+      } else if (!validateTenSanPhamtu3den50(input)) {
         setError("Tên chất liệu từ 2 đến 50 ký tự");
         return;
-      }else if(!validateTenSanPhamkhongchuakytudacbiet(input)){
+      } else if (!validateTenSanPhamkhongchuakytudacbiet(input)) {
         setError("Tên chất liệu không được chưa kí tự đặc biệt");
         return;
       }
@@ -82,7 +82,7 @@ export default function chatlieu() {
   };
 
   const validateTenSanPhamkhongchuakytudacbiet = (ten) => {
-    const regex = /^[a-zA-Z0-9\s]+$/; // Chỉ cho phép chữ cái, số và khoảng trắng
+    const regex = /^[\p{L}\p{M}\d\s]+$/u; // Cho phép tất cả các ký tự chữ (có dấu), số và khoảng trắng
     return regex.test(ten); // Kiểm tra ký tự đặc biệt
   };
 
@@ -90,9 +90,7 @@ export default function chatlieu() {
     return ten.length >= 2 && ten.length <= 50; // Chỉ kiểm tra độ dài
   };
 
-  const themchatlieu = async () => {  
-    
-
+  const themchatlieu = async () => {
     // Sử dụng Modal.confirm để xác nhận trước khi thêm chất liệu mới
     Modal.confirm({
       title: "Xác nhận",
@@ -100,7 +98,10 @@ export default function chatlieu() {
       onOk: async () => {
         try {
           // Gọi API để thêm chất liệu mới
-          await axios.post(`http://localhost:8080/api/chatlieu/add`, chatlieuMoi);
+          await axios.post(
+            `http://localhost:8080/api/chatlieu/add`,
+            chatlieuMoi,
+          );
 
           // Sau khi thêm thành công, gọi lại loadchatlieu để cập nhật bảng
           loadchatlieu(trangHienTai);

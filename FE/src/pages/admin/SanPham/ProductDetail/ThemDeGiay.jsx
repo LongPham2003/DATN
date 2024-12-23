@@ -11,7 +11,7 @@ export default function ThemDeGiay({ closeModel }) {
   };
 
   const validateTenSanPhamkhongchuakytudacbiet = (ten) => {
-    const regex = /^[a-zA-Z0-9\s]+$/; // Chỉ cho phép chữ cái, số và khoảng trắng
+    const regex = /^[\p{L}\p{M}\d\s]+$/u; // Cho phép tất cả các ký tự chữ (có dấu), số và khoảng trắng
     return regex.test(ten); // Kiểm tra ký tự đặc biệt
   };
   const them = async (e) => {
