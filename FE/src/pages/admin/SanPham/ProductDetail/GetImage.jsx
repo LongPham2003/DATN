@@ -33,10 +33,12 @@ const GetImage = ({ fileList, setFileList }) => {
 
   const handleDelete = async (file) => {
     try {
+      if(file.id !== undefined){
       await axios.delete(`http://localhost:8080/api/hinhanh/delete/${file.id}`);
       const updatedFileList = fileList.filter((item) => item.uid !== file.uid);
       setFileList(updatedFileList);
       toast.success("Xóa ảnh thành công!");
+    }
     } catch (error) {
       // console.error("Lỗi khi xóa ảnh:", error);
       toast.error("Lỗi khi xóa ảnh.");
@@ -45,7 +47,7 @@ const GetImage = ({ fileList, setFileList }) => {
 
   const handleChange = async ({ fileList: newFileList }) => {
     const updatedFileList = await Promise.all(
-      newFileList.map(async (file) => {
+      newFileList.slice(0, 5).map(async (file) => {
         if (!file.duLieuAnhBase64 && file.originFileObj) {
           file.duLieuAnhBase64 = await getBase64(file.originFileObj);
         }
@@ -87,6 +89,7 @@ const GetImage = ({ fileList, setFileList }) => {
         itemRender={(originNode) => (
           <div style={{ cursor: "pointer" }}>{originNode}</div>
         )}
+        multiple
       >
         {fileList.length >= 5 ? null : uploadButton}
       </Upload>

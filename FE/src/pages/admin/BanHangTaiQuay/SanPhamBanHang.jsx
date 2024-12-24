@@ -103,7 +103,7 @@ export default function SanPhamBanTaiQuay({
     // Nếu input là rỗng, xóa thông báo lỗi và đặt giá trị mặc định
     if (value === "") {
       setError(""); // Xóa thông báo lỗi
-      setSoLuongMua(1); // Đặt giá trị mặc định
+      setSoLuongMua(1); // Đặt giá trị mặc ��ịnh
       return;
     }
 
@@ -199,7 +199,7 @@ export default function SanPhamBanTaiQuay({
       <div className="h-[700px]">
         <div className="bg-slate-300 font-mono">
           <div className="flex justify-center gap-5">
-            <div>
+            <div className="highlight">
               <p className="font-bold">Tên sản phẩm</p>
               <Input
                 className="h-[38px] w-[250px]"
@@ -208,7 +208,7 @@ export default function SanPhamBanTaiQuay({
                 onChange={(e) => setMaSanPham(e.target.value)} // Gọi hàm khi có thay đổi
               />
             </div>
-            <div>
+            <div className="highlight">
               <p className="font-bold">Hãng</p>
               <Select
                 className="h-[38px] w-[250px]"
@@ -222,7 +222,7 @@ export default function SanPhamBanTaiQuay({
                 onChange={(value) => setSelectedIdHang(value)} // Gọi hàm khi có thay đổi
               />
             </div>
-            <div>
+            <div className="highlight">
               <p className="font-bold">Màu sắc</p>
               <Select
                 className="h-[38px] w-[250px]"
@@ -238,7 +238,7 @@ export default function SanPhamBanTaiQuay({
             </div>
           </div>
           <div className="flex justify-center gap-5 py-5">
-            <div>
+            <div className="highlight">
               <p className="font-bold">Chất liệu</p>
               <Select
                 className="h-[38px] w-[250px]"
@@ -252,7 +252,7 @@ export default function SanPhamBanTaiQuay({
                 onChange={(value) => setSelectedIdChatLieu(value)}
               />
             </div>
-            <div>
+            <div className="highlight">
               <p className="font-bold">Kích thước</p>
               <Select
                 className="h-[38px] w-[250px]"
@@ -266,7 +266,7 @@ export default function SanPhamBanTaiQuay({
                 onChange={(value) => setSelectedIdKichThuoc(value)}
               />
             </div>
-            <div>
+            <div className="highlight">
               <p className="font-bold">Đế giày</p>
               <Select
                 className="h-[38px] w-[250px]"
@@ -295,21 +295,19 @@ export default function SanPhamBanTaiQuay({
         </div>
         <div className="mx-5 my-3 font-mono">
           <div className="my-5 flex">
-            <span className="text-xl font-bold">
+            <span className="text-2xl font-bold">
               Danh sách sản phẩm chi tiết của sản phẩm:
             </span>
           </div>
           <div className="flex justify-center">
             <div className="min-w-full">
-              {/* Thêm max-height và overflow-y-auto để tạo thành cuộn */}
               <div className="max-h-[400px] overflow-y-auto">
                 <table className="mb-[60px] min-w-full bg-white text-[20px]">
-                  <thead className="sticky top-0 z-10 bg-white">
-                    <tr className="h-10 border-b-2 border-indigo-500 text-base">
+                  <thead className="sticky top-0 z-10 bg-white table-header">
+                    <tr className="h-10 border-b-2 border-indigo-500 text-lg font-bold">
                       <th className="w-20">Mã sản phẩm</th>
                       <th className="w-[230px]">Sản phẩm</th>
                       <th className="w-[100px] border-b">Ảnh</th>
-
                       <th className="w-[100px] border-b">Đơn giá</th>
                       <th className="w-[100px] border-b">Số lượng tồn</th>
                       <th className="w-[100px] border-b">Hành động</th>
@@ -317,7 +315,7 @@ export default function SanPhamBanTaiQuay({
                   </thead>
                   <tbody className="text-center">
                     {SPCTBH.map((item, index) => (
-                      <tr key={item.id} className="hover:bg-gray-100">
+                      <tr key={item.id} className="hover:bg-gray-100 table-row">
                         <td className="border-b-[1px] border-indigo-500 px-4 py-2">
                           {item.maSPCT}
                         </td>
@@ -332,7 +330,6 @@ export default function SanPhamBanTaiQuay({
                             />
                           </div>
                         </td>
-
                         <td className="border-b-[1px] border-indigo-500">
                           {item.donGia}
                         </td>
