@@ -242,11 +242,11 @@ const ChiTietPhieuGiamGia = () => {
                 value={formData.trangThai}
                 onChange={handleChange}
                 className="w-full rounded border p-2"
-                required
+                disabled
               >
                 <option value="">Chọn trạng thái</option>
                 <option value="Sắp Hoạt Động">Sắp Hoạt Động</option>
-                <option value="Hoạt Động">Hoạt Động</option>
+                <option value="Hoạt Động">Hoạt Động</option>
                 <option value="Ngừng Hoạt Động">Ngừng Hoạt Động</option>
               </select>
             </div>

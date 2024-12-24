@@ -240,7 +240,7 @@ export default function ListPhieuGiamGia() {
                   <td className="mx-auto flex justify-center border-b px-4 py-2 text-center">
                     <button
                       className={`rounded border-2 px-4 py-2 ${
-                        item.trangThai === "Hoạt Động"
+                        item.trangThai === "Hoạt Động"
                           ? "border-green-400 text-green-400"
                           : item.trangThai === "Ngừng Hoạt Động"
                             ? "border-red-600 text-red-600"
