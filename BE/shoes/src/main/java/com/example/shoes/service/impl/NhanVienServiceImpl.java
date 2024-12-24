@@ -181,6 +181,6 @@ public class NhanVienServiceImpl implements NhanVienService {
         int newNumber = maxNumber + 1;
 
         // Trả về mã sản phẩm mới theo định dạng "SPxx" (ví dụ: SP06)
-        return String.format("NV%02d", newNumber);
+        return String.format("NV%d", newNumber);
     }
 }

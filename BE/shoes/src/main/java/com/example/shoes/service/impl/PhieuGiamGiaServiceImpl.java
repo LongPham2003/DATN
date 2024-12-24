@@ -84,7 +84,7 @@ public class PhieuGiamGiaServiceImpl
             phieuGiamGia.setTrangThai("Sắp Hoạt Động");
         }
         else {
-            phieuGiamGia.setTrangThai("Hoạt Động");
+            phieuGiamGia.setTrangThai("Hoạt Động");
         }
 
         PhieuGiamGia saved = phieuGiamGiaRepo.save(phieuGiamGia);
@@ -129,16 +129,22 @@ public class PhieuGiamGiaServiceImpl
         phieuGiamGia.setSoLuong(request.getSoLuong());
         phieuGiamGia.setNgayBatDau(request.getNgayBatDau());
         phieuGiamGia.setNgayKetThuc(request.getNgayKetThuc());
-//        if (phieuGiamGia.getNgayBatDau().isAfter(LocalDateTime.now())) {
-//            phieuGiamGia.setTrangThai("Sắp Hoạt Động");
-//        }
-//        else if (phieuGiamGia.getNgayKetThuc().isBefore(LocalDateTime.now())) {
-//            phieuGiamGia.setTrangThai("Ngừng Hoạt Động");
-//        }
-//        else {
-//            phieuGiamGia.setTrangThai("Hoạt Động");
-//        }
-        phieuGiamGia.setTrangThai(request.getTrangThai());
+        if (phieuGiamGia.getNgayBatDau().isAfter(LocalDateTime.now())) {
+            phieuGiamGia.setTrangThai("Sắp Hoạt Động");
+        }
+        else if (phieuGiamGia.getNgayKetThuc().isBefore(LocalDateTime.now())) {
+            phieuGiamGia.setTrangThai("Ngừng Hoạt Động");
+        }
+        else if (phieuGiamGia.getSoLuong()==0) {
+            phieuGiamGia.setTrangThai("Ngừng Hoạt Động");
+        }
+        else if (phieuGiamGia.getSoLuong()>0&&phieuGiamGia.getNgayKetThuc().isAfter(LocalDateTime.now())) {
+            phieuGiamGia.setTrangThai("Hoạt Động");
+        }
+        else {
+            phieuGiamGia.setTrangThai(request.getTrangThai());
+        }
+
         PhieuGiamGia updated = phieuGiamGiaRepo.save(phieuGiamGia);
         return convertToResponse(updated);
     }
@@ -211,29 +217,37 @@ public class PhieuGiamGiaServiceImpl
         return phieuGiamGiaResponse;
     }
 
-    @Scheduled(cron = "0 * * * *  ?") // mỗi phút chạy 1 lần
+    public void capNhatTrangThaiPhieuGiamGia()
+    {
+        List<PhieuGiamGia> phieuGiamGias = phieuGiamGiaRepo.findAll();
+        LocalDateTime now = LocalDateTime.now();
+        for (PhieuGiamGia pgg : phieuGiamGias) {
+            // số luượng 0 cập nhật về trạng thái ngừng
+            if (pgg.getSoLuong() == 0) {
+                pgg.setTrangThai("Ngừng Hoạt Động");
+            }
+            else if (pgg.getNgayKetThuc().isBefore(now)) {
+                pgg.setTrangThai("Ngừng Hoạt Động");
+            }
+            else if (pgg.getNgayBatDau().isAfter(now)) {
+                pgg.setTrangThai("Sắp Hoạt Động");
+            }
+            else {
+                pgg.setTrangThai("Hoạt Động");
+            }
+            phieuGiamGiaRepo.save(pgg);
+        }
+    }
+    //    isBefore(kiểm tra trong quá khứ): Kiểm tra xem một thời điểm có trước thời điểm khác không.
+//    isAfter(kiểm tra trong tương lai): Kiểm tra xem một thời điểm có sau thời điểm khác không.
+//    isEqual(LocalDateTime other): Kiểm tra xem hai thời điểm có bằng nhau không.
+
+    @Scheduled(cron = "0/15 * * * *  ?") // mỗi phút chạy 1 lần
     public void checkAndUpdateVoucherStatus()
     {
         // Lấy tất cả các voucher còn active
         System.out.println("long");
-        List<PhieuGiamGia> phieuGiamGias = phieuGiamGiaRepo.findAll();
-
-        LocalDateTime today = LocalDateTime.now();
-        for (PhieuGiamGia pgg : phieuGiamGias) {
-            // Kiểm tra nếu ngày kết thúc của voucher đã qua (voucher hết hạn)
-            if (pgg.getNgayKetThuc().isBefore(today)) {
-                pgg.setTrangThai("Ngừng Hoạt Động");
-            }
-            // Kiểm tra nếu ngày bắt đầu của voucher chưa đến
-            else if (pgg.getNgayBatDau().isAfter(today)) {
-                pgg.setTrangThai("Sắp Hoạt Động");
-            }
-            // Nếu không, voucher đang "Hoạt Động"
-            else {
-                pgg.setTrangThai("Hoạt Động");
-            }
-            phieuGiamGiaRepo.save(pgg);
-        }
+        capNhatTrangThaiPhieuGiamGia();
     }
 
     // Phương thức chuyển đổi BigDecimal sang định dạng tiền tệ Việt Nam
@@ -270,6 +284,6 @@ public class PhieuGiamGiaServiceImpl
         int newNumber = maxNumber + 1;
 
         // Trả về mã sản phẩm mới theo định dạng "SPxx" (ví dụ: SP06)
-        return String.format("VC%02d", newNumber);
+        return String.format("VC%d", newNumber);
     }
 }

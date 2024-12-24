@@ -35,7 +35,7 @@ public class PhieuGiamGiaRequest
     private BigDecimal giamToiDa;
 
     @NotNull(message = "Số lượng không được để trống")
-    @PositiveOrZero(message = "Số lượng phải là số không âm")
+    @Positive(message = "Số lượng phải là số không âm")
     private Integer soLuong;
 
     @NotNull(message = "Ngày bắt đầu không được để trống")
