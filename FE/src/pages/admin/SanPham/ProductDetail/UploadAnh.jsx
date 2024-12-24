@@ -29,10 +29,10 @@ const ImageUpload = ({ fileList, setFileList }) => {
     );
   };
   const handleChange = ({ fileList: newFileList }) => {
-    // setFileList((prevFileList) => [...prevFileList, ...newFileList]); // Append new files to the existing list
-    // console.log("Updated fileList:", [...fileList, ...newFileList]); // Debugging log
-    setFileList(newFileList);
-    // console.log(newFileList);
+    // Giới hạn số lượng ảnh chỉ lấy 5 ảnh đầu tiên
+    const limitedFileList = newFileList.slice(0, 5);
+    setFileList(limitedFileList);
+    // console.log("Updated fileList:", limitedFileList); // Debugging log
   };
 
   const uploadButton = (
@@ -50,6 +50,7 @@ const ImageUpload = ({ fileList, setFileList }) => {
         onPreview={handlePreview}
         onChange={handleChange}
         beforeUpload={() => false}
+        multiple
       >
         {fileList.length >= 5 ? null : uploadButton}
       </Upload>

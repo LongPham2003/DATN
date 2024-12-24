@@ -169,6 +169,9 @@ public class HoaDonServiceImpl implements HoaDonService {
             throw new AppException(ErrorCode.INVALID_QUANTITY_LONHONO);
         }
 
+        // kiểm tra đơn giá sản phẩm
+
+
         // Tìm chi tiết hóa đơn đã tồn tại
         HoaDonChiTiet existingChiTiet = hoaDonChiTietRepo.findByHoaDonAndSanPhamChiTiet(hoaDon, spct);
 
@@ -177,6 +180,10 @@ public class HoaDonServiceImpl implements HoaDonService {
 
         // Nếu chi tiết hóa đơn đã tồn tại
         if (existingChiTiet != null) {
+            if(existingChiTiet.getDonGia()!=spct.getDonGia()){
+                throw new AppException(ErrorCode.PRODUCT_DETAIL_NOT_FOUND);
+            }
+            
             // Lấy số lượng hiện tại của sản phẩm trong hóa đơn
             int soLuongHienTai = existingChiTiet.getSoLuong();
             int soLuongMoi = chiTietRequest.getSoLuong();
@@ -510,20 +517,24 @@ public class HoaDonServiceImpl implements HoaDonService {
         SanPhamChiTiet spct = sanPhamChiTietRepo.findById(chiTietRequest.getIdSpct())
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_DETAIL_NOT_FOUND));
 
-        // Kiểm tra số lượng có đủ để thêm vào hóa đơn không
-        if (chiTietRequest.getSoLuong() > spct.getSoLuong()) {
-            throw new AppException(ErrorCode.INSUFFICIENT_STOCK); // Kiểm tra nếu không đủ hàng
-        }
+//        // Kiểm tra số lượng có đủ để thêm vào hóa đơn không
+//        if (chiTietRequest.getSoLuong() > spct.getSoLuong()) {
+//            throw new AppException(ErrorCode.INSUFFICIENT_STOCK); // Kiểm tra nếu không đủ hàng
+//        }
 
         // Tìm chi tiết hóa đơn đã tồn tại
         HoaDonChiTiet existingChiTiet = hoaDonChiTietRepo.findByHoaDonAndSanPhamChiTiet(hoaDon, spct);
 
         if (existingChiTiet != null) {
+            if(chiTietRequest.getDonGia()!=existingChiTiet.getDonGia()){
+                throw new AppException(ErrorCode.PRODUCT_DETAIL_NOT_FOUND);
+            }
             // Nếu chi tiết hóa đơn đã tồn tại, cộng thêm số lượng
             existingChiTiet.setSoLuong(existingChiTiet.getSoLuong() + chiTietRequest.getSoLuong());
             existingChiTiet.setDonGia(spct.getDonGia()); // Cập nhật đơn giá (nếu cần thiết)
             // Cập nhật số lượng trong SPCT
             spct.setSoLuong(spct.getSoLuong() - chiTietRequest.getSoLuong());
+            // kiểm tra đơn giá sản phẩm
 
             // Lưu lại chi tiết hóa đơn đã cập nhật
             hoaDonChiTietRepo.save(existingChiTiet);
