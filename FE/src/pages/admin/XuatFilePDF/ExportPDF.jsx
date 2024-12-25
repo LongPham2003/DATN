@@ -33,7 +33,7 @@ export const generatePDF = () => {
   }
 };
 
-export const ExportPDF = ({ idHoaDon }) => {
+export const ExportPDF = ({ idHoaDon, tienKhachDua, tienThuaTraKhach }) => {
   const [hoadon, setHoaDon] = useState({});
   const [danhSachSP, setDanhSachSP] = useState([]);
   const [maHD, setMaHD] = useState("");
@@ -214,8 +214,8 @@ export const ExportPDF = ({ idHoaDon }) => {
                   : "Tại Quầy"}
               </p>
               <p>Trạng thái: {hoadon.trangThaiThanhToan}</p>
-              <p>Tiền khách đưa: {hoadon.tienKhachDua}</p>
-              <p>Tiền thừa trả khách: {hoadon.tienThua}</p>
+              <p>Tiền khách đưa: {tienKhachDua}</p>
+              <p>Tiền thừa trả khách: {tienThuaTraKhach}</p>
             </div>
           </div>
           <div className="text-xs italic">

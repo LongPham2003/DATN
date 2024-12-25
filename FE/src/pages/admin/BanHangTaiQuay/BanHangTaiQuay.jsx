@@ -1344,7 +1344,11 @@ export default function BanHangTaiQuay() {
       )}
 
       <div style={{ display: "none" }}>
-        <ExportPDF idHoaDon={tempHoaDonId} />
+        <ExportPDF
+          idHoaDon={tempHoaDonId}
+          tienKhachDua={tienKhachDua}
+          tienThuaTraKhach={tienThuaTraKhach}
+        />
       </div>
     </>
   );

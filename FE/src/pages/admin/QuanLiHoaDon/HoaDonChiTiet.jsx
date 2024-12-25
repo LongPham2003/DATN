@@ -10,6 +10,7 @@ import {
   FaRegTimesCircle,
   FaStackOverflow,
   FaTruck,
+  FaUndoAlt,
 } from "react-icons/fa";
 import { Modal } from "antd";
 import { useParams } from "react-router-dom";
@@ -55,6 +56,29 @@ const HoaDonChiTiet = () => {
   };
   const closeModalHuy = async () => {
     setOpenModelHuy(false);
+    await fillHoaDon();
+    await fillHoaDonChiTiet();
+    await fillLichSuHoaDon();
+  };
+  // model hoàn hàng
+  const [OpenModelHoanHang, setOpenModelHoanHang] = useState(false);
+  const openModalHoanHang = () => {
+    setOpenModelHoanHang(true);
+  };
+  const closeModalHoanHang = async () => {
+    setOpenModelHoanHang(false);
+    await fillHoaDon();
+    await fillHoaDonChiTiet();
+    await fillLichSuHoaDon();
+  };
+
+  // model hoàn hàng thành công
+  const [OpenModelHoanHangTC, setOpenModelHoanHangTC] = useState(false);
+  const openModalHoanHangTC = () => {
+    setOpenModelHoanHangTC(true);
+  };
+  const closeModalHoanHangTC = async () => {
+    setOpenModelHoanHangTC(false);
     await fillHoaDon();
     await fillHoaDonChiTiet();
     await fillLichSuHoaDon();
@@ -196,6 +220,58 @@ const HoaDonChiTiet = () => {
           })
           .catch((error) => {
             closeModalHuy();
+            toast.error(error.response.data.message); // Hiển thị thông báo từ server
+          });
+      },
+      onCancel() {
+        // Nếu người dùng hủy, có thể không cần làm gì cả
+      },
+    });
+  };
+
+  const handleSubmitUpdateHoanHang = (e) => {
+    e.preventDefault(); // Ngăn chặn hành động mặc định của form
+    Modal.confirm({
+      title: "Xác nhận cập nhật",
+      content: "Bạn có chắc chắn muốn hoàn hàng  không?",
+      onOk() {
+        axios
+          .post(`http://localhost:8080/api/hoadon/hoanhang/${id}`, {
+            ghiChu: ghiChu,
+          })
+          .then((response) => {
+            console.log("Cập nhật thành công:", response.data);
+            toast.success("Thành công");
+            closeModalHoanHang();
+          })
+          .catch((error) => {
+            closeModalHoanHang();
+            toast.error(error.response.data.message); // Hiển thị thông báo từ server
+          });
+      },
+      onCancel() {
+        // Nếu người dùng hủy, có thể không cần làm gì cả
+      },
+    });
+  };
+
+  const handleSubmitUpdateHoanHangTC = (e) => {
+    e.preventDefault(); // Ngăn chặn hành động mặc định của form
+    Modal.confirm({
+      title: "Xác nhận cập nhật",
+      content: "Bạn có chắc chắn đơn hàng hoàn thành công không?",
+      onOk() {
+        axios
+          .post(`http://localhost:8080/api/hoadon/hoanhangtc/${id}`, {
+            ghiChu: ghiChu,
+          })
+          .then((response) => {
+            console.log("Cập nhật thành công:", response.data);
+            toast.success("Thành công");
+            closeModalHoanHangTC();
+          })
+          .catch((error) => {
+            closeModalHoanHangTC();
             toast.error(error.response.data.message); // Hiển thị thông báo từ server
           });
       },
@@ -361,7 +437,11 @@ const HoaDonChiTiet = () => {
                             ? FaStackOverflow
                             : item.trangThai === "HOAN_THANH"
                               ? FaCheckCircle
-                              : ""
+                              : item.trangThai === "HOAN_HANG"
+                                ? FaUndoAlt
+                                : item.trangThai === "HOAN_HANG_THANH_CONG"
+                                  ? FaCheckCircle
+                                  : ""
             }
             color={
               item.trangThai === "CHO_XAC_NHAN"
@@ -380,7 +460,11 @@ const HoaDonChiTiet = () => {
                             ? "#99FF00"
                             : item.trangThai === "HOAN_THANH"
                               ? "#99FF00"
-                              : ""
+                              : item.trangThai === "HOAN_HANG"
+                                ? "#008080"
+                                : item.trangThai === "HOAN_HANG_THANH_CONG"
+                                  ? "#99FF00"
+                                  : ""
             }
             subtitle={formatDate(item.createAt)}
             title={
@@ -400,7 +484,11 @@ const HoaDonChiTiet = () => {
                             ? "Đã thanh toán"
                             : item.trangThai === "HOAN_THANH"
                               ? "Hoàn thành"
-                              : ""
+                              : item.trangThai === "HOAN_HANG"
+                                ? "Hoàn hàng"
+                                : item.trangThai === "HOAN_HANG_THANH_CONG"
+                                  ? "Hoàn hàng thành công"
+                                  : ""
             }
           ></TimelineEvent>
         ))}
@@ -420,14 +508,7 @@ const HoaDonChiTiet = () => {
                   Xác nhận
                 </button>
               )}
-              {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" && (
-                <button
-                  onClick={openModalHuy}
-                  className="mx-5 rounded bg-blue-500 px-2 py-1 text-white"
-                >
-                  Hủy Hóa Đơn
-                </button>
-              )}
+
               {hoaDon.trangThaiDonHang === "Đã xác nhận đơn" && (
                 <button
                   onClick={openModalChoLayHang}
@@ -442,6 +523,16 @@ const HoaDonChiTiet = () => {
                   className="rounded bg-blue-500 px-2 py-1 text-white"
                 >
                   Chờ vận chuyển
+                </button>
+              )}
+              {(hoaDon.trangThaiDonHang === "Chờ Xác Nhận" ||
+                hoaDon.trangThaiDonHang === "Đã xác nhận đơn" ||
+                hoaDon.trangThaiDonHang === "Chờ lấy hàng") && (
+                <button
+                  onClick={openModalHuy}
+                  className="mx-5 rounded bg-blue-500 px-2 py-1 text-white"
+                >
+                  Hủy Hóa Đơn
                 </button>
               )}
 
@@ -463,6 +554,24 @@ const HoaDonChiTiet = () => {
                 </button>
               )}
             </div>
+          )}
+          {(hoaDon.trangThaiDonHang === "Chờ đơn vị vẫn chuyển" ||
+            hoaDon.trangThaiDonHang === "Đơn đang trên đường giao hàng") && (
+            <button
+              onClick={openModalHoanHang}
+              className="mx-5 rounded bg-blue-500 px-2 py-1 text-white"
+            >
+              Hoàn Hàng
+            </button>
+          )}
+
+          {hoaDon.trangThaiDonHang === "Hoàn hàng" && (
+            <button
+              onClick={openModalHoanHangTC}
+              className="mx-5 rounded bg-blue-500 px-2 py-1 text-white"
+            >
+              Hoàn Hàng Thành Công
+            </button>
           )}
 
           <button
@@ -648,6 +757,66 @@ const HoaDonChiTiet = () => {
             </div>
             <button
               onClick={closeModalHuy}
+              className="h-10 rounded bg-red-500 px-4 text-white hover:bg-red-600"
+            >
+              X
+            </button>
+          </div>
+        </div>
+      )}
+      {OpenModelHoanHang && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="flex h-[300px] w-[400px] justify-between rounded-lg bg-white p-8">
+            <div className="font-bold">
+              <h3 className="mb-3">Cập nhật hóa đơn</h3>
+              <label className="pt-3">Ghi chú</label>
+              <textarea
+                onChange={(e) => setGhiChu(e.target.value)}
+                className="w-full rounded border p-2"
+                rows="4" // Số dòng hiển thị
+                placeholder="Nhập ghi chú tại đây..."
+              ></textarea>
+              <div className="mx-auto my-3 flex justify-center">
+                <button
+                  onClick={handleSubmitUpdateHoanHang}
+                  className="rounded bg-blue-500 px-2 py-2 text-white"
+                >
+                  Cập nhật
+                </button>
+              </div>
+            </div>
+            <button
+              onClick={closeModalHoanHang}
+              className="h-10 rounded bg-red-500 px-4 text-white hover:bg-red-600"
+            >
+              X
+            </button>
+          </div>
+        </div>
+      )}
+      {OpenModelHoanHangTC && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="flex h-[300px] w-[400px] justify-between rounded-lg bg-white p-8">
+            <div className="font-bold">
+              <h3 className="mb-3">Cập nhật hóa đơn</h3>
+              <label className="pt-3">Ghi chú</label>
+              <textarea
+                onChange={(e) => setGhiChu(e.target.value)}
+                className="w-full rounded border p-2"
+                rows="4" // Số dòng hiển thị
+                placeholder="Nhập ghi chú tại đây..."
+              ></textarea>
+              <div className="mx-auto my-3 flex justify-center">
+                <button
+                  onClick={handleSubmitUpdateHoanHangTC}
+                  className="rounded bg-blue-500 px-2 py-2 text-white"
+                >
+                  Cập nhật
+                </button>
+              </div>
+            </div>
+            <button
+              onClick={closeModalHoanHangTC}
               className="h-10 rounded bg-red-500 px-4 text-white hover:bg-red-600"
             >
               X
