@@ -1,4 +1,4 @@
-import { Button, Card, Radio } from "antd";
+import { Button, Card, Radio, Select, Collapse, Checkbox } from "antd";
 import Meta from "antd/es/card/Meta";
 import axios from "./../../../api/axiosConfig";
 import { useState, useEffect } from "react";
@@ -145,16 +145,17 @@ export default function SanPham() {
       <div className="my-5">
         <div className="my-5 grid grid-cols-12 gap-4">
           {/* Filter Section */}
-          <div className="col-span-3 rounded-lg p-5 shadow-md">
-            <span className="mb-4 text-2xl font-semibold">Bộ Lọc</span>
-            <Search
-              placeholder="Nhập từ khóa tìm kiếm"
-              allowClear
-              enterButton="Tìm kiếm"
-              size="large"
-              onChange={(e) => setTenSP(e.target.value)}
-            />
-
+          <div className="col-span-3 my-3 h-auto rounded-lg p-5">
+            <span className="mb-4 text-3xl font-semibold">Bộ Lọc</span>
+            <div className="mb-4">
+              <Search
+                placeholder="Nhập từ khóa tìm kiếm"
+                allowClear
+                enterButton="Tìm kiếm"
+                size="large"
+                onChange={(e) => setTenSP(e.target.value)}
+              />
+            </div>
             {/* Filters */}
             {[
               {
@@ -194,25 +195,37 @@ export default function SanPham() {
                 setSelected: setSelectedIdKichThuoc,
               },
             ].map(({ title, items, selected, setSelected }) => (
-              <Card title={title} key={title} className="mb-5">
-                <div className="grid grid-cols-3 gap-2">
-                  {items.map((item) => (
-                    <Button
-                      key={item.id}
-                      onClick={() =>
-                        toggleSelection(item.id, setSelected, selected)
-                      }
-                      className={`m-2 w-[90px] ${selected.includes(item.id) ? "bg-black text-white" : "bg-white"} transition-all duration-300 hover:bg-yellow-400`}
-                    >
-                      {item.ten || item.kichThuoc}
-                    </Button>
-                  ))}
-                </div>
-              </Card>
+              <Collapse key={title} className="my-3">
+                <Collapse.Panel
+                  header={
+                    <span className="text-xl font-semibold">
+                      {title} ({selected.length})
+                    </span>
+                  }
+                  key={title}
+                >
+                  <div className="grid grid-cols-1 gap-2">
+                    {items.map((item) => (
+                      <Checkbox
+                        key={item.id}
+                        checked={selected.includes(item.id)}
+                        onChange={() =>
+                          toggleSelection(item.id, setSelected, selected)
+                        }
+                      >
+                        {item.ten || item.kichThuoc}
+                      </Checkbox>
+                    ))}
+                  </div>
+                </Collapse.Panel>
+              </Collapse>
             ))}
 
             {/* Price Range */}
-            <Card title="Khoảng Giá">
+            <Card
+              title={<span className="text-xl font-semibold">Khoảng Giá</span>}
+              className="my-3"
+            >
               <Radio.Group onChange={handlePriceChange}>
                 <Radio value="0-999999999" className="hover:bg-gray-200">
                   Tất cả
@@ -238,7 +251,7 @@ export default function SanPham() {
           </div>
 
           {/* Product Section */}
-          <div className="col-span-9 grid h-[250px] grid-cols-3 gap-6">
+          <div className="col-span-9 grid h-auto grid-cols-3 gap-6">
             {listSanPham.length > 0 ? (
               listSanPham.map((spct, index) => (
                 <Card
@@ -290,31 +303,33 @@ export default function SanPham() {
                 Không có sản phẩm nào
               </div>
             )}
+            {tongSoTrang > 1 && (
+              <div className="mx-auto mt-[-10px] flex justify-center">
+                <ReactPaginate
+                  previousLabel={"<"}
+                  nextLabel={">"}
+                  breakLabel={"..."}
+                  pageCount={tongSoTrang}
+                  marginPagesDisplayed={2}
+                  pageRangeDisplayed={2}
+                  onPageChange={handlePageChange}
+                  containerClassName={"flex items-center gap-2"}
+                  previousClassName={"mx-1"}
+                  previousLinkClassName="px-4 py-2  hover:text-orange-500 transition duration-200"
+                  nextClassName={"mx-1"}
+                  nextLinkClassName="px-4 py-2  hover:text-orange-500 transition duration-200"
+                  breakClassName={"mx-1"}
+                  breakLinkClassName="px-4 py-2 hover:text-orange-500 transition duration-200"
+                  pageClassName={"mx-1"}
+                  pageLinkClassName="px-4 py-2 hover:text-orange-500 transition duration-200"
+                  activeClassName={"text-orange-500"}
+                  activeLinkClassName={
+                    "text-orange-500 font-bold text-xl border border-orange-500 rounded-full"
+                  }
+                />
+              </div>
+            )}
           </div>
-        </div>
-        <div className="mx-auto mt-[-10px] flex justify-center">
-          <ReactPaginate
-            previousLabel={"<"}
-            nextLabel={">"}
-            breakLabel={"..."}
-            pageCount={tongSoTrang}
-            marginPagesDisplayed={2}
-            pageRangeDisplayed={2}
-            onPageChange={handlePageChange}
-            containerClassName={"flex items-center gap-2"}
-            previousClassName={"mx-1"}
-            previousLinkClassName="px-4 py-2  hover:text-orange-500 transition duration-200"
-            nextClassName={"mx-1"}
-            nextLinkClassName="px-4 py-2  hover:text-orange-500 transition duration-200"
-            breakClassName={"mx-1"}
-            breakLinkClassName="px-4 py-2 hover:text-orange-500 transition duration-200"
-            pageClassName={"mx-1"}
-            pageLinkClassName="px-4 py-2 hover:text-orange-500 transition duration-200"
-            activeClassName={"text-orange-500"}
-            activeLinkClassName={
-              "text-orange-500 font-bold text-xl border border-orange-500 rounded-full"
-            }
-          />
         </div>
       </div>
     </>
