@@ -10,7 +10,6 @@ export default function ThemMoiKhachHang({ button, onAdd }) {
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [selectedCommune, setSelectedCommune] = useState("");
   const [detailAddress, setDetailAddress] = useState("");
-  const [disabled, setDisabled] = useState(false);
   const [diaChiData, setDiaChiData] = useState({
     province: [],
     district: [],
@@ -120,39 +119,12 @@ export default function ThemMoiKhachHang({ button, onAdd }) {
     }));
   };
 
-  const validateTentu3den50 = (ten) => {
-    return ten.length >= 3 && ten.length <= 50; // Chỉ kiểm tra độ dài
-  };
-
-  const validateTenkhongchuakytudacbiet = (ten) => {
-    const regex = /^[\p{L}\p{M}\s]+$/u; // Chỉ cho phép tất cả các ký tự chữ (có dấu) và khoảng trắng
-    return regex.test(ten); // Kiểm tra ký tự đặc biệt
-  };
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
       ...prevState,
       [name]: value,
     }));
-
-    const input = value.trim();
-    if (input === "") {
-      setError("Tên  không được để trống");
-      setDisabled(true);
-      return;
-    } else if (!validateTentu3den50(input)) {
-      setError("Tên từ 3 đến 50 ký tự");
-      setDisabled(true);
-      return;
-    } else if (!validateTenkhongchuakytudacbiet(input)) {
-      setError("Tên không chứa kí tự đặc biệt và số");
-      setDisabled(true);
-      return;
-    } else {
-      setError("");
-      setDisabled(false);
-    }
   };
 
   const handleSubmit = async (e) => {
@@ -264,7 +236,7 @@ export default function ThemMoiKhachHang({ button, onAdd }) {
               />
             </div>
             <div className="w-full p-2 sm:w-1/2">
-              <label className="mb-1 block">Email:</label>
+              <label className="mb-1 block">Tài khoản:</label>
               <input
                 type="email"
                 id="email"
@@ -388,7 +360,7 @@ export default function ThemMoiKhachHang({ button, onAdd }) {
               />
             </div>
             <div className="w-full p-2">
-              <label className="mb-1 block">Địa Chỉ chi tiết:</label>
+              <label className="mb-1 block">Địa chỉ chi tiết:</label>
               <input
                 type="text"
                 value={fullAddress}
@@ -398,16 +370,15 @@ export default function ThemMoiKhachHang({ button, onAdd }) {
               />
             </div>
           </div>
-          {error && <div className="text-red-600">{error}</div>}
+          {error && <div className="text-center text-red-600">{error}</div>}
           <button
             type="submit"
             className="mt-4 w-full rounded bg-blue-600 p-2 text-white hover:bg-blue-700"
-            disabled={disabled}
           >
             Thêm Khách Hàng
           </button>
         </form>
-        {/* <ToastContainer
+        <ToastContainer
           position="top-right"
           autoClose={3000}
           transition={Bounce}
@@ -418,7 +389,7 @@ export default function ThemMoiKhachHang({ button, onAdd }) {
           pauseOnFocusLoss
           draggable
           pauseOnHover
-        /> */}
+        />
       </div>
     </div>
   );

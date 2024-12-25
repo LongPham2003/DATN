@@ -42,7 +42,10 @@ public class AuthenticationController {
     }
 
     @PostMapping("/doimatkhau")
-    public ApiResponse<String> doiMatKhau(@RequestBody DoiMatKhauRequest request) {
+    public ApiResponse<String> doiMatKhau(@Valid @RequestBody DoiMatKhauRequest request,BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new ValidationException(bindingResult.getFieldError().getDefaultMessage());
+        }
         return ApiResponse.<String>builder()
                 .result(authenticationService.doiMatKhau(request)).build();
     }

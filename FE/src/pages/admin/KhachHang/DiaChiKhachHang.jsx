@@ -200,7 +200,7 @@ export const DiaChiKhachHang = ({ idKhachHang }) => {
           })
 
           .catch((error) => {
-            toast.error("Cập nhật thông tin không thành công.");
+            toast.error(error.response.data.message);
             console.error("Error updating customer data", error);
           });
       },

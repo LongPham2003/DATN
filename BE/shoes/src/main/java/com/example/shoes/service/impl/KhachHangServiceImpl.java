@@ -229,6 +229,6 @@ public class KhachHangServiceImpl implements KhachHangService {
         int newNumber = maxNumber + 1;
 
         // Trả về mã sản phẩm mới theo định dạng "SPxx" (ví dụ: SP06)
-        return String.format("KH%02d", newNumber);
+        return String.format("KH%d", newNumber);
     }
 }

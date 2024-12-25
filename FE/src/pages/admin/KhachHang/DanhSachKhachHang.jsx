@@ -153,7 +153,7 @@ export default function DanhSachNhanVien() {
                 <th className="border-b px-4 py-2">STT</th>
                 <th className="border-b px-4 py-2">Mã</th>
                 <th className="border-b px-4 py-2">Họ tên</th>
-                <th className="border-b px-4 py-2">Email</th>
+                <th className="border-b px-4 py-2">Tài khoản</th>
                 <th className="border-b px-4 py-2">SDT</th>
                 <th className="border-b px-4 py-2">Ngày Sinh</th>
                 <th className="border-b px-4 py-2">Giới Tính</th>

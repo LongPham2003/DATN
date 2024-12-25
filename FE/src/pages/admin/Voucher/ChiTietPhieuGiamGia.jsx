@@ -242,11 +242,11 @@ const ChiTietPhieuGiamGia = () => {
                 value={formData.trangThai}
                 onChange={handleChange}
                 className="w-full rounded border p-2"
-                required
+                disabled
               >
                 <option value="">Chọn trạng thái</option>
                 <option value="Sắp Hoạt Động">Sắp Hoạt Động</option>
-                <option value="Hoạt Động">Hoạt Động</option>
+                <option value="Hoạt Động">Hoạt Động</option>
                 <option value="Ngừng Hoạt Động">Ngừng Hoạt Động</option>
               </select>
             </div>
@@ -310,19 +310,21 @@ const ChiTietPhieuGiamGia = () => {
                 required
               />
             </div>
+          </div>
+          <div className="text-center">
             {error && <p className="mb-4 text-sm text-red-500">{error}</p>}
-            <div className="w-full p-2">
-              <button
-                type="submit"
-                className="mx-auto flex rounded-md border border-transparent bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
-              >
-                Cập nhật phiếu giảm giá
-              </button>
-            </div>
+          </div>
+          <div className="w-full p-2">
+            <button
+              type="submit"
+              className="mx-auto flex h-10 w-[225px] rounded-md border border-transparent bg-blue-500 px-4 py-2 text-center text-white hover:bg-blue-600"
+            >
+              Cập nhật phiếu giảm giá
+            </button>
           </div>
         </form>
       </div>
-      <ToastContainer
+      {/* <ToastContainer
         position="top-center"
         autoClose={3000}
         hideProgressBar={false}
@@ -334,7 +336,7 @@ const ChiTietPhieuGiamGia = () => {
         pauseOnHover
         theme="light"
         transition={Bounce}
-      />
+      /> */}
     </div>
   );
 };

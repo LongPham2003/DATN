@@ -262,12 +262,9 @@ export default function DiaCHiMacDinhKhachHang({
     const tenQH = QH.find((qh) => qh.DistrictID == idQH)?.DistrictName || "";
     const tenXa = xa.find((x) => x.WardCode == idXa)?.WardName || "";
 
-    const diaChiHoanChinh = [
-      soNha,
-      tenXa,
-      tenQH,
-      tenTP
-    ].filter(Boolean).join(' - '); // Chỉ thêm vào nếu giá trị không phải null
+    const diaChiHoanChinh = [soNha, tenXa, tenQH, tenTP]
+      .filter(Boolean)
+      .join(" - "); // Chỉ thêm vào nếu giá trị không phải null
     setDiaChiGiaoHang(diaChiHoanChinh); // Cập nhật địa chỉ giao hàng trong state
     setdiaChiGiaoHang(diaChiHoanChinh); // Cập nhật địa chỉ giao hàng trong props
   }, [

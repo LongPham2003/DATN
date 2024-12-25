@@ -60,12 +60,10 @@ const ResetPass = () => {
         onSubmit={handleSubmit}
         className="w-96 rounded-lg bg-white p-8 shadow-lg"
       >
-        <h2 className="mb-6 text-center text-2xl font-bold">
-          Lấy lại mật khẩu
-        </h2>
+        <h2 className="mb-6 text-center text-2xl font-bold">Quên mật khẩu</h2>
 
         <div className="mb-4">
-          <label className="block text-gray-700">Email</label>
+          <label className="block text-black">Tài khoản</label>
           <input
             type="email"
             name="email"

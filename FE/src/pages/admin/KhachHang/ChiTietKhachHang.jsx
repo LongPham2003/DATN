@@ -267,7 +267,7 @@ export default function ChiTietKhachHang() {
                 />
               </div>
               <div className="w-full p-2 sm:w-1/2">
-                <label className="mb-1 block">Email:</label>
+                <label className="mb-1 block">Tài khoản:</label>
                 <input
                   type="email"
                   id="email"
@@ -275,6 +275,7 @@ export default function ChiTietKhachHang() {
                   value={formData.email}
                   onChange={handleChange}
                   className="w-full rounded border p-2"
+                  readOnly
                 />
               </div>
               <div className="w-full p-2 sm:w-1/2">
@@ -423,7 +424,7 @@ export default function ChiTietKhachHang() {
                 />
               </div>
             </div>
-            {error && <div className="text-red-600">{error}</div>}
+            {error && <div className="text-center text-red-600">{error}</div>}
             <button
               type="submit"
               onClick={handleUpdate}

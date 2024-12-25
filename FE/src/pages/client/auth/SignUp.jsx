@@ -27,7 +27,7 @@ const SignUp = () => {
     e.preventDefault();
 
     if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match!");
+      setError("Mật khẩu không trùng nhau");
       return;
     }
 
@@ -77,7 +77,7 @@ const SignUp = () => {
           </h2>
 
           <div className="mb-4">
-            <label className="block text-gray-700">UserName</label>
+            <label className="block text-black">Tên</label>
             <input
               type="text"
               name="hoTen"
@@ -89,7 +89,7 @@ const SignUp = () => {
           </div>
 
           <div className="mb-4">
-            <label className="block text-gray-700">Email</label>
+            <label className="block text-black">Tài khoản</label>
             <input
               type="email"
               name="email"
@@ -101,7 +101,7 @@ const SignUp = () => {
           </div>
 
           <div className="mb-4">
-            <label className="block text-gray-700">Password</label>
+            <label className="block text-black">Mật khẩu</label>
             <input
               type="password"
               name="password"
@@ -113,7 +113,7 @@ const SignUp = () => {
           </div>
 
           <div className="mb-4">
-            <label className="block text-gray-700">Confirm Password</label>
+            <label className="block text-black">Nhập lại mật khẩu</label>
             <input
               type="password"
               name="confirmPassword"

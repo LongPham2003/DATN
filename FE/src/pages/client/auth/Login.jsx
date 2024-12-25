@@ -81,7 +81,7 @@ const Login = () => {
           <h2 className="mb-6 text-center text-2xl font-bold">Đăng nhập</h2>
 
           <div className="mb-4">
-            <label className="block text-gray-700">Email</label>
+            <label className="block text-black">Tài khoản</label>
             <input
               type="email"
               name="email"
@@ -92,7 +92,7 @@ const Login = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700">Password</label>
+            <label className="block text-black">Mật khẩu</label>
             <input
               type="password"
               name="password"

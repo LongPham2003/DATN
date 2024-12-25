@@ -8,7 +8,7 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
   const { confirm } = Modal;
 
   const [error, setError] = useState("");
-  const [disabled, setDisabled] = useState(false);
+
   const [formData, setFormData] = useState({
     tenVoucher: "",
     dieuKienGiamGia: "",
@@ -28,14 +28,6 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
     return new Intl.NumberFormat("vi-VN").format(numberValue);
   };
 
-  const validateTentu3den50 = (ten) => {
-    return ten.length >= 10 && ten.length <= 50; // Chỉ kiểm tra độ dài
-  };
-
-  const validateTenSanPhamkhongchuakytudacbiet = (ten) => {
-    const regex = /^[\p{L}\p{M}\d\s]+$/u; // Cho phép tất cả các ký tự chữ (có dấu), số và khoảng trắng
-    return regex.test(ten); // Kiểm tra ký tự đặc biệt
-  };
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -46,24 +38,6 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
           ? formatCurrency(value) // Format trực tiếp
           : value,
     }));
-
-    const input = value.trim();
-    if (input === "") {
-      setError("Tên phiếu giảm giá không được để trống");
-      setDisabled(true);
-      return;
-    } else if (!validateTentu3den50(input)) {
-      setError("Tên phiếu giảm giá từ 10 đến 50 ký tự");
-      setDisabled(true);
-      return;
-    } else if (!validateTenkhongchuakytudacbiet(input)) {
-      setError("Tên phiếu giảm giá không chứa kí tự đặc biệt");
-      setDisabled(true);
-      return;
-    } else {
-      setError("");
-      setDisabled(false);
-    }
   };
 
   // hàm format lại định dạng khi gửi về be
@@ -234,17 +208,19 @@ const ThemMoiPhieuGiamGia = ({ button, onAdd }) => {
                 type="datetime-local"
               />
             </div>
+          </div>
+          <div className="text-center">
+            {" "}
+            {error && <p className="mb-4 text-sm text-red-500">{error}</p>}
+          </div>
 
-            <div className="w-full p-2">
-              <button
-                type="submit"
-                className="mx-auto flex rounded-md border border-transparent bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
-                disabled={disabled}
-              >
-                Thêm
-              </button>
-              {error && <p className="mb-4 text-sm text-red-500">{error}</p>}
-            </div>
+          <div className="w-full p-2">
+            <button
+              type="submit"
+              className="mx-auto flex rounded-md border border-transparent bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+            >
+              Thêm
+            </button>
           </div>
         </form>
       </div>
