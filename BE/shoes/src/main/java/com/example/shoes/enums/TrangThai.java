@@ -11,7 +11,9 @@ public enum TrangThai {
     XAC_NHAN_THANH_TOAN("Chờ xác nhận thanh toán"),
     DA_THANH_TOAN("Đã thanh toán"), //
     HOAN_THANH("Hoàn thành"),
-    HUY_DON("Hủy đơn");
+    HUY_DON("Hủy đơn"),
+    HOAN_HANG("Hoàn hàng"),
+    HOAN_HANG_THANH_CONG("Hoàn hàng thành công");
 
 
     private final String moTa;

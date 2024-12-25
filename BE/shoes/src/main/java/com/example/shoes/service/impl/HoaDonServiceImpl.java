@@ -53,7 +53,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class HoaDonServiceImpl implements HoaDonService {
+public class HoaDonServiceImpl
+        implements HoaDonService
+{
     @Autowired
     private HoaDonRepo hoaDonRepo;
     @Autowired
@@ -75,7 +77,8 @@ public class HoaDonServiceImpl implements HoaDonService {
     @Autowired
     private HoaDonChiTietRepo hoaDonChiTietRepo;
 
-    private NhanVien getCurrentNhanVien() {
+    private NhanVien getCurrentNhanVien()
+    {
         // Lấy thông tin người dùng hiện tại
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName(); // Tên đăng nhập
@@ -85,7 +88,8 @@ public class HoaDonServiceImpl implements HoaDonService {
                 .orElseThrow(() -> new AppException(ErrorCode.STAFF)); // Xử lý nếu không tìm thấy nhân viên
     }
 
-    public String generateMaHoaDon() {
+    public String generateMaHoaDon()
+    {
         // Lấy mã sản phẩm chi tiết lớn nhất từ database
         String maxMaHoaDon = hoaDonRepo.findMaxMaHoaDon();
 
@@ -94,7 +98,8 @@ public class HoaDonServiceImpl implements HoaDonService {
         if (maxMaHoaDon != null) {
             soThuTu = Integer.parseInt(maxMaHoaDon.substring(2, 5)); // Bỏ phần "HD" và lấy 3 số tiếp theo
             soThuTu++;
-        } else {
+        }
+        else {
             soThuTu = 1; // Nếu chưa có mã nào, bắt đầu từ 001
         }
 
@@ -107,7 +112,8 @@ public class HoaDonServiceImpl implements HoaDonService {
     }
 
     // Hàm sinh chuỗi ký tự ngẫu nhiên gồm 5 chữ cái
-    private String generateRandomString(int length) {
+    private String generateRandomString(int length)
+    {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         Random random = new Random();
         StringBuilder stringBuilder = new StringBuilder(length);
@@ -120,7 +126,8 @@ public class HoaDonServiceImpl implements HoaDonService {
     }
 
     @Override
-    public HoaDonResponse createHoaDon() {
+    public HoaDonResponse createHoaDon()
+    {
         // Lấy nhân viên hiện tại đang đăng nhập
         NhanVien nhanVien = getCurrentNhanVien();
 
@@ -137,8 +144,8 @@ public class HoaDonServiceImpl implements HoaDonService {
         hoaDon.setTongTien(BigDecimal.ZERO);
         hoaDon.setTienDuocGiam(BigDecimal.ZERO);
         hoaDon.setTienPhaiThanhToan(BigDecimal.ZERO);
-        hoaDon.setTienKhachDua(BigDecimal.ZERO);
-        hoaDon.setTienThua(BigDecimal.ZERO);
+//        hoaDon.setTienKhachDua(BigDecimal.ZERO);
+//        hoaDon.setTienThua(BigDecimal.ZERO);
         // Lưu hóa đơn
         HoaDon savedHoaDon = hoaDonRepo.save(hoaDon);
         LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
@@ -151,7 +158,8 @@ public class HoaDonServiceImpl implements HoaDonService {
     }
 
     @Override
-    public HoaDonResponse updateHoaDon(Integer idHoaDon, HoaDonChiTietRequest chiTietRequest) { // Tìm hóa đơn theo ID
+    public HoaDonResponse updateHoaDon(Integer idHoaDon, HoaDonChiTietRequest chiTietRequest)
+    { // Tìm hóa đơn theo ID
         // Tìm hóa đơn theo ID
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon)
                 .orElseThrow(() -> new AppException(ErrorCode.BILL_NOT_FOUND));
@@ -171,7 +179,6 @@ public class HoaDonServiceImpl implements HoaDonService {
 
         // kiểm tra đơn giá sản phẩm
 
-
         // Tìm chi tiết hóa đơn đã tồn tại
         HoaDonChiTiet existingChiTiet = hoaDonChiTietRepo.findByHoaDonAndSanPhamChiTiet(hoaDon, spct);
 
@@ -180,10 +187,10 @@ public class HoaDonServiceImpl implements HoaDonService {
 
         // Nếu chi tiết hóa đơn đã tồn tại
         if (existingChiTiet != null) {
-            if(existingChiTiet.getDonGia()!=spct.getDonGia()){
+            if (existingChiTiet.getDonGia() != spct.getDonGia()) {
                 throw new AppException(ErrorCode.PRODUCT_DETAIL_NOT_FOUND);
             }
-            
+
             // Lấy số lượng hiện tại của sản phẩm trong hóa đơn
             int soLuongHienTai = existingChiTiet.getSoLuong();
             int soLuongMoi = chiTietRequest.getSoLuong();
@@ -213,8 +220,8 @@ public class HoaDonServiceImpl implements HoaDonService {
 
             // Lưu lại thay đổi số lượng SPCT
             sanPhamChiTietRepo.save(spct);
-
-        } else {
+        }
+        else {
             // Nếu SPCT chưa tồn tại, thêm mới
             if (chiTietRequest.getSoLuong() <= spct.getSoLuong()) {
                 HoaDonChiTiet chiTietMoi = new HoaDonChiTiet();
@@ -232,7 +239,8 @@ public class HoaDonServiceImpl implements HoaDonService {
                 // Trừ số lượng sản phẩm chi tiết
                 spct.setSoLuong(spct.getSoLuong() - chiTietRequest.getSoLuong());
                 sanPhamChiTietRepo.save(spct); // Lưu thay đổi số lượng SPCT
-            } else {
+            }
+            else {
                 throw new AppException(ErrorCode.INVALID_QUANTITY);
             }
         }
@@ -250,7 +258,8 @@ public class HoaDonServiceImpl implements HoaDonService {
     }
 
     @Override
-    public HoaDonResponse findByid(Integer id) {
+    public HoaDonResponse findByid(Integer id)
+    {
         // Tìm hóa đơn theo ID
         HoaDon hoaDon = hoaDonRepo.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.BILL_NOT_FOUND));
@@ -260,7 +269,8 @@ public class HoaDonServiceImpl implements HoaDonService {
     }
 
     @Override
-    public HoaDonResponse deleteHoaDon(Integer idHoaDon) {
+    public HoaDonResponse deleteHoaDon(Integer idHoaDon)
+    {
         // Lấy hóa đơn theo ID
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon)
                 .orElseThrow(() -> new AppException(ErrorCode.BILL_NOT_FOUND));
@@ -286,8 +296,8 @@ public class HoaDonServiceImpl implements HoaDonService {
         hoaDon.setTongTien(BigDecimal.ZERO);
         hoaDon.setTienDuocGiam(BigDecimal.ZERO);
         hoaDon.setTienPhaiThanhToan(BigDecimal.ZERO);
-        hoaDon.setTienKhachDua(BigDecimal.ZERO);
-        hoaDon.setTienThua(BigDecimal.ZERO);
+//        hoaDon.setTienKhachDua(BigDecimal.ZERO);
+//        hoaDon.setTienThua(BigDecimal.ZERO);
         hoaDon.setTrangThaiDonHang(TrangThai.HUY_DON);
         // Xóa hóa đơn
         hoaDonRepo.save(hoaDon);
@@ -295,7 +305,8 @@ public class HoaDonServiceImpl implements HoaDonService {
     }
 
     @Override
-    public List<HoaDonResponse> getAllHoaDon() {
+    public List<HoaDonResponse> getAllHoaDon()
+    {
         // Lấy tất cả hóa đơn
         List<HoaDon> hoaDonList = hoaDonRepo.findAll();
 
@@ -308,7 +319,8 @@ public class HoaDonServiceImpl implements HoaDonService {
         return hoaDonResponses;
     }
 
-    private boolean kiemTraTrangThaiThanhToanZaloPay(String phuongThuc, Integer idHoaDon) {
+    private boolean kiemTraTrangThaiThanhToanZaloPay(String phuongThuc, Integer idHoaDon)
+    {
         try {
             String appId = "554";
             String key2 = "uUfsWgfLkRLzq6W2uNXTCxrfxs51auny";
@@ -345,16 +357,19 @@ public class HoaDonServiceImpl implements HoaDonService {
             if (response.getStatusCode() == HttpStatus.OK) {
                 // Kiểm tra phản hồi và trạng thái thanh toán
                 return true; // Thanh toán thành công
-            } else {
+            }
+            else {
                 return false; // Thanh toán chưa thành công
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
             return false; // Có lỗi xảy ra khi kiểm tra thanh toán
         }
     }
 
-    private String generateZaloPayQR(HoaDon hoaDon) {
+    private String generateZaloPayQR(HoaDon hoaDon)
+    {
         try {
             String appId = "554";
             String key2 = "uUfsWgfLkRLzq6W2uNXTCxrfxs51auny";
@@ -396,19 +411,21 @@ public class HoaDonServiceImpl implements HoaDonService {
                     .collect(Collectors.joining("&"));
 
             return endpoint + "?" + params;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    private boolean kiemTraTrangThaiThanhToanMoMo(String phuongThuc, Integer idHoaDon) {
+    private boolean kiemTraTrangThaiThanhToanMoMo(String phuongThuc, Integer idHoaDon)
+    {
 
         return true;
     }
 
-
-    private void capNhatTrangThaiHoaDon(HoaDon hoaDon) {
+    private void capNhatTrangThaiHoaDon(HoaDon hoaDon)
+    {
         // Lấy danh sách chi tiết hóa đơn
         List<HoaDonChiTiet> chiTietList = hoaDonChiTietRepo.findByIdHoaDon(hoaDon.getId());
         for (HoaDonChiTiet chiTiet : chiTietList) {
@@ -436,10 +453,12 @@ public class HoaDonServiceImpl implements HoaDonService {
         lichSuHoaDonRepo.save(lichSuHoaDon1);
     }
 
-    private boolean kiemTraTrangThaiThanhToanVNPAY(String phuongThuc, Integer idHoaDon) {
+    private boolean kiemTraTrangThaiThanhToanVNPAY(String phuongThuc, Integer idHoaDon)
+    {
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon).orElse(null);
-        if (hoaDon == null)
+        if (hoaDon == null) {
             return false;
+        }
 
         // Tạo URL endpoint "/payment-infor"
         String paymentInfoUrl = "http://localhost:8080/api/paymentvnpay/payment-infor";
@@ -471,7 +490,8 @@ public class HoaDonServiceImpl implements HoaDonService {
     }
 
     @Override
-    public void thanhToan(Integer idHoaDon, HoaDonRequest hoaDonRequest) {
+    public void thanhToan(Integer idHoaDon, HoaDonRequest hoaDonRequest)
+    {
         // Tìm hóa đơn
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon)
                 .orElseThrow(() -> new IllegalArgumentException("Hóa đơn không tồn tại."));
@@ -489,26 +509,27 @@ public class HoaDonServiceImpl implements HoaDonService {
 
         if (tienKhachDua.compareTo(tienPhaiThanhToan) >= 0) {
             // Thiết lập tiền khách đưa
-            hoaDon.setTienKhachDua(tienKhachDua);
-
-            // Tính toán tiền thừa
-            BigDecimal tienThua = tienKhachDua.subtract(tienPhaiThanhToan);
-            hoaDon.setTienThua(tienThua);
+//            hoaDon.setTienKhachDua(tienKhachDua);
+//
+//            // Tính toán tiền thừa
+//            BigDecimal tienThua = tienKhachDua.subtract(tienPhaiThanhToan);
+//            hoaDon.setTienThua(tienThua);
 
             // Lưu hóa đơn vào cơ sở dữ liệu
             hoaDonRepo.save(hoaDon);
-        } else {
+        }
+        else {
             // Nếu tiền khách đưa không đủ, ném ra ngoại lệ hoặc xử lý lỗi
             throw new AppException(ErrorCode.INSUFFICIENT_PAYMENT);
         }
         // Nếu khách hàng đã thanh toán, cập nhật trạng thái hóa đơn
         capNhatTrangThaiHoaDon(hoaDon);
         hoaDonRepo.save(hoaDon);
-
     }
 
     @Override
-    public HoaDonResponse addSanPhamChiTietToHoaDon(Integer idHoaDon, HoaDonChiTietRequest chiTietRequest) {
+    public HoaDonResponse addSanPhamChiTietToHoaDon(Integer idHoaDon, HoaDonChiTietRequest chiTietRequest)
+    {
         // Tìm hóa đơn theo ID
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon)
                 .orElseThrow(() -> new AppException(ErrorCode.BILL_NOT_FOUND));
@@ -526,7 +547,7 @@ public class HoaDonServiceImpl implements HoaDonService {
         HoaDonChiTiet existingChiTiet = hoaDonChiTietRepo.findByHoaDonAndSanPhamChiTiet(hoaDon, spct);
 
         if (existingChiTiet != null) {
-            if(chiTietRequest.getDonGia()!=existingChiTiet.getDonGia()){
+            if (chiTietRequest.getDonGia() != existingChiTiet.getDonGia()) {
                 throw new AppException(ErrorCode.PRODUCT_DETAIL_NOT_FOUND);
             }
             // Nếu chi tiết hóa đơn đã tồn tại, cộng thêm số lượng
@@ -538,7 +559,8 @@ public class HoaDonServiceImpl implements HoaDonService {
 
             // Lưu lại chi tiết hóa đơn đã cập nhật
             hoaDonChiTietRepo.save(existingChiTiet);
-        } else {
+        }
+        else {
             // Nếu chi tiết hóa đơn chưa tồn tại, tạo mới
             HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
             hoaDonChiTiet.setIdHoaDon(hoaDon); // Liên kết với hóa đơn
@@ -572,7 +594,8 @@ public class HoaDonServiceImpl implements HoaDonService {
         return converToHoaDonResponse(hoaDon);
     }
 
-    public BigDecimal apDungVoucher(BigDecimal tongTienDonHang, PhieuGiamGia phieuGiamGia) {
+    public BigDecimal apDungVoucher(BigDecimal tongTienDonHang, PhieuGiamGia phieuGiamGia)
+    {
         // Kiểm tra điều kiện áp dụng voucher
         if (tongTienDonHang.compareTo(phieuGiamGia.getDieuKienGiamGia()) < 0) {
             throw new AppException(ErrorCode.INVALID_VOUCHER);
@@ -589,7 +612,8 @@ public class HoaDonServiceImpl implements HoaDonService {
             if (soTienGiam.compareTo(phieuGiamGia.getGiamToiDa()) > 0) {
                 soTienGiam = phieuGiamGia.getGiamToiDa(); // Giảm giá tối đa
             }
-        } else if (tienmat.equals(phieuGiamGia.getHinhThucGiam())) {
+        }
+        else if (tienmat.equals(phieuGiamGia.getHinhThucGiam())) {
             // Giảm giá tiền mặt
             soTienGiam = phieuGiamGia.getMucGiam();
             if (soTienGiam.compareTo(phieuGiamGia.getGiamToiDa()) > 0) {
@@ -602,7 +626,8 @@ public class HoaDonServiceImpl implements HoaDonService {
     }
 
     @Override
-    public void apPhieuGiamGiaHoaDon(Integer idHoaDon, Integer idPhieuGiamGia) {
+    public void apPhieuGiamGiaHoaDon(Integer idHoaDon, Integer idPhieuGiamGia)
+    {
         // Lấy thông tin hóa đơn từ idHoaDon
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon)
                 .orElseThrow(() -> new AppException(ErrorCode.BILL_NOT_FOUND));
@@ -642,7 +667,8 @@ public class HoaDonServiceImpl implements HoaDonService {
     }
 
     @Override
-    public List<HoaDonResponse> getAllTrangThaiDaThanhToan() {
+    public List<HoaDonResponse> getAllTrangThaiDaThanhToan()
+    {
         // Lấy tất cả các ChatLieu từ repository
         List<HoaDon> hoaDonList = hoaDonRepo.getAllTrangThaiDaThanhToan();
         // Chuyển đổi từ ChatLieu sang ChatLieuResponse
@@ -653,7 +679,8 @@ public class HoaDonServiceImpl implements HoaDonService {
 
     @Override
     public PhanTrangResponse<HoaDonResponse> getHoaDon(int pageNumber, int pageSize, String keyword,
-                                                       String phuongThucGiaoHang, String trangThai) {
+            String phuongThucGiaoHang, String trangThai)
+    {
 
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
 
@@ -673,7 +700,8 @@ public class HoaDonServiceImpl implements HoaDonService {
 
     //dat hang tai quay
     @Override
-    public Void updateTrangThaiHoaDonById(Integer idHoaDon, DatHangRequest datHangRequest) {
+    public Void updateTrangThaiHoaDonById(Integer idHoaDon, DatHangRequest datHangRequest)
+    {
 
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon).get();
         hoaDon.setTrangThaiDonHang(TrangThai.DA_XAC_NHAN);
@@ -701,11 +729,12 @@ public class HoaDonServiceImpl implements HoaDonService {
     }
 
     @Override
-    public Void xacNhanThanhToan(Integer idHoaDon, XacNhanThanhToan xacNhanThanhToan) {
+    public Void xacNhanThanhToan(Integer idHoaDon, XacNhanThanhToan xacNhanThanhToan)
+    {
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon).get();
         hoaDon.setTrangThaiThanhToan(true);
         hoaDon.setTienPhaiThanhToan(xacNhanThanhToan.getTienKhachDua());
-        hoaDon.setTienKhachDua(xacNhanThanhToan.getTienPhaiThanhToan());
+        //   hoaDon.setTienKhachDua(xacNhanThanhToan.getTienPhaiThanhToan());
         hoaDon.setPhuongThucThanhToan(xacNhanThanhToan.getPhuongThucThanhToan());
         hoaDonRepo.save(hoaDon);
         LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
@@ -726,9 +755,9 @@ public class HoaDonServiceImpl implements HoaDonService {
         return null;
     }
 
-
     @Override
-    public List<HoaDonResponse> getAllTrangThaiChuaThanhToan() {
+    public List<HoaDonResponse> getAllTrangThaiChuaThanhToan()
+    {
         // Lấy tất cả các ChatLieu từ repository
         List<HoaDon> hoaDonList = hoaDonRepo.getAllTrangThaiChuaThanhToan();
         // Chuyển đổi từ ChatLieu sang ChatLieuResponse
@@ -738,7 +767,8 @@ public class HoaDonServiceImpl implements HoaDonService {
     }
 
     @Override
-    public void xoaPhieuGiamGiaHoaDon(Integer idHoaDon, Integer idPhieuGiamGia) {
+    public void xoaPhieuGiamGiaHoaDon(Integer idHoaDon, Integer idPhieuGiamGia)
+    {
         // Lấy thông tin hóa đơn từ idHoaDon
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon)
                 .orElseThrow(() -> new AppException(ErrorCode.BILL_NOT_FOUND));
@@ -771,7 +801,8 @@ public class HoaDonServiceImpl implements HoaDonService {
     }
 
     @Override
-    public HoaDonTheoIDResponse getTheoIdHoaDon(Integer idHoaDon) {
+    public HoaDonTheoIDResponse getTheoIdHoaDon(Integer idHoaDon)
+    {
         // Lấy thông tin tổng hợp hóa đơn
         List<Object[]> totals = hoaDonRepo.findTotalsByIdHoaDon(idHoaDon);
         // Kiểm tra nếu không tìm thấy hóa đơn
@@ -802,8 +833,8 @@ public class HoaDonServiceImpl implements HoaDonService {
         return response;
     }
 
-
-    private List<BaoCaoThongKeResponse> convertToResponse(List<Object[]> results) {
+    private List<BaoCaoThongKeResponse> convertToResponse(List<Object[]> results)
+    {
         List<BaoCaoThongKeResponse> responses = new ArrayList<>();
         for (Object[] result : results) {
             BaoCaoThongKeResponse response = new BaoCaoThongKeResponse();
@@ -819,7 +850,8 @@ public class HoaDonServiceImpl implements HoaDonService {
                 if (result[4] instanceof LocalDate) {
                     // Trường hợp theo ngày
                     response.setNgayTao((LocalDate) result[4]);
-                } else if (result[4] instanceof Number) {
+                }
+                else if (result[4] instanceof Number) {
                     // Trường hợp theo tháng
                     int year = ((Number) result[4]).intValue();
                     int month = ((Number) result[5]).intValue();
@@ -832,9 +864,11 @@ public class HoaDonServiceImpl implements HoaDonService {
         return responses;
     }
 
-    private BaoCaoThongKeResponse convertToSingleResponse(List<Object[]> results) {
-        if (results.isEmpty())
+    private BaoCaoThongKeResponse convertToSingleResponse(List<Object[]> results)
+    {
+        if (results.isEmpty()) {
             return new BaoCaoThongKeResponse();
+        }
 
         Object[] result = results.get(0);
         BaoCaoThongKeResponse response = new BaoCaoThongKeResponse();
@@ -849,12 +883,14 @@ public class HoaDonServiceImpl implements HoaDonService {
         if (result.length >= 7) { // Kiểm tra xem có đủ phần tử không
             if (result[6] instanceof LocalDate) {
                 response.setNgayTao((LocalDate) result[6]);
-            } else if (result[6] instanceof Number) {
+            }
+            else if (result[6] instanceof Number) {
                 // Trường hợp theo tháng
                 int year = ((Number) result[6]).intValue();
                 int month = ((Number) result[7]).intValue();
                 response.setNgayTao(LocalDate.of(year, month, 1));
-            } else {
+            }
+            else {
                 throw new ClassCastException("Unexpected type at index 6: " + result[6].getClass());
             }
         }
@@ -864,7 +900,8 @@ public class HoaDonServiceImpl implements HoaDonService {
 
     // xuat hoa don
     @Transactional
-    public String xuatHoaDon(Integer idHoaDon) {
+    public String xuatHoaDon(Integer idHoaDon)
+    {
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy hóa đơn với ID: " + idHoaDon));
 
@@ -898,16 +935,18 @@ public class HoaDonServiceImpl implements HoaDonService {
     }
 
     @Override
-    public Integer idHoaDon() {
+    public Integer idHoaDon()
+    {
         return hoaDonRepo.idHoaDon();
     }
 
     @Override
-    public Void updateHoaDonById(Integer idHoaDon, PaymentRequest paymentRequest) {
+    public Void updateHoaDonById(Integer idHoaDon, PaymentRequest paymentRequest)
+    {
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon).get();
         hoaDon.setTrangThaiDonHang(TrangThai.HOAN_THANH);
         hoaDon.setPhuongThucThanhToan(paymentRequest.getPhuongThucThanhToan());
-        hoaDon.setTienKhachDua(paymentRequest.getTienKhachDua());
+        // hoaDon.setTienKhachDua(paymentRequest.getTienKhachDua());
         hoaDon.setTrangThaiThanhToan(true);
         hoaDon.setPhuongThucGiaoHang("Tại quầy");
         hoaDonRepo.save(hoaDon);
@@ -985,6 +1024,7 @@ public class HoaDonServiceImpl implements HoaDonService {
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon).get();
         if (hoaDon.getTrangThaiDonHang().getMoTa().equals("Chờ Xác Nhận")) {
             hoaDon.setTrangThaiDonHang(TrangThai.HUY_DON);
+            hoaDon.setTrangThaiThanhToan(false);
             hoaDonRepo.save(hoaDon);
             LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
             lichSuHoaDon.setIdHoaDon(hoaDon);
@@ -995,12 +1035,35 @@ public class HoaDonServiceImpl implements HoaDonService {
             for (HoaDonChiTiet chiTiet : chiTietList) {
                 chiTiet.setTrangThai(TrangThai.HUY_DON); // Cập nhật trạng thái thành true
             }
-            if(hoaDon.getIdPhieuGiamGia() != null){
+            if (hoaDon.getIdPhieuGiamGia() != null) {
                 Optional<PhieuGiamGia> phieuGiamGia = phieuGiamGiaRepo.findById(hoaDon.getIdPhieuGiamGia().getId());
-                if(phieuGiamGia.isPresent()) {
-                    xoaPhieuGiamGiaHoaDon(hoaDon.getId(),hoaDon.getIdPhieuGiamGia().getId());
+                if (phieuGiamGia.isPresent()) {
+                    xoaPhieuGiamGiaHoaDon(hoaDon.getId(), hoaDon.getIdPhieuGiamGia().getId());
                 }
-                
+            }
+
+            hoaDonChiTietRepo.saveAll(chiTietList);
+        }
+        else if (!hoaDon.getTrangThaiDonHang().getMoTa().equals("Chờ Xác Nhận")) {
+            hoaDon.setTrangThaiDonHang(TrangThai.HUY_DON);
+            hoaDon.setTrangThaiThanhToan(false);
+            hoaDonRepo.save(hoaDon);
+            LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
+            lichSuHoaDon.setIdHoaDon(hoaDon);
+            lichSuHoaDon.setTrangThai(TrangThai.HUY_DON);
+            lichSuHoaDon.setMoTa(moTa.getGhiChu());
+            lichSuHoaDonRepo.save(lichSuHoaDon);
+            List<HoaDonChiTiet> chiTietList = hoaDonChiTietRepo.findByIdHoaDon(hoaDon.getId());
+            for (HoaDonChiTiet chiTiet : chiTietList) {
+                chiTiet.setTrangThai(TrangThai.HUY_DON); // Cập nhật trạng thái thành true
+                SanPhamChiTiet sanPhamChiTiet = chiTiet.getIdSpct();
+                sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() + chiTiet.getSoLuong());
+            }
+            if (hoaDon.getIdPhieuGiamGia() != null) {
+                Optional<PhieuGiamGia> phieuGiamGia = phieuGiamGiaRepo.findById(hoaDon.getIdPhieuGiamGia().getId());
+                if (phieuGiamGia.isPresent()) {
+                    xoaPhieuGiamGiaHoaDon(hoaDon.getId(), hoaDon.getIdPhieuGiamGia().getId());
+                }
             }
 
             hoaDonChiTietRepo.saveAll(chiTietList);
@@ -1011,8 +1074,49 @@ public class HoaDonServiceImpl implements HoaDonService {
 
         return null;
     }
+
     @Override
-    public Void updateTrangThaiHoaDonByIdChoLayHang(Integer idHoaDon, GhiChu moTa) {
+    public Void updateTrangThaiHoaDonByIdHoanHang(Integer idHoaDon, GhiChu moTa)
+    {
+        HoaDon hoaDon = hoaDonRepo.findById(idHoaDon).get();
+        hoaDon.setTrangThaiDonHang(TrangThai.HOAN_HANG);
+        hoaDonRepo.save(hoaDon);
+        LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
+        lichSuHoaDon.setIdHoaDon(hoaDon);
+        lichSuHoaDon.setTrangThai(TrangThai.HOAN_HANG);
+        lichSuHoaDon.setMoTa(moTa.getGhiChu());
+        lichSuHoaDonRepo.save(lichSuHoaDon);
+        List<HoaDonChiTiet> chiTietList = hoaDonChiTietRepo.findByIdHoaDon(idHoaDon);
+        for (HoaDonChiTiet chiTiet : chiTietList) {
+            chiTiet.setTrangThai(TrangThai.HOAN_HANG); // Cập nhật trạng thái thành true
+        }
+        hoaDonChiTietRepo.saveAll(chiTietList);
+        return null;
+    }
+    @Override
+    public Void updateTrangThaiHoaDonByIdHoanHangThanhCong(Integer idHoaDon, GhiChu moTa)
+    {
+        HoaDon hoaDon = hoaDonRepo.findById(idHoaDon).get();
+        hoaDon.setTrangThaiDonHang(TrangThai.HOAN_HANG_THANH_CONG);
+        hoaDonRepo.save(hoaDon);
+        LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
+        lichSuHoaDon.setIdHoaDon(hoaDon);
+        lichSuHoaDon.setTrangThai(TrangThai.HOAN_HANG_THANH_CONG);
+        lichSuHoaDon.setMoTa(moTa.getGhiChu());
+        lichSuHoaDonRepo.save(lichSuHoaDon);
+        List<HoaDonChiTiet> chiTietList = hoaDonChiTietRepo.findByIdHoaDon(idHoaDon);
+        for (HoaDonChiTiet chiTiet : chiTietList) {
+            chiTiet.setTrangThai(TrangThai.HOAN_HANG_THANH_CONG); // Cập nhật trạng thái thành true
+            SanPhamChiTiet sanPhamChiTiet = chiTiet.getIdSpct();
+            sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() + chiTiet.getSoLuong());
+        }
+        hoaDonChiTietRepo.saveAll(chiTietList);
+        return null;
+    }
+
+    @Override
+    public Void updateTrangThaiHoaDonByIdChoLayHang(Integer idHoaDon, GhiChu moTa)
+    {
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon).get();
         hoaDon.setTrangThaiDonHang(TrangThai.CHO_LAY_HANG);
         hoaDonRepo.save(hoaDon);
@@ -1032,7 +1136,8 @@ public class HoaDonServiceImpl implements HoaDonService {
     }
 
     @Override
-    public Void updateTrangThaiHoaDonByIdChoVanChuyen(Integer idHoaDon, GhiChu moTa) {
+    public Void updateTrangThaiHoaDonByIdChoVanChuyen(Integer idHoaDon, GhiChu moTa)
+    {
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon).get();
         hoaDon.setTrangThaiDonHang(TrangThai.CHO_GIAO_HANG);
         hoaDonRepo.save(hoaDon);
@@ -1052,7 +1157,8 @@ public class HoaDonServiceImpl implements HoaDonService {
     }
 
     @Override
-    public Void updateTrangThaiHoaDonByIdGiaoHang(Integer idHoaDon, GhiChu moTa) {
+    public Void updateTrangThaiHoaDonByIdGiaoHang(Integer idHoaDon, GhiChu moTa)
+    {
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon).get();
         hoaDon.setTrangThaiDonHang(TrangThai.DANG_GIAO);
         hoaDonRepo.save(hoaDon);
@@ -1072,7 +1178,8 @@ public class HoaDonServiceImpl implements HoaDonService {
     }
 
     @Override
-    public Void updateTrangThaiHoaDonByIdThanhCong(Integer idHoaDon, GhiChu moTa) {
+    public Void updateTrangThaiHoaDonByIdThanhCong(Integer idHoaDon, GhiChu moTa)
+    {
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon).get();
         if (hoaDon.getTrangThaiThanhToan()) {
             hoaDon.setTrangThaiDonHang(TrangThai.HOAN_THANH);
@@ -1087,14 +1194,16 @@ public class HoaDonServiceImpl implements HoaDonService {
                 chiTiet.setTrangThai(TrangThai.HOAN_THANH); // Cập nhật trạng thái thành true
             }
             hoaDonChiTietRepo.saveAll(chiTietList);
-        } else {
+        }
+        else {
             throw new AppException(ErrorCode.CHUA_THANH_TOAN);
         }
 
         return null;
     }
 
-    private HoaDonTheoIDResponse convert(HoaDon hoaDon) {
+    private HoaDonTheoIDResponse convert(HoaDon hoaDon)
+    {
         HoaDonTheoIDResponse response = new HoaDonTheoIDResponse();
         response.setTongTien(formatCurrency(hoaDon.getTongTien()));
         response.setTienDuocGiam(formatCurrency(hoaDon.getTienDuocGiam()));
@@ -1104,7 +1213,8 @@ public class HoaDonServiceImpl implements HoaDonService {
 
     // add khách hàng vào hóa đơn
     @Override
-    public HoaDonResponse addKhachHangHoaDon(Integer idHoaDon, Integer idKhachHang) {
+    public HoaDonResponse addKhachHangHoaDon(Integer idHoaDon, Integer idKhachHang)
+    {
         // Lấy thông tin hóa đơn từ idHoaDon
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon)
                 .orElseThrow(() -> new AppException(ErrorCode.BILL_NOT_FOUND));
@@ -1117,11 +1227,11 @@ public class HoaDonServiceImpl implements HoaDonService {
         hoaDon.setIdKhachHang(khachHang);
 
         return converToHoaDonResponse(hoaDonRepo.save(hoaDon)); // Lưu hóa đơn đã cập nhật
-
     }
 
     @Override
-    public HoaDonResponse xoaKhachHangHoaDon(Integer idHoaDon, Integer idKhachHang) {
+    public HoaDonResponse xoaKhachHangHoaDon(Integer idHoaDon, Integer idKhachHang)
+    {
 
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon)
                 .orElseThrow(() -> new AppException(ErrorCode.BILL_NOT_FOUND));
@@ -1132,9 +1242,11 @@ public class HoaDonServiceImpl implements HoaDonService {
     }
 
     // Phương thức chuyển đổi BigDecimal sang định dạng tiền tệ Việt Nam
-    private String formatCurrency(Object value) {
-        if (value == null)
+    private String formatCurrency(Object value)
+    {
+        if (value == null) {
             return "0 VNĐ"; // Trả về "0 VNĐ" nếu giá trị là null
+        }
 
         if (value instanceof Number) {
             // Chuyển đổi value thành BigDecimal để đảm bảo độ chính xác khi định dạng tiền
@@ -1147,12 +1259,14 @@ public class HoaDonServiceImpl implements HoaDonService {
 
             // Loại bỏ ký hiệu ₫ và thêm VNĐ
             return formatted.replace("₫", "").trim() + " VNĐ";
-        } else {
+        }
+        else {
             throw new IllegalArgumentException("Provided value is not a number: " + value);
         }
     }
 
-    private HoaDonResponse converToHoaDonResponse(HoaDon hoaDon) {
+    private HoaDonResponse converToHoaDonResponse(HoaDon hoaDon)
+    {
         HoaDonResponse hoaDonResponse = new HoaDonResponse();
         hoaDonResponse.setId(hoaDon.getId());
         hoaDonResponse.setMa(hoaDon.getMa());
@@ -1167,25 +1281,29 @@ public class HoaDonServiceImpl implements HoaDonService {
         hoaDonResponse.setTongTien(formatCurrency(hoaDon.getTongTien()));
         hoaDonResponse.setTienDuocGiam(formatCurrency(hoaDon.getTienDuocGiam()));
         hoaDonResponse.setTienPhaiThanhToan(formatCurrency(hoaDon.getTienPhaiThanhToan()));
-        hoaDonResponse.setTienKhachDua(formatCurrency(hoaDon.getTienKhachDua()));
-        hoaDonResponse.setTienThua(formatCurrency(hoaDon.getTienThua()));
+        //  hoaDonResponse.setTienKhachDua(formatCurrency(hoaDon.getTienKhachDua()));
+        //  hoaDonResponse.setTienThua(formatCurrency(hoaDon.getTienThua()));
         hoaDonResponse.setPhuongThucThanhToan(hoaDon.getPhuongThucThanhToan());
         hoaDonResponse.setPhuongThucGiaoHang(hoaDon.getPhuongThucGiaoHang());
         hoaDonResponse.setNgayTao(hoaDon.getCreatedAt());
         hoaDonResponse.setTrangThaiDonHang(hoaDon.getTrangThaiDonHang().getMoTa());
         hoaDonResponse.setTrangThaiThanhToan(hoaDon.getTrangThaiThanhToan() ? "Đã thanh toán" : "Chưa thanh toán");
         hoaDonResponse.setTienShip(formatCurrency(hoaDon.getPhiVanChuyen()));
-        hoaDonResponse.setPhieuGiamGia(hoaDon.getIdPhieuGiamGia() != null ? hoaDon.getIdPhieuGiamGia().getMa() : "Không có");
+        hoaDonResponse.setPhieuGiamGia(
+                hoaDon.getIdPhieuGiamGia() != null ? hoaDon.getIdPhieuGiamGia().getMa() : "Không có");
         return hoaDonResponse;
     }
+
     @Override
-    public List<HoaDonTheoIDKH> getHoaDonTheoKH(Integer idKhachHang, String maHD,String trangThaiDonHang, String ngay) {
-        List<HoaDonTheoIDKH> list = hoaDonRepo.getHoaDonTheoKH(idKhachHang, maHD,trangThaiDonHang, ngay);
+    public List<HoaDonTheoIDKH> getHoaDonTheoKH(Integer idKhachHang, String maHD, String trangThaiDonHang, String ngay)
+    {
+        List<HoaDonTheoIDKH> list = hoaDonRepo.getHoaDonTheoKH(idKhachHang, maHD, trangThaiDonHang, ngay);
         return list;
     }
 
     @Override
-    public HoaDonResponse traHang(Integer idHoaDon, List<SanPhamTraRequest> sanPhamTraList) {
+    public HoaDonResponse traHang(Integer idHoaDon, List<SanPhamTraRequest> sanPhamTraList)
+    {
         // Tìm hóa đơn
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon)
                 .orElseThrow(() -> new RuntimeException("Hóa đơn không tồn tại"));
@@ -1230,7 +1348,8 @@ public class HoaDonServiceImpl implements HoaDonService {
 
             if (chiTiet.getSoLuong() == 0) {
                 hoaDonChiTietRepo.delete(chiTiet); // Xóa nếu số lượng bằng 0
-            } else {
+            }
+            else {
                 hoaDonChiTietRepo.save(chiTiet); // Cập nhật số lượng mới
             }
 
@@ -1246,7 +1365,8 @@ public class HoaDonServiceImpl implements HoaDonService {
         // Cập nhật trạng thái hóa đơn
         if (hoaDonChiTietRepo.findByIdHoaDon(hoaDon.getId()).isEmpty()) {
             hoaDon.setTrangThaiDonHang(TrangThai.HOAN_TRA); // Trả hết sản phẩm
-        } else {
+        }
+        else {
             hoaDon.setTrangThaiDonHang(TrangThai.TRA_HANG); // Trả một phần
         }
 
@@ -1257,8 +1377,8 @@ public class HoaDonServiceImpl implements HoaDonService {
 
     // Gọi hàm deleteByHoaDonTaiQuay() vào lúc 12h đêm mỗi ngày
     @Scheduled(cron = "0 0 0 * * ?")
-    public void deleteHoaDonAtMidnight() {
+    public void deleteHoaDonAtMidnight()
+    {
         hoaDonRepo.deleteByHoaDonTaiQuay();
     }
-
 }

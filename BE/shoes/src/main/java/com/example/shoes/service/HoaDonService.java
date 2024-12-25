@@ -49,6 +49,8 @@ public interface HoaDonService {
  Void updateTrangThaiHoaDonById(Integer idHoaDon, DatHangRequest datHangRequest);
  Void xacNhanThanhToan(Integer idHoaDon, XacNhanThanhToan xacNhanThanhToan);
  Void updateTrangThaiHoaDonByIdHuy (Integer idHoaDon, GhiChu moTa);
+ Void updateTrangThaiHoaDonByIdHoanHang (Integer idHoaDon, GhiChu moTa);
+ Void updateTrangThaiHoaDonByIdHoanHangThanhCong (Integer idHoaDon, GhiChu moTa);
  List<HoaDonTheoIDKH> getHoaDonTheoKH (Integer idKhachHang, String maHD, String trangThaiDonHang, String ngay);
  HoaDonResponse traHang(Integer idHoaDon,List<SanPhamTraRequest> sanPhamTraList);
 }

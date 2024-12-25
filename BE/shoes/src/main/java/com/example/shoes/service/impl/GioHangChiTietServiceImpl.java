@@ -311,8 +311,8 @@ public class GioHangChiTietServiceImpl
         hoaDon.setTongTien(BigDecimal.ZERO);
         hoaDon.setTienDuocGiam(BigDecimal.ZERO);
         hoaDon.setTienPhaiThanhToan(BigDecimal.ZERO);
-        hoaDon.setTienKhachDua(BigDecimal.ZERO);
-        hoaDon.setTienThua(BigDecimal.ZERO);
+      //  hoaDon.setTienKhachDua(BigDecimal.ZERO);
+      //  hoaDon.setTienThua(BigDecimal.ZERO);
         // Lưu hóa đơn
         hoaDonRepo.save(hoaDon);
         // Kiểm tra số lượng có đủ để thêm vào hóa đơn không
@@ -363,8 +363,8 @@ public class GioHangChiTietServiceImpl
         hoaDon.setTongTien(BigDecimal.ZERO);
         hoaDon.setTienDuocGiam(BigDecimal.ZERO);
         hoaDon.setTienPhaiThanhToan(BigDecimal.ZERO);
-        hoaDon.setTienKhachDua(BigDecimal.ZERO);
-        hoaDon.setTienThua(BigDecimal.ZERO);
+     //   hoaDon.setTienKhachDua(BigDecimal.ZERO);
+     //   hoaDon.setTienThua(BigDecimal.ZERO);
 
         // Lưu HoaDon mới
         hoaDonRepo.save(hoaDon);
@@ -532,8 +532,8 @@ public class GioHangChiTietServiceImpl
         hoaDon.setTongTien(BigDecimal.ZERO);
         hoaDon.setTienDuocGiam(BigDecimal.ZERO);
         hoaDon.setTienPhaiThanhToan(hoaDonRequest.getTienPhaiThanhToan());
-        hoaDon.setTienKhachDua(BigDecimal.ZERO);
-        hoaDon.setTienThua(BigDecimal.ZERO);
+    //    hoaDon.setTienKhachDua(BigDecimal.ZERO);
+    //    hoaDon.setTienThua(BigDecimal.ZERO);
 
 //        if()
         // Lưu hóa đơn ban đầu
@@ -616,8 +616,8 @@ public class GioHangChiTietServiceImpl
         hoaDon.setTongTien(BigDecimal.ZERO);
         hoaDon.setTienDuocGiam(BigDecimal.ZERO);
         hoaDon.setTienPhaiThanhToan(hoaDonRequest.getTienPhaiThanhToan());
-        hoaDon.setTienKhachDua(BigDecimal.ZERO);
-        hoaDon.setTienThua(BigDecimal.ZERO);
+       // hoaDon.setTienKhachDua(BigDecimal.ZERO);
+      //  hoaDon.setTienThua(BigDecimal.ZERO);
 
         // Lưu hóa đơn ban đầu
         HoaDon savedHoaDon = hoaDonRepo.save(hoaDon);
@@ -817,8 +817,8 @@ public class GioHangChiTietServiceImpl
         hoaDonResponse.setTongTien(formatCurrency(hoaDon.getTongTien()));
         hoaDonResponse.setTienDuocGiam(formatCurrency(hoaDon.getTienDuocGiam()));
         hoaDonResponse.setTienPhaiThanhToan(formatCurrency(hoaDon.getTienPhaiThanhToan()));
-        hoaDonResponse.setTienKhachDua(formatCurrency(hoaDon.getTienKhachDua()));
-        hoaDonResponse.setTienThua(formatCurrency(hoaDon.getTienThua()));
+   //     hoaDonResponse.setTienKhachDua(formatCurrency(hoaDon.getTienKhachDua()));
+   //     hoaDonResponse.setTienThua(formatCurrency(hoaDon.getTienThua()));
         hoaDonResponse.setPhuongThucThanhToan(hoaDon.getPhuongThucThanhToan());
         hoaDonResponse.setPhuongThucGiaoHang(hoaDon.getPhuongThucGiaoHang());
         hoaDonResponse.setNgayTao(hoaDon.getCreatedAt());

@@ -43,7 +43,7 @@ public interface HoaDonRepo extends JpaRepository<HoaDon, Integer> {
                         +
                         "hd.tien_duoc_giam ,hd.tien_phai_thanh_toan ,hd.tong_tien,hd.id_khach_hang,hd.id_nhan_vien ,hd.id_phieu_giam_gia ,"
                         +
-                        "hd.tien_khach_dua ,hd.tien_thua ,hd.trang_thai_don_hang,hd.trang_thai_thanh_toan " +
+                        "hd.trang_thai_don_hang,hd.trang_thai_thanh_toan " +
                         " from  hoa_don hd " +
                         "left  join  khach_hang kh on kh.id = hd.id_khach_hang " +
                         "left  join  nhan_vien nv on nv.id = hd.id_nhan_vien " +
