@@ -924,7 +924,7 @@ public class GioHangChiTietServiceImpl
         hoaDon.setTienPhaiThanhToan(
                 hoaDon.getTongTien().subtract(hoaDon.getTienDuocGiam()).add(hoaDon.getPhiVanChuyen()));
 
-        if(hoaDon.getIdPhieuGiamGia().getId()!=null){
+        if(hoaDon.getIdPhieuGiamGia()!=null){
             PhieuGiamGia phieuGiamGia = phieuGiamGiaRepo.findById(hoaDon.getIdPhieuGiamGia().getId()).orElseThrow(
                     () -> new AppException(ErrorCode.VOUCHER_NOT_FOUND));
             if (hoaDon.getTongTien().compareTo(phieuGiamGia.getDieuKienGiamGia()) < 0) {

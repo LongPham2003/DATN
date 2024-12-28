@@ -1,4 +1,5 @@
-import html2pdf from "html2pdf.js"; // Thêm import html2pdf
+/* eslint-disable react/prop-types */
+import html2pdf, { f } from "html2pdf.js"; // Thêm import html2pdf
 import { useState } from "react";
 import { useEffect } from "react";
 import axios from "./../../../api/axiosConfig";

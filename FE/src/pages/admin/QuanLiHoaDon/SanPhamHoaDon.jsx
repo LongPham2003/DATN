@@ -1,8 +1,9 @@
+/* eslint-disable react/prop-types */
 import axios from "../../../api/axiosConfig.js";
 import { useEffect, useState } from "react";
 import LayAnhTheoIdSP from "../SanPham/Product/LayANhTheoIDSP";
 import { Button, Input, Modal, Select } from "antd";
-import { Bounce, toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 // import { getAllSPCTBH } from "./SanPhamService.js";
 
 export const getAllSPBH = async (params = {}) => {
@@ -53,19 +54,7 @@ export default function SanPhamHoaDon({ id, fillHoaDon, fillHoaDonChiTiet }) {
       };
 
       await axios.post(ApiThemSPvaoHoaDon, newSPCT);
-      toast.success("Thêm sản phẩm thành công", {
-        position: "top-right",
-        autoClose: 600,
-        hideProgressBar: false,
-        newestOnTop: false,
-        closeOnClick: true,
-        rtl: false,
-        pauseOnFocusLoss: true,
-        draggable: true,
-        pauseOnHover: true,
-        theme: "light",
-        transition: Bounce,
-      });
+      toast.success("Thêm sản phẩm thành công");
       // Gọi hàm onProductAdded để báo cho component cha biết và cập nhật giỏ hàng
       if (fillHoaDon) {
         fillHoaDon();
@@ -76,17 +65,7 @@ export default function SanPhamHoaDon({ id, fillHoaDon, fillHoaDonChiTiet }) {
       setModalVisible(false);
     } catch (error) {
       console.log(error);
-      toast.error(error.message || "Thêm mới thất bại", {
-        position: "top-right",
-        autoClose: 600,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Bounce,
-      });
+      toast.error(error.message || "Thêm mới thất bại");
     }
   };
 

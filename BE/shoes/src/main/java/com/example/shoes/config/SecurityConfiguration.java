@@ -51,7 +51,7 @@ public class SecurityConfiguration {
             "/banhangonline/**","/api/sanpham/SPClient", "/api/kichthuoc/**", "/api/mausac/**",
             "/api/thuonghieu/**", "/api/degiay/**", "/api/hinhanh/**", "/api/khachhang/**",
             "/api/loai/**", "/api/phieugiamgia/**",  "/api/chatlieu/**",
-            "/api/sanphamchitiet/**"
+            "/api/sanphamchitiet/**","/api/giohang/**","/api/sanpham/**"
     };
 
     private final String[] NHANVIEN_ENDPOINTS = {

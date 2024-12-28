@@ -57,7 +57,8 @@ public enum ErrorCode {
     KHONG_THE_XOA(1005,"Không thể xóa do phiếu giảm giá của bạn",HttpStatus.BAD_REQUEST),
     KHONG_THE_XOA_SP(1005,"Không thể xóa sản phẩm duy nhất ",HttpStatus.BAD_REQUEST),
     SAN_PHAM_NGUNG_KINH_DOANH(1005,"San phẩm ngừng kinh doanh ",HttpStatus.BAD_REQUEST),
-    PRODUCT_EXISTED(1005,"Sản phẩm đã tồn tại",HttpStatus.BAD_REQUEST)
+    PRODUCT_EXISTED(1005,"Sản phẩm đã tồn tại",HttpStatus.BAD_REQUEST),
+    QUAY_LAI(1005,"Không thể cập nhật trạng thái",HttpStatus.BAD_REQUEST)
     ;
     private int code;
     private String message;

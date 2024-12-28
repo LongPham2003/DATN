@@ -7,13 +7,14 @@ import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.hoadon.request.DatHangRequest;
 import com.example.shoes.dto.hoadon.request.GhiChu;
 import com.example.shoes.dto.hoadon.request.HoaDonRequest;
+import com.example.shoes.dto.hoadon.request.HoaDonUpdateAdmin;
+import com.example.shoes.dto.hoadon.request.UpdatePhiVanChuyen;
 import com.example.shoes.dto.hoadon.request.XacNhanThanhToan;
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
 import com.example.shoes.dto.hoadon.response.HoaDonTheoIDKH;
 import com.example.shoes.dto.hoadon.response.HoaDonTheoIDResponse;
 import com.example.shoes.dto.hoadonchitiet.request.HoaDonChiTietRequest;
 import com.example.shoes.dto.payment.PaymentRequest;
-import com.example.shoes.dto.phuongthucthanhtoan.request.PhuongThucThanhToanRequest;
 import com.example.shoes.dto.sanpham.request.SanPhamTraRequest;
 import com.example.shoes.dto.vnpay.response.TransactionStatus;
 import com.example.shoes.entity.*;
@@ -23,7 +24,6 @@ import com.example.shoes.exception.ErrorCode;
 import com.example.shoes.repository.*;
 //import com.example.shoes.repository.PhuongThucThanhToanRepo;
 import com.example.shoes.service.HoaDonService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -40,15 +40,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -187,7 +183,7 @@ public class HoaDonServiceImpl
 
         // Nếu chi tiết hóa đơn đã tồn tại
         if (existingChiTiet != null) {
-            if (existingChiTiet.getDonGia() != spct.getDonGia()) {
+            if (!Objects.equals(existingChiTiet.getDonGia(), spct.getDonGia())) {
                 throw new AppException(ErrorCode.PRODUCT_DETAIL_NOT_FOUND);
             }
 
@@ -547,7 +543,7 @@ public class HoaDonServiceImpl
         HoaDonChiTiet existingChiTiet = hoaDonChiTietRepo.findByHoaDonAndSanPhamChiTiet(hoaDon, spct);
 
         if (existingChiTiet != null) {
-            if (chiTietRequest.getDonGia() != existingChiTiet.getDonGia()) {
+            if (!Objects.equals(chiTietRequest.getDonGia(), existingChiTiet.getDonGia())) {
                 throw new AppException(ErrorCode.PRODUCT_DETAIL_NOT_FOUND);
             }
             // Nếu chi tiết hóa đơn đã tồn tại, cộng thêm số lượng
@@ -1093,6 +1089,7 @@ public class HoaDonServiceImpl
         hoaDonChiTietRepo.saveAll(chiTietList);
         return null;
     }
+
     @Override
     public Void updateTrangThaiHoaDonByIdHoanHangThanhCong(Integer idHoaDon, GhiChu moTa)
     {
@@ -1272,9 +1269,9 @@ public class HoaDonServiceImpl
         hoaDonResponse.setMa(hoaDon.getMa());
         hoaDonResponse.setTenNhanVien(hoaDon.getIdNhanVien() != null ? hoaDon.getIdNhanVien().getHoTen() : null);
         hoaDonResponse
-                .setTenKhachHang(hoaDon.getIdKhachHang() != null ? hoaDon.getIdKhachHang().getHoTen() : "Khách lẻ");
+                .setTenKhachHang(hoaDon.getIdKhachHang() != null ? hoaDon.getTenKhachHang() : "Khách lẻ");
 
-        hoaDonResponse.setSoDienThoai(hoaDon.getIdKhachHang() != null ? hoaDon.getIdKhachHang().getSdt() : "Không có");
+        hoaDonResponse.setSoDienThoai(hoaDon.getIdKhachHang() != null ? hoaDon.getSoDienThoai() : "Không có");
 
         hoaDonResponse.setDiaChiGiaoHang(hoaDon.getDiaChiGiaoHang());
         // Định dạng và lưu trữ giá trị tiền
@@ -1373,6 +1370,103 @@ public class HoaDonServiceImpl
         // Lưu hóa đơn
         HoaDon hoaDonUpdated = hoaDonRepo.save(hoaDon);
         return converToHoaDonResponse(hoaDonUpdated);
+    }
+
+    @Override
+    public Void updateHoaDonAdmin(Integer id, HoaDonUpdateAdmin hoaDonUpdateAdmin)
+    {
+        HoaDon hoaDon = hoaDonRepo.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.BILL_NOT_FOUND));
+        hoaDon.setTenKhachHang(hoaDonUpdateAdmin.getTenKhachHang());
+        hoaDon.setSoDienThoai(hoaDonUpdateAdmin.getSoDienThoai());
+        hoaDon.setDiaChiGiaoHang(hoaDonUpdateAdmin.getDiaChiGiaoHang());
+        hoaDon.setPhiVanChuyen(hoaDonUpdateAdmin.getPhiVanChuyen());
+        hoaDon.setNgayDuKien(hoaDonUpdateAdmin.getNgayDuKien());
+        hoaDon.setTienPhaiThanhToan(hoaDon.getTongTien().add(hoaDonUpdateAdmin.getPhiVanChuyen()).subtract(hoaDon.getTienDuocGiam()));
+        hoaDonRepo.save(hoaDon);
+
+        return null;
+    }
+
+    @Override
+    public Void updatePhiGiaoHang(Integer id, UpdatePhiVanChuyen request)
+    {
+        HoaDon hoaDon = hoaDonRepo.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.BILL_NOT_FOUND));
+        hoaDon.setPhiVanChuyen(request.getPhiVanChuyen());
+        hoaDon.setTienPhaiThanhToan(hoaDon.getTongTien().add(request.getPhiVanChuyen()));
+        hoaDonRepo.save(hoaDon);
+        return null;
+    }
+
+    @Override
+    public Void updateQuayLaiTrangThaiTruoc(Integer id,GhiChu moTa)
+    {
+        HoaDon hoaDon = hoaDonRepo.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.BILL_NOT_FOUND));
+        if(hoaDon.getTrangThaiDonHang().getMoTa().equals("Đã xác nhận đơn")){
+            hoaDon.setTrangThaiDonHang(TrangThai.CHO_XAC_NHAN);
+            LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
+            lichSuHoaDon.setIdHoaDon(hoaDon);
+            lichSuHoaDon.setTrangThai(TrangThai.CHO_XAC_NHAN);
+            lichSuHoaDon.setMoTa(moTa.getGhiChu());
+            lichSuHoaDonRepo.save(lichSuHoaDon);
+        }
+        else if(hoaDon.getTrangThaiDonHang().getMoTa().equals("Chờ lấy hàng")){
+            hoaDon.setTrangThaiDonHang(TrangThai.DA_XAC_NHAN);
+            LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
+            lichSuHoaDon.setIdHoaDon(hoaDon);
+            lichSuHoaDon.setTrangThai(TrangThai.DA_XAC_NHAN);
+            lichSuHoaDon.setMoTa(moTa.getGhiChu());
+            lichSuHoaDonRepo.save(lichSuHoaDon);
+        }else if(hoaDon.getTrangThaiDonHang().getMoTa().equals("Chờ đơn vị vẫn chuyển")){
+            hoaDon.setTrangThaiDonHang(TrangThai.CHO_LAY_HANG);
+            LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
+            lichSuHoaDon.setIdHoaDon(hoaDon);
+            lichSuHoaDon.setTrangThai(TrangThai.CHO_LAY_HANG);
+            lichSuHoaDon.setMoTa(moTa.getGhiChu());
+            lichSuHoaDonRepo.save(lichSuHoaDon);
+        }else if(hoaDon.getTrangThaiDonHang().getMoTa().equals("Đơn đang trên đường giao hàng")){
+            hoaDon.setTrangThaiDonHang(TrangThai.CHO_GIAO_HANG);
+            LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
+            lichSuHoaDon.setIdHoaDon(hoaDon);
+            lichSuHoaDon.setTrangThai(TrangThai.CHO_GIAO_HANG);
+            lichSuHoaDon.setMoTa(moTa.getGhiChu());
+            lichSuHoaDonRepo.save(lichSuHoaDon);
+        }else if(hoaDon.getTrangThaiDonHang().getMoTa().equals("Chờ xác nhận thanh toán")){
+            hoaDon.setTrangThaiDonHang(TrangThai.DANG_GIAO);
+            LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
+            lichSuHoaDon.setIdHoaDon(hoaDon);
+            lichSuHoaDon.setTrangThai(TrangThai.DANG_GIAO);
+            lichSuHoaDon.setMoTa(moTa.getGhiChu());
+            lichSuHoaDonRepo.save(lichSuHoaDon);
+        }else if(hoaDon.getTrangThaiDonHang().getMoTa().equals("Đã thanh toán")){
+            hoaDon.setTrangThaiDonHang(TrangThai.XAC_NHAN_THANH_TOAN);
+            LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
+            lichSuHoaDon.setIdHoaDon(hoaDon);
+            lichSuHoaDon.setTrangThai(TrangThai.XAC_NHAN_THANH_TOAN);
+            lichSuHoaDon.setMoTa(moTa.getGhiChu());
+            lichSuHoaDonRepo.save(lichSuHoaDon);
+        }else if(hoaDon.getTrangThaiDonHang().getMoTa().equals("Hoàn thành")){
+            hoaDon.setTrangThaiDonHang(TrangThai.DA_THANH_TOAN);
+            LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
+            lichSuHoaDon.setIdHoaDon(hoaDon);
+            lichSuHoaDon.setTrangThai(TrangThai.DA_THANH_TOAN);
+            lichSuHoaDon.setMoTa(moTa.getGhiChu());
+            lichSuHoaDonRepo.save(lichSuHoaDon);
+        }else if(hoaDon.getTrangThaiDonHang().getMoTa().equals("Hoàn hàng")){
+            hoaDon.setTrangThaiDonHang(TrangThai.DANG_GIAO);
+            LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
+            lichSuHoaDon.setIdHoaDon(hoaDon);
+            lichSuHoaDon.setTrangThai(TrangThai.DANG_GIAO);
+            lichSuHoaDon.setMoTa(moTa.getGhiChu());
+            lichSuHoaDonRepo.save(lichSuHoaDon);
+        }
+        else {
+            throw  new AppException(ErrorCode.QUAY_LAI);
+        }
+
+        return null;
     }
 
     // Gọi hàm deleteByHoaDonTaiQuay() vào lúc 12h đêm mỗi ngày

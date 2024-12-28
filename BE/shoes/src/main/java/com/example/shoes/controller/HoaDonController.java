@@ -3,6 +3,8 @@ package com.example.shoes.controller;
 import com.example.shoes.dto.PhanTrangResponse;
 import com.example.shoes.dto.hoadon.request.DatHangRequest;
 import com.example.shoes.dto.hoadon.request.GhiChu;
+import com.example.shoes.dto.hoadon.request.HoaDonUpdateAdmin;
+import com.example.shoes.dto.hoadon.request.UpdatePhiVanChuyen;
 import com.example.shoes.dto.hoadon.request.XacNhanThanhToan;
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
 import com.example.shoes.dto.hoadon.response.HoaDonTheoIDKH;
@@ -144,6 +146,18 @@ public class HoaDonController {
     @PostMapping("/xacnhanthanhtoan/{id}")
     private ApiResponse<Void> xacNhan(@PathVariable Integer id,@RequestBody XacNhanThanhToan xacNhanThanhToan) {
         return ApiResponse.<Void>builder().result(hoaDonService.xacNhanThanhToan(id,xacNhanThanhToan)).build();
+    }
+    @PostMapping("/quaylai/{id}")
+    private ApiResponse<Void> xacNhan(@PathVariable Integer id,@RequestBody GhiChu moTa) {
+        return ApiResponse.<Void>builder().result(hoaDonService.updateQuayLaiTrangThaiTruoc(id,moTa)).build();
+    }
+    @PostMapping("/updateadmin/{id}")
+    private ApiResponse<Void> xacNhan(@PathVariable Integer id,@RequestBody HoaDonUpdateAdmin request) {
+        return ApiResponse.<Void>builder().result(hoaDonService.updateHoaDonAdmin(id,request)).build();
+    }
+    @PostMapping("/updatepvc/{id}")
+    private ApiResponse<Void> UpdatePhiVanChuyen(@PathVariable Integer id,@RequestBody UpdatePhiVanChuyen request) {
+        return ApiResponse.<Void>builder().result(hoaDonService.updatePhiGiaoHang(id,request)).build();
     }
 
     @GetMapping("/soluong/hoadon")
