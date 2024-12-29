@@ -638,7 +638,7 @@ const HoaDonChiTiet = () => {
 
   return (
     <div className="mx-3 py-3">
-      <div className="overflow-x-auto">
+      <div>
         <Timeline minEvents={6}>
           {lichSuHoaDon.map((item, index) => (
             <TimelineEvent
@@ -806,12 +806,15 @@ const HoaDonChiTiet = () => {
           </button>
         </div>
         <div className="">
-          <button
-            className="mx-3 rounded bg-blue-500 px-2 py-1 text-white"
-            onClick={openModalQuayLai}
-          >
-            Quay lại trạng thái trước
-          </button>
+          {hoaDon.trangThaiDonHang === "Đã xác nhận đơn" || hoaDon.trangThaiDonHang === "Chờ lấy hàng"  ? (
+            <button
+              className="mx-3 rounded bg-blue-500 px-2 py-1 text-white"
+              onClick={openModalQuayLai}
+            >
+              Quay lại trạng thái trước
+            </button>
+          ):("")}
+
           <button
             className="rounded bg-blue-500 px-2 py-1 text-white"
             onClick={openModalLSHD}

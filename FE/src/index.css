@@ -59,3 +59,7 @@ body {
   font-weight: bold; /* Đặt chữ đậm */
   color: #000000; /* Màu chữ đỏ (hoặc màu bạn muốn) */
 }
+.MuiGrid-root.Timeline2-wrapper-1 {
+  overflow-x: auto;
+  position: relative;
+}
