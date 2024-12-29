@@ -1394,7 +1394,7 @@ public class HoaDonServiceImpl
         HoaDon hoaDon = hoaDonRepo.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.BILL_NOT_FOUND));
         hoaDon.setPhiVanChuyen(request.getPhiVanChuyen());
-        hoaDon.setTienPhaiThanhToan(hoaDon.getTongTien().add(request.getPhiVanChuyen()));
+        hoaDon.setTienPhaiThanhToan(hoaDon.getTongTien().subtract(hoaDon.getTienDuocGiam()).add(request.getPhiVanChuyen()));
         hoaDonRepo.save(hoaDon);
         return null;
     }
@@ -1411,6 +1411,14 @@ public class HoaDonServiceImpl
             lichSuHoaDon.setTrangThai(TrangThai.CHO_XAC_NHAN);
             lichSuHoaDon.setMoTa(moTa.getGhiChu());
             lichSuHoaDonRepo.save(lichSuHoaDon);
+            List<HoaDonChiTiet> chiTietList = hoaDonChiTietRepo.findByIdHoaDon(hoaDon.getId());
+            for (HoaDonChiTiet chiTiet : chiTietList) {
+                chiTiet.setTrangThai(TrangThai.HUY_DON); // Cập nhật trạng thái thành true
+                SanPhamChiTiet sanPhamChiTiet = chiTiet.getIdSpct();
+                sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() + chiTiet.getSoLuong());
+            }
+            hoaDonChiTietRepo.saveAll(chiTietList);
+
         }
         else if(hoaDon.getTrangThaiDonHang().getMoTa().equals("Chờ lấy hàng")){
             hoaDon.setTrangThaiDonHang(TrangThai.DA_XAC_NHAN);
