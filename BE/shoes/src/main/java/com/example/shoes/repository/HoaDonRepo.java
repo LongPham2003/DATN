@@ -2,6 +2,7 @@ package com.example.shoes.repository;
 
 import com.example.shoes.dto.BaoCaoThongKeResponse;
 
+import com.example.shoes.dto.hoadon.response.HoaDonKhongThanhCongTheoIdKH;
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
 
 import com.example.shoes.dto.hoadon.response.HoaDonTheoIDKH;
@@ -126,4 +127,58 @@ public interface HoaDonRepo extends JpaRepository<HoaDon, Integer> {
 
         @Query(value = "delete  from hoa_don where phuong_thuc_giao_hang = 'Tại quầy' and trang_thai_don_hang ='CHO_XAC_NHAN'",nativeQuery = true)
         void deleteByHoaDonTaiQuay();
+
+
+        @Query(value = """
+
+                SELECT\s
+                                  hd.id AS idHoaDon,
+                                  hd.ma AS maHoaDon,
+                                  hd.create_at AS ngayDatHang,
+                                  hd.dia_chi_giao_hang AS diaChiGiaoHang,
+                                  hd.ngay_du_kien AS ngayGiaoHang,
+                                  hd.phi_van_chuyen AS phiVanChuyen,
+                                  hd.phuong_thuc_thanh_toan AS phuongThucThanhToan,
+                                  pgg.ma AS maGiamGia,
+                                  hd.tong_tien AS tongTienHang,
+                                  hd.tien_duoc_giam AS tienDuocGiam,
+                                  hd.tien_phai_thanh_toan AS tienPhaiThanhToan,
+                                  hd.trang_thai_don_hang AS trangThaiDonHang,
+                                  hd.trang_thai_thanh_toan AS trangThaiThanhToan,
+                                 lshd.mo_ta AS ghiChu,
+                                                     COUNT(hdct.id_spct) AS tongSoSanPham
+                                                 FROM\s
+                                                     datn.hoa_don hd
+                                                     join lich_su_hoa_don lshd on lshd.id_hoa_don = hd.id
+                              LEFT JOIN\s
+                                  phieu_giam_gia pgg ON pgg.id = hd.id_phieu_giam_gia
+                              LEFT JOIN\s
+                                  hoa_don_chi_tiet hdct ON hdct.id_hoa_don = hd.id
+                              WHERE\s
+                                  hd.id_khach_hang = :idKhachHang
+                                  AND (:maHD IS NULL OR hd.ma LIKE CONCAT('%', :maHD, '%'))
+                                  AND hd.phuong_thuc_giao_hang = 'Giao Hàng'
+                                  AND (:ngay IS NULL OR DATE(hd.create_at) = :ngay)
+                                  AND hd.trang_thai_don_hang IN ('HOAN_HANG', 'HOAN_HANG_THANH_CONG') -- Thêm điều kiện này
+                              GROUP BY\s
+                                  hd.id,\s
+                                  hd.ma,\s
+                                  hd.create_at,
+                                  hd.dia_chi_giao_hang,\s
+                                  hd.ngay_du_kien,\s
+                                  hd.phi_van_chuyen,\s
+                                  hd.phuong_thuc_thanh_toan,\s
+                                  pgg.ma,\s
+                                  hd.tong_tien,\s
+                                  hd.tien_duoc_giam,\s
+                                  hd.tien_phai_thanh_toan,\s
+                                  hd.trang_thai_don_hang,\s
+                                  hd.trang_thai_thanh_toan
+                              ORDER BY\s
+                                  hd.update_at DESC;
+                              
+        """, nativeQuery = true)
+        List<HoaDonKhongThanhCongTheoIdKH> getHoaDonKhongThanhCongTheoKH(@Param("idKhachHang") Integer idKhachHang,
+                                                           @Param("maHD") String maHD,
+                                                           @Param("ngay") String ngay );
 }

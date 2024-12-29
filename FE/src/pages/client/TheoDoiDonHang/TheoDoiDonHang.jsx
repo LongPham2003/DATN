@@ -6,23 +6,26 @@ import SPMua from "./SPMua";
 import { toast } from "react-toastify";
 
 export default function TheoDoiDonHang() {
-  const [idKH, setIdKH] = useState();
+  // const [idKH, setIdKH] = useState();
   const [listHoaDon, setListHoaDon] = useState([]);
   const [maHD, setmaHD] = useState();
   const [trangThaiDonHang, setTrangThaiDonHang] = useState("CHO_XAC_NHAN");
   const [ngay, setngay] = useState();
   const [idHD, setIdHD] = useState();
+  // const [HDkhongthanhcong, setHDkhongthanhcong] = useState([]);
 
   const laydsHD = async () => {
     let idkh = Number(localStorage.getItem("idKH"));
-    setIdKH(idkh);
+    // setIdKH(idkh);
 
     // Khởi tạo URL cơ bản
     let url = `http://localhost:8080/api/hoadon/getAllHDTheoIDKH?idKhachHang=${idkh}`;
+    let urlKhongThanhCong =`http://localhost:8080/api/hoadon/HDkhongthanhcong?idKhachHang=${idkh}`;
 
     // Thêm `maHD` nếu khác null
     if (maHD) {
       url += `&maHD=${maHD}`;
+      urlKhongThanhCong += `&maHD=${maHD}`;
     }
 
     if (trangThaiDonHang) {
@@ -31,12 +34,20 @@ export default function TheoDoiDonHang() {
 
     if (ngay) {
       url += `&ngay=${ngay}`;
+      urlKhongThanhCong += `&ngay=${ngay}`;
     }
 
     try {
       const resp = await axios.get(url);
-      // console.log(resp.data.result); // Log dữ liệu trả về
       setListHoaDon(resp.data.result);
+      if (trangThaiDonHang === "KhongThanhCong") {
+        const respKhongThanhCong = await axios.get(urlKhongThanhCong);
+        setListHoaDon(respKhongThanhCong.data.result);
+        // Xử lý dữ liệu từ respKhongThanhCong nếu cần
+    }
+      // console.log(resp.data.result); // Log dữ liệu trả về
+      
+      // setHDkhongthanhcong(respKhongThanhCong.data.result);
     } catch (error) {
       console.error("Error fetching data:", error); // Log lỗi
     }
@@ -101,6 +112,22 @@ export default function TheoDoiDonHang() {
       },
     });
   };
+
+  const mapTrangThaiDonHang = (trangThai) => {
+    const trangThaiMapping = {
+      CHO_XAC_NHAN: "Chờ xác nhận",
+      DA_XAC_NHAN: "Đã xác nhận",
+      CHO_GIAO_HANG: "Chờ giao hàng",
+      DANG_GIAO: "Đang giao",
+      HOAN_THANH: "Hoàn thành",
+      HUY_DON: "Hủy đơn",
+      HOAN_HANG : "Giao hàng không thành công",
+      HOAN_HANG_THANH_CONG:"Giao hàng không thành công"
+    };
+
+    return trangThaiMapping[trangThai] || "Không xác định";
+  };
+
   return (
     <>
       <div className="my-10">
@@ -124,6 +151,7 @@ export default function TheoDoiDonHang() {
             <Select.Option value="DANG_GIAO">Đang giao</Select.Option>
             <Select.Option value="HOAN_THANH">Hoàn thành</Select.Option>
             <Select.Option value="HUY_DON">Hủy đơn</Select.Option>
+            <Select.Option value="KhongThanhCong">Giao hàng không thành công</Select.Option>
           </Select>
 
           <Input
@@ -163,16 +191,18 @@ export default function TheoDoiDonHang() {
                         : hd.trangThaiDonHang === "DA_XAC_NHAN"
                           ? "text-orange-500"
                           : hd.trangThaiDonHang === "CHO_GIAO_HANG" ||
-                              hd.trangThaiDonHang === "DANG_GIAO"
-                            ? "text-yellow-500"
+                          hd.trangThaiDonHang === "DANG_GIAO"
+                            ? "text-yellow-600"
                             : hd.trangThaiDonHang === "HOAN_THANH"
                               ? "text-green-500"
                               : hd.trangThaiDonHang === "HUY_DON"
                                 ? "text-red-500"
-                                : ""
+                                : hd.trangThaiDonHang === "KhongThanhCong"
+                                  ? "text-red-600"
+                                  : ""
                     } text-lg`}
                   >
-                    {hd.trangThaiDonHang}
+                      {mapTrangThaiDonHang(hd.trangThaiDonHang)}
                   </span>
                 </div>
 
@@ -189,25 +219,29 @@ export default function TheoDoiDonHang() {
                 </div>
               </div>
             </div>
+            <hr  className="hr"/>
             <div className="flex gap-2">
               <div className="ml-5">
                 <div className="mt-4">
                   <span className="font-bold"> Ngày đặt hàng:</span>
                   {hd.ngayDatHang}
                 </div>
-                <div className="mt-4">
-                  {hd.trangThaiDonHang === "HOAN_THANH"
-                    ? "Ngày giao:"
-                    : "Ngày nhận hàng dự kiến:"}
-                  {hd.ngayGiaoHang}
-                </div>
+                {trangThaiDonHang !== "KhongThanhCong" ? (
+                  <div className="mt-4">
+
+                    {hd.trangThaiDonHang === "HOAN_THANH"
+                      ? "Ngày giao:"
+                      : "Ngày nhận hàng dự kiến:"}
+                    {hd.ngayGiaoHang}
+                  </div>) : ("")}
+
                 <div className="mt-4">
                   <span className="font-bold"> Tổng tiền hàng:</span>{" "}
                   {formatTien(hd.tongTienHang)}
                 </div>
                 <div className="mt-4">
                   <span className="font-bold">
-                    {" "}
+             
                     Tiền giảm từ phiếu giảm giá:
                   </span>{" "}
                   {formatTien(hd.tienDuocGiam)}
@@ -217,9 +251,14 @@ export default function TheoDoiDonHang() {
                   {formatTien(hd.phiVanChuyen)}
                 </div>
                 <div className="mt-4">
-                  {" "}
+
                   <span className="font-bold"> Tiền phải thành toán:</span>{" "}
                   {formatTien(hd.tienPhaiThanhToan)}
+                </div>
+                <div className="mt-4">
+
+                  <span className="font-bold"> Ghi chú:</span>{" "}
+                  {hd.ghiChu ? hd.ghiChu : "Không có ghi chú"}
                 </div>
                 <div className="mt-10">
                   {hd.trangThaiDonHang === "CHO_XAC_NHAN" ? (

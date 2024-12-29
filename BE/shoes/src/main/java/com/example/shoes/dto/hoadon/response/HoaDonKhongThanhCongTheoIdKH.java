@@ -20,5 +20,6 @@ public interface HoaDonKhongThanhCongTheoIdKH {
     Float getTienPhaiThanhToan();  // alias: tienPhaiThanhToan
     String getTrangThaiDonHang();  // alias: trangThaiDonHang
     Boolean getTrangThaiThanhToan(); // alias: trangThaiThanhToan
+    String getGhiChu();
     Integer getTongSoSanPham();    // alias: tongSoSanPham
 }

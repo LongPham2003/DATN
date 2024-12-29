@@ -6,6 +6,7 @@ import com.example.shoes.dto.hoadon.request.GhiChu;
 import com.example.shoes.dto.hoadon.request.HoaDonUpdateAdmin;
 import com.example.shoes.dto.hoadon.request.UpdatePhiVanChuyen;
 import com.example.shoes.dto.hoadon.request.XacNhanThanhToan;
+import com.example.shoes.dto.hoadon.response.HoaDonKhongThanhCongTheoIdKH;
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
 import com.example.shoes.dto.hoadon.response.HoaDonTheoIDKH;
 import com.example.shoes.dto.payment.PaymentRequest;
@@ -206,6 +207,16 @@ public class HoaDonController {
         return ApiResponse.<List<HoaDonTheoIDKH>>builder()
                 .result(hdresq)
                 .build();
+    }
+
+    @GetMapping("/HDkhongthanhcong")
+    public ApiResponse<List<HoaDonKhongThanhCongTheoIdKH>> getHDkhongthanhcong(
+            @RequestParam(value = "maHD", required = false) String maHD,
+            @RequestParam(value = "idKhachHang", required = true) Integer idKhachHang, // Chuyển `idKhachHang` thành bắt buộc
+            @RequestParam(value = "ngay", required = false) String ngay
+    ){
+       List<HoaDonKhongThanhCongTheoIdKH> list = hoaDonRepo.getHoaDonKhongThanhCongTheoKH(idKhachHang,maHD,ngay);
+       return ApiResponse.<List<HoaDonKhongThanhCongTheoIdKH>>builder().result(list).build();
     }
     // Trả hàng
     @PostMapping("/tra-hang")
