@@ -6,6 +6,7 @@ import com.example.shoes.dto.hoadon.request.GhiChu;
 import com.example.shoes.dto.hoadon.request.HoaDonUpdateAdmin;
 import com.example.shoes.dto.hoadon.request.UpdatePhiVanChuyen;
 import com.example.shoes.dto.hoadon.request.XacNhanThanhToan;
+import com.example.shoes.dto.hoadon.response.HoaDonKhongThanhCongTheoIdKH;
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
 import com.example.shoes.dto.hoadon.response.HoaDonTheoIDKH;
 import com.example.shoes.dto.payment.PaymentRequest;
@@ -14,8 +15,11 @@ import com.example.shoes.entity.HoaDon;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.repository.HoaDonRepo;
 import com.example.shoes.service.HoaDonService;
+import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -152,7 +156,11 @@ public class HoaDonController {
         return ApiResponse.<Void>builder().result(hoaDonService.updateQuayLaiTrangThaiTruoc(id,moTa)).build();
     }
     @PostMapping("/updateadmin/{id}")
-    private ApiResponse<Void> xacNhan(@PathVariable Integer id,@RequestBody HoaDonUpdateAdmin request) {
+    private ApiResponse<Void> xacNhan(@PathVariable Integer id,@Valid @RequestBody HoaDonUpdateAdmin request,
+            BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            throw new ValidationException(bindingResult.getFieldError().getDefaultMessage());
+        }
         return ApiResponse.<Void>builder().result(hoaDonService.updateHoaDonAdmin(id,request)).build();
     }
     @PostMapping("/updatepvc/{id}")
@@ -206,6 +214,16 @@ public class HoaDonController {
         return ApiResponse.<List<HoaDonTheoIDKH>>builder()
                 .result(hdresq)
                 .build();
+    }
+
+    @GetMapping("/HDkhongthanhcong")
+    public ApiResponse<List<HoaDonKhongThanhCongTheoIdKH>> getHDkhongthanhcong(
+            @RequestParam(value = "maHD", required = false) String maHD,
+            @RequestParam(value = "idKhachHang", required = true) Integer idKhachHang, // Chuyển `idKhachHang` thành bắt buộc
+            @RequestParam(value = "ngay", required = false) String ngay
+    ){
+       List<HoaDonKhongThanhCongTheoIdKH> list = hoaDonRepo.getHoaDonKhongThanhCongTheoKH(idKhachHang,maHD,ngay);
+       return ApiResponse.<List<HoaDonKhongThanhCongTheoIdKH>>builder().result(list).build();
     }
     // Trả hàng
     @PostMapping("/tra-hang")

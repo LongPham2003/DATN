@@ -63,3 +63,19 @@ body {
   font-weight: bold; /* Đặt chữ đậm */
   color: #000000; /* Màu chữ đỏ (hoặc màu bạn muốn) */
 }
+.MuiGrid-root.Timeline2-wrapper-1 {
+  overflow-x: auto;
+  position: relative;
+}
+
+.hr {
+  height: 1px;
+  margin-bottom: 5px;
+  /*background-color: red; !* Set background color to red *!*/
+  border: none; /* Remove default border */
+  border-top: 1px dashed red; /* Add a dashed top border */
+  width: 90%;
+  margin-left: 60px;
+  /*right: 0;*/
+  /*width: 100%;*/
+}

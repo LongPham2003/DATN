@@ -421,7 +421,7 @@ const HoaDonChiTiet = () => {
       },
     });
   };
-
+  const [lyDoHoanHang, setLyDoHoanHang] = useState("Lý do khác");
   const handleSubmitUpdateHoanHang = (e) => {
     e.preventDefault(); // Ngăn chặn hành động mặc định của form
     Modal.confirm({
@@ -916,16 +916,24 @@ const HoaDonChiTiet = () => {
         transition={Bounce}
       /> */}
       {OpenModelLSHD && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="flex h-[525px] max-h-[600px] w-[450px] justify-between overflow-y-auto rounded-lg bg-white p-8">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="relative h-[650px] w-full max-w-lg overflow-y-auto rounded-lg bg-white p-6 shadow-lg">
             <div className="font-bold">
-              <h3 className="mb-3">Lịch sử hóa đơn</h3>
+              <div className="mb-4 flex items-center justify-between">
+                <h3 className="text-xl">Lịch sử hóa đơn</h3>
+                <button
+                  onClick={closeModalLSHD}
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-red-500 text-white hover:bg-red-600"
+                >
+                  &times;
+                </button>
+              </div>
 
               {lichSuHoaDon.map((item, index) => (
                 <div key={index} className="my-2">
-                  <div className="flex">
-                    <h4>Trạng thái : </h4>
-                    <span>
+                  <div className="mb-2 flex">
+                    <h4 className="w-1/3 font-medium">Trạng thái:</h4>
+                    <span className="text-gray-700">
                       {item.trangThai === "CHO_XAC_NHAN"
                         ? "Chờ xác nhận"
                         : item.trangThai === "DA_XAC_NHAN"
@@ -938,31 +946,31 @@ const HoaDonChiTiet = () => {
                                 ? "Đã thanh toán"
                                 : item.trangThai === "HOAN_THANH"
                                   ? "Hoàn thành"
-                                  : ""}
+                                  : item.trangThai === "HOAN_HANG"
+                                    ? "Hoàn Hàng"
+                                    : item.trangThai === "HOAN_HANG_THANH_CONG"
+                                      ? "Hoàn Hàng Thành Công"
+                                      : ""}
                     </span>
                   </div>
-                  <div className="flex">
-                    <h4>Thời gian :</h4>
-                    <span>{formatDate(item.createAt)}</span>
+                  <div className="mb-2 flex">
+                    <h4 className="w-1/3 font-medium">Thời gian:</h4>
+                    <span className="text-gray-700">
+                      {formatDate(item.createAt)}
+                    </span>
                   </div>
-                  <div className="flex">
-                    <h4>Ghi chú:</h4>
-                    <h4>{item.moTa}</h4>
+                  <div className="mb-2 flex">
+                    <h4 className="w-1/3 font-medium">Ghi chú:</h4>
+                    <span className="text-gray-700">{item.moTa}</span>
                   </div>
-                  <div className="flex">
-                    <h4>Người thực hiện : </h4>
-                    <span> {item.createBy}</span>
+                  <div className="mb-2 flex">
+                    <h4 className="w-1/3 font-medium">Người thực hiện:</h4>
+                    <span className="text-gray-700">{item.createBy}</span>
                   </div>
-                  <hr className="border-orange-400" />
+                  <hr className="border-t border-gray-300" />
                 </div>
               ))}
             </div>
-            <button
-              onClick={closeModalLSHD}
-              className="h-10 rounded bg-red-500 px-4 text-white hover:bg-red-600"
-            >
-              X
-            </button>
           </div>
         </div>
       )}
@@ -1046,7 +1054,9 @@ const HoaDonChiTiet = () => {
                       type="radio"
                       name="lyDoHoanHang"
                       value="Người nhận không nghe máy"
-                      onChange={(e) => setGhiChu(e.target.value)}
+                      onChange={(e) => setLyDoHoanHang(e.target.value)}
+                      checked={lyDoHoanHang === "Người nhận không nghe máy"}
+                      onClick={(e) => setGhiChu(e.target.value)}
                       className="mr-2"
                     />
                     Người nhận không nghe máy
@@ -1056,7 +1066,9 @@ const HoaDonChiTiet = () => {
                       type="radio"
                       name="lyDoHoanHang"
                       value="Do sản phẩm bị lỗi"
-                      onChange={(e) => setGhiChu(e.target.value)}
+                      onChange={(e) => setLyDoHoanHang(e.target.value)}
+                      onClick={(e) => setGhiChu(e.target.value)}
+                      checked={lyDoHoanHang === "Do sản phẩm bị lỗi"}
                       className="mr-2"
                     />
                     Do sản phẩm bị lỗi
@@ -1068,7 +1080,11 @@ const HoaDonChiTiet = () => {
                       type="radio"
                       name="lyDoHoanHang"
                       value="Khách hàng đặt nhầm kích thước"
-                      onChange={(e) => setGhiChu(e.target.value)}
+                      onChange={(e) => setLyDoHoanHang(e.target.value)}
+                      onClick={(e) => setGhiChu(e.target.value)}
+                      checked={
+                        lyDoHoanHang === "Khách hàng đặt nhầm kích thước"
+                      }
                       className="mr-2"
                     />
                     Khách hàng đặt nhầm kích thước
@@ -1078,9 +1094,10 @@ const HoaDonChiTiet = () => {
                       type="radio"
                       name="lyDoHoanHang"
                       value="Lý do khác"
-                      onChange={(e) => setGhiChu(e.target.value)}
+                      onChange={(e) => setLyDoHoanHang(e.target.value)}
+                      onClick={(e) => setGhiChu(e.target.value)}
+                      checked={lyDoHoanHang === "Lý do khác"}
                       className="mr-2"
-                      checked
                     />
                     Lý do khác
                   </label>

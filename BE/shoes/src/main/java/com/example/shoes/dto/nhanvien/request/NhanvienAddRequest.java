@@ -21,7 +21,7 @@ public class NhanvienAddRequest {
     @NotBlank(message = "Họ tên không được để trống")
     @Size(min = 3, max = 50, message = "Tên phải có độ dài từ 3 đến 50 ký tự")
     @Pattern(
-            regexp = "^[a-zA-Z\\s]+$",
+            regexp = "^[\\p{L}\\p{Mn}\\s]+$",
             message = "Tên chỉ được chứa chữ cái và khoảng trắng"
     )
     private String hoTen;

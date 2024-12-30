@@ -1382,7 +1382,8 @@ public class HoaDonServiceImpl
         hoaDon.setDiaChiGiaoHang(hoaDonUpdateAdmin.getDiaChiGiaoHang());
         hoaDon.setPhiVanChuyen(hoaDonUpdateAdmin.getPhiVanChuyen());
         hoaDon.setNgayDuKien(hoaDonUpdateAdmin.getNgayDuKien());
-        hoaDon.setTienPhaiThanhToan(hoaDon.getTongTien().add(hoaDonUpdateAdmin.getPhiVanChuyen()).subtract(hoaDon.getTienDuocGiam()));
+        hoaDon.setTienPhaiThanhToan(
+                hoaDon.getTongTien().add(hoaDonUpdateAdmin.getPhiVanChuyen()).subtract(hoaDon.getTienDuocGiam()));
         hoaDonRepo.save(hoaDon);
 
         return null;
@@ -1394,17 +1395,18 @@ public class HoaDonServiceImpl
         HoaDon hoaDon = hoaDonRepo.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.BILL_NOT_FOUND));
         hoaDon.setPhiVanChuyen(request.getPhiVanChuyen());
-        hoaDon.setTienPhaiThanhToan(hoaDon.getTongTien().subtract(hoaDon.getTienDuocGiam()).add(request.getPhiVanChuyen()));
+        hoaDon.setTienPhaiThanhToan(
+                hoaDon.getTongTien().subtract(hoaDon.getTienDuocGiam()).add(request.getPhiVanChuyen()));
         hoaDonRepo.save(hoaDon);
         return null;
     }
 
     @Override
-    public Void updateQuayLaiTrangThaiTruoc(Integer id,GhiChu moTa)
+    public Void updateQuayLaiTrangThaiTruoc(Integer id, GhiChu moTa)
     {
         HoaDon hoaDon = hoaDonRepo.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.BILL_NOT_FOUND));
-        if(hoaDon.getTrangThaiDonHang().getMoTa().equals("Đã xác nhận đơn")){
+        if (hoaDon.getTrangThaiDonHang().getMoTa().equals("Đã xác nhận đơn")) {
             hoaDon.setTrangThaiDonHang(TrangThai.CHO_XAC_NHAN);
             LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
             lichSuHoaDon.setIdHoaDon(hoaDon);
@@ -1418,51 +1420,56 @@ public class HoaDonServiceImpl
                 sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() + chiTiet.getSoLuong());
             }
             hoaDonChiTietRepo.saveAll(chiTietList);
-
         }
-        else if(hoaDon.getTrangThaiDonHang().getMoTa().equals("Chờ lấy hàng")){
+        else if (hoaDon.getTrangThaiDonHang().getMoTa().equals("Chờ lấy hàng")) {
             hoaDon.setTrangThaiDonHang(TrangThai.DA_XAC_NHAN);
             LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
             lichSuHoaDon.setIdHoaDon(hoaDon);
             lichSuHoaDon.setTrangThai(TrangThai.DA_XAC_NHAN);
             lichSuHoaDon.setMoTa(moTa.getGhiChu());
             lichSuHoaDonRepo.save(lichSuHoaDon);
-        }else if(hoaDon.getTrangThaiDonHang().getMoTa().equals("Chờ đơn vị vẫn chuyển")){
+        }
+        else if (hoaDon.getTrangThaiDonHang().getMoTa().equals("Chờ đơn vị vẫn chuyển")) {
             hoaDon.setTrangThaiDonHang(TrangThai.CHO_LAY_HANG);
             LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
             lichSuHoaDon.setIdHoaDon(hoaDon);
             lichSuHoaDon.setTrangThai(TrangThai.CHO_LAY_HANG);
             lichSuHoaDon.setMoTa(moTa.getGhiChu());
             lichSuHoaDonRepo.save(lichSuHoaDon);
-        }else if(hoaDon.getTrangThaiDonHang().getMoTa().equals("Đơn đang trên đường giao hàng")){
+        }
+        else if (hoaDon.getTrangThaiDonHang().getMoTa().equals("Đơn đang trên đường giao hàng")) {
             hoaDon.setTrangThaiDonHang(TrangThai.CHO_GIAO_HANG);
             LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
             lichSuHoaDon.setIdHoaDon(hoaDon);
             lichSuHoaDon.setTrangThai(TrangThai.CHO_GIAO_HANG);
             lichSuHoaDon.setMoTa(moTa.getGhiChu());
             lichSuHoaDonRepo.save(lichSuHoaDon);
-        }else if(hoaDon.getTrangThaiDonHang().getMoTa().equals("Chờ xác nhận thanh toán")){
+        }
+        else if (hoaDon.getTrangThaiDonHang().getMoTa().equals("Chờ xác nhận thanh toán")) {
             hoaDon.setTrangThaiDonHang(TrangThai.DANG_GIAO);
             LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
             lichSuHoaDon.setIdHoaDon(hoaDon);
             lichSuHoaDon.setTrangThai(TrangThai.DANG_GIAO);
             lichSuHoaDon.setMoTa(moTa.getGhiChu());
             lichSuHoaDonRepo.save(lichSuHoaDon);
-        }else if(hoaDon.getTrangThaiDonHang().getMoTa().equals("Đã thanh toán")){
+        }
+        else if (hoaDon.getTrangThaiDonHang().getMoTa().equals("Đã thanh toán")) {
             hoaDon.setTrangThaiDonHang(TrangThai.XAC_NHAN_THANH_TOAN);
             LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
             lichSuHoaDon.setIdHoaDon(hoaDon);
             lichSuHoaDon.setTrangThai(TrangThai.XAC_NHAN_THANH_TOAN);
             lichSuHoaDon.setMoTa(moTa.getGhiChu());
             lichSuHoaDonRepo.save(lichSuHoaDon);
-        }else if(hoaDon.getTrangThaiDonHang().getMoTa().equals("Hoàn thành")){
+        }
+        else if (hoaDon.getTrangThaiDonHang().getMoTa().equals("Hoàn thành")) {
             hoaDon.setTrangThaiDonHang(TrangThai.DA_THANH_TOAN);
             LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
             lichSuHoaDon.setIdHoaDon(hoaDon);
             lichSuHoaDon.setTrangThai(TrangThai.DA_THANH_TOAN);
             lichSuHoaDon.setMoTa(moTa.getGhiChu());
             lichSuHoaDonRepo.save(lichSuHoaDon);
-        }else if(hoaDon.getTrangThaiDonHang().getMoTa().equals("Hoàn hàng")){
+        }
+        else if (hoaDon.getTrangThaiDonHang().getMoTa().equals("Hoàn hàng")) {
             hoaDon.setTrangThaiDonHang(TrangThai.DANG_GIAO);
             LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
             lichSuHoaDon.setIdHoaDon(hoaDon);
@@ -1471,16 +1478,24 @@ public class HoaDonServiceImpl
             lichSuHoaDonRepo.save(lichSuHoaDon);
         }
         else {
-            throw  new AppException(ErrorCode.QUAY_LAI);
+            throw new AppException(ErrorCode.QUAY_LAI);
         }
 
         return null;
+    }
+
+    @Transactional
+    void deleteAtNight()
+    {
+        hoaDonRepo.deleteByLichSuHoaDon();
+        hoaDonRepo.deleteByHoaDonChiTiet();
+        hoaDonRepo.deleteByHoaDonTaiQuay();
     }
 
     // Gọi hàm deleteByHoaDonTaiQuay() vào lúc 12h đêm mỗi ngày
     @Scheduled(cron = "0 0 0 * * ?")
     public void deleteHoaDonAtMidnight()
     {
-        hoaDonRepo.deleteByHoaDonTaiQuay();
+        deleteAtNight();
     }
 }
