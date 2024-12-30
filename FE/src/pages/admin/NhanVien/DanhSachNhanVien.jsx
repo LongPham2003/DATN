@@ -204,8 +204,8 @@ export default function DanhSachNhanVien() {
         </div>
         <div className="mr-14 mt-4 flex justify-end">
           <ReactPaginate
-            previousLabel={"< Previous"}
-            nextLabel={"Next >"}
+            previousLabel={"<"}
+            nextLabel={">"}
             breakLabel={"..."}
             pageCount={tongSoTrang}
             marginPagesDisplayed={2}

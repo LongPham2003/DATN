@@ -41,7 +41,7 @@ const Carousel = () => {
 
   return (
     <>
-      <div className="flex">
+      <div className="my-10 flex">
         <div className="flex w-[70%] bg-[#f9ffffb7]">
           <div className="mx-auto my-auto">
             <p className="my-8 font-mono text-[50px] font-bold">
@@ -78,7 +78,7 @@ const Carousel = () => {
         </div>
       </div>
       <div>
-        {" "}
+        <hr />{" "}
         <Row gutter={[32, 32]} justify="center" style={{ padding: "20px 0" }}>
           {features.map((feature, index) => (
             <Col
@@ -98,6 +98,7 @@ const Carousel = () => {
             </Col>
           ))}
         </Row>
+        <hr />
       </div>
       <div className="flex gap-[40px] py-8">
         <div className="mt-[100px] flex flex-col items-center gap-4">

@@ -329,8 +329,8 @@ export default function DanhSachHoaDon() {
         </div>
         <div className="mr-14 mt-4 flex justify-center">
           <ReactPaginate
-            previousLabel={"< Previous"}
-            nextLabel={"Next >"}
+            previousLabel={"<"}
+            nextLabel={">"}
             breakLabel={"..."}
             pageCount={tongSoTrang}
             marginPagesDisplayed={2}
