@@ -9,12 +9,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public interface PhieuGiamGiaRepo extends JpaRepository<PhieuGiamGia, Integer> {
+public interface PhieuGiamGiaRepo
+        extends JpaRepository<PhieuGiamGia, Integer>
+{
 
     boolean existsById(Integer id);
 
@@ -40,4 +43,15 @@ public interface PhieuGiamGiaRepo extends JpaRepository<PhieuGiamGia, Integer> {
 
     @Query("SELECT pgg.ma FROM PhieuGiamGia pgg ORDER BY pgg.ma DESC")
     List<String> findTopMaPhieuGiamGia();
+
+    @Query("""
+                SELECT v 
+                FROM PhieuGiamGia v 
+                WHERE :dieuKienGiam >= v.dieuKienGiamGia 
+                AND v.ngayBatDau <= CURRENT_TIMESTAMP 
+                AND v.ngayKetThuc >= CURRENT_TIMESTAMP 
+                AND v.soLuong > 0
+                ORDER BY v.mucGiam DESC limit  1
+            """)
+    PhieuGiamGia findPhieuGiamGiaCoLoiNhat(@Param("dieuKienGiam") BigDecimal dieuKienGiam);
 }

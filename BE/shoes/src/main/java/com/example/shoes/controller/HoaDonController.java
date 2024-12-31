@@ -9,12 +9,15 @@ import com.example.shoes.dto.hoadon.request.XacNhanThanhToan;
 import com.example.shoes.dto.hoadon.response.HoaDonKhongThanhCongTheoIdKH;
 import com.example.shoes.dto.hoadon.response.HoaDonResponse;
 import com.example.shoes.dto.hoadon.response.HoaDonTheoIDKH;
+import com.example.shoes.dto.hoadonchitiet.request.HoaDonChiTietRequest;
 import com.example.shoes.dto.payment.PaymentRequest;
 import com.example.shoes.dto.sanpham.request.SanPhamTraRequest;
 import com.example.shoes.entity.HoaDon;
 import com.example.shoes.exception.ApiResponse;
 import com.example.shoes.repository.HoaDonRepo;
 import com.example.shoes.service.HoaDonService;
+import com.example.shoes.service.impl.GioHangChiTietServiceImpl;
+import com.example.shoes.service.impl.HoaDonServiceImpl;
 import jakarta.validation.Valid;
 import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +34,8 @@ public class HoaDonController {
     private HoaDonService hoaDonService;
     @Autowired
     private HoaDonRepo hoaDonRepo;
-
+    @Autowired private HoaDonServiceImpl hoaDonServiceImpl;
+    @Autowired private GioHangChiTietServiceImpl gioHangChiTietServiceImpl;
 
     @GetMapping("/getall")
     public ApiResponse<PhanTrangResponse<HoaDonResponse>> getAllHoaDon(
@@ -235,6 +239,16 @@ public class HoaDonController {
         // Trả về kết quả dưới dạng ApiResponse
         return ApiResponse.<HoaDonResponse>builder()
                 .result(hoaDonResponse)
+                .build();
+    }
+
+    @PutMapping("/capnhatsoluongsanphamchitiet/{id}")
+    public ApiResponse<HoaDonResponse> updateHoaDon(
+            @PathVariable("id") Integer id,
+            @RequestBody HoaDonChiTietRequest hoaDonRequest) {
+        HoaDonResponse updatedHoaDon = gioHangChiTietServiceImpl.chinhSuaSoLuongSanPhamChiTiet(id, hoaDonRequest);
+        return ApiResponse.<HoaDonResponse>builder()
+                .result(updatedHoaDon)
                 .build();
     }
 
