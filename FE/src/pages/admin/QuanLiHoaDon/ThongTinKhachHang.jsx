@@ -365,7 +365,7 @@ const ThongTinKhachHang = ({ hoaDon, fillHoaDon, fillHoaDonChiTiet }) => {
           {/* Cột phải */}
           <div className="w-1/2 space-y-4 pl-4">
             <div className="flex items-center justify-end">
-              {hoaDon.trangThaiDonHang === "Chờ xác nhận" && (
+              {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" && (
                 <button
                   onClick={openModelCapNhatThongTin}
                   className="rounded bg-blue-500 px-2 text-white"
@@ -373,7 +373,6 @@ const ThongTinKhachHang = ({ hoaDon, fillHoaDon, fillHoaDonChiTiet }) => {
                   Cập nhật thông tin
                 </button>
               )}
-
             </div>
             <div className="flex items-center justify-between">
               <span className="font-medium text-gray-600">

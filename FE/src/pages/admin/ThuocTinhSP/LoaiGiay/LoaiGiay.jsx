@@ -362,8 +362,8 @@ export default function Loai() {
           </div>
           <div className="mr-14 mt-4 flex justify-end">
             <ReactPaginate
-              previousLabel={"< Previous"}
-              nextLabel={"Next >"}
+              previousLabel={"<"}
+              nextLabel={">"}
               breakLabel={"..."}
               pageCount={tongSoTrang} // Tổng số trang
               marginPagesDisplayed={2}

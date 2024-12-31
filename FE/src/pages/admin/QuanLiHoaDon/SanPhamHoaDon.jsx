@@ -65,7 +65,7 @@ export default function SanPhamHoaDon({ id, fillHoaDon, fillHoaDonChiTiet }) {
       setModalVisible(false);
     } catch (error) {
       console.log(error);
-      toast.error(error.message || "Thêm mới thất bại");
+      toast.error(error.response.data.message || "Thêm mới thất bại");
     }
   };
 

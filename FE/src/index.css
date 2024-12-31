@@ -37,6 +37,10 @@ body {
   max-height: auto; /* Đảm bảo hình ảnh không vượt quá chiều cao của thumbnail */
   object-fit: contain; /* Đảm bảo hình ảnh giữ đúng tỷ lệ trong ô */
 }
+.MuiGrid-root.Timeline2-wrapper-1 {
+  overflow-x: auto;
+  position: relative;
+}
 
 /* Vô hiệu hóa hover hiển thị nội dung */
 /* .ant-select-item-option-content {
@@ -71,7 +75,7 @@ body {
   border: none; /* Remove default border */
   border-top: 1px dashed red; /* Add a dashed top border */
   width: 90%;
-   margin-left: 60px;
+  margin-left: 60px;
   /*right: 0;*/
   /*width: 100%;*/
 }

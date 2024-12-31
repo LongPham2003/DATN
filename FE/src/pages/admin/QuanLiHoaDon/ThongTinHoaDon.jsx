@@ -64,6 +64,28 @@ const ThongTinHoaDon = ({
     }
   };
 
+  // Tăng giảm số lượng mua lên 1
+  const updateSoLuong = async (idSpct, newQuantity) => {
+    if (newQuantity > 0) {
+      try {
+        await axios.put(
+          `http://localhost:8080/api/hoadon/capnhatsoluongsanphamchitiet/${hoaDon.id}`,
+          {
+            idSpct: idSpct,
+            soLuong: newQuantity,
+          },
+        );
+        fillHoaDon();
+        fillHoaDonChiTiet();
+        toast.success("Cập nhật thành công");
+      } catch (error) {
+        toast.error(error.response.data.message);
+      }
+    } else {
+      toast.error("Số lượng phải lớn hơn 0");
+    }
+  };
+
   return (
     <div>
       <h3 className="text-[20px] font-bold text-pink-500">
@@ -179,7 +201,21 @@ const ThongTinHoaDon = ({
                   <br />
                 </td>
                 <td>{formatTien(SPCT.donGia)}</td>
-                <td>{SPCT.soLuong}</td>
+                <td className="space-x-3">
+                  <button
+                    onClick={() => updateSoLuong(SPCT.idSpct, SPCT.soLuong - 1)}
+                    className="h-8 w-8 rounded-full bg-gray-200 font-bold text-gray-500 hover:bg-gray-300"
+                  >
+                    -
+                  </button>
+                  <span className="text-lg font-medium">{SPCT.soLuong}</span>
+                  <button
+                    onClick={() => updateSoLuong(SPCT.idSpct, SPCT.soLuong + 1)}
+                    className="h-8 w-8 rounded-full bg-gray-200 font-bold text-gray-500 hover:bg-gray-300"
+                  >
+                    +
+                  </button>
+                </td>
                 <td>{formatTien(SPCT.donGia * SPCT.soLuong)}</td>
                 {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" &&
                 hoaDon.trangThaiThanhToan === "Chưa thanh toán" ? (
