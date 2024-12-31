@@ -843,19 +843,11 @@ public class GioHangChiTietServiceImpl
         // Tìm chi tiết hóa đơn đã tồn tại
         HoaDonChiTiet existingChiTiet = hoaDonChiTietRepo.findByHoaDonAndSanPhamChiTiet(hoaDon, spct);
 
-        // Kiểm tra số lượng có đủ để thêm vào hóa đơn không
-        if(chiTietRequest.getIdSpct().intValue()==existingChiTiet.getIdSpct().getId().intValue()){
+        if (existingChiTiet != null) {
+            // Nếu chi tiết hóa đơn đã tồn tại, cộng thêm số lượng
             if (chiTietRequest.getSoLuong() + existingChiTiet.getSoLuong() > spct.getSoLuong()) {
                 throw new AppException(ErrorCode.INSUFFICIENT_STOCK); // Kiểm tra nếu không đủ hàng
             }
-        }else{
-            if (chiTietRequest.getSoLuong() > spct.getSoLuong()) {
-                throw new AppException(ErrorCode.INSUFFICIENT_STOCK); // Kiểm tra nếu không đủ hàng
-            }
-        }
-
-        if (existingChiTiet != null) {
-            // Nếu chi tiết hóa đơn đã tồn tại, cộng thêm số lượng
             existingChiTiet.setSoLuong(existingChiTiet.getSoLuong() + chiTietRequest.getSoLuong());
             existingChiTiet.setDonGia(spct.getDonGia());
             // Lưu lại chi tiết hóa đơn đã cập nhật
@@ -866,6 +858,9 @@ public class GioHangChiTietServiceImpl
             HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
             hoaDonChiTiet.setIdHoaDon(hoaDon);
             hoaDonChiTiet.setIdSpct(spct);
+            if (chiTietRequest.getSoLuong() > spct.getSoLuong()) {
+                throw new AppException(ErrorCode.INSUFFICIENT_STOCK); // Kiểm tra nếu không đủ hàng
+            }
             hoaDonChiTiet.setSoLuong(chiTietRequest.getSoLuong());
             hoaDonChiTiet.setDonGia(chiTietRequest.getDonGia() != null ? chiTietRequest.getDonGia() : spct.getDonGia());
             hoaDonChiTiet.setTrangThai(TrangThai.CHO_XAC_NHAN);
