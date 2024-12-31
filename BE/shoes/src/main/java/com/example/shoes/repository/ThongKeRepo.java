@@ -414,29 +414,37 @@ public interface ThongKeRepo
                     WHEN hd.trang_thai_thanh_toan = 1 THEN hd.tong_tien - COALESCE(hd.tien_duoc_giam, 0)
                     ELSE 0 END), 0) AS tongTien,
                 COALESCE(SUM(CASE
-                     WHEN hd.trang_thai_thanh_toan = 1 THEN COALESCE(hdct.so_luong, 0)
-                     ELSE 0 END), 0) AS sanPhamBanDuoc
+                    WHEN hd.trang_thai_thanh_toan = 1 THEN COALESCE(hdct.so_luong, 0)
+                    ELSE 0 END), 0) AS sanPhamBanDuoc
             FROM
-                (SELECT 'Monday' AS ngayTrongTuan UNION ALL
-                 SELECT 'Tuesday' UNION ALL
-                 SELECT 'Wednesday' UNION ALL
-                 SELECT 'Thursday' UNION ALL
-                 SELECT 'Friday' UNION ALL
-                 SELECT 'Saturday' UNION ALL
-                 SELECT 'Sunday') AS weekday
+                (SELECT 'Thứ hai' AS ngayTrongTuan UNION ALL
+                 SELECT 'Thứ ba' UNION ALL
+                 SELECT 'Thứ tư' UNION ALL
+                 SELECT 'Thứ năm' UNION ALL
+                 SELECT 'Thứ sáu' UNION ALL
+                 SELECT 'Thứ bảy' UNION ALL
+                 SELECT 'Chủ nhật') AS weekday
             LEFT JOIN
                 hoa_don hd
-                ON DAYNAME(hd.update_at) = weekday.ngayTrongTuan
-                   AND hd.update_at BETWEEN DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY)
-                                       AND DATE_ADD(CURDATE(), INTERVAL (6 - WEEKDAY(CURDATE())) DAY) + INTERVAL 1 DAY - INTERVAL 1 SECOND
+                ON CASE
+                    WHEN DAYNAME(hd.update_at) = 'Monday' THEN 'Thứ hai'
+                    WHEN DAYNAME(hd.update_at) = 'Tuesday' THEN 'Thứ ba'
+                    WHEN DAYNAME(hd.update_at) = 'Wednesday' THEN 'Thứ tư'
+                    WHEN DAYNAME(hd.update_at) = 'Thursday' THEN 'Thứ năm'
+                    WHEN DAYNAME(hd.update_at) = 'Friday' THEN 'Thứ sáu'
+                    WHEN DAYNAME(hd.update_at) = 'Saturday' THEN 'Thứ bảy'
+                    WHEN DAYNAME(hd.update_at) = 'Sunday' THEN 'Chủ nhật'
+                END = weekday.ngayTrongTuan
+                AND hd.update_at BETWEEN DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY)
+                                     AND DATE_ADD(CURDATE(), INTERVAL (6 - WEEKDAY(CURDATE())) DAY) + INTERVAL 1 DAY - INTERVAL 1 SECOND
             LEFT JOIN
                 hoa_don_chi_tiet hdct
                 ON hd.id = hdct.id_hoa_don
             GROUP BY
                 weekday.ngayTrongTuan
             ORDER BY
-                FIELD(weekday.ngayTrongTuan, 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
-
+                FIELD(weekday.ngayTrongTuan, 'Thứ hai', 'Thứ ba', 'Thứ tư', 'Thứ năm', 'Thứ sáu', 'Thứ bảy', 'Chủ nhật');
+            
             """, nativeQuery = true)
     List<BieuDoNgayTrongTuan> cacNgayTrongTuan();
 }

@@ -71,6 +71,8 @@ export default function DoanhThu() {
           className="rounded-md border-blue-600 shadow-md"
           onChange={handleDateChange}
           value={selectedDate}
+          placeholder="Chọn ngày"
+
         />
         <Button
           className="rounded-md bg-blue-600 text-white shadow-md hover:bg-blue-700"

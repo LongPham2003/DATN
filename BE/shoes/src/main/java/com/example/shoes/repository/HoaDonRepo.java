@@ -88,9 +88,11 @@ public interface HoaDonRepo extends JpaRepository<HoaDon, Integer> {
             hd.tien_phai_thanh_toan AS tienPhaiThanhToan,
             hd.trang_thai_don_hang AS trangThaiDonHang,
             hd.trang_thai_thanh_toan AS trangThaiThanhToan,
-            COUNT(hdct.id_spct) AS tongSoSanPham
-        FROM 
-            datn.hoa_don hd
+             lshd.mo_ta AS ghiChu,
+                                                     COUNT(hdct.id_spct) AS tongSoSanPham
+                                                 FROM\s
+                                                     datn.hoa_don hd
+                                                     join lich_su_hoa_don lshd on lshd.id_hoa_don = hd.id
         LEFT JOIN 
             phieu_giam_gia pgg ON pgg.id = hd.id_phieu_giam_gia
         LEFT JOIN 
