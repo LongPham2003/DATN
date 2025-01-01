@@ -363,18 +363,20 @@ const HoaDonChiTiet = () => {
       isFirstRender.current = false;
       return;
     }
-    axios
-      .post(`http://localhost:8080/api/hoadon/updatepvc/${id}`, {
-        phiVanChuyen: phiGiaoHang,
-      })
-      .then(() => {
-        fillHoaDonChiTiet();
-        fillHoaDon();
-      })
-      .catch((error) => {
-        toast.error(error.response.data.message);
-      });
-  }, [soLuong]);
+    if (phiGiaoHang !== 0) {
+      axios
+        .post(`http://localhost:8080/api/hoadon/updatepvc/${id}`, {
+          phiVanChuyen: phiGiaoHang,
+        })
+        .then(() => {
+          fillHoaDonChiTiet();
+          fillHoaDon();
+        })
+        .catch((error) => {
+          toast.error(error.response.data.message);
+        });
+    }
+  }, [soLuong, id]);
 
   console.log(thanhToan);
   console.log(lichSuHoaDon);

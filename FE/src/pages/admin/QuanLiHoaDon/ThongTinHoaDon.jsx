@@ -96,7 +96,7 @@ const ThongTinHoaDon = ({
       .then((res) => {
         setDanhSachPhieuGiamGia(res.data.result);
       });
-  }, []);
+  }, [hoaDon.idPhieuGiamGia]);
 
   const addPhieuGiamGia = async (idPhieuGiamGiaDangChon) => {
     Modal.confirm({

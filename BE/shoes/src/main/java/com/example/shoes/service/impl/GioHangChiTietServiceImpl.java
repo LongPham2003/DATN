@@ -1058,28 +1058,27 @@ public class GioHangChiTietServiceImpl
     {
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon)
                 .orElseThrow(() -> new AppException(ErrorCode.BILL_NOT_FOUND));
-
+        PhieuGiamGia phieuGiamGiaDangApDung = hoaDon.getIdPhieuGiamGia();
         PhieuGiamGia phieuGiamGia = phieuGiamGiaRepo.findById(idPhieuGiamGia)
                 .orElseThrow(() -> new AppException(ErrorCode.VOUCHER_NOT_FOUND));
 
         if (hoaDon.getIdPhieuGiamGia() != null) {
-            xoaPhieuGiamGiaHoaDon(idHoaDon,idPhieuGiamGia);
+            xoaPhieuGiamGiaHoaDon(idHoaDon,phieuGiamGiaDangApDung.getId());
             BigDecimal soTienGiam = apDungVoucher(hoaDon.getTongTien(), phieuGiamGia);
             hoaDon.setTienDuocGiam(soTienGiam);
             hoaDon.setIdPhieuGiamGia(phieuGiamGia);
             hoaDon.setTienPhaiThanhToan(hoaDon.getTongTien().subtract(hoaDon.getTienDuocGiam()).add(hoaDon.getPhiVanChuyen()));
             phieuGiamGia.setSoLuong(phieuGiamGia.getSoLuong() - 1);
-            phieuGiamGiaRepo.save(phieuGiamGia);
-            hoaDonRepo.save(hoaDon);
         }else {
             BigDecimal soTienGiam = apDungVoucher(hoaDon.getTongTien(), phieuGiamGia);
             hoaDon.setTienDuocGiam(soTienGiam);
             hoaDon.setIdPhieuGiamGia(phieuGiamGia);
             hoaDon.setTienPhaiThanhToan(hoaDon.getTongTien().subtract(hoaDon.getTienDuocGiam()).add(hoaDon.getPhiVanChuyen()));
             phieuGiamGia.setSoLuong(phieuGiamGia.getSoLuong() - 1);
-            phieuGiamGiaRepo.save(phieuGiamGia);
-            hoaDonRepo.save(hoaDon);
+
         }
+        phieuGiamGiaRepo.save(phieuGiamGia);
+        hoaDonRepo.save(hoaDon);
         return converToHoaDonResponse(hoaDon);
     }
 }
