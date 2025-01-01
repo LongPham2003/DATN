@@ -601,7 +601,7 @@ public class GioHangChiTietServiceImpl
         }
 
         hoaDon.setIdKhachHang(khachHang);
-        hoaDon.setTenKhachHang(khachHang.getHoTen());
+        hoaDon.setTenKhachHang(hoaDonRequest.getTenKhachHang());
         // lay tu request
         hoaDon.setSoDienThoai(hoaDonRequest.getSoDienThoai());
         hoaDon.setDiaChiGiaoHang(hoaDonRequest.getDiaChiChiTiet());
@@ -1051,6 +1051,35 @@ public class GioHangChiTietServiceImpl
         sanPhamChiTietRepo.save(spct);
 
         // Trả về kết quả
+        return converToHoaDonResponse(hoaDon);
+    }
+
+    public HoaDonResponse thayDoiPhieuGiamGia(Integer idHoaDon, Integer idPhieuGiamGia)
+    {
+        HoaDon hoaDon = hoaDonRepo.findById(idHoaDon)
+                .orElseThrow(() -> new AppException(ErrorCode.BILL_NOT_FOUND));
+
+        PhieuGiamGia phieuGiamGia = phieuGiamGiaRepo.findById(idPhieuGiamGia)
+                .orElseThrow(() -> new AppException(ErrorCode.VOUCHER_NOT_FOUND));
+
+        if (hoaDon.getIdPhieuGiamGia() != null) {
+            xoaPhieuGiamGiaHoaDon(idHoaDon,idPhieuGiamGia);
+            BigDecimal soTienGiam = apDungVoucher(hoaDon.getTongTien(), phieuGiamGia);
+            hoaDon.setTienDuocGiam(soTienGiam);
+            hoaDon.setIdPhieuGiamGia(phieuGiamGia);
+            hoaDon.setTienPhaiThanhToan(hoaDon.getTongTien().subtract(hoaDon.getTienDuocGiam()).add(hoaDon.getPhiVanChuyen()));
+            phieuGiamGia.setSoLuong(phieuGiamGia.getSoLuong() - 1);
+            phieuGiamGiaRepo.save(phieuGiamGia);
+            hoaDonRepo.save(hoaDon);
+        }else {
+            BigDecimal soTienGiam = apDungVoucher(hoaDon.getTongTien(), phieuGiamGia);
+            hoaDon.setTienDuocGiam(soTienGiam);
+            hoaDon.setIdPhieuGiamGia(phieuGiamGia);
+            hoaDon.setTienPhaiThanhToan(hoaDon.getTongTien().subtract(hoaDon.getTienDuocGiam()).add(hoaDon.getPhiVanChuyen()));
+            phieuGiamGia.setSoLuong(phieuGiamGia.getSoLuong() - 1);
+            phieuGiamGiaRepo.save(phieuGiamGia);
+            hoaDonRepo.save(hoaDon);
+        }
         return converToHoaDonResponse(hoaDon);
     }
 }

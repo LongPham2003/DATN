@@ -30,6 +30,10 @@ export default function DatHang() {
   const [idPGGDangChon, setIdPhieuGiamGiaDangChon] = useState();
   const [phieuGiamGiaDangChon, setPhieuGiamGiaDangChon] = useState();
   const [phuongThucThanhToan, setPhuongThucThanhToan] = useState("Tiền mặt");
+  const [tenKhachHang, setTenKhachHang] = useState("");
+  const [sdt, setSdt] = useState("");
+
+  console.log(sdt);
 
   const ApiLayTTGHCT = `http://localhost:8080/api/giohang/laygiohangchitiet`;
   let ApiLayPhieuGiamGia = `http://localhost:8080/api/phieugiamgia/trang-thai-true`; // Danh Sach Phiếu Giam giá
@@ -110,7 +114,8 @@ export default function DatHang() {
         phuongThucThanhToan: "Tiền mặt",
         chiTietSanPhams,
         idPhieuGiamGia: idPGGDangChon || null,
-        soDienThoai: khachHang.sdt,
+        soDienThoai: sdt,
+        tenKhachHang: tenKhachHang,
         phiVanChuyen: phiGiaoHang,
         diaChiChiTiet: diaChiGiaoHang,
         ngayDuKien: ngayDuKien,
@@ -124,7 +129,7 @@ export default function DatHang() {
       }, 1000);
     } catch (error) {
       console.error("Lỗi khi đặt hàng:", error);
-      toast.error("Có lỗi xảy ra khi đặt hàng");
+      toast.error(error.response.data.message);
     }
   };
 
@@ -145,6 +150,8 @@ export default function DatHang() {
         setKhachHang(response.data);
         // Đảm bảo không gán undefined
         setIdKH(response.data.id || null);
+        setTenKhachHang(response.data.hoTen);
+        setSdt(response.data.sdt);
       }
     } catch (error) {
       console.error("Error fetching customer data:", error);
@@ -284,7 +291,8 @@ export default function DatHang() {
           JSON.stringify(chiTietSanPhams),
         );
         localStorage.setItem("idPhieuGiamGia", idPGGDangChon || null);
-        localStorage.setItem("soDienThoai", khachHang.sdt);
+        localStorage.setItem("soDienThoai", sdt);
+        localStorage.setItem("hoTen", tenKhachHang);
         localStorage.setItem("phiVanChuyen", phiGiaoHang);
         localStorage.setItem("diaChiChiTiet", diaChiGiaoHang);
         localStorage.setItem("ngayDuKien", ngayDuKien);
@@ -413,12 +421,28 @@ export default function DatHang() {
           </div>
           <div className="my-3">
             <span className="font-bold">Thông tin người đặt:</span>
-            <div className="justify-between">
-              <div>Họ Tên: {khachHang.hoTen ? khachHang.hoTen : ""}</div>
-              <div>
-                Số điện thoại:{" "}
-                {khachHang.sdt ? khachHang.sdt : "Bạn chưa thêm số điện thoại"}
-              </div>
+            <div>
+              <label>
+                Họ Tên:
+                <input
+                  type="text"
+                  value={tenKhachHang}
+                  onChange={(e) => setTenKhachHang(e.target.value)}
+                  className="rounded border p-1"
+                />
+              </label>
+            </div>
+            <div>
+              <label>
+                Số điện thoại:
+                <input
+                  type="text"
+                  value={sdt}
+                  placeholder="Bạn chưa thêm số điện thoại"
+                  onChange={(e) => setSdt(e.target.value)}
+                  className="rounded border p-1"
+                />
+              </label>
             </div>
           </div>
           <div>

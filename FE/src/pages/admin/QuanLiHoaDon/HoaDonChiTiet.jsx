@@ -374,7 +374,7 @@ const HoaDonChiTiet = () => {
       .catch((error) => {
         toast.error(error.response.data.message);
       });
-  }, [id, phiGiaoHang, soLuong]);
+  }, [soLuong]);
 
   console.log(thanhToan);
   console.log(lichSuHoaDon);
@@ -409,6 +409,7 @@ const HoaDonChiTiet = () => {
           .then((response) => {
             console.log("Cập nhật thành công:", response.data);
             toast.success("Thành công");
+            setGhiChu("");
             closeModalHuy();
           })
           .catch((error) => {
@@ -430,7 +431,7 @@ const HoaDonChiTiet = () => {
       onOk() {
         axios
           .post(`http://localhost:8080/api/hoadon/hoanhang/${id}`, {
-            ghiChu: ghiChu,
+            ghiChu: lyDoHoanHang,
           })
           .then((response) => {
             console.log("Cập nhật thành công:", response.data);
@@ -460,6 +461,7 @@ const HoaDonChiTiet = () => {
           })
           .then((response) => {
             console.log("Cập nhật thành công:", response.data);
+            setGhiChu("");
             toast.success("Thành công");
             closeModalHoanHangTC();
           })
@@ -486,6 +488,7 @@ const HoaDonChiTiet = () => {
           })
           .then((response) => {
             console.log("Cập nhật thành công:", response.data);
+            setGhiChu("");
             toast.success("Thành công");
             closeModalChoLayHang();
           })
@@ -512,6 +515,7 @@ const HoaDonChiTiet = () => {
           })
           .then((response) => {
             console.log("Cập nhật thành công:", response.data);
+            setGhiChu("");
             toast.success("Thành công");
             closeModalChoGiao();
           })
@@ -538,6 +542,7 @@ const HoaDonChiTiet = () => {
           })
           .then((response) => {
             console.log("Cập nhật thành công:", response.data);
+            setGhiChu("");
             toast.success("Thành công");
             closeModalGiao();
           })
@@ -564,6 +569,7 @@ const HoaDonChiTiet = () => {
           })
           .then((response) => {
             console.log("Cập nhật thành công:", response.data);
+            setGhiChu("");
             toast.success("Thành công");
             closeModalXacNhan();
           })
@@ -593,6 +599,7 @@ const HoaDonChiTiet = () => {
           })
           .then((response) => {
             console.log("Cập nhật thành công:", response.data);
+            setGhiChu("");
             toast.success("Thành công");
             closeModalQuayLai();
           })
@@ -619,6 +626,7 @@ const HoaDonChiTiet = () => {
           })
           .then((response) => {
             console.log("Cập nhật thành công:", response.data);
+            setGhiChu("");
             toast.success("Thành công");
             closeModalHT();
           })
@@ -1113,7 +1121,7 @@ const HoaDonChiTiet = () => {
               </label>
               <textarea
                 id="ghiChuHoanHang"
-                value={ghiChu} // Ghi chú sẽ hiển thị giá trị đã chọn từ radio button
+                value={lyDoHoanHang} // Ghi chú sẽ hiển thị giá trị đã chọn từ radio button
                 readOnly // Không cho phép chỉnh sửa ghi chú trực tiếp
                 className="w-full resize-none rounded border border-gray-300 p-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 rows="4"

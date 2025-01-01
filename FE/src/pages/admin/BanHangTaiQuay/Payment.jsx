@@ -68,6 +68,7 @@ export default function PaymentResult() {
           localStorage.removeItem("ngayDuKien");
           localStorage.removeItem("tienPhaiThanhToan");
           localStorage.removeItem("sanPhamChon");
+          localStorage.removeItem("hoTen");
         } else {
           setTimeout(() => navigate("/gioHang"), 500);
           toast.error("Thất bại");
@@ -78,6 +79,7 @@ export default function PaymentResult() {
           localStorage.removeItem("diaChiChiTiet");
           localStorage.removeItem("ngayDuKien");
           localStorage.removeItem("sanPhamChon");
+          localStorage.removeItem("hoTen");
         }
       } catch (error) {
         console.error("Error:", error);

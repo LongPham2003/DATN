@@ -22,8 +22,6 @@ public class HoaDonResponse {
     private String tongTien;
     private String tienDuocGiam;
     private String tienPhaiThanhToan;
-    private String tienKhachDua;
-    private String tienThua;
     private String phuongThucThanhToan;
     private String phuongThucGiaoHang;
     private LocalDateTime ngayTao;
@@ -31,6 +29,7 @@ public class HoaDonResponse {
     private String trangThaiThanhToan;
     private String tienShip;
     private String PhieuGiamGia;
+    private Integer idPhieuGiamGia;
 }
 
 

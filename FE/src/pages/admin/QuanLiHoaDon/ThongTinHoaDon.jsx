@@ -1,11 +1,11 @@
 /* eslint-disable no-unused-vars */
 
-import { Button, Popconfirm } from "antd";
+import { Button, Modal, Popconfirm, Select } from "antd";
 import LayAnhTheoIdSP from "../SanPham/Product/LayANhTheoIDSP";
 import { TrashIcon } from "@heroicons/react/16/solid";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SanPhamHoaDon from "./SanPhamHoaDon";
 
 /* eslint-disable react/prop-types */
@@ -85,6 +85,42 @@ const ThongTinHoaDon = ({
       toast.error("Số lượng phải lớn hơn 0");
     }
   };
+  const [danhSachPhieuGiamGia, setDanhSachPhieuGiamGia] = useState([]);
+  const [idPhieuGiamGiaDangChon, setIdPhieuGiamGiaDangChon] = useState();
+  useEffect(() => {
+    setIdPhieuGiamGiaDangChon(hoaDon.idPhieuGiamGia);
+  }, [hoaDon.idPhieuGiamGia]);
+  useEffect(() => {
+    const pgg = axios
+      .get("http://localhost:8080/api/phieugiamgia/trang-thai-true")
+      .then((res) => {
+        setDanhSachPhieuGiamGia(res.data.result);
+      });
+  }, []);
+
+  const addPhieuGiamGia = async (idPhieuGiamGiaDangChon) => {
+    Modal.confirm({
+      title: "Xác nhận cập nhật",
+      content: "Bạn có chắc chắn muốn cập nhật phiếu giảm giá của hóa đơn?",
+      onOk() {
+        axios
+          .post(
+            `http://localhost:8080/api/hoadon/capnhatphieugiamgia/${hoaDon.id}/${idPhieuGiamGiaDangChon}`,
+          )
+          .then((res) => {
+            fillHoaDon();
+            fillHoaDonChiTiet();
+            toast.success("Cập nhật thành công");
+          })
+          .catch((err) => {
+            toast.error(err.response.data.message);
+          });
+      },
+      onCancel() {
+        // Nếu người dùng hủy, có thể không cần làm gì cả
+      },
+    });
+  };
 
   return (
     <div>
@@ -121,7 +157,47 @@ const ThongTinHoaDon = ({
               Mã phiếu giảm giá:
             </span>
             <h3 className="font-semibold text-gray-800">
-              {hoaDon.phieuGiamGia}
+              <Select
+                showSearch
+                style={{ width: 200, height: "35px" }}
+                placeholder="Chọn phiếu giảm giá"
+                optionLabelProp="label"
+                value={idPhieuGiamGiaDangChon}
+                onChange={(value) => {
+                  setIdPhieuGiamGiaDangChon(value); // Cập nhật state
+                  addPhieuGiamGia(value);
+                }}
+                filterOption={(input, option) =>
+                  option?.label?.toLowerCase().includes(input.toLowerCase())
+                }
+              >
+                {/* Option rỗng */}
+                <Select.Option value="" label="Không chọn phiếu">
+                  <div>
+                    <span>Không chọn phiếu giảm giá</span>
+                  </div>
+                </Select.Option>
+
+                {/* Danh sách phiếu giảm giá */}
+                {danhSachPhieuGiamGia.map((pgg) => (
+                  <Select.Option
+                    key={pgg.id}
+                    value={pgg.id}
+                    label={pgg.tenVoucher}
+                  >
+                    <div>
+                      <span>Tên: {pgg.tenVoucher}</span> <br />
+                      <span>Điều kiện: {pgg.dieuKienGiamGia}</span> <br />
+                      <span>Mức giảm: {pgg.mucGiam}</span> <br />
+                      <span>Giảm tối đa: {pgg.giamToiDa}</span> <br />
+                      <span className="text-red-600">
+                        Còn: {pgg.soLuong} phiếu
+                      </span>
+                      <hr />
+                    </div>
+                  </Select.Option>
+                ))}
+              </Select>
             </h3>
           </div>
         </div>
@@ -202,19 +278,28 @@ const ThongTinHoaDon = ({
                 </td>
                 <td>{formatTien(SPCT.donGia)}</td>
                 <td className="space-x-3">
-                  <button
-                    onClick={() => updateSoLuong(SPCT.idSpct, SPCT.soLuong - 1)}
-                    className="h-8 w-8 rounded-full bg-gray-200 font-bold text-gray-500 hover:bg-gray-300"
-                  >
-                    -
-                  </button>
+                  {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" && (
+                    <button
+                      onClick={() =>
+                        updateSoLuong(SPCT.idSpct, SPCT.soLuong - 1)
+                      }
+                      className="h-8 w-8 rounded-full bg-gray-200 font-bold text-gray-500 hover:bg-gray-300"
+                    >
+                      -
+                    </button>
+                  )}
+
                   <span className="text-lg font-medium">{SPCT.soLuong}</span>
-                  <button
-                    onClick={() => updateSoLuong(SPCT.idSpct, SPCT.soLuong + 1)}
-                    className="h-8 w-8 rounded-full bg-gray-200 font-bold text-gray-500 hover:bg-gray-300"
-                  >
-                    +
-                  </button>
+                  {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" && (
+                    <button
+                      onClick={() =>
+                        updateSoLuong(SPCT.idSpct, SPCT.soLuong + 1)
+                      }
+                      className="h-8 w-8 rounded-full bg-gray-200 font-bold text-gray-500 hover:bg-gray-300"
+                    >
+                      +
+                    </button>
+                  )}
                 </td>
                 <td>{formatTien(SPCT.donGia * SPCT.soLuong)}</td>
                 {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" &&
