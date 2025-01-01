@@ -146,7 +146,7 @@ export default function TheoDoiDonHang() {
           >
             <Select.Option value="CHO_XAC_NHAN">Chờ xác nhận</Select.Option>
             <Select.Option value="DA_XAC_NHAN">Đã xác nhận</Select.Option>
-            <Select.Option value="DA_LAY_HANG">Chờ lấy hàng</Select.Option>
+            <Select.Option value="CHO_LAY_HANG">Chờ lấy hàng</Select.Option>
             <Select.Option value="CHO_GIAO_HANG">Chờ giao hàng</Select.Option>
             <Select.Option value="DANG_GIAO">Đang giao</Select.Option>
             <Select.Option value="HOAN_THANH">Hoàn thành</Select.Option>
@@ -170,7 +170,7 @@ export default function TheoDoiDonHang() {
         </div>
         {listHoaDon.map((hd, index) => (
           <div
-            className="mx-auto mt-9 h-[400px] w-[1000px] rounded-3xl shadow-lg shadow-gray-500/50"
+            className="mx-auto mt-9 h-[420px] w-[1000px] rounded-3xl shadow-lg shadow-gray-500/50"
             key={index}
           >
             <div className="flex w-full justify-between">

@@ -409,6 +409,7 @@ const HoaDonChiTiet = () => {
           .then((response) => {
             console.log("Cập nhật thành công:", response.data);
             toast.success("Thành công");
+            setGhiChu("");
             closeModalHuy();
           })
           .catch((error) => {
@@ -430,7 +431,7 @@ const HoaDonChiTiet = () => {
       onOk() {
         axios
           .post(`http://localhost:8080/api/hoadon/hoanhang/${id}`, {
-            ghiChu: ghiChu,
+            ghiChu: lyDoHoanHang,
           })
           .then((response) => {
             console.log("Cập nhật thành công:", response.data);
@@ -460,6 +461,7 @@ const HoaDonChiTiet = () => {
           })
           .then((response) => {
             console.log("Cập nhật thành công:", response.data);
+            setGhiChu("");
             toast.success("Thành công");
             closeModalHoanHangTC();
           })
@@ -486,6 +488,7 @@ const HoaDonChiTiet = () => {
           })
           .then((response) => {
             console.log("Cập nhật thành công:", response.data);
+            setGhiChu("");
             toast.success("Thành công");
             closeModalChoLayHang();
           })
@@ -512,6 +515,7 @@ const HoaDonChiTiet = () => {
           })
           .then((response) => {
             console.log("Cập nhật thành công:", response.data);
+            setGhiChu("");
             toast.success("Thành công");
             closeModalChoGiao();
           })
@@ -538,6 +542,7 @@ const HoaDonChiTiet = () => {
           })
           .then((response) => {
             console.log("Cập nhật thành công:", response.data);
+            setGhiChu("");
             toast.success("Thành công");
             closeModalGiao();
           })
@@ -564,6 +569,7 @@ const HoaDonChiTiet = () => {
           })
           .then((response) => {
             console.log("Cập nhật thành công:", response.data);
+            setGhiChu("");
             toast.success("Thành công");
             closeModalXacNhan();
           })
@@ -593,6 +599,7 @@ const HoaDonChiTiet = () => {
           })
           .then((response) => {
             console.log("Cập nhật thành công:", response.data);
+            setGhiChu("");
             toast.success("Thành công");
             closeModalQuayLai();
           })
@@ -619,6 +626,7 @@ const HoaDonChiTiet = () => {
           })
           .then((response) => {
             console.log("Cập nhật thành công:", response.data);
+            setGhiChu("");
             toast.success("Thành công");
             closeModalHT();
           })
@@ -639,7 +647,7 @@ const HoaDonChiTiet = () => {
   return (
     <div className="mx-3 py-3">
       <div className="overflow-x-auto">
-        <Timeline className="Timeline2-wrapper-1 relative !overflow-scroll">
+        <Timeline className="">
           {lichSuHoaDon.map((item, index) => (
             <TimelineEvent
               className="overflow-x-auto"
@@ -855,38 +863,38 @@ const HoaDonChiTiet = () => {
         <div>
           <table className="min-w-full divide-y divide-gray-200 rounded-lg bg-white shadow-md">
             <thead className="bg-gray-100">
-              <tr>
-                <th className="px-6 py-3 text-left text-sm font-medium uppercase tracking-wider text-gray-500">
-                  Số tiền
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-medium uppercase tracking-wider text-gray-500">
-                  Thời gian
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-medium uppercase tracking-wider text-gray-500">
-                  Nhân viên xác nhận
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-medium uppercase tracking-wider text-gray-500">
-                  Ghi chú
-                </th>
-              </tr>
+            <tr>
+              <th className="px-6 py-3 text-left text-sm font-medium uppercase tracking-wider text-gray-500">
+                Số tiền
+              </th>
+              <th className="px-6 py-3 text-left text-sm font-medium uppercase tracking-wider text-gray-500">
+                Thời gian
+              </th>
+              <th className="px-6 py-3 text-left text-sm font-medium uppercase tracking-wider text-gray-500">
+                Nhân viên xác nhận
+              </th>
+              <th className="px-6 py-3 text-left text-sm font-medium uppercase tracking-wider text-gray-500">
+                Ghi chú
+              </th>
+            </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {thanhToan.map((item, index) => (
-                <tr key={index} className="hover:bg-gray-100">
-                  <td className="px-6 py-4 text-sm text-gray-700">
-                    {hoaDon.tienPhaiThanhToan}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-700">
-                    {formatDate(item.createAt)}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-700">
-                    {item.nguoiThucHien}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-blue-700">
-                    {item.moTa}
-                  </td>
-                </tr>
-              ))}
+            {thanhToan.map((item, index) => (
+              <tr key={index} className="hover:bg-gray-100">
+                <td className="px-6 py-4 text-sm text-gray-700">
+                  {hoaDon.tienPhaiThanhToan}
+                </td>
+                <td className="px-6 py-4 text-sm text-gray-700">
+                  {formatDate(item.createAt)}
+                </td>
+                <td className="px-6 py-4 text-sm text-gray-700">
+                  {item.nguoiThucHien}
+                </td>
+                <td className="px-6 py-4 text-sm text-blue-700">
+                  {item.moTa}
+                </td>
+              </tr>
+            ))}
             </tbody>
           </table>
         </div>
@@ -1113,7 +1121,7 @@ const HoaDonChiTiet = () => {
               </label>
               <textarea
                 id="ghiChuHoanHang"
-                value={ghiChu} // Ghi chú sẽ hiển thị giá trị đã chọn từ radio button
+                value={lyDoHoanHang} // Ghi chú sẽ hiển thị giá trị đã chọn từ radio button
                 readOnly // Không cho phép chỉnh sửa ghi chú trực tiếp
                 className="w-full resize-none rounded border border-gray-300 p-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 rows="4"

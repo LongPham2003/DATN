@@ -21,7 +21,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-public interface HoaDonRepo extends JpaRepository<HoaDon, Integer> {
+public interface HoaDonRepo
+        extends JpaRepository<HoaDon, Integer>
+{
         @Query("SELECT hd FROM HoaDon  hd WHERE hd.trangThaiDonHang = 'DA_THANH_TOAN'")
         List<HoaDon> getAllTrangThaiDaThanhToan();
 
@@ -40,149 +42,174 @@ public interface HoaDonRepo extends JpaRepository<HoaDon, Integer> {
         Integer idHoaDon();
 
         // lấy hóa dơn theo ma phan trang loc
-        @Query(value = "select  hd.id ,hd.create_at,hd.create_by,hd.update_at,hd.update_by ,hd.dia_chi_giao_hang ,hd.phi_van_chuyen, "
-                        +
-                        "hd.ma,hd.phuong_thuc_giao_hang ,hd.ten_khach_hang, hd.phuong_thuc_thanh_toan , hd.so_dien_thoai,hd.ngay_du_kien ,"
-                        +
-                        "hd.tien_duoc_giam ,hd.tien_phai_thanh_toan ,hd.tong_tien,hd.id_khach_hang,hd.id_nhan_vien ,hd.id_phieu_giam_gia ,"
-                        +
-                        "hd.trang_thai_don_hang,hd.trang_thai_thanh_toan " +
-                        " from  hoa_don hd " +
-                        "left  join  khach_hang kh on kh.id = hd.id_khach_hang " +
-                        "left  join  nhan_vien nv on nv.id = hd.id_nhan_vien " +
-                        "left  join  phieu_giam_gia pgg on pgg.id= hd.id_phieu_giam_gia " +
-                        "where (hd.ma like %:keyword%  or  kh.ho_ten like %:keyword% or kh.sdt like %:keyword%) " +
-                        "AND (:trangThai is null or hd.trang_thai_don_hang = :trangThai)" +
-                        "AND (:phuongThucGiaoHang is null or hd.phuong_thuc_giao_hang =:phuongThucGiaoHang)" +
-                        "order by  hd.create_at desc ", nativeQuery = true)
+        @Query(value = "select  hd.id ,hd.create_at,hd.create_by,hd.update_at,hd.update_by ,hd.dia_chi_giao_hang ,hd.phi_van_chuyen, " + "hd.ma,hd.phuong_thuc_giao_hang ,hd.ten_khach_hang, hd.phuong_thuc_thanh_toan , hd.so_dien_thoai,hd.ngay_du_kien ," + "hd.tien_duoc_giam ,hd.tien_phai_thanh_toan ,hd.tong_tien,hd.id_khach_hang,hd.id_nhan_vien ,hd.id_phieu_giam_gia ," + "hd.trang_thai_don_hang,hd.trang_thai_thanh_toan " + " from  hoa_don hd " + "left  join  khach_hang kh on kh.id = hd.id_khach_hang " + "left  join  nhan_vien nv on nv.id = hd.id_nhan_vien " + "left  join  phieu_giam_gia pgg on pgg.id= hd.id_phieu_giam_gia " + "where (hd.ma like %:keyword%  or  kh.ho_ten like %:keyword% or kh.sdt like %:keyword%) " + "AND (:trangThai is null or hd.trang_thai_don_hang = :trangThai)" + "AND (:phuongThucGiaoHang is null or hd.phuong_thuc_giao_hang =:phuongThucGiaoHang)" + "order by  hd.create_at desc ", nativeQuery = true)
         Page<HoaDon> getAll(Pageable pageable, String keyword, String phuongThucGiaoHang, String trangThai);
 
-
-        @Query(value = "select count(id) from hoa_don",nativeQuery = true)
+        @Query(value = "select count(id) from hoa_don", nativeQuery = true)
         Integer getCountHoaDon();
-        @Query(value = "select count(id) from hoa_don where trang_thai_don_hang = 'CHO_XAC_NHAN'",nativeQuery = true)
+
+        @Query(value = "select count(id) from hoa_don where trang_thai_don_hang = 'CHO_XAC_NHAN'", nativeQuery = true)
         Integer getCountHoaDonCXN();
-        @Query(value = "select count(id) from hoa_don where trang_thai_don_hang = 'DA_XAC_NHAN'",nativeQuery = true)
+
+        @Query(value = "select count(id) from hoa_don where trang_thai_don_hang = 'DA_XAC_NHAN'", nativeQuery = true)
         Integer getCountHoaDonDXN();
-        @Query(value = "select count(id) from hoa_don where trang_thai_don_hang = 'CHO_LAY_HANG'",nativeQuery = true)
+
+        @Query(value = "select count(id) from hoa_don where trang_thai_don_hang = 'CHO_LAY_HANG'", nativeQuery = true)
         Integer getCountHoaDonCLH();
-        @Query(value = "select count(id) from hoa_don where trang_thai_don_hang = 'CHO_GIAO_HANG'",nativeQuery = true)
+
+        @Query(value = "select count(id) from hoa_don where trang_thai_don_hang = 'CHO_GIAO_HANG'", nativeQuery = true)
         Integer getCountHoaDonCGH();
-        @Query(value = "select count(id) from hoa_don where trang_thai_don_hang = 'DANG_GIAO'",nativeQuery = true)
+
+        @Query(value = "select count(id) from hoa_don where trang_thai_don_hang = 'DANG_GIAO'", nativeQuery = true)
         Integer getCountHoaDonDG();
-        @Query(value = "select count(id) from hoa_don where trang_thai_don_hang = 'HOAN_THANH'",nativeQuery = true)
+
+        @Query(value = "select count(id) from hoa_don where trang_thai_don_hang = 'HOAN_THANH'", nativeQuery = true)
         Integer getCountHoaDonHT();
-        @Query(value = "select count(id) from hoa_don where trang_thai_don_hang = 'HUY_DON'",nativeQuery = true)
+
+        @Query(value = "select count(id) from hoa_don where trang_thai_don_hang = 'HUY_DON'", nativeQuery = true)
         Integer getCountHoaDonHuy();
 
         @Query(value = """
-        SELECT 
-            hd.id AS idHoaDon,
-            hd.ma AS maHoaDon,
-            hd.create_at AS ngayDatHang,
-            hd.dia_chi_giao_hang AS diaChiGiaoHang,
-            hd.ngay_du_kien AS ngayGiaoHang,
-            hd.phi_van_chuyen AS phiVanChuyen,
-            hd.phuong_thuc_thanh_toan AS phuongThucThanhToan,
-            pgg.ma AS maGiamGia,
-            hd.tong_tien AS tongTienHang,
-            hd.tien_duoc_giam AS tienDuocGiam,
-            hd.tien_phai_thanh_toan AS tienPhaiThanhToan,
-            hd.trang_thai_don_hang AS trangThaiDonHang,
-            hd.trang_thai_thanh_toan AS trangThaiThanhToan,
-             lshd.mo_ta AS ghiChu,
-                                                     COUNT(hdct.id_spct) AS tongSoSanPham
-                                                 FROM\s
-                                                     datn.hoa_don hd
-                                                     join lich_su_hoa_don lshd on lshd.id_hoa_don = hd.id
-        LEFT JOIN 
-            phieu_giam_gia pgg ON pgg.id = hd.id_phieu_giam_gia
-        LEFT JOIN 
-            hoa_don_chi_tiet hdct ON hdct.id_hoa_don = hd.id
-        WHERE 
-            hd.id_khach_hang = :idKhachHang
-            AND (:maHD IS NULL OR hd.ma LIKE CONCAT('%', :maHD, '%'))
-            AND (:trangThaiDonHang IS NULL OR hd.trang_thai_don_hang = :trangThaiDonHang)
-            AND hd.phuong_thuc_giao_hang = 'Giao Hàng'
-            AND (:ngay IS NULL OR DATE(hd.create_at) = :ngay)
-        GROUP BY 
-            hd.id, 
-            hd.ma, 
-            hd.create_at,
-            hd.dia_chi_giao_hang, 
-            hd.ngay_du_kien, 
-            hd.phi_van_chuyen, 
-            hd.phuong_thuc_thanh_toan, 
-            pgg.ma, 
-            hd.tong_tien, 
-            hd.tien_duoc_giam, 
-            hd.tien_phai_thanh_toan, 
-            hd.trang_thai_don_hang, 
-            hd.trang_thai_thanh_toan
-        ORDER BY 
-            hd.create_at DESC
-        """, nativeQuery = true)
-        List<HoaDonTheoIDKH> getHoaDonTheoKH(
-                @Param("idKhachHang") Integer idKhachHang,
-                @Param("maHD") String maHD,
-                @Param("trangThaiDonHang") String trangThaiDonHang,
-                @Param("ngay") String ngay // Ngày lọc (YYYY-MM-DD)
+
+              WITH LichSuMoiNhat AS (
+                  SELECT\s
+                      id_hoa_don,\s
+                      mo_ta AS ghiChu,
+                      ROW_NUMBER() OVER (PARTITION BY id_hoa_don ORDER BY create_at DESC) AS rn
+                  FROM\s
+                      lich_su_hoa_don
+              )
+              SELECT\s
+                  hd.id AS idHoaDon,
+                  hd.ma AS maHoaDon,
+                  hd.create_at AS ngayDatHang,
+                  hd.dia_chi_giao_hang AS diaChiGiaoHang,
+                  hd.ngay_du_kien AS ngayGiaoHang,
+                  hd.phi_van_chuyen AS phiVanChuyen,
+                  hd.phuong_thuc_thanh_toan AS phuongThucThanhToan,
+                  pgg.ma AS maGiamGia,
+                  hd.tong_tien AS tongTienHang,
+                  hd.tien_duoc_giam AS tienDuocGiam,
+                  hd.tien_phai_thanh_toan AS tienPhaiThanhToan,
+                  hd.trang_thai_don_hang AS trangThaiDonHang,
+                  hd.trang_thai_thanh_toan AS trangThaiThanhToan,
+                  lsmn.ghiChu AS ghiChu,
+                  COUNT(DISTINCT hdct.id_spct) AS tongSoSanPham
+              FROM\s
+                  datn.hoa_don hd
+              LEFT JOIN\s
+                  LichSuMoiNhat lsmn ON lsmn.id_hoa_don = hd.id AND lsmn.rn = 1
+              LEFT JOIN\s
+                  phieu_giam_gia pgg ON pgg.id = hd.id_phieu_giam_gia
+              LEFT JOIN\s
+                  hoa_don_chi_tiet hdct ON hdct.id_hoa_don = hd.id
+              WHERE\s
+                  hd.id_khach_hang = :idKhachHang
+                  AND (:maHD IS NULL OR hd.ma LIKE CONCAT('%', :maHD, '%'))
+                  AND (:trangThaiDonHang IS NULL OR hd.trang_thai_don_hang = :trangThaiDonHang)
+                  AND hd.phuong_thuc_giao_hang = 'Giao Hàng'
+                  AND (:ngay IS NULL OR DATE(hd.create_at) = :ngay)
+              GROUP BY\s
+                  hd.id,\s
+                  hd.ma,\s
+                  hd.create_at,
+                  hd.dia_chi_giao_hang,\s
+                  hd.ngay_du_kien,\s
+                  hd.phi_van_chuyen,\s
+                  hd.phuong_thuc_thanh_toan,\s
+                  pgg.ma,\s
+                  hd.tong_tien,\s
+                  hd.tien_duoc_giam,\s
+                  hd.tien_phai_thanh_toan,\s
+                  hd.trang_thai_don_hang,\s
+                  hd.trang_thai_thanh_toan,
+                  lsmn.ghiChu
+              ORDER BY\s
+                  hd.create_at DESC;
+              
+            """, nativeQuery = true)
+        List<HoaDonTheoIDKH> getHoaDonTheoKH(@Param("idKhachHang") Integer idKhachHang, @Param("maHD") String maHD,
+                                             @Param("trangThaiDonHang") String trangThaiDonHang, @Param("ngay") String ngay // Ngày lọc (YYYY-MM-DD)
         );
 
-        @Query(value = "delete  from hoa_don where phuong_thuc_giao_hang = 'Tại quầy' and trang_thai_don_hang ='CHO_XAC_NHAN'",nativeQuery = true)
+        @Transactional
+        @Modifying
+        @Query(value = "delete  from hoa_don_chi_tiet where id_hoa_don in ( select id from hoa_don where phuong_thuc_giao_hang = 'Tại quầy' and trang_thai_don_hang = 'CHO_XAC_NHAN')",
+                nativeQuery = true)
+        void deleteByHoaDonChiTiet();
+
+        @Transactional
+        @Modifying
+        @Query(value = "delete  from lich_su_hoa_don where id_hoa_don in ( select id from hoa_don where phuong_thuc_giao_hang = 'Tại quầy' and trang_thai_don_hang = 'CHO_XAC_NHAN')",
+                nativeQuery = true)
+        void deleteByLichSuHoaDon();
+
+        @Transactional
+        @Modifying
+        @Query(value = "delete  from hoa_don where phuong_thuc_giao_hang = 'Tại quầy' and trang_thai_don_hang ='CHO_XAC_NHAN'",
+                nativeQuery = true)
         void deleteByHoaDonTaiQuay();
 
 
         @Query(value = """
 
-                SELECT\s
-                                  hd.id AS idHoaDon,
-                                  hd.ma AS maHoaDon,
-                                  hd.create_at AS ngayDatHang,
-                                  hd.dia_chi_giao_hang AS diaChiGiaoHang,
-                                  hd.ngay_du_kien AS ngayGiaoHang,
-                                  hd.phi_van_chuyen AS phiVanChuyen,
-                                  hd.phuong_thuc_thanh_toan AS phuongThucThanhToan,
-                                  pgg.ma AS maGiamGia,
-                                  hd.tong_tien AS tongTienHang,
-                                  hd.tien_duoc_giam AS tienDuocGiam,
-                                  hd.tien_phai_thanh_toan AS tienPhaiThanhToan,
-                                  hd.trang_thai_don_hang AS trangThaiDonHang,
-                                  hd.trang_thai_thanh_toan AS trangThaiThanhToan,
-                                 lshd.mo_ta AS ghiChu,
-                                                     COUNT(hdct.id_spct) AS tongSoSanPham
-                                                 FROM\s
-                                                     datn.hoa_don hd
-                                                     join lich_su_hoa_don lshd on lshd.id_hoa_don = hd.id
-                              LEFT JOIN\s
-                                  phieu_giam_gia pgg ON pgg.id = hd.id_phieu_giam_gia
-                              LEFT JOIN\s
-                                  hoa_don_chi_tiet hdct ON hdct.id_hoa_don = hd.id
-                              WHERE\s
-                                  hd.id_khach_hang = :idKhachHang
-                                  AND (:maHD IS NULL OR hd.ma LIKE CONCAT('%', :maHD, '%'))
-                                  AND hd.phuong_thuc_giao_hang = 'Giao Hàng'
-                                  AND (:ngay IS NULL OR DATE(hd.create_at) = :ngay)
-                                  AND hd.trang_thai_don_hang IN ('HOAN_HANG', 'HOAN_HANG_THANH_CONG') -- Thêm điều kiện này
-                              GROUP BY\s
-                                  hd.id,\s
-                                  hd.ma,\s
-                                  hd.create_at,
-                                  hd.dia_chi_giao_hang,\s
-                                  hd.ngay_du_kien,\s
-                                  hd.phi_van_chuyen,\s
-                                  hd.phuong_thuc_thanh_toan,\s
-                                  pgg.ma,\s
-                                  hd.tong_tien,\s
-                                  hd.tien_duoc_giam,\s
-                                  hd.tien_phai_thanh_toan,\s
-                                  hd.trang_thai_don_hang,\s
-                                  hd.trang_thai_thanh_toan
-                              ORDER BY\s
-                                  hd.update_at DESC;
-                              
-        """, nativeQuery = true)
+                WITH LichSuMoiNhat AS (
+    SELECT\s
+        id_hoa_don,\s
+        mo_ta AS ghiChu,
+        ROW_NUMBER() OVER (PARTITION BY id_hoa_don ORDER BY create_at DESC) AS rn
+    FROM\s
+        lich_su_hoa_don
+)
+SELECT\s
+    hd.id AS idHoaDon,
+    hd.ma AS maHoaDon,
+    hd.create_at AS ngayDatHang,
+    hd.dia_chi_giao_hang AS diaChiGiaoHang,
+    hd.ngay_du_kien AS ngayGiaoHang,
+    hd.phi_van_chuyen AS phiVanChuyen,
+    hd.phuong_thuc_thanh_toan AS phuongThucThanhToan,
+    pgg.ma AS maGiamGia,
+    hd.tong_tien AS tongTienHang,
+    hd.tien_duoc_giam AS tienDuocGiam,
+    hd.tien_phai_thanh_toan AS tienPhaiThanhToan,
+    hd.trang_thai_don_hang AS trangThaiDonHang,
+    hd.trang_thai_thanh_toan AS trangThaiThanhToan,
+    lsmn.ghiChu AS ghiChu,
+    COUNT(DISTINCT hdct.id_spct) AS tongSoSanPham
+FROM\s
+    datn.hoa_don hd
+JOIN\s
+    LichSuMoiNhat lsmn ON lsmn.id_hoa_don = hd.id AND lsmn.rn = 1
+LEFT JOIN\s
+    phieu_giam_gia pgg ON pgg.id = hd.id_phieu_giam_gia
+LEFT JOIN\s
+    hoa_don_chi_tiet hdct ON hdct.id_hoa_don = hd.id
+WHERE\s
+    hd.id_khach_hang = :idKhachHang
+    AND (:maHD IS NULL OR hd.ma LIKE CONCAT('%', :maHD, '%'))
+    AND hd.phuong_thuc_giao_hang = 'Giao Hàng'
+    AND (:ngay IS NULL OR DATE(hd.create_at) = :ngay)
+    AND hd.trang_thai_don_hang IN ('HOAN_HANG', 'HOAN_HANG_THANH_CONG')
+GROUP BY\s
+    hd.id,\s
+    hd.ma,\s
+    hd.create_at,
+    hd.dia_chi_giao_hang,\s
+    hd.ngay_du_kien,\s
+    hd.phi_van_chuyen,\s
+    hd.phuong_thuc_thanh_toan,\s
+    pgg.ma,\s
+    hd.tong_tien,\s
+    hd.tien_duoc_giam,\s
+    hd.tien_phai_thanh_toan,\s
+    hd.trang_thai_don_hang,\s
+    hd.trang_thai_thanh_toan,
+    lsmn.ghiChu
+ORDER BY\s
+    hd.update_at DESC;
+
+            """, nativeQuery = true)
         List<HoaDonKhongThanhCongTheoIdKH> getHoaDonKhongThanhCongTheoKH(@Param("idKhachHang") Integer idKhachHang,
-                                                           @Param("maHD") String maHD,
-                                                           @Param("ngay") String ngay );
+                                                                         @Param("maHD") String maHD, @Param("ngay") String ngay);
 }
