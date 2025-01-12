@@ -140,6 +140,8 @@ export default function SanPhamBanChay() {
         <DatePicker.RangePicker
           format="YYYY-MM-DD"
           onChange={handleDateChange}
+          placeholder={['Ngày bắt đầu', 'Ngày kết thúc']} // Set placeholders in Vietnamese
+
         />
       </div>
       <div className="mt-2">
