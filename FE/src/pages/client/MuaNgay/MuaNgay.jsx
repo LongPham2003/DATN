@@ -31,6 +31,9 @@ export default function MuaNgay() {
   const [phieuGiamGiaDangChon, setPhieuGiamGiaDangChon] = useState();
   const [phuongThucThanhToan, setPhuongThucThanhToan] = useState("Tiền mặt");
 
+  const [tenKhachHang, setTenKhachHang] = useState("");
+  const [sdt, setSdt] = useState("");
+
   let ApiLayPhieuGiamGia = `http://localhost:8080/api/phieugiamgia/trang-thai-true`; // Danh Sach Phiếu Giam giá
   let ApiLayThongTinPhieuGiamGiaDangChon = `http://localhost:8080/api/phieugiamgia`;
   let ApiDatHangonLine = `http://localhost:8080/api/giohang/dat-hang`;
@@ -143,7 +146,8 @@ export default function MuaNgay() {
         phuongThucThanhToan: "Tiền mặt",
         chiTietSanPhams,
         idPhieuGiamGia: idPGGDangChon || null,
-        soDienThoai: khachHang.sdt,
+        soDienThoai: sdt,
+        tenKhachHang: tenKhachHang,
         phiVanChuyen: phiGiaoHang,
         diaChiChiTiet: diaChiGiaoHang,
         ngayDuKien: ngayDuKien,
@@ -159,7 +163,7 @@ export default function MuaNgay() {
       toast.success("Đặt hàng thành công");
     } catch (error) {
       console.error("Lỗi khi đặt hàng:", error);
-      toast.error("Có lỗi xảy ra khi đặt hàng");
+      toast.error(error.response.data.message);
     }
   };
 
@@ -182,6 +186,8 @@ export default function MuaNgay() {
         const response = await axios.get(ApiTimKhTheoEmail);
         setKhachHang(response.data);
         setIdKH(response.data.id);
+        setTenKhachHang(response.data.hoTen);
+        setSdt(response.data.sdt);
         // console.log(response.data.id);
       } catch (error) {
         console.error("Error fetching customer data:", error);
@@ -272,6 +278,7 @@ export default function MuaNgay() {
           JSON.stringify(chiTietSanPhams),
         );
         localStorage.setItem("idPhieuGiamGia", idPGGDangChon || null);
+        localStorage.setItem("hoTen", tenKhachHang);
         localStorage.setItem("soDienThoai", khachHang.sdt);
         localStorage.setItem("phiVanChuyen", phiGiaoHang);
         localStorage.setItem("diaChiChiTiet", diaChiGiaoHang);
@@ -295,11 +302,11 @@ export default function MuaNgay() {
               <thead>
                 <tr>
                   <th>STT</th>
-                  <th>Anh</th>
-                  <th>San Pham</th>
-                  <th>So luong</th>
-                  <th>Don gia</th>
-                  <th>Thanh tien</th>
+                  <th>Ảnh</th>
+                  <th>Sản Phẩm</th>
+                  <th>Số lựơng</th>
+                  <th>Đơn giá</th>
+                  <th>Thành tiền</th>
                 </tr>
               </thead>
               <tbody className="text-center">
@@ -332,7 +339,7 @@ export default function MuaNgay() {
           <div className="ml-1">
             <span>Chọn phiếu giảm giá và địa chỉ</span>
             <div className="my-4 flex gap-5">
-              <span>Phieu giam gia</span>
+              <span>Phiếu giảm giá</span>
               <Select
                 style={{ width: 300, height: "35px" }}
                 placeholder="Chọn phiếu giảm giá"
@@ -377,26 +384,55 @@ export default function MuaNgay() {
 
             <div>
               <div className="flex gap-10">
-                <span className="font-semibold">Tong tien: </span>
+                <span className="font-semibold">Tổng tiền: </span>
                 <span className="ml-auto">{formatTien(tongTien)}</span>
               </div>
               <div className="flex gap-10">
-                <span className="font-semibold">Phi giao hang: </span>
+                <span className="font-semibold">Phí giao hàng: </span>
                 <span className="ml-auto">{formatTien(phiGiaoHang)}</span>
               </div>
               <div className="flex gap-10">
-                <span className="font-semibold">Tien duoc giam: </span>
+                <span className="font-semibold">Tiền dược giảm: </span>
                 <span className="ml-auto"> {formatTien(TienDuocGiam)}</span>
               </div>
               <div className="flex gap-10">
-                <span className="font-semibold">Thanh tien: </span>
+                <span className="font-semibold">Thành tiền: </span>
                 <span className="ml-auto">{formatTien(thanhTien)}</span>
               </div>
 
               <div className="my-5 flex gap-10">
-                <span className="font-semibold">Ngay nhan hang du kien: </span>
+                <span className="font-semibold">Ngày nhận hàng dự kiến: </span>
                 <span className="ml-auto">{ngayDuKien}</span>
               </div>
+            </div>
+          </div>
+          <div className="my-3">
+            <span className="font-bold">Thông tin người đặt:</span>
+            <div>
+              <label>
+                Họ Tên:
+                <input
+                  type="text"
+                  value={tenKhachHang}
+                  onChange={(e) => {
+                    setTenKhachHang(e.target.value);
+                    console.log(e.target.value);
+                  }}
+                  className="rounded border p-1"
+                />
+              </label>
+            </div>
+            <div>
+              <label>
+                Số điện thoại:
+                <input
+                  type="text"
+                  value={sdt}
+                  placeholder="Bạn chưa thêm số điện thoại"
+                  onChange={(e) => setSdt(e.target.value)}
+                  className="rounded border p-1"
+                />
+              </label>
             </div>
           </div>
           <div>

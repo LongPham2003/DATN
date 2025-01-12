@@ -74,6 +74,8 @@ export default function DanhSachHoaDon() {
     ht: 0,
     huy: 0,
     clh: 0,
+    hh: 0,
+    hhtc: 0,
   });
 
   useEffect(() => {
@@ -89,6 +91,8 @@ export default function DanhSachHoaDon() {
           dgRes,
           htRes,
           huyRes,
+          hhRes,
+          hhtcRes,
         ] = await Promise.all([
           axios.get("http://localhost:8080/api/hoadon/soluong/hoadon"),
           axios.get("http://localhost:8080/api/hoadon/soluong/hoadoncxn"),
@@ -98,6 +102,8 @@ export default function DanhSachHoaDon() {
           axios.get("http://localhost:8080/api/hoadon/soluong/hoadondg"),
           axios.get("http://localhost:8080/api/hoadon/soluong/hoadonht"),
           axios.get("http://localhost:8080/api/hoadon/soluong/hoadonhd"),
+          axios.get("http://localhost:8080/api/hoadon/soluong/hoadonhh"),
+          axios.get("http://localhost:8080/api/hoadon/soluong/hoadonhhtc"),
         ]);
 
         // Cập nhật số lượng trong state
@@ -110,6 +116,8 @@ export default function DanhSachHoaDon() {
           ht: htRes.data.result,
           huy: huyRes.data.result,
           clh: clhRes.data.result,
+          hh: hhRes.data.result,
+          hhtc: hhtcRes.data.result,
         });
       } catch (error) {
         console.error("Lỗi khi gọi API:", error);
@@ -251,6 +259,15 @@ export default function DanhSachHoaDon() {
               </span>
               Đã hủy
             </button>
+            <button
+              className="relative rounded bg-blue-500 px-4 py-2 text-white"
+              onClick={() => setTrangThai("HOAN_HANG")}
+            >
+              <span className="absolute right-0 top-0 flex h-6 w-6 translate-x-[50%] translate-y-[-50%] items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                {soluong.hh}
+              </span>
+              Hoàn hàng
+            </button>
           </div>
         </div>
         <div></div>
@@ -303,16 +320,20 @@ export default function DanhSachHoaDon() {
                         ? "text-yellow-500"
                         : item.trangThaiDonHang === "Đã Xác Nhận"
                           ? "text-green-500"
-                          : item.trangThaiDonHang === "Chờ đơn vị vận chuyển"
-                            ? "text-purple-500"
-                            : item.trangThaiDonHang ===
-                                "Đơn đang trên đường giao hàng"
-                              ? "text-blue-500"
-                              : item.trangThaiDonHang === "Đã thanh toán"
-                                ? "text-green-600"
-                                : item.trangThaiDonHang === "Hoàn thành"
-                                  ? "text-green-600"
-                                  : "text-gray-500"
+                          : item.trangThaiDonHang === "Chờ lấy hàng"
+                            ? "text-orange-500"
+                            : item.trangThaiDonHang === "Chờ đơn vị vẫn chuyển"
+                              ? "text-purple-700"
+                              : item.trangThaiDonHang === "Hủy đơn"
+                                ? "text-red-700"
+                                : item.trangThaiDonHang ===
+                                    "Đơn đang trên đường giao hàng"
+                                  ? "text-blue-500"
+                                  : item.trangThaiDonHang === "Đã thanh toán"
+                                    ? "text-green-600"
+                                    : item.trangThaiDonHang === "Hoàn thành"
+                                      ? "text-green-600"
+                                      : "text-pink-800"
                     }`}
                   >
                     {item.trangThaiDonHang}

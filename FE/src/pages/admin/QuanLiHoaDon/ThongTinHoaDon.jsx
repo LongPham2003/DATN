@@ -163,6 +163,7 @@ const ThongTinHoaDon = ({
                 placeholder="Chọn phiếu giảm giá"
                 optionLabelProp="label"
                 value={idPhieuGiamGiaDangChon}
+                disabled={hoaDon.trangThaiDonHang !== "Chờ Xác Nhận"} // Vô hiệu hóa nếu trạng thái là "xác nhận"
                 onChange={(value) => {
                   setIdPhieuGiamGiaDangChon(value); // Cập nhật state
                   addPhieuGiamGia(value);
@@ -180,11 +181,7 @@ const ThongTinHoaDon = ({
 
                 {/* Danh sách phiếu giảm giá */}
                 {danhSachPhieuGiamGia.map((pgg) => (
-                  <Select.Option
-                    key={pgg.id}
-                    value={pgg.id}
-                    label={pgg.tenVoucher}
-                  >
+                  <Select.Option key={pgg.id} value={pgg.id} label={pgg.ma}>
                     <div>
                       <span>Tên: {pgg.tenVoucher}</span> <br />
                       <span>Điều kiện: {pgg.dieuKienGiamGia}</span> <br />

@@ -196,8 +196,11 @@ const HoaDonChiTiet = () => {
   }, [id]);
 
   const thanhToan = lichSuHoaDon.filter(
-    (item) => item.trangThai === "DA_THANH_TOAN",
+    (item) =>
+      item.trangThai === "DA_THANH_TOAN" || item.trangThai === "HOAN_TIEN",
   );
+
+  console.log(thanhToan);
 
   // tính lại phí ship
   const [idTP, setIdTP] = useState(null);
@@ -376,7 +379,7 @@ const HoaDonChiTiet = () => {
           toast.error(error.response.data.message);
         });
     }
-  }, [soLuong, id]);
+  }, [soLuong, phiGiaoHang]);
 
   console.log(thanhToan);
   console.log(lichSuHoaDon);
@@ -650,82 +653,86 @@ const HoaDonChiTiet = () => {
     <div className="mx-3 py-3">
       <div className="overflow-x-auto">
         <Timeline className="Timeline2-wrapper-1 relative !overflow-scroll">
-          {lichSuHoaDon.map((item, index) => (
-            <TimelineEvent
-              className="overflow-x-auto"
-              key={index}
-              icon={
-                item.trangThai === "CHO_XAC_NHAN"
-                  ? FaHourglassStart
-                  : item.trangThai === "HUY_DON"
-                    ? FaRegTimesCircle
-                    : item.trangThai === "DA_XAC_NHAN"
-                      ? FaCheck
-                      : item.trangThai === "CHO_LAY_HANG"
-                        ? FaBoxOpen
-                        : item.trangThai === "CHO_GIAO_HANG"
-                          ? FaCar
-                          : item.trangThai === "DANG_GIAO"
-                            ? FaTruck
-                            : item.trangThai === "DA_THANH_TOAN"
-                              ? FaStackOverflow
-                              : item.trangThai === "HOAN_THANH"
-                                ? FaCheckCircle
-                                : item.trangThai === "HOAN_HANG"
-                                  ? FaUndoAlt
-                                  : item.trangThai === "HOAN_HANG_THANH_CONG"
-                                    ? FaCheckCircle
-                                    : ""
-              }
-              color={
-                item.trangThai === "CHO_XAC_NHAN"
-                  ? "#FFFF33"
-                  : item.trangThai === "HUY_DON"
-                    ? "#FF0000"
-                    : item.trangThai === "DA_XAC_NHAN"
-                      ? "#33FF33"
-                      : item.trangThai === "CHO_LAY_HANG"
-                        ? "#EE82EE"
-                        : item.trangThai === "CHO_GIAO_HANG"
-                          ? "#9999CC"
-                          : item.trangThai === "DANG_GIAO"
-                            ? "#6699FF"
-                            : item.trangThai === "DA_THANH_TOAN"
-                              ? "#99FF00"
-                              : item.trangThai === "HOAN_THANH"
+          {lichSuHoaDon
+            .filter((item) => item.trangThai !== "HOAN_TIEN")
+            .map((item, index) => (
+              <TimelineEvent
+                className="overflow-x-auto"
+                key={index}
+                icon={
+                  item.trangThai === "CHO_XAC_NHAN"
+                    ? FaHourglassStart
+                    : item.trangThai === "HUY_DON"
+                      ? FaRegTimesCircle
+                      : item.trangThai === "DA_XAC_NHAN"
+                        ? FaCheck
+                        : item.trangThai === "CHO_LAY_HANG"
+                          ? FaBoxOpen
+                          : item.trangThai === "CHO_GIAO_HANG"
+                            ? FaCar
+                            : item.trangThai === "DANG_GIAO"
+                              ? FaTruck
+                              : item.trangThai === "DA_THANH_TOAN"
+                                ? FaStackOverflow
+                                : item.trangThai === "HOAN_THANH"
+                                  ? FaCheckCircle
+                                  : item.trangThai === "HOAN_HANG"
+                                    ? FaUndoAlt
+                                    : item.trangThai === "HOAN_HANG_THANH_CONG"
+                                      ? FaCheckCircle
+                                      : item.trangThai === "HOAN_TIEN"
+                                        ? null
+                                        : ""
+                }
+                color={
+                  item.trangThai === "CHO_XAC_NHAN"
+                    ? "#FFFF33"
+                    : item.trangThai === "HUY_DON"
+                      ? "#FF0000"
+                      : item.trangThai === "DA_XAC_NHAN"
+                        ? "#33FF33"
+                        : item.trangThai === "CHO_LAY_HANG"
+                          ? "#EE82EE"
+                          : item.trangThai === "CHO_GIAO_HANG"
+                            ? "#9999CC"
+                            : item.trangThai === "DANG_GIAO"
+                              ? "#6699FF"
+                              : item.trangThai === "DA_THANH_TOAN"
                                 ? "#99FF00"
-                                : item.trangThai === "HOAN_HANG"
-                                  ? "#008080"
-                                  : item.trangThai === "HOAN_HANG_THANH_CONG"
-                                    ? "#99FF00"
-                                    : ""
-              }
-              subtitle={formatDate(item.createAt)}
-              title={
-                item.trangThai === "CHO_XAC_NHAN"
-                  ? "Chờ xác nhận"
-                  : item.trangThai === "HUY_DON"
-                    ? "Đã hủy đơn"
-                    : item.trangThai === "DA_XAC_NHAN"
-                      ? "Đã xác nhận"
-                      : item.trangThai === "CHO_LAY_HANG"
-                        ? "Chờ lấy hàng"
-                        : item.trangThai === "CHO_GIAO_HANG"
-                          ? "Chờ giao hàng"
-                          : item.trangThai === "DANG_GIAO"
-                            ? "Đang giao hàng"
-                            : item.trangThai === "DA_THANH_TOAN"
-                              ? "Đã thanh toán"
-                              : item.trangThai === "HOAN_THANH"
-                                ? "Hoàn thành"
-                                : item.trangThai === "HOAN_HANG"
-                                  ? "Hoàn hàng"
-                                  : item.trangThai === "HOAN_HANG_THANH_CONG"
-                                    ? "Hoàn hàng thành công"
-                                    : ""
-              }
-            ></TimelineEvent>
-          ))}
+                                : item.trangThai === "HOAN_THANH"
+                                  ? "#99FF00"
+                                  : item.trangThai === "HOAN_HANG"
+                                    ? "#008080"
+                                    : item.trangThai === "HOAN_HANG_THANH_CONG"
+                                      ? "#99FF00"
+                                      : ""
+                }
+                subtitle={formatDate(item.createAt)}
+                title={
+                  item.trangThai === "CHO_XAC_NHAN"
+                    ? "Chờ xác nhận"
+                    : item.trangThai === "HUY_DON"
+                      ? "Đã hủy đơn"
+                      : item.trangThai === "DA_XAC_NHAN"
+                        ? "Đã xác nhận"
+                        : item.trangThai === "CHO_LAY_HANG"
+                          ? "Chờ lấy hàng"
+                          : item.trangThai === "CHO_GIAO_HANG"
+                            ? "Chờ giao hàng"
+                            : item.trangThai === "DANG_GIAO"
+                              ? "Đang giao hàng"
+                              : item.trangThai === "DA_THANH_TOAN"
+                                ? "Đã thanh toán"
+                                : item.trangThai === "HOAN_THANH"
+                                  ? "Hoàn thành"
+                                  : item.trangThai === "HOAN_HANG"
+                                    ? "Hoàn hàng"
+                                    : item.trangThai === "HOAN_HANG_THANH_CONG"
+                                      ? "Hoàn hàng thành công"
+                                      : ""
+                }
+              ></TimelineEvent>
+            ))}
         </Timeline>
       </div>
       <hr className="mb-2" />
@@ -776,7 +783,7 @@ const HoaDonChiTiet = () => {
                   onClick={openModalGiao}
                   className="rounded bg-blue-500 px-2 py-1 text-white"
                 >
-                  Giao hàng
+                  Giao Hàng
                 </button>
               )}
 
@@ -785,13 +792,12 @@ const HoaDonChiTiet = () => {
                   onClick={openModalHT}
                   className="rounded bg-blue-500 px-2 py-1 text-white"
                 >
-                  Hoàn thành
+                  Hoàn Thành
                 </button>
               )}
             </div>
           )}
-          {(hoaDon.trangThaiDonHang === "Chờ đơn vị vẫn chuyển" ||
-            hoaDon.trangThaiDonHang === "Đơn đang trên đường giao hàng") && (
+          {hoaDon.trangThaiDonHang === "Đơn đang trên đường giao hàng" && (
             <button
               onClick={openModalHoanHang}
               className="mx-5 rounded bg-blue-500 px-2 py-1 text-white"
@@ -927,7 +933,7 @@ const HoaDonChiTiet = () => {
       /> */}
       {OpenModelLSHD && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="relative h-[650px] w-full max-w-lg overflow-y-auto rounded-lg bg-white p-6 shadow-lg">
+          <div className="relative h-[600px] w-[900px] overflow-y-auto rounded-lg bg-white p-6 shadow-lg">
             <div className="font-bold">
               <div className="mb-4 flex items-center justify-between">
                 <h3 className="text-xl">Lịch sử hóa đơn</h3>
@@ -939,47 +945,65 @@ const HoaDonChiTiet = () => {
                 </button>
               </div>
 
-              {lichSuHoaDon.map((item, index) => (
-                <div key={index} className="my-2">
-                  <div className="mb-2 flex">
-                    <h4 className="w-1/3 font-medium">Trạng thái:</h4>
-                    <span className="text-gray-700">
-                      {item.trangThai === "CHO_XAC_NHAN"
-                        ? "Chờ xác nhận"
-                        : item.trangThai === "DA_XAC_NHAN"
-                          ? "Đã xác nhận"
-                          : item.trangThai === "CHO_GIAO_HANG"
-                            ? "Chờ giao hàng"
-                            : item.trangThai === "DANG_GIAO"
-                              ? "Đang giao hàng"
-                              : item.trangThai === "DA_THANH_TOAN"
-                                ? "Đã thanh toán"
-                                : item.trangThai === "HOAN_THANH"
-                                  ? "Hoàn thành"
-                                  : item.trangThai === "HOAN_HANG"
-                                    ? "Hoàn Hàng"
-                                    : item.trangThai === "HOAN_HANG_THANH_CONG"
-                                      ? "Hoàn Hàng Thành Công"
-                                      : ""}
-                    </span>
-                  </div>
-                  <div className="mb-2 flex">
-                    <h4 className="w-1/3 font-medium">Thời gian:</h4>
-                    <span className="text-gray-700">
-                      {formatDate(item.createAt)}
-                    </span>
-                  </div>
-                  <div className="mb-2 flex">
-                    <h4 className="w-1/3 font-medium">Ghi chú:</h4>
-                    <span className="text-gray-700">{item.moTa}</span>
-                  </div>
-                  <div className="mb-2 flex">
-                    <h4 className="w-1/3 font-medium">Người thực hiện:</h4>
-                    <span className="text-gray-700">{item.createBy}</span>
-                  </div>
-                  <hr className="border-t border-gray-300" />
-                </div>
-              ))}
+              <table className="w-full border-collapse border border-gray-300 text-center">
+                <thead>
+                  <tr className="bg-gray-100">
+                    <th className="border border-gray-300 px-4 py-2 text-center">
+                      Trạng thái
+                    </th>
+                    <th className="border border-gray-300 px-4 py-2 text-center">
+                      Thời gian
+                    </th>
+                    <th className="border border-gray-300 px-4 py-2 text-center">
+                      Ghi chú
+                    </th>
+                    <th className="border border-gray-300 px-4 py-2 text-center">
+                      Người thực hiện
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {lichSuHoaDon.map((item, index) => (
+                    <tr key={index} className="hover:bg-gray-50">
+                      <td className="border border-gray-300 px-4 py-2">
+                        {item.trangThai === "CHO_XAC_NHAN"
+                          ? "Chờ xác nhận"
+                          : item.trangThai === "DA_XAC_NHAN"
+                            ? "Đã xác nhận"
+                            : item.trangThai === "CHO_LAY_HANG"
+                              ? "Chờ lấy hàng"
+                              : item.trangThai === "CHO_GIAO_HANG"
+                                ? "Chờ giao hàng"
+                                : item.trangThai === "DANG_GIAO"
+                                  ? "Đang giao hàng"
+                                  : item.trangThai === "DA_THANH_TOAN"
+                                    ? "Đã thanh toán"
+                                    : item.trangThai === "HOAN_THANH"
+                                      ? "Hoàn thành"
+                                      : item.trangThai === "HUY_DON"
+                                        ? "Hủy đơn"
+                                        : item.trangThai === "HOAN_TIEN"
+                                          ? "Đã hoàn tiền"
+                                          : item.trangThai === "HOAN_HANG"
+                                            ? "Hoàn Hàng"
+                                            : item.trangThai ===
+                                                "HOAN_HANG_THANH_CONG"
+                                              ? "Hoàn Hàng Thành Công"
+                                              : ""}
+                      </td>
+                      <td className="border border-gray-300 px-4 py-2">
+                        {formatDate(item.createAt)}
+                      </td>
+                      <td className="border border-gray-300 px-4 py-2">
+                        {item.moTa}
+                      </td>
+                      <td className="border border-gray-300 px-4 py-2">
+                        {item.createBy}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -1007,10 +1031,24 @@ const HoaDonChiTiet = () => {
               X
             </button>
             {/* Nội dung modal */}
-            <div className="text-center">
-              <h3 className="mb-4 text-lg font-bold text-gray-800">
+            <div className="">
+              <h3 className="mb-4 text-center text-lg font-bold text-gray-800">
                 Cập nhật hóa đơn
               </h3>
+              {hoaDon.trangThaiThanhToan !== "Chưa thanh toán" && (
+                <div className="flex gap-3 py-3">
+                  <label
+                    htmlFor="ghiChuHoanHangTC"
+                    className="block text-sm font-semibold text-gray-700"
+                  >
+                    Số tiền hoàn trả khách:
+                  </label>
+                  <input
+                    value={hoaDon.tienPhaiThanhToan}
+                    className="font-semibold text-green-600"
+                  />
+                </div>
+              )}
               <label
                 htmlFor="ghiChu"
                 className="mb-2 block text-sm font-semibold text-gray-700"
@@ -1154,13 +1192,28 @@ const HoaDonChiTiet = () => {
               X
             </button>
             {/* Nội dung modal */}
-            <div className="text-center">
-              <h3 className="mb-4 text-lg font-bold text-gray-800">
-                Cập nhật hóa đơn
+            <div className="">
+              <h3 className="mb-4 text-center text-lg font-bold text-gray-800">
+                Xác Nhận Hoàn Hàng Thành Công
               </h3>
+              {hoaDon.trangThaiThanhToan !== "Chưa thanh toán" && (
+                <div className="flex gap-3">
+                  <label
+                    htmlFor="ghiChuHoanHangTC"
+                    className="block text-sm font-semibold text-gray-700"
+                  >
+                    Số tiền hoàn trả khách:
+                  </label>
+                  <input
+                    value={hoaDon.tienPhaiThanhToan}
+                    className="font-semibold text-green-600"
+                  />
+                </div>
+              )}
+
               <label
                 htmlFor="ghiChuHoanHangTC"
-                className="mb-2 block text-sm font-semibold text-gray-700"
+                className="my-2 block text-sm font-semibold text-gray-700"
               >
                 Ghi chú
               </label>

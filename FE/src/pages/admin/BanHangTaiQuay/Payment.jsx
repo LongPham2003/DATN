@@ -18,6 +18,7 @@ export default function PaymentResult() {
   const phiVanChuyen = localStorage.getItem("phiVanChuyen");
   const diaChiChiTiet = localStorage.getItem("diaChiChiTiet");
   const ngayDuKien = localStorage.getItem("ngayDuKien");
+  const tenKhachHang = localStorage.getItem("hoTen");
   const tienPhaiThanhToan = localStorage.getItem("tienPhaiThanhToan");
 
   const handleGeneratePDF = () => {
@@ -51,6 +52,7 @@ export default function PaymentResult() {
             chiTietSanPhams,
             idPhieuGiamGia: idPhieuGiamGia || null,
             soDienThoai: soDienThoai,
+            tenKhachHang: tenKhachHang,
             phiVanChuyen: phiVanChuyen,
             diaChiChiTiet: diaChiChiTiet,
             ngayDuKien: ngayDuKien,

@@ -8,7 +8,7 @@ export default function SPMua({ idHD }) {
   useEffect(() => {
     const fetchData = async () => {
       const resp = await axios.get(ApiDSSP);
-      console.log(resp.data.result);
+      // console.log(resp.data.result);
       setListSP(resp.data.result);
     };
     fetchData();
