@@ -69,6 +69,12 @@ public interface HoaDonRepo
     @Query(value = "select count(id) from hoa_don where trang_thai_don_hang = 'HUY_DON'", nativeQuery = true)
     Integer getCountHoaDonHuy();
 
+    @Query(value = "select count(id) from hoa_don where trang_thai_don_hang = 'HOAN_HANG'", nativeQuery = true)
+    Integer getCountHoaDonHoanHang();
+
+    @Query(value = "select count(id) from hoa_don where trang_thai_don_hang = 'HOAN_HANG_THANH_CONG'", nativeQuery = true)
+    Integer getCountHoaDonHoanHangTC();
+
     @Query(value = """
             SELECT 
                 hd.id AS idHoaDon,

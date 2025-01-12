@@ -26,6 +26,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -515,7 +516,7 @@ public class GioHangChiTietServiceImpl
         }
 
         hoaDon.setIdKhachHang(khachHang);
-        hoaDon.setTenKhachHang(khachHang.getHoTen());
+        hoaDon.setTenKhachHang(hoaDonRequest.getTenKhachHang());
         // lay tu request
         hoaDon.setSoDienThoai(hoaDonRequest.getSoDienThoai());
         hoaDon.setDiaChiGiaoHang(hoaDonRequest.getDiaChiChiTiet());
@@ -779,56 +780,7 @@ public class GioHangChiTietServiceImpl
         return response;
     }
 
-    // Phương thức chuyển đổi BigDecimal sang định dạng tiền tệ Việt Nam
-    private String formatCurrency(Object value)
-    {
-        if (value == null) {
-            return "0 VNĐ"; // Trả về "0 VNĐ" nếu giá trị là null
-        }
-
-        if (value instanceof Number) {
-            // Chuyển đổi value thành BigDecimal để đảm bảo độ chính xác khi định dạng tiền tệ
-            BigDecimal amount = new BigDecimal(((Number) value).toString());
-
-            // Sử dụng NumberFormat để định dạng tiền tệ Việt Nam
-            NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
-            String formatted = currencyFormat.format(amount);
-
-            // Loại bỏ ký hiệu ₫ và thêm VNĐ
-            return formatted.replace("₫", "").trim() + " VNĐ";
-        }
-        else {
-            throw new IllegalArgumentException("Provided value is not a number: " + value);
-        }
-    }
-
-    private HoaDonResponse converToHoaDonResponse(HoaDon hoaDon)
-    {
-        HoaDonResponse hoaDonResponse = new HoaDonResponse();
-        hoaDonResponse.setId(hoaDon.getId());
-        hoaDonResponse.setMa(hoaDon.getMa());
-        hoaDonResponse.setTenNhanVien(hoaDon.getIdNhanVien() != null ? hoaDon.getIdNhanVien().getHoTen() : null);
-        hoaDonResponse.setTenKhachHang(
-                hoaDon.getIdKhachHang() != null ? hoaDon.getIdKhachHang().getHoTen() : "Khách lẻ");
-
-        hoaDonResponse.setSoDienThoai(hoaDon.getIdKhachHang() != null ? hoaDon.getIdKhachHang().getSdt() : "Không có");
-
-        hoaDonResponse.setDiaChiGiaoHang(hoaDon.getDiaChiGiaoHang());
-        // Định dạng và lưu trữ giá trị tiền
-        hoaDonResponse.setTongTien(formatCurrency(hoaDon.getTongTien()));
-        hoaDonResponse.setTienDuocGiam(formatCurrency(hoaDon.getTienDuocGiam()));
-        hoaDonResponse.setTienPhaiThanhToan(formatCurrency(hoaDon.getTienPhaiThanhToan()));
-        //     hoaDonResponse.setTienKhachDua(formatCurrency(hoaDon.getTienKhachDua()));
-        //     hoaDonResponse.setTienThua(formatCurrency(hoaDon.getTienThua()));
-        hoaDonResponse.setPhuongThucThanhToan(hoaDon.getPhuongThucThanhToan());
-        hoaDonResponse.setPhuongThucGiaoHang(hoaDon.getPhuongThucGiaoHang());
-        hoaDonResponse.setNgayTao(hoaDon.getCreatedAt());
-        hoaDonResponse.setTrangThaiDonHang(hoaDon.getTrangThaiDonHang().getMoTa());
-        hoaDonResponse.setTienShip(formatCurrency(hoaDon.getPhiVanChuyen()));
-        return hoaDonResponse;
-    }
-
-    // chỉnh sửa hóa đơn
+    // thêm sản phẩm chi tiết vào hóa đơn
     @Override
     public HoaDonResponse addSanPhamChiTietToHoaDon(Integer idHoaDon, HoaDonChiTietRequest chiTietRequest)
     {
@@ -909,7 +861,7 @@ public class GioHangChiTietServiceImpl
         return converToHoaDonResponse(hoaDon);
     }
 
-    //delete
+    //xóa sản phẩm chi tiết
     @Override
     public void deleteByIdHoaDonAndIdSpct(Integer idHoaDon, Integer idSpct)
     {
@@ -990,11 +942,7 @@ public class GioHangChiTietServiceImpl
         hoaDonRepo.save(hoaDon);
     }
 
-    public PhieuGiamGia phieuGiamGiaCoLoiNhat(BigDecimal tongTienHoaDon)
-    {
-        return phieuGiamGiaRepo.findPhieuGiamGiaCoLoiNhat(tongTienHoaDon);
-    }
-
+    // chỉnh sửa số lượng của sản phẩm chi tiết trong giỏ hàng
     public HoaDonResponse chinhSuaSoLuongSanPhamChiTiet(Integer idHoaDon, HoaDonChiTietRequest chiTietRequest)
     {
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon)
@@ -1004,30 +952,35 @@ public class GioHangChiTietServiceImpl
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_DETAIL_NOT_FOUND));
 
         HoaDonChiTiet existingChiTiet = hoaDonChiTietRepo.findByHoaDonAndSanPhamChiTiet(hoaDon, spct);
-        if(spct.getSoLuong()<chiTietRequest.getSoLuong()){
-            throw  new AppException(ErrorCode.INSUFFICIENT_STOCK);
+        if (spct.getSoLuong() < chiTietRequest.getSoLuong()) {
+            throw new AppException(ErrorCode.INSUFFICIENT_STOCK);
         }
         // Cập nhật tổng tiền hóa đơn
         BigDecimal tongTien = hoaDon.getTongTien();
         BigDecimal tongTienChiTiet = spct.getDonGia();
-        if(existingChiTiet.getSoLuong()<chiTietRequest.getSoLuong()){
+        if (existingChiTiet.getSoLuong() < chiTietRequest.getSoLuong()) {
             hoaDon.setTongTien(tongTien.add(tongTienChiTiet));
-        }else {
+        }
+        else {
             hoaDon.setTongTien(tongTien.subtract(tongTienChiTiet));
         }
 
-        PhieuGiamGia phieuGiamGia = phieuGiamGiaCoLoiNhat(hoaDon.getTongTien());
+        PhieuGiamGia phieuGiamGiaCoLoiNhat = phieuGiamGiaCoLoiNhat(hoaDon.getTongTien());
         PhieuGiamGia phieuGiamGiaDangApDung = hoaDon.getIdPhieuGiamGia();
-
-        if (phieuGiamGia != null) {
+        System.out.println(hoaDon.getTongTien());
+        if (phieuGiamGiaDangApDung == null && phieuGiamGiaCoLoiNhat == null) {
+            hoaDon.setTienPhaiThanhToan(
+                    hoaDon.getTongTien().subtract(hoaDon.getTienDuocGiam()).add(hoaDon.getPhiVanChuyen()));
+        }
+        else if (phieuGiamGiaCoLoiNhat != null) {
             if (phieuGiamGiaDangApDung == null) {
-                themPhieuGiamGiaHoaDon(hoaDon.getId(), phieuGiamGia.getId());
+                themPhieuGiamGiaHoaDon(hoaDon.getId(), phieuGiamGiaCoLoiNhat.getId());
                 hoaDon.setTienPhaiThanhToan(
                         hoaDon.getTongTien().subtract(hoaDon.getTienDuocGiam()).add(hoaDon.getPhiVanChuyen()));
             }
-            else {
+            else if (phieuGiamGiaDangApDung != null) {
                 xoaPhieuGiamGiaHoaDon(hoaDon.getId(), phieuGiamGiaDangApDung.getId());
-                themPhieuGiamGiaHoaDon(hoaDon.getId(), phieuGiamGia.getId());
+                themPhieuGiamGiaHoaDon(hoaDon.getId(), phieuGiamGiaCoLoiNhat.getId());
                 hoaDon.setTienPhaiThanhToan(
                         hoaDon.getTongTien().subtract(hoaDon.getTienDuocGiam()).add(hoaDon.getPhiVanChuyen()));
             }
@@ -1035,10 +988,6 @@ public class GioHangChiTietServiceImpl
         else if (phieuGiamGiaDangApDung != null && hoaDon.getTongTien().compareTo(
                 phieuGiamGiaDangApDung.getDieuKienGiamGia()) < 0) {
             xoaPhieuGiamGiaHoaDon(hoaDon.getId(), phieuGiamGiaDangApDung.getId());
-            hoaDon.setTienPhaiThanhToan(
-                    hoaDon.getTongTien().subtract(hoaDon.getTienDuocGiam()).add(hoaDon.getPhiVanChuyen()));
-        }
-        else if (phieuGiamGiaDangApDung == null && phieuGiamGia == null) {
             hoaDon.setTienPhaiThanhToan(
                     hoaDon.getTongTien().subtract(hoaDon.getTienDuocGiam()).add(hoaDon.getPhiVanChuyen()));
         }
@@ -1054,6 +1003,7 @@ public class GioHangChiTietServiceImpl
         return converToHoaDonResponse(hoaDon);
     }
 
+    // thay đổi phiếu giảm giá trong hóa đơn
     public HoaDonResponse thayDoiPhieuGiamGia(Integer idHoaDon, Integer idPhieuGiamGia)
     {
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon)
@@ -1063,22 +1013,106 @@ public class GioHangChiTietServiceImpl
                 .orElseThrow(() -> new AppException(ErrorCode.VOUCHER_NOT_FOUND));
 
         if (hoaDon.getIdPhieuGiamGia() != null) {
-            xoaPhieuGiamGiaHoaDon(idHoaDon,phieuGiamGiaDangApDung.getId());
+            xoaPhieuGiamGiaHoaDon(idHoaDon, phieuGiamGiaDangApDung.getId());
             BigDecimal soTienGiam = apDungVoucher(hoaDon.getTongTien(), phieuGiamGia);
             hoaDon.setTienDuocGiam(soTienGiam);
             hoaDon.setIdPhieuGiamGia(phieuGiamGia);
-            hoaDon.setTienPhaiThanhToan(hoaDon.getTongTien().subtract(hoaDon.getTienDuocGiam()).add(hoaDon.getPhiVanChuyen()));
+            hoaDon.setTienPhaiThanhToan(
+                    hoaDon.getTongTien().subtract(hoaDon.getTienDuocGiam()).add(hoaDon.getPhiVanChuyen()));
             phieuGiamGia.setSoLuong(phieuGiamGia.getSoLuong() - 1);
-        }else {
+        }
+        else {
             BigDecimal soTienGiam = apDungVoucher(hoaDon.getTongTien(), phieuGiamGia);
             hoaDon.setTienDuocGiam(soTienGiam);
             hoaDon.setIdPhieuGiamGia(phieuGiamGia);
-            hoaDon.setTienPhaiThanhToan(hoaDon.getTongTien().subtract(hoaDon.getTienDuocGiam()).add(hoaDon.getPhiVanChuyen()));
+            hoaDon.setTienPhaiThanhToan(
+                    hoaDon.getTongTien().subtract(hoaDon.getTienDuocGiam()).add(hoaDon.getPhiVanChuyen()));
             phieuGiamGia.setSoLuong(phieuGiamGia.getSoLuong() - 1);
-
         }
         phieuGiamGiaRepo.save(phieuGiamGia);
         hoaDonRepo.save(hoaDon);
         return converToHoaDonResponse(hoaDon);
+    }
+
+    // phiếu giảm giá có lợi nhất
+    public PhieuGiamGia phieuGiamGiaCoLoiNhat(BigDecimal tongTienHoaDon)
+    {
+        List<PhieuGiamGia> phieuGiamGiaList = phieuGiamGiaRepo.findPhieuGiamGiaCoLoiNhat(tongTienHoaDon);
+        if (phieuGiamGiaList.isEmpty()) {
+            return null; // Không có phiếu giảm giá nào
+        }
+        PhieuGiamGia phieuCoLoiNhat = null;
+        BigDecimal maxDiscount = BigDecimal.ZERO;
+        for (PhieuGiamGia phieuGiamGia : phieuGiamGiaList) {
+            BigDecimal discount = BigDecimal.ZERO;
+
+            if ("%".equalsIgnoreCase(phieuGiamGia.getHinhThucGiam())) {
+                // Tính giảm giá theo phần trăm
+                discount = tongTienHoaDon
+                        .multiply(phieuGiamGia.getMucGiam().divide(BigDecimal.valueOf(100)))
+                        .min(phieuGiamGia.getGiamToiDa()); // Không vượt quá giảm tối đa
+            }
+            else if ("VND".equalsIgnoreCase(phieuGiamGia.getHinhThucGiam())) {
+                // Tính giảm giá theo tiền mặt
+                discount = phieuGiamGia.getMucGiam().min(phieuGiamGia.getGiamToiDa()); // Không vượt quá giảm tối đa
+            }
+
+            // So sánh để tìm phiếu giảm giá có lợi nhất
+            if (discount.compareTo(maxDiscount) > 0) {
+                maxDiscount = discount;
+                phieuCoLoiNhat = phieuGiamGia;
+            }
+        }
+
+        return phieuCoLoiNhat;
+    }
+
+    // Phương thức chuyển đổi BigDecimal sang định dạng tiền tệ Việt Nam
+    private String formatCurrency(Object value)
+    {
+        if (value == null) {
+            return "0 VNĐ"; // Trả về "0 VNĐ" nếu giá trị là null
+        }
+
+        if (value instanceof Number) {
+            // Chuyển đổi value thành BigDecimal để đảm bảo độ chính xác khi định dạng tiền tệ
+            BigDecimal amount = new BigDecimal(((Number) value).toString());
+
+            // Sử dụng NumberFormat để định dạng tiền tệ Việt Nam
+            NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+            String formatted = currencyFormat.format(amount);
+
+            // Loại bỏ ký hiệu ₫ và thêm VNĐ
+            return formatted.replace("₫", "").trim() + " VNĐ";
+        }
+        else {
+            throw new IllegalArgumentException("Provided value is not a number: " + value);
+        }
+    }
+
+    private HoaDonResponse converToHoaDonResponse(HoaDon hoaDon)
+    {
+        HoaDonResponse hoaDonResponse = new HoaDonResponse();
+        hoaDonResponse.setId(hoaDon.getId());
+        hoaDonResponse.setMa(hoaDon.getMa());
+        hoaDonResponse.setTenNhanVien(hoaDon.getIdNhanVien() != null ? hoaDon.getIdNhanVien().getHoTen() : null);
+        hoaDonResponse.setTenKhachHang(
+                hoaDon.getIdKhachHang() != null ? hoaDon.getIdKhachHang().getHoTen() : "Khách lẻ");
+
+        hoaDonResponse.setSoDienThoai(hoaDon.getIdKhachHang() != null ? hoaDon.getIdKhachHang().getSdt() : "Không có");
+
+        hoaDonResponse.setDiaChiGiaoHang(hoaDon.getDiaChiGiaoHang());
+        // Định dạng và lưu trữ giá trị tiền
+        hoaDonResponse.setTongTien(formatCurrency(hoaDon.getTongTien()));
+        hoaDonResponse.setTienDuocGiam(formatCurrency(hoaDon.getTienDuocGiam()));
+        hoaDonResponse.setTienPhaiThanhToan(formatCurrency(hoaDon.getTienPhaiThanhToan()));
+        //     hoaDonResponse.setTienKhachDua(formatCurrency(hoaDon.getTienKhachDua()));
+        //     hoaDonResponse.setTienThua(formatCurrency(hoaDon.getTienThua()));
+        hoaDonResponse.setPhuongThucThanhToan(hoaDon.getPhuongThucThanhToan());
+        hoaDonResponse.setPhuongThucGiaoHang(hoaDon.getPhuongThucGiaoHang());
+        hoaDonResponse.setNgayTao(hoaDon.getCreatedAt());
+        hoaDonResponse.setTrangThaiDonHang(hoaDon.getTrangThaiDonHang().getMoTa());
+        hoaDonResponse.setTienShip(formatCurrency(hoaDon.getPhiVanChuyen()));
+        return hoaDonResponse;
     }
 }

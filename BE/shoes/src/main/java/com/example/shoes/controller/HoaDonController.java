@@ -256,6 +256,18 @@ public class HoaDonController
         return ApiResponse.<Integer>builder().result(hoaDonRepo.getCountHoaDonHuy()).build();
     }
 
+    @GetMapping("/soluong/hoadonhh")
+    private ApiResponse<Integer> soluongHoanHang()
+    {
+        return ApiResponse.<Integer>builder().result(hoaDonRepo.getCountHoaDonHoanHang()).build();
+    }
+
+    @GetMapping("/soluong/hoadonhhtc")
+    private ApiResponse<Integer> soluongHoanHangTC()
+    {
+        return ApiResponse.<Integer>builder().result(hoaDonRepo.getCountHoaDonHoanHangTC()).build();
+    }
+
     @GetMapping("/getAllHDTheoIDKH")
     public ApiResponse<List<HoaDonTheoIDKH>> getAllHDTheoIDKH(
             @RequestParam(value = "maHD", required = false) String maHD,

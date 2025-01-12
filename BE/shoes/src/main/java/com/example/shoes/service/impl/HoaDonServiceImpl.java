@@ -1020,7 +1020,15 @@ public class HoaDonServiceImpl
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon).get();
         if (hoaDon.getTrangThaiDonHang().getMoTa().equals("Chờ Xác Nhận")) {
             hoaDon.setTrangThaiDonHang(TrangThai.HUY_DON);
-            hoaDon.setTrangThaiThanhToan(false);
+            if(hoaDon.getTrangThaiThanhToan()){
+                LichSuHoaDon lichSuHoaDon1 = new LichSuHoaDon();
+                lichSuHoaDon1.setMoTa("Đã hoàn tiền");
+                lichSuHoaDon1.setTrangThai(TrangThai.HOAN_TIEN);
+                lichSuHoaDon1.setIdHoaDon(hoaDon);
+                lichSuHoaDon1.setNguoiThucHien(getCurrentNhanVien().getHoTen());
+                lichSuHoaDonRepo.save(lichSuHoaDon1);
+                hoaDon.setTrangThaiThanhToan(false);
+            }
             hoaDonRepo.save(hoaDon);
             LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
             lichSuHoaDon.setIdHoaDon(hoaDon);
@@ -1042,7 +1050,15 @@ public class HoaDonServiceImpl
         }
         else if (!hoaDon.getTrangThaiDonHang().getMoTa().equals("Chờ Xác Nhận")) {
             hoaDon.setTrangThaiDonHang(TrangThai.HUY_DON);
-            hoaDon.setTrangThaiThanhToan(false);
+            if(hoaDon.getTrangThaiThanhToan()){
+                LichSuHoaDon lichSuHoaDon1 = new LichSuHoaDon();
+                lichSuHoaDon1.setMoTa("Đã hoàn tiền");
+                lichSuHoaDon1.setTrangThai(TrangThai.HOAN_TIEN);
+                lichSuHoaDon1.setIdHoaDon(hoaDon);
+                lichSuHoaDon1.setNguoiThucHien(getCurrentNhanVien().getHoTen());
+                lichSuHoaDonRepo.save(lichSuHoaDon1);
+                hoaDon.setTrangThaiThanhToan(false);
+            }
             hoaDonRepo.save(hoaDon);
             LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
             lichSuHoaDon.setIdHoaDon(hoaDon);
@@ -1094,12 +1110,23 @@ public class HoaDonServiceImpl
     public Void updateTrangThaiHoaDonByIdHoanHangThanhCong(Integer idHoaDon, GhiChu moTa)
     {
         HoaDon hoaDon = hoaDonRepo.findById(idHoaDon).get();
+        LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
+        if(hoaDon.getTrangThaiThanhToan()){
+            LichSuHoaDon lichSuHoaDon1 = new LichSuHoaDon();
+            lichSuHoaDon1.setMoTa("Đã hoàn tiền");
+            lichSuHoaDon1.setTrangThai(TrangThai.HOAN_TIEN);
+            lichSuHoaDon1.setIdHoaDon(hoaDon);
+            lichSuHoaDon1.setNguoiThucHien(getCurrentNhanVien().getHoTen());
+            lichSuHoaDonRepo.save(lichSuHoaDon1);
+            hoaDon.setTrangThaiThanhToan(false);
+        }
         hoaDon.setTrangThaiDonHang(TrangThai.HOAN_HANG_THANH_CONG);
         hoaDonRepo.save(hoaDon);
-        LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
         lichSuHoaDon.setIdHoaDon(hoaDon);
-        lichSuHoaDon.setTrangThai(TrangThai.HOAN_HANG_THANH_CONG);
         lichSuHoaDon.setMoTa(moTa.getGhiChu());
+        lichSuHoaDon.setTrangThai(TrangThai.HOAN_HANG_THANH_CONG);
+        lichSuHoaDon.setNguoiThucHien(getCurrentNhanVien().getHoTen());
+
         lichSuHoaDonRepo.save(lichSuHoaDon);
         List<HoaDonChiTiet> chiTietList = hoaDonChiTietRepo.findByIdHoaDon(idHoaDon);
         for (HoaDonChiTiet chiTiet : chiTietList) {
@@ -1374,6 +1401,7 @@ public class HoaDonServiceImpl
         return converToHoaDonResponse(hoaDonUpdated);
     }
 
+    // cập nhật tổng tiền khi thay đổi thông tin khách hàng
     @Override
     public Void updateHoaDonAdmin(Integer id, HoaDonUpdateAdmin hoaDonUpdateAdmin)
     {
@@ -1391,6 +1419,7 @@ public class HoaDonServiceImpl
         return null;
     }
 
+    //cập nhật lại tiền ship và tiền thanh toán khi thay đổi số lượng sản phẩm
     @Override
     public Void updatePhiGiaoHang(Integer id, UpdatePhiVanChuyen request)
     {

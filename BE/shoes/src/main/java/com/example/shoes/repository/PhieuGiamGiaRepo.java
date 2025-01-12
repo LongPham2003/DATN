@@ -51,7 +51,7 @@ public interface PhieuGiamGiaRepo
                 AND v.ngayBatDau <= CURRENT_TIMESTAMP 
                 AND v.ngayKetThuc >= CURRENT_TIMESTAMP 
                 AND v.soLuong > 0
-                ORDER BY v.mucGiam DESC limit  1
+                ORDER BY v.mucGiam DESC 
             """)
-    PhieuGiamGia findPhieuGiamGiaCoLoiNhat(@Param("dieuKienGiam") BigDecimal dieuKienGiam);
+    List<PhieuGiamGia> findPhieuGiamGiaCoLoiNhat(@Param("dieuKienGiam") BigDecimal dieuKienGiam);
 }

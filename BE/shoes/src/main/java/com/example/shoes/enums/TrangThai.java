@@ -1,6 +1,7 @@
 package com.example.shoes.enums;
 
-public enum TrangThai {
+public enum TrangThai
+{
     TRA_HANG("trả hàng"),
     HOAN_TRA("hoàn trả "),
     CHO_XAC_NHAN("Chờ Xác Nhận"),
@@ -13,16 +14,18 @@ public enum TrangThai {
     HOAN_THANH("Hoàn thành"),
     HUY_DON("Hủy đơn"),
     HOAN_HANG("Hoàn hàng"),
-    HOAN_HANG_THANH_CONG("Hoàn hàng thành công");
-
+    HOAN_HANG_THANH_CONG("Hoàn hàng thành công"),
+    HOAN_TIEN("Hoàn tiền");
 
     private final String moTa;
 
-    TrangThai(String moTa) {
+    TrangThai(String moTa)
+    {
         this.moTa = moTa;
     }
 
-    public String getMoTa() {
+    public String getMoTa()
+    {
         return moTa;
     }
 }
