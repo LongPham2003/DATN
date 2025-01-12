@@ -156,6 +156,7 @@ const HoaDonChiTiet = () => {
   };
 
   const fillHoaDon = () => {
+
     axios
       .get(`http://localhost:8080/api/hoadon/${id}`)
       .then((res) => {
@@ -356,31 +357,32 @@ const HoaDonChiTiet = () => {
   }, [idQH, idTP, idXa, soLuong]);
 
   const isFirstRender = useRef(true); // Flag để kiểm tra lần render đầu tiên
-
   useEffect(() => {
     if (isFirstRender.current) {
       // Nếu là lần render đầu tiên, chỉ đổi giá trị flag mà không chạy API
       isFirstRender.current = false;
       return;
     }
-    axios
-      .post(`http://localhost:8080/api/hoadon/updatepvc/${id}`, {
-        phiVanChuyen: phiGiaoHang,
-      })
-      .then(() => {
-        fillHoaDonChiTiet();
-        fillHoaDon();
-      })
-      .catch((error) => {
-        toast.error(error.response.data.message);
-      });
-  }, [soLuong]);
+    if (phiGiaoHang !== 0) {
+      axios
+        .post(`http://localhost:8080/api/hoadon/updatepvc/${id}`, {
+          phiVanChuyen: phiGiaoHang,
+        })
+        .then(() => {
+          fillHoaDonChiTiet();
+          fillHoaDon();
+        })
+        .catch((error) => {
+          toast.error(error.response.data.message);
+        });
+    }
+  }, [soLuong, id]);
 
-  console.log(thanhToan);
-  console.log(lichSuHoaDon);
-  console.log(hoaDon);
-  console.log(soLuong);
-  console.log(phiGiaoHang);
+  // console.log(thanhToan);
+  // console.log(lichSuHoaDon);
+  // console.log(hoaDon);
+  // console.log(soLuong);
+  // console.log(phiGiaoHang);
 
   const formatDate = (dateTimeString) => {
     const date = new Date(dateTimeString);
@@ -647,7 +649,7 @@ const HoaDonChiTiet = () => {
   return (
     <div className="mx-3 py-3">
       <div className="overflow-x-auto">
-        <Timeline className="Timeline2-wrapper-1 relative !overflow-scroll">
+        <Timeline className="Timeline2-wrapper-1 relative">
           {lichSuHoaDon.map((item, index) => (
             <TimelineEvent
               className="overflow-x-auto"
@@ -788,8 +790,7 @@ const HoaDonChiTiet = () => {
               )}
             </div>
           )}
-          {(hoaDon.trangThaiDonHang === "Chờ đơn vị vẫn chuyển" ||
-            hoaDon.trangThaiDonHang === "Đơn đang trên đường giao hàng") && (
+          {hoaDon.trangThaiDonHang === "Đơn đang trên đường giao hàng" && (
             <button
               onClick={openModalHoanHang}
               className="mx-5 rounded bg-blue-500 px-2 py-1 text-white"

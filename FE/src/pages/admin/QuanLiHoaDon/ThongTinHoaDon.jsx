@@ -90,13 +90,15 @@ const ThongTinHoaDon = ({
   useEffect(() => {
     setIdPhieuGiamGiaDangChon(hoaDon.idPhieuGiamGia);
   }, [hoaDon.idPhieuGiamGia]);
+
+
   useEffect(() => {
     const pgg = axios
       .get("http://localhost:8080/api/phieugiamgia/trang-thai-true")
       .then((res) => {
         setDanhSachPhieuGiamGia(res.data.result);
       });
-  }, []);
+  }, [hoaDon.idPhieuGiamGia]);
 
   const addPhieuGiamGia = async (idPhieuGiamGiaDangChon) => {
     Modal.confirm({

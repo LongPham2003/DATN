@@ -197,7 +197,7 @@ export default function DatHang() {
       return 0;
     }
 
-    console.log("Đủ điều kiện áp dụng phiếu giảm giá");
+    // console.log("Đủ điều kiện áp dụng phiếu giảm giá");
 
     let tienGiam = 0;
 
@@ -217,13 +217,13 @@ export default function DatHang() {
     // Giới hạn giảm tối đa
     const giamToiDaValue = formatCurrencyToNumber(giamToiDa);
     if (tienGiam > giamToiDaValue) {
-      console.log(
-        `Giảm tối đa giới hạn: ${tienGiam} > ${giamToiDaValue}, áp dụng giảm tối đa`,
-      );
+      // console.log(
+      //   `Giảm tối đa giới hạn: ${tienGiam} > ${giamToiDaValue}, áp dụng giảm tối đa`,
+      // );
       tienGiam = giamToiDaValue;
     }
 
-    console.log("Tiền giảm sau khi áp dụng tối đa (nếu có):", tienGiam);
+    // console.log("Tiền giảm sau khi áp dụng tối đa (nếu có):", tienGiam);
 
     setTienDuocGiam(tienGiam); // Cập nhật tiền được giảm
     return tienGiam;
@@ -238,10 +238,10 @@ export default function DatHang() {
     tinhThanhTien();
   }, [tongTien, phiGiaoHang, TienDuocGiam]);
 
-  useEffect(() => {
-    const tienDuocGiam = tinhTienDuocGiam();
-    console.log("Tiền được giảm cuối cùng:", tienDuocGiam);
-  }, [tongTien, phieuGiamGiaDangChon]);
+  // useEffect(() => {
+  //   const tienDuocGiam = tinhTienDuocGiam();
+  //   // console.log("Tiền được giảm cuối cùng:", tienDuocGiam);
+  // }, [tongTien, phieuGiamGiaDangChon]);
 
   // hàm format lại định dạng khi gửi về be loai bo vnd
   const formatCurrencyToNumber = (value) => {

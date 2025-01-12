@@ -243,11 +243,11 @@ export default function ChonSizeVSMauSac({ id }) {
           // SoLuongTon !== null
           idSPCT ? (
             <> */}
-        {Ma !== null && <div>Ma: {Ma}</div>}
-        {ThuongHieu !== null && <div>Thuong hieu: {ThuongHieu}</div>}
-        {ChatLieu !== null && <div>Chat lieu: {ChatLieu}</div>}
-        {DeGiay !== null && <div>De giay: {DeGiay}</div>}
-        {SoLuongTon !== null && <div>So luong con: {SoLuongTon}</div>}
+        {Ma !== null && <div>Mã: {Ma}</div>}
+        {ThuongHieu !== null && <div>Thương hiệu: {ThuongHieu}</div>}
+        {ChatLieu !== null && <div>Chất liệu: {ChatLieu}</div>}
+        {DeGiay !== null && <div>Dế giày: {DeGiay}</div>}
+        {SoLuongTon !== null && <div>Số lượng còn: {SoLuongTon}</div>}
         {/* </>
           ) : (
             <div className="font-bold text-red-500">Sản phẩm hết hàng</div>
