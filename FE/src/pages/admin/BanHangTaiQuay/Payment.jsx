@@ -19,7 +19,7 @@ export default function PaymentResult() {
   const diaChiChiTiet = localStorage.getItem("diaChiChiTiet");
   const ngayDuKien = localStorage.getItem("ngayDuKien");
   const tienPhaiThanhToan = localStorage.getItem("tienPhaiThanhToan");
-
+  const hoten = localStorage.getItem("hoTen");
   const handleGeneratePDF = () => {
     setShowPDF(true); // Hiển thị ExportPDF để có thể tạo file PDF
     setTimeout(() => {
@@ -51,6 +51,7 @@ export default function PaymentResult() {
             chiTietSanPhams,
             idPhieuGiamGia: idPhieuGiamGia || null,
             soDienThoai: soDienThoai,
+            tenKhachHang: hoten,
             phiVanChuyen: phiVanChuyen,
             diaChiChiTiet: diaChiChiTiet,
             ngayDuKien: ngayDuKien,

@@ -156,7 +156,6 @@ const HoaDonChiTiet = () => {
   };
 
   const fillHoaDon = () => {
-
     axios
       .get(`http://localhost:8080/api/hoadon/${id}`)
       .then((res) => {
@@ -357,6 +356,7 @@ const HoaDonChiTiet = () => {
   }, [idQH, idTP, idXa, soLuong]);
 
   const isFirstRender = useRef(true); // Flag để kiểm tra lần render đầu tiên
+
   useEffect(() => {
     if (isFirstRender.current) {
       // Nếu là lần render đầu tiên, chỉ đổi giá trị flag mà không chạy API
@@ -376,13 +376,13 @@ const HoaDonChiTiet = () => {
           toast.error(error.response.data.message);
         });
     }
-  }, [soLuong, id]);
+  }, [soLuong, phiGiaoHang]);
 
-  // console.log(thanhToan);
-  // console.log(lichSuHoaDon);
-  // console.log(hoaDon);
-  // console.log(soLuong);
-  // console.log(phiGiaoHang);
+  console.log(thanhToan);
+  console.log(lichSuHoaDon);
+  console.log(hoaDon);
+  console.log(soLuong);
+  console.log(phiGiaoHang);
 
   const formatDate = (dateTimeString) => {
     const date = new Date(dateTimeString);
@@ -649,7 +649,7 @@ const HoaDonChiTiet = () => {
   return (
     <div className="mx-3 py-3">
       <div className="overflow-x-auto">
-        <Timeline className="Timeline2-wrapper-1 relative">
+        <Timeline className="Timeline2-wrapper-1 relative !overflow-scroll">
           {lichSuHoaDon.map((item, index) => (
             <TimelineEvent
               className="overflow-x-auto"
@@ -776,7 +776,7 @@ const HoaDonChiTiet = () => {
                   onClick={openModalGiao}
                   className="rounded bg-blue-500 px-2 py-1 text-white"
                 >
-                  Giao hàng
+                  Giao Hàng
                 </button>
               )}
 
@@ -785,7 +785,7 @@ const HoaDonChiTiet = () => {
                   onClick={openModalHT}
                   className="rounded bg-blue-500 px-2 py-1 text-white"
                 >
-                  Hoàn thành
+                  Hoàn Thành
                 </button>
               )}
             </div>
@@ -864,38 +864,38 @@ const HoaDonChiTiet = () => {
         <div>
           <table className="min-w-full divide-y divide-gray-200 rounded-lg bg-white shadow-md">
             <thead className="bg-gray-100">
-              <tr>
-                <th className="px-6 py-3 text-left text-sm font-medium uppercase tracking-wider text-gray-500">
-                  Số tiền
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-medium uppercase tracking-wider text-gray-500">
-                  Thời gian
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-medium uppercase tracking-wider text-gray-500">
-                  Nhân viên xác nhận
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-medium uppercase tracking-wider text-gray-500">
-                  Ghi chú
-                </th>
-              </tr>
+            <tr>
+              <th className="px-6 py-3 text-left text-sm font-medium uppercase tracking-wider text-gray-500">
+                Số tiền
+              </th>
+              <th className="px-6 py-3 text-left text-sm font-medium uppercase tracking-wider text-gray-500">
+                Thời gian
+              </th>
+              <th className="px-6 py-3 text-left text-sm font-medium uppercase tracking-wider text-gray-500">
+                Nhân viên xác nhận
+              </th>
+              <th className="px-6 py-3 text-left text-sm font-medium uppercase tracking-wider text-gray-500">
+                Ghi chú
+              </th>
+            </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {thanhToan.map((item, index) => (
-                <tr key={index} className="hover:bg-gray-100">
-                  <td className="px-6 py-4 text-sm text-gray-700">
-                    {hoaDon.tienPhaiThanhToan}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-700">
-                    {formatDate(item.createAt)}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-700">
-                    {item.nguoiThucHien}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-blue-700">
-                    {item.moTa}
-                  </td>
-                </tr>
-              ))}
+            {thanhToan.map((item, index) => (
+              <tr key={index} className="hover:bg-gray-100">
+                <td className="px-6 py-4 text-sm text-gray-700">
+                  {hoaDon.tienPhaiThanhToan}
+                </td>
+                <td className="px-6 py-4 text-sm text-gray-700">
+                  {formatDate(item.createAt)}
+                </td>
+                <td className="px-6 py-4 text-sm text-gray-700">
+                  {item.nguoiThucHien}
+                </td>
+                <td className="px-6 py-4 text-sm text-blue-700">
+                  {item.moTa}
+                </td>
+              </tr>
+            ))}
             </tbody>
           </table>
         </div>

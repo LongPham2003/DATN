@@ -10,11 +10,11 @@ import SanPhamHoaDon from "./SanPhamHoaDon";
 
 /* eslint-disable react/prop-types */
 const ThongTinHoaDon = ({
-  hoaDon,
-  hoaDonChiTiet,
-  fillHoaDon,
-  fillHoaDonChiTiet,
-}) => {
+                          hoaDon,
+                          hoaDonChiTiet,
+                          fillHoaDon,
+                          fillHoaDonChiTiet,
+                        }) => {
   console.log(hoaDonChiTiet);
   const [OpenModelSP, setOpenModelSP] = useState(false);
   const openModalSP = () => {
@@ -90,8 +90,6 @@ const ThongTinHoaDon = ({
   useEffect(() => {
     setIdPhieuGiamGiaDangChon(hoaDon.idPhieuGiamGia);
   }, [hoaDon.idPhieuGiamGia]);
-
-
   useEffect(() => {
     const pgg = axios
       .get("http://localhost:8080/api/phieugiamgia/trang-thai-true")
@@ -165,6 +163,7 @@ const ThongTinHoaDon = ({
                 placeholder="Chọn phiếu giảm giá"
                 optionLabelProp="label"
                 value={idPhieuGiamGiaDangChon}
+                disabled={hoaDon.trangThaiDonHang !== "Chờ Xác Nhận"} // Vô hiệu hóa nếu trạng thái là "xác nhận"
                 onChange={(value) => {
                   setIdPhieuGiamGiaDangChon(value); // Cập nhật state
                   addPhieuGiamGia(value);
@@ -182,11 +181,7 @@ const ThongTinHoaDon = ({
 
                 {/* Danh sách phiếu giảm giá */}
                 {danhSachPhieuGiamGia.map((pgg) => (
-                  <Select.Option
-                    key={pgg.id}
-                    value={pgg.id}
-                    label={pgg.tenVoucher}
-                  >
+                  <Select.Option key={pgg.id} value={pgg.id} label={pgg.ma}>
                     <div>
                       <span>Tên: {pgg.tenVoucher}</span> <br />
                       <span>Điều kiện: {pgg.dieuKienGiamGia}</span> <br />
@@ -250,82 +245,82 @@ const ThongTinHoaDon = ({
 
         <table className="min-w-full text-center text-sm font-light">
           <thead className="top-0 bg-blue-700 text-xl font-medium text-white">
-            <tr>
-              <th className="px-6 py-4">STT</th>
-              <th className="px-6 py-4">Ảnh</th>
-              <th className="px-6 py-4">Sản phẩm</th>
-              <th className="px-6 py-4">Đơn giá</th>
-              <th className="px-6 py-4">Số lượng</th>
-              <th className="px-6 py-4">Thành tiền</th>
-              {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" &&
-              hoaDon.trangThaiThanhToan === "Chưa thanh toán" ? (
-                <th className="px-6 py-4">Hành động</th>
-              ) : null}
-            </tr>
+          <tr>
+            <th className="px-6 py-4">STT</th>
+            <th className="px-6 py-4">Ảnh</th>
+            <th className="px-6 py-4">Sản phẩm</th>
+            <th className="px-6 py-4">Đơn giá</th>
+            <th className="px-6 py-4">Số lượng</th>
+            <th className="px-6 py-4">Thành tiền</th>
+            {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" &&
+            hoaDon.trangThaiThanhToan === "Chưa thanh toán" ? (
+              <th className="px-6 py-4">Hành động</th>
+            ) : null}
+          </tr>
           </thead>
           <tbody>
-            {hoaDonChiTiet.map((SPCT, index) => (
-              <tr key={SPCT.id} className="hover:bg-gray-100">
-                <td>{index + 1}</td>
-                <td>
-                  <LayAnhTheoIdSP
-                    id={SPCT.idSpct}
-                    className="h-[120px] w-[120px]"
-                  />
-                </td>
-                <td>
-                  {SPCT.tenSanPham} <br />
-                  {SPCT.maSPCT} [{SPCT.kichThuoc} - {SPCT.mauSac}]
-                  <br />
-                </td>
-                <td>{formatTien(SPCT.donGia)}</td>
-                <td className="space-x-3">
-                  {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" && (
-                    <button
-                      onClick={() =>
-                        updateSoLuong(SPCT.idSpct, SPCT.soLuong - 1)
-                      }
-                      className="h-8 w-8 rounded-full bg-gray-200 font-bold text-gray-500 hover:bg-gray-300"
-                    >
-                      -
-                    </button>
-                  )}
+          {hoaDonChiTiet.map((SPCT, index) => (
+            <tr key={SPCT.id} className="hover:bg-gray-100">
+              <td>{index + 1}</td>
+              <td>
+                <LayAnhTheoIdSP
+                  id={SPCT.idSpct}
+                  className="h-[120px] w-[120px]"
+                />
+              </td>
+              <td>
+                {SPCT.tenSanPham} <br />
+                {SPCT.maSPCT} [{SPCT.kichThuoc} - {SPCT.mauSac}]
+                <br />
+              </td>
+              <td>{formatTien(SPCT.donGia)}</td>
+              <td className="space-x-3">
+                {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" && (
+                  <button
+                    onClick={() =>
+                      updateSoLuong(SPCT.idSpct, SPCT.soLuong - 1)
+                    }
+                    className="h-8 w-8 rounded-full bg-gray-200 font-bold text-gray-500 hover:bg-gray-300"
+                  >
+                    -
+                  </button>
+                )}
 
-                  <span className="text-lg font-medium">{SPCT.soLuong}</span>
-                  {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" && (
-                    <button
-                      onClick={() =>
-                        updateSoLuong(SPCT.idSpct, SPCT.soLuong + 1)
-                      }
-                      className="h-8 w-8 rounded-full bg-gray-200 font-bold text-gray-500 hover:bg-gray-300"
-                    >
-                      +
-                    </button>
-                  )}
+                <span className="text-lg font-medium">{SPCT.soLuong}</span>
+                {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" && (
+                  <button
+                    onClick={() =>
+                      updateSoLuong(SPCT.idSpct, SPCT.soLuong + 1)
+                    }
+                    className="h-8 w-8 rounded-full bg-gray-200 font-bold text-gray-500 hover:bg-gray-300"
+                  >
+                    +
+                  </button>
+                )}
+              </td>
+              <td>{formatTien(SPCT.donGia * SPCT.soLuong)}</td>
+              {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" &&
+              hoaDon.trangThaiThanhToan === "Chưa thanh toán" ? (
+                <td>
+                  <Popconfirm
+                    title="Xóa Sản phẩm"
+                    description="Bạn có muốn xóa sản phẩm không?"
+                    okText="Yes"
+                    cancelText="No"
+                    onConfirm={(e) => {
+                      e.preventDefault();
+                      XoaSPKhoiGioHang(SPCT.idSpct);
+                    }}
+                  >
+                    <Button type="primary" danger>
+                      <TrashIcon className="h-5 w-5 text-white" />
+                      Xóa
+                    </Button>
+                  </Popconfirm>
                 </td>
-                <td>{formatTien(SPCT.donGia * SPCT.soLuong)}</td>
-                {hoaDon.trangThaiDonHang === "Chờ Xác Nhận" &&
-                hoaDon.trangThaiThanhToan === "Chưa thanh toán" ? (
-                  <td>
-                    <Popconfirm
-                      title="Xóa Sản phẩm"
-                      description="Bạn có muốn xóa sản phẩm không?"
-                      okText="Yes"
-                      cancelText="No"
-                      onConfirm={(e) => {
-                        e.preventDefault();
-                        XoaSPKhoiGioHang(SPCT.idSpct);
-                      }}
-                    >
-                      <Button type="primary" danger>
-                        <TrashIcon className="h-5 w-5 text-white" />
-                        Xóa
-                      </Button>
-                    </Popconfirm>
-                  </td>
-                ) : null}
-              </tr>
-            ))}
+              ) : null}
+            </tr>
+          ))}
           </tbody>
         </table>
       </div>

@@ -279,6 +279,7 @@ export default function MuaNgay() {
         );
         localStorage.setItem("idPhieuGiamGia", idPGGDangChon || null);
         localStorage.setItem("soDienThoai", khachHang.sdt);
+        localStorage.setItem("hoTen", tenKhachHang);
         localStorage.setItem("phiVanChuyen", phiGiaoHang);
         localStorage.setItem("diaChiChiTiet", diaChiGiaoHang);
         localStorage.setItem("ngayDuKien", ngayDuKien);
@@ -446,16 +447,24 @@ export default function MuaNgay() {
             />
           </div>
           <div>
-            <p>Phương thức thanh toán:</p>
-            <div className="flex gap-5">
-              <input name="phuongThucThanhToan" defaultChecked type="radio" />{" "}
-              Thanh toán khi nhận hàng
-              <input
-                onClick={() => setPhuongThucThanhToan("Chuyển khoản")}
-                name="phuongThucThanhToan"
-                type="radio"
-              />{" "}
-              Chuyển khoản
+
+            <div>
+              <p>Phương thức thanh toán:</p>
+              <div className="flex gap-5">
+                <input
+                  onClick={() => setPhuongThucThanhToan("Tiền mặt")}
+                  name="phuongThucThanhToan"
+                  defaultChecked
+                  type="radio"
+                />{" "}
+                Thanh toán khi nhận hàng
+                <input
+                  onClick={() => setPhuongThucThanhToan("Chuyển khoản")}
+                  name="phuongThucThanhToan"
+                  type="radio"
+                />{" "}
+                Chuyển khoản
+              </div>
             </div>
           </div>
           {phuongThucThanhToan === "Tiền mặt" && (
